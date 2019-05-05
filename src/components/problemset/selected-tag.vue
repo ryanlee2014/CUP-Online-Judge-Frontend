@@ -14,7 +14,7 @@
         name: "selected-tag",
         props: {
             data: String,
-            color: Array,
+            color: Object,
             show_tag: Boolean,
             dim: Boolean,
             label: String
