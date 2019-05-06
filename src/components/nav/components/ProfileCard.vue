@@ -50,7 +50,7 @@
         },
         computed: {
             img_url: function() {
-                if(this.avatar) {
+                if(this.avatar && this.user_id.length > 0) {
                     return "../avatar/" + this.user_id + ".jpg";
                 }
                 else {
