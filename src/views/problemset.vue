@@ -117,7 +117,8 @@
     // eslint-disable-next-line no-unused-vars
     import Pagination from '@/components/problemset/pagination.vue'
     import selectedTag from '@/components/problemset/selected-tag.vue'
-    import mainContent from '@/components/problemset/mainContent.vue'
+    import mainContent from '@/components/problemset/MainContent.vue'
+    import util from "../lib/util"
     // eslint-disable-next-line no-unused-vars
     const $ = require("jquery"), jQuery = $;
     window.jQuery = $;
@@ -125,6 +126,7 @@
     import DataSet from '@antv/data-set';
     const _ = require("lodash");
     require("../static/js/semantic.min");
+    util.init();
     $('#show_tag')
         .checkbox()
         .first().checkbox({
@@ -275,7 +277,7 @@
                 //handler.activate.call(obj.target);
                 var that = this;
                 this.setQuery();
-                $.get("../api/problemset/" + page + "/" + search_tag + "/" + order_target + "/" + order + "/?label=" + this.label, function (data) {
+                $.get("/api/problemset/" + page + "/" + search_tag + "/" + order_target + "/" + order + "/?label=" + this.label, function (data) {
                     that.dim = false;
                     that.tables = data;
                 })
@@ -288,7 +290,7 @@
                 var search_tag = this.search_tag || "none";
                 var order = this.order = prev_target_equal_to_current ? (-this.order + 1) : default_order;
                 var that = this;
-                $.get("../api/problemset/" + page + "/" + search_tag + "/" + target + "/" + order + "/?label=" + this.label, function (data) {
+                $.get("/api/problemset/" + page + "/" + search_tag + "/" + target + "/" + order + "/?label=" + this.label, function (data) {
                     that.dim = false;
                     that.tables = data;
                 })
@@ -305,7 +307,7 @@
                 var order = this.order;
                 var that = this;
                 this.setQuery();
-                $.get("../api/problemset/" + page + "/" + search_tag + "/" + order_target + "/" + order + "/?label=" + this.label, function (data) {
+                $.get("/api/problemset/" + page + "/" + search_tag + "/" + order_target + "/" + order + "/?label=" + this.label, function (data) {
                     that.dim = false;
                     that.tables = data;
                 })
@@ -321,7 +323,7 @@
                 var order = this.order;
                 var that = this;
                 this.setQuery();
-                $.get("../api/problemset/" + page + "/" + label + "/" + order_target + "/" + order + "/?label=" + this.label, function (data) {
+                $.get("/api/problemset/" + page + "/" + label + "/" + order_target + "/" + order + "/?label=" + this.label, function (data) {
                     that.dim = false;
                     that.tables = data;
                 })
@@ -337,7 +339,7 @@
                 var order = this.order;
                 var that = this;
                 this.setQuery();
-                $.get("../api/problemset/" + page + "/" + (this.search_tag || "none") + "/" + order_target + "/" + order + "/?label=" + this.label, function (data) {
+                $.get("/api/problemset/" + page + "/" + (this.search_tag || "none") + "/" + order_target + "/" + order + "/?label=" + this.label, function (data) {
                     that.dim = false;
                     that.tables = data;
                 })
@@ -448,7 +450,7 @@
             $("#show_cloud").checkbox((that.show_label_cloud ? "" : "un") + "check");
 
             this.current_page = page;
-            $.get("../api/problemset/" + page + "/" + (this.search_tag || "none") + "/" + this.order_target + "/" + this.order + "/?label=" + this.label, function (data) {
+            $.get("/api/problemset/" + page + "/" + (this.search_tag || "none") + "/" + this.order_target + "/" + this.order + "/?label=" + this.label, function (data) {
                 if (data.total) {
                     that.tables = data;
                 } else {
@@ -465,7 +467,7 @@
             $('.ui.search')
                 .search({
                     apiSettings: {
-                        url: '../api/problem/module/search/{query}'
+                        url: '/api/problem/module/search/{query}'
                     },
                     fields: {
                         results: 'items',

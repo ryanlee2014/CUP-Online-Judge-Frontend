@@ -680,23 +680,23 @@
             },
             current_tag: function (newVal, oldVal) {
                 if (newVal === "user") {
-                    $.get("../api/status/device/browser", function (data) {
+                    $.get("/api/status/device/browser", function (data) {
                         if (data.status == "OK") {
                             _.delay(drawDynamicInteractiveLineChart, 0, data.data, "browser", "browser_statistics");
                         }
-                        $.get("../api/status/device/os", function (data) {
+                        $.get("/api/status/device/os", function (data) {
                             if (data.status == "OK") {
                                 _.delay(drawDynamicInteractiveLineChart, 0, data.data, "os", "os_statistics");
                             }
                         });
-                        $.get("../api/status/problem/solve_map/", function (data) {
+                        $.get("/api/status/problem/solve_map/", function (data) {
                             if (data.status == "OK") {
                                 _.delay(drawChordGraph, 0, data.data);
                             }
                         });
                     });
                 } else if (newVal === "graph") {
-                    $.get("../api/user/register_timeline", function (data) {
+                    $.get("/api/user/register_timeline", function (data) {
                         if (data.status == "OK") {
                             _.delay(drawRegisterTimeline, 0, data.data);
                         }
@@ -768,7 +768,7 @@
                 var sim = Number(this.sim_checkbox);
                 var pri = Number(this.privilege);
                 return new Promise(function (resolve, reject) {
-                    $.get("../api/status/" + problem_id + "/" + user_id + "/" + language + "/" + result + "/" + page_cnt + "/" + sim + "/" + pri, function (data) {
+                    $.get("/api/status/" + problem_id + "/" + user_id + "/" + language + "/" + result + "/" + page_cnt + "/" + sim + "/" + pri, function (data) {
                         that.dim = false;
                         that.search_func(data);
                         resolve();
@@ -796,10 +796,10 @@
                 var sim_checkbox = Number(this.sim_checkbox);
                 var pri = Number(this.privilege);
                 var that = this;
-                $.get("../api/status/" + problem_id + "/" + user_id + "/" + language + "/" + result + "/" + page_cnt + "/" + sim_checkbox + "/" + pri, function (data) {
+                $.get("/api/status/" + problem_id + "/" + user_id + "/" + language + "/" + result + "/" + page_cnt + "/" + sim_checkbox + "/" + pri, function (data) {
                     that.dim = false;
                     that.search_func(data);
-                    $.get("../api/status/" + problem_id + "/" + user_id + "/" + language + "/" + result + "/" + page_cnt + "/" + sim_checkbox + "/" + pri, function (data) {
+                    $.get("/api/status/" + problem_id + "/" + user_id + "/" + language + "/" + result + "/" + page_cnt + "/" + sim_checkbox + "/" + pri, function (data) {
                         that.dim = false;
                         that.search_func(data);
                     })
@@ -882,21 +882,21 @@
             var user_id = (this.user_id = this.getUserId() || null) || "null";
             var language = (this.language = this.getLanguage() || -1) == -1 ? "null" : this.getLanguage();
             var result = (this.problem_result = this.getResult() || -1) == -1 ? "null" : this.problem_result;
-            $.get("../api/status/" + problem_id + "/" + user_id + "/" + language + "/" + result + "/0/", function (data) {
+            $.get("/api/status/" + problem_id + "/" + user_id + "/" + language + "/" + result + "/0/", function (data) {
                 that.dim = false;
                 that.search_func(data);
-                $.get("../api/status/result", function (dat) {
+                $.get("/api/status/result", function (dat) {
                     drawResult(dat.data, data.const_list.result.cn);
                 });
-                $.get("../api/status/submit_hour", function (dat) {
+                $.get("/api/status/submit_hour", function (dat) {
                     var func = function (a, b) {
                         return a.hour - b.hour;
                     };
                     dat.data.submit.sort(func);
                     dat.data.login.sort(func);
                     drawBar(dat.data);
-                })
-                $.get("../api/status/" + problem_id + "/" + user_id + "/" + language + "/" + result + "/0/", function (data) {
+                });
+                $.get("/api/status/" + problem_id + "/" + user_id + "/" + language + "/" + result + "/0/", function (data) {
                     that.dim = false;
                     that.search_func(data);
                 })
@@ -910,7 +910,7 @@
             });
         },
         mounted: function () {
-            $.get("../api/status/graph", function (data) {
+            $.get("/api/status/graph", function (data) {
                 draw(data);
                 drawDynamicInteractiveLineChart();
             });

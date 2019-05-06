@@ -1,15 +1,31 @@
 <template>
     <div id="app">
-        <Navbar></Navbar>
-        <router-view/>
+        <Navbar :user_id="user_id" :nick="nick" :admin="admin" :avatar="avatar"></Navbar>
+        <transition name="fade">
+            <router-view/>
+        </transition>
     </div>
 </template>
 <script>
     import Navbar from './components/nav/Navbar'
-export default {
+    import { mapState } from 'vuex'
+    export default {
         name: 'App',
-    components: {Navbar}
-}
+        components: {Navbar},
+        data: function () {
+            return {}
+        },
+        mounted() {
+            this.$store.dispatch("NavStatus");
+        },
+        computed: mapState({
+            logined: state => state.logined,
+            avatar: state => state.userInfo.avatar,
+            admin: state => state.userInfo.admin,
+            user_id: state => state.userInfo.user_id,
+            nick: state => state.userInfo.nick
+        })
+    }
 </script>
 <style>
     @import "./static/css/semantic.min.css";

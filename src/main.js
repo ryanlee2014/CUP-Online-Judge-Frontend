@@ -1,23 +1,19 @@
 import Vue from 'vue'
+import VueAxios from 'vue-axios'
+import axios from 'axios';
+Vue.use(VueAxios, axios);
 import App from './App.vue'
 import router from './router'
+import store from './store'
 Vue.config.productionTip = false;
+const $ = require("jquery");
 
 new Vue({
   router,
+  store,
   render: h => h(App)
 }).$mount('#app');
-const $ = require("jquery");
-if(process.env.NODE_ENV === "development") {
-    const _get = $.get;
-    $.get = function () {
-        let addr = arguments[0];
-        if (addr.indexOf("api") !== -1) {
-            arguments[0] = `http://192.168.28.150:3000${addr.substring(addr.indexOf("api") + 3)}`
-        }
-        _get.apply($, arguments);
-    }
-}
+
 Vue.directive('tableUpdated', {
   componentUpdated: function () {
     $('.ui.sticky.element')

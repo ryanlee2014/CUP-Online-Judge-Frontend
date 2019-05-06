@@ -12,6 +12,7 @@
     "@antv/data-set": "^0.10.2",
     "@antv/g2": "^3.5.3",
     "@ryanlee2014/markdown-it-katex": "^1.0.4",
+    "axios": "^0.18.0",
     "chart.js": "^2.8.0",
     "core-js": "^2.6.5",
     "dayjs": "^1.8.13",
@@ -23,13 +24,17 @@
     "markdown-it-highlightjs": "^3.0.0",
     "mermaid": "^8.0.0",
     "postcss-import": "^12.0.1",
+    "socket.io-client": "^2.2.0",
     "vue": "^2.6.10",
-    "vue-router": "^3.0.3"
+    "vue-axios": "^2.1.4",
+    "vue-router": "^3.0.3",
+    "vuex": "^3.0.1"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "^3.6.0",
-    "@vue/cli-plugin-eslint": "^3.6.0",
-    "@vue/cli-service": "^3.6.0",
+    "@cnamts/vue-cli-plugin-proxy": "^2.2.1",
+    "@vue/cli-plugin-babel": "^3.7.0",
+    "@vue/cli-plugin-eslint": "^3.7.0",
+    "@vue/cli-service": "^3.7.0",
     "babel-eslint": "^10.0.1",
     "eslint": "^5.16.0",
     "eslint-plugin-vue": "^5.0.0",
@@ -48,7 +53,8 @@
       "parser": "babel-eslint"
     },
     "rules": {
-      "vue/no-unused-vars": "off"
+      "vue/no-unused-vars": "off",
+      "vue/no-unused-components": "warning"
     }
   },
   "postcss": {

@@ -24,9 +24,9 @@
             <td>
                 <div class="ui grid">
                     <div class="three wide column" style="margin:auto">
-                        <img class="ui avatar image" :src="'../avatar/'+row.user_id+'.jpg'"
+                        <img class="ui avatar image" :src="'/avatar/'+row.user_id+'.jpg'"
                              v-if="row.avatar||user[row.user_id].avatar" style="object-fit: cover;">
-                        <img class="ui avatar image" src="../../static/image/default-user.png" v-else style="object-fit: cover;">
+                        <img class="ui avatar image" src="/image/default-user.png" v-else style="object-fit: cover;">
                     </div>
                     <div class="twelve wide column">
                         <a :href="'userinfo.php?user='+row.user_id">{{row.user_id}}<br>{{row.nick}}</a>
