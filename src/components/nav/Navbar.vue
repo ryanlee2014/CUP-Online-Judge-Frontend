@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="following bar topmenu" style="z-index: 900;">
-            <Large :nick="nick"></Large>
+            <Large :nick="nick" :logined="logined"></Large>
             <Small></Small>
             <Nano></Nano>
         </div>
@@ -55,7 +55,6 @@
             return {}
         },
         updated() {
-            console.log(this.logined);
         },
         mounted() {
         }

@@ -26,13 +26,21 @@
             </div>
             <a class="item" href="/vjudgeindex.php"><i class="lab icon"></i>Virtual
                 Judge</a>
-            <div class="right menu">
+            <div class="right menu" v-if="logined">
                 <a class="item online_num" href="newonline.php"><i class="users icon"></i>2人
                     <i class="microchip icon"></i>8</a>
                 <div class="ui dropdown item detail" tabindex="0">
                     <div class="text"><span class="profile_group">{{nick}}</span></div>
                     <i class="dropdown icon"></i>
                     <div class="menu"></div>
+                </div>
+            </div>
+            <div class="right menu" v-else>
+                <div class="item">
+                    <router-link to="/login" class="ui button">登录</router-link>
+                </div>
+                <div class="item">
+                    <router-link to="/register" class="ui primary button">注册</router-link>
                 </div>
             </div>
         </div>
@@ -46,6 +54,10 @@
             nick: {
                 type: String,
                 default: ""
+            },
+            logined: {
+                type: Boolean,
+                default: false
             }
         }
     }
