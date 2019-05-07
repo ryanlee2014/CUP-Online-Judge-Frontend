@@ -51,6 +51,7 @@
 <script>
     import util from "../lib/util"
     const $ = require("jquery");
+    window.$ = window.jQuery = $;
     const dayjs = require("dayjs");
     require("../static/js/semantic.min");
     util.init();

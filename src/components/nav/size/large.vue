@@ -13,7 +13,7 @@
                 <div class="text"><i class="options icon"></i>功能</div>
                 <i class="dropdown icon"></i>
                 <div class="menu">
-                    <a class="item" href="/faqs.php"><i class="help icon"></i>常见问答</a>
+                    <router-link to="/faq" class="item"><i class="help icon"></i>常见问答</router-link>
                     <a class="item" href="/specialsubject.php"><i class="rocket icon"></i>ACM专题</a>
                     <a class="item" href="/recent-contest.php"><i class="sitemap icon"></i>名校联赛</a>
                     <a class="item" href="/acmmanager.php"><i class="road icon"></i>ACM管理系统</a>

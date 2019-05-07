@@ -4,9 +4,9 @@ export default {
         axios.get("/api/user/self")
             .then(response => {
                 const data = response.data;
-                console.log(data);
                 if (data.status === "OK") {
                     commit("setUserData", data.data);
+                    commit("loginMutate", {login: true});
                 }
             });
     }

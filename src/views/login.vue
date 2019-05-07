@@ -66,7 +66,7 @@
             login: function() {
                 const that = this;
                 this.axios.defaults.withCredentials = true;
-                this.axios.post("/test/login/newlogin", this.$data)
+                this.axios.post("/api/login/newlogin", this.$data)
                     .then(response => {
                         if(response.data.status === "OK") {
                             that.$root.$store.commit("loginMutate", {login: true});
