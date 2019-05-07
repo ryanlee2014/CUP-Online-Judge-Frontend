@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios from 'axios/index'
 export default {
     NavStatus ({commit}) {
         axios.get("/api/user/self")

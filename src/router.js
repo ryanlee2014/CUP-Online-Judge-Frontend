@@ -67,7 +67,7 @@ const router = new Router({
 
 router.beforeEach((to, from, next) => {
   if(to.meta.auth) {
-    if(store.state.logined) {
+    if(store.getters.logined) {
       next();
     }
     else if(sessionStorage.isLogined === "true") {

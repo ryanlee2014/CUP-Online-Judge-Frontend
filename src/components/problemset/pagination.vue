@@ -44,6 +44,7 @@
         },
         methods: {
             page: function (event, arrow) {
+                ++this.total;
                 if (arrow) {
                     this.$parent.page(null, arrow);
                 }
@@ -51,7 +52,7 @@
                     this.$parent.page(parseInt(event.target.innerText) - 1);
                 }
             }
-        }
+        },
     }
 </script>
 

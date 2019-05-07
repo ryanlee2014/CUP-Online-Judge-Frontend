@@ -1,6 +1,6 @@
 <template>
     <div id="app">
-        <Navbar :user_id="user_id" :nick="nick" :admin="admin" :avatar="avatar" :logined="logined"></Navbar>
+        <Navbar :admin="admin" :avatar="avatar" :logined="logined" :nick="nick" :user_id="user_id"></Navbar>
         <transition name="fade">
             <router-view/>
         </transition>
@@ -10,7 +10,8 @@
 <script>
     import Navbar from './components/nav/Navbar'
     import Bottom from './components/bottom/Bottom'
-    import { mapState } from 'vuex'
+    import {mapGetters} from 'vuex'
+
     export default {
         name: 'App',
         components: {Navbar, Bottom},
@@ -20,13 +21,7 @@
         mounted() {
             this.$store.dispatch("NavStatus");
         },
-        computed: mapState({
-            logined: state => state.logined,
-            avatar: state => state.userInfo.avatar,
-            admin: state => state.userInfo.admin,
-            user_id: state => state.userInfo.user_id,
-            nick: state => state.userInfo.nick
-        })
+        computed: mapGetters(["logined", "avatar", "admin", "user_id", "nick"])
     }
 </script>
 <style>
