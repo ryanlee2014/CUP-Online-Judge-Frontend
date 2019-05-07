@@ -44,7 +44,6 @@
         },
         methods: {
             page: function (event, arrow) {
-                ++this.total;
                 if (arrow) {
                     this.$parent.page(null, arrow);
                 }
