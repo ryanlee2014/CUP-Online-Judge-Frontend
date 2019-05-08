@@ -22,8 +22,8 @@
             this.$store.dispatch("NavStatus");
         },
         watch: {
-            $route(to, from) {
-                console.log(to);
+            $route(to) {
+                this.$socket.emit("updateURL", {url: to.fullPath});
             }
         },
         computed: mapGetters(["logined", "avatar", "admin", "user_id", "nick"])
