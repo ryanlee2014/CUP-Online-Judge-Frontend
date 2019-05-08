@@ -13,7 +13,7 @@
                 <div class="text"><i class="options icon"></i>功能</div>
                 <i class="dropdown icon"></i>
                 <div class="menu">
-                    <router-link to="/faq" class="item"><i class="help icon"></i>常见问答</router-link>
+                    <router-link class="item" to="/faq"><i class="help icon"></i>常见问答</router-link>
                     <a class="item" href="/specialsubject.php"><i class="rocket icon"></i>ACM专题</a>
                     <a class="item" href="/recent-contest.php"><i class="sitemap icon"></i>名校联赛</a>
                     <a class="item" href="/acmmanager.php"><i class="road icon"></i>ACM管理系统</a>
@@ -27,8 +27,7 @@
             <a class="item" href="/vjudgeindex.php"><i class="lab icon"></i>Virtual
                 Judge</a>
             <div class="right menu" v-if="logined">
-                <a class="item online_num" href="newonline.php"><i class="users icon"></i>2人
-                    <i class="microchip icon"></i>8</a>
+                <router-link to="/online" class="item online_num" v-html="serverInfo"></router-link>
                 <div class="ui dropdown item detail" tabindex="0">
                     <div class="text"><span class="profile_group">{{nick}}</span></div>
                     <i class="dropdown icon"></i>
@@ -37,10 +36,10 @@
             </div>
             <div class="right menu" v-else>
                 <div class="item">
-                    <router-link to="/login" class="ui button">登录</router-link>
+                    <router-link class="ui button" to="/login">登录</router-link>
                 </div>
                 <div class="item">
-                    <router-link to="/register" class="ui primary button">注册</router-link>
+                    <router-link class="ui primary button" to="/register">注册</router-link>
                 </div>
             </div>
         </div>
@@ -58,7 +57,35 @@
             logined: {
                 type: Boolean,
                 default: false
+            },
+            user: {
+                type: Number,
+                default: 0
+            },
+            judger: {
+                type: Number,
+                default: 0
+            },
+            connected: {
+                type: Boolean,
+                default: false
             }
+        },
+        data: function () {
+            return {}
+        },
+        computed: {
+            serverInfo: function () {
+                if(this.connected) {
+                    return "<i class='users icon'></i>" + this.user + "人" + "&nbsp;<i class='microchip icon'></i>" + this.judger;
+                }
+                else {
+                    return "与服务器连接丢失";
+                }
+            }
+        },
+        mounted() {
+
         }
     }
 </script>

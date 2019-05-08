@@ -42,24 +42,24 @@
                     <div class="three wide column">
                         <div class="row half_padding">
                             <div class="sixteen wide column">
-                                <div class="ui toggle checkbox" id="show_tag" @click="check">
-                                    <input type="checkbox">
+                                <div class="ui toggle checkbox" id="show_tag">
+                                    <input @click="check" type="checkbox">
                                     <label>显示标签</label>
                                 </div>
                             </div>
                         </div>
                         <div class="row half_padding">
                             <div class="sixteen wide column">
-                                <div class="ui toggle checkbox" id="hide_currect" @click="hide">
-                                    <input type="checkbox">
+                                <div class="ui toggle checkbox" id="hide_currect" >
+                                    <input @click="hide" type="checkbox">
                                     <label>隐藏通过题目</label>
                                 </div>
                             </div>
                         </div>
                         <div class="row half_padding">
                             <div class="sixteen wide column">
-                                <div class="ui toggle checkbox" id="show_cloud" @click="cloud">
-                                    <input type="checkbox">
+                                <div class="ui toggle checkbox" id="show_cloud">
+                                    <input @click="cloud" type="checkbox">
                                     <label>显示标签云</label>
                                 </div>
                             </div>
@@ -208,45 +208,7 @@
         },
         computed: {
             tables: {
-                get: function () {
-                    this.setQuery();
-                    if (this.table.length == 0) {
-                        if ($("tbody")[0].innerText.length) {
-                            return $("tbody").html();
-                        }
-                        // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-                        this.dim = false;
-                        return "<br><br><br>";
-                    }
-                    var color = this.table.color;
-                    color["标签待整理"] = "black";
-                    var problem = this.table.problem;
-                    var len = problem.length;
-                    var tot_html = "";
-                    for (var i = 0; i < len; ++i) {
-                        var html = "<tr style='vertical-align:middle'><td>";
-                        if (problem[i].ac == true) {
-                            html += "<i class='checkmark icon'></i>";
-                        } else if (problem[i].ac == false) {
-                            html += "<i class='remove icon'></i>";
-                        }
-                        html += "</td>";
-                        html += "<td><div class='center'>" + problem[i].problem_id + "</div></td><td><div class='left aligned'><a href='newsubmitpage.php?id=" + problem[i].problem_id + "&js' target='_blank'>" + problem[i].title;
-                        html += "</a>";
-                        var label = problem[i].label ? problem[i].label.split(" ") : ["标签待整理"];
-                        label.sort();
-                        // eslint-disable-next-line no-console
-                        console.log(label);
-                        html += "<div class='show_tag_controled' style='float: right; '><span class='ui header'>";
-                        for (var j = 0; j < label.length; ++j) {
-                            html += "<a @click='tag(\"" + label[j] + "\",$event)' class='ui " + color[label[j]] + " label' target='_blank'>" + label[j] + "</a>";
-                        }
-                        html += "</span>";
-                        html += "</div></div></td><td  class='hidden-xs'>	</td><td><div class='center'>" + problem[i].accepted + " / " + problem[i].submit + "<br>" + (parseInt(problem[i].accepted) / Math.max(parseInt(problem[i].submit), 1) * 100).toString().substring(0, 4) + " %</div></td></tr>";
-                        tot_html += html;
-                    }
-                    return tot_html;
-                },
+                get: () => undefined,
                 set: function (_t) {
                     this.page_cnt = _t.step;
                     this.total = _t.total;
@@ -460,8 +422,6 @@
 
         },
         updated: function() {
-            // eslint-disable-next-line no-console
-            console.log(this.$route);
         },
         mounted: function () {
             $('.ui.search')

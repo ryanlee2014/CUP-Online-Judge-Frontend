@@ -59,8 +59,10 @@
                 <div><span class="boldstatus">{{memory_parse(row.memory)}}</span><br><span class="boldstatus">{{time_parse(row.time)}}</span>
                 </div>
             </td>
-            <td><a class="boldstatus" v-if="self === row.user_id || isadmin || row.share == 1" target=_blank
-                   :href="'showsource.php?id='+row.solution_id">查看</a>
+            <td>
+                <router-link class="boldstatus" v-if="self === row.user_id || isadmin || row.share == 1" :to="`/usercode/local/${row.solution_id}`">
+                    查看
+                </router-link>
                 <span class="boldstatus" v-else>{{language_name[row.language]}}</span>
                 <span v-if="(self === row.user_id || isadmin || row.share == 1) && row.problem_id"> / </span>
                 <a class="boldstatus" v-if="(self === row.user_id || isadmin || row.share == 1) && row.problem_id"

@@ -1,0 +1,97 @@
+<template>
+    <div class="eleven wide column">
+
+        <table class='ui padded celled selectable table' id='cs' width=90%>
+            <thead>
+            <tr align=center class=toprow>
+                <th onclick="sortTable('cs', 0, 'float');" width=15%>ID</th>
+                <th width=20%>Name</th>
+                <th width=55%>href</th>
+            </tr>
+            </thead>
+            <tbody id="online_user_table" refresh="true">
+            <tr :key="idx" style="text-align:center" v-cloak v-for="(value,idx) in user">
+                <td>{{ value.user_id }}</td>
+                <td><a :href="'userinfo.php?user='+value.user_id" target="_blank">{{ value.nick }}</a></td>
+                <td style="
+    width: 450px;
+    float: left; /* add this */
+    white-space: nowrap;
+    overflow: hidden;
+"><a :href="decodeURI(location.origin+value.url)">{{
+                    decodeURI(location.origin+value.url) }}</a></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</template>
+
+<script>
+    import utils from '../../lib/util'
+    import {mapGetters} from 'vuex'
+    export default {
+        name: "addressList",
+        watch: {
+            onlineList: function (newVal) {
+                this.temp_userList = newVal;
+            }
+        },
+        data: function () {
+            return {
+                temp_userlist: [],
+                location: window.location,
+                window: window
+            }
+        },
+        mounted() {
+        },
+        computed: {
+            ...mapGetters({
+                userlist: "onlineUser"
+            }),
+            user: {
+                get: function () {
+                    var newlist = [];
+                    var doc = document.createElement("div");
+                    if (!this.userlist) return [];
+                    for (var i = 0; i < this.userlist.length; ++i) {
+                        var tat = this.userlist[i];
+                        for (var j = 0; j < this.userlist[i].url.length; ++j) {
+                            var tmp = JSON.parse(JSON.stringify(tat));
+                            tmp.url = tmp.url[j];
+                            doc.innerHTML = tmp.nick;
+                            tmp.nick = doc.innerText;
+                            utils.detectIP(tmp);
+                            newlist.push(tmp);
+                        }
+                    }
+                    if (localStorage.getItem("sort") == "true") {
+                        newlist.sort(function (a, b) {
+                            var a1 = a["user_id"];
+                            var b1 = b["user_id"];
+                            //if (!isNaN(parseInt(a1)) && !isNaN(parseInt(b1))) {
+                            //   return parseInt(a1) - parseInt(b1);
+                            //}
+                            //else {
+                            //    return isNaN(parseInt(b1)) ? 1 : -1;
+                            //}
+                            return a1 < b1 ? -1 : a1 === b1 ? 0 : 1;
+                        });
+                    }
+                    return newlist;
+                },
+                set: function (newval) {
+                    if (!this.userlist) {
+                        this.userlist = newval;
+                    } else {
+                        this.tmp_userlist = newval;
+                    }
+                }
+            }
+        },
+    }
+</script>
+
+<style scoped>
+
+</style>

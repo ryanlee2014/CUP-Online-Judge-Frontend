@@ -9,7 +9,12 @@ module.exports = {
             '/api': {
                 secure: false,
                 target: 'https://www.cupacm.com',
-                changeOrigin: true,
+                changeOrigin: true
+            },
+            '/socket.io': {
+                secure: false,
+                target: 'https://www.cupacm.com',
+                changeOrigin: true
             },
             '/avatar': {
                 target: 'https://www.cupacm.com',

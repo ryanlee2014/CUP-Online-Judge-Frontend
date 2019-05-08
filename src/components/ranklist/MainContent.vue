@@ -188,7 +188,7 @@
     export default {
         name: "MainContent",
         props: {
-            data: Object
+            rank: Object
         },
         data: function () {
             return {
@@ -200,18 +200,24 @@
                 time_stamp: "",
                 acmmember: {ranklist: []},
                 retiremember: {ranklist: []},
-                markdownIt
+                markdownIt,
+                ranklistData: {}
             };
+        },
+        watch: {
+            rank: function(val, oldVal) {
+                this.ranklistData = val;
+            }
         },
         computed: {
             _name: function () {
-                if(this.data._name) {
-                    return this.data._name;
+                if(this.ranklistData._name) {
+                    return this.ranklistData._name;
                 }
                 return {};
             },
             ranklist: function () {
-                return this.data.ranklist;
+                return this.ranklistData.ranklist;
             },
             acmmem: {
                 get: function () {
@@ -240,21 +246,21 @@
                 var that = this;
                 this.search = $event.target.value;
                 $.get("/api/ranklist?page=" + this.page + "&search=" + this.search + "&time_stamp=" + this.time_stamp, function (data) {
-                    that.data = data;
+                    that.ranklistData = data;
                 })
             },
             timestamp: function (time, $event) {
                 var that = this;
                 this.time_stamp = time;
                 $.get("/api/ranklist?page=" + this.page + "&search=" + this.search + "&time_stamp=" + this.time_stamp, function (data) {
-                    that.data = data;
+                    that.ranklistData = data;
                 })
             },
             _page: function (diff, $event) {
                 this.page += diff;
                 var that = this;
                 $.get("/api/ranklist?page=" + this.page + "&search=" + this.search + "&time_stamp=" + this.time_stamp, function (data) {
-                    that.data = data;
+                    that.ranklistData = data;
                 })
             }
         },

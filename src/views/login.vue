@@ -71,6 +71,8 @@
                         if(response.data.status === "OK") {
                             that.$root.$store.commit("loginMutate", {login: true});
                             sessionStorage.isLogined = "true";
+                            that.$socket.disconnect();
+                            setTimeout(() => that.$socket.connect(), 700);
                             if(that.$route.query.redirect) {
                                 that.$router.push({path: that.$route.query.redirect});
                                 that.$store.dispatch("NavStatus");

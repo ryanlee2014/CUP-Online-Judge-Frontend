@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Home from './views/Home.vue'
 import store from './store'
-
+import adminAuth from './lib/router'
 Vue.use(Router)
 
 const router = new Router({
@@ -61,6 +61,20 @@ const router = new Router({
       path: '/faq',
       name: 'faq',
       component: () => import('./views/faq.vue')
+    },
+    {
+      path: '/online',
+      name: 'online',
+      component: () => import('./views/online.vue'),
+      beforeEnter: adminAuth.adminAuth
+    },
+    {
+      path: '/usercode/:from/:solution_id',
+      name: 'usercode',
+      component: () => import('./views/usercode.vue'),
+      meta: {
+        auth: true
+      }
     }
   ]
 });

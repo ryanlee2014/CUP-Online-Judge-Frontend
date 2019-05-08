@@ -4,7 +4,7 @@
             <h2 class="ui dividing header">
                 Rank List
             </h2>
-            <RankList :data="ranklist"></RankList>
+            <RankList :rank="ranklist"></RankList>
         </div>
     </div>
 </template>
@@ -27,10 +27,8 @@
             }
         },
         mounted: function () {
-            const that = this;
-            $.get("/api/ranklist", function (data) {
-                that.ranklist = data;
-            })
+            this.axios.get(`/api/ranklist/${this.$route.query.page ? `?page=${this.$route.query.page}` : ''}`)
+                .then((response) => this.ranklist = response.data);
         }
     }
 </script>

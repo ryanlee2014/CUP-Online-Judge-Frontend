@@ -777,7 +777,7 @@
             },
             list_self_only: function () {
                 var that = this;
-                var self_user_id = Cookies.get("user_id");
+                var self_user_id = this.$store.getters.user_id;
                 if (this.user_id == null || this.user_id != self_user_id) {
                     this.user_id = self_user_id;
                 } else {
@@ -806,7 +806,7 @@
                 })
 
             },
-            submit: function (data) {
+            Submit: function (data) {
                 if (!this.auto_refresh) {
                     return;
                 }
@@ -837,7 +837,7 @@
                     this.problem_list.unshift(obj);
                 }
             },
-            update: function (data) {
+            Update: function (data) {
                 if (!this.auto_refresh) {
                     return;
                 }
@@ -914,6 +914,16 @@
                 draw(data);
                 drawDynamicInteractiveLineChart();
             });
+        },
+        sockets: {
+            submit: function (data) {
+                console.log("get submit", data);
+                this.Submit(data);
+            },
+            result: function (data) {
+                console.log("get result", data);
+                this.Update(data);
+            }
         }
     }
 </script>

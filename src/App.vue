@@ -21,6 +21,11 @@
         mounted() {
             this.$store.dispatch("NavStatus");
         },
+        watch: {
+            $route(to, from) {
+                console.log(to);
+            }
+        },
         computed: mapGetters(["logined", "avatar", "admin", "user_id", "nick"])
     }
 </script>

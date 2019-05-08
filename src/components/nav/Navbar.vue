@@ -1,11 +1,11 @@
 <template>
     <div>
         <div class="following bar topmenu" style="z-index: 900;">
-            <Large :nick="nick" :logined="logined"></Large>
+            <Large :connected="socketConnected" :judger="judger" :logined="logined" :nick="nick" :user="user"></Large>
             <Small></Small>
             <Nano></Nano>
         </div>
-        <ProfileCard :user_id="user_id" :nick="nick" :admin="admin" :avatar="avatar"></ProfileCard>
+        <ProfileCard :admin="admin" :avatar="avatar" :nick="nick" :user_id="user_id"></ProfileCard>
         <div class="ui vertical center aligned segment hidemenu" style="border-bottom:0px;display:none">
             <div class="ui container">
                 <div class="ui inverted borderless large pointing menu" style="opacity:0">
@@ -21,8 +21,11 @@
     import Small from "./size/Small";
     import Nano from "./size/nano";
     import ProfileCard from "./components/ProfileCard";
+    import init from '../../mixin/init'
+    const $ = require("jquery");
     export default {
         name: "Navbar",
+        mixins: [init],
         components: {
             Large,
             Small,
@@ -52,11 +55,51 @@
             }
         },
         data: function () {
-            return {}
+            return {
+                user: 0,
+                judger: 0,
+                socketConnected: false
+            }
         },
         updated() {
         },
         mounted() {
+            const auth_msg={
+                url: this.$route.fullPath,
+                version:window.navigator.appVersion,
+                platform:window.navigator.platform,
+                browser_core:window.navigator.product,
+                useragent:window.navigator.userAgent,
+                screen:{
+                    width:screen.availWidth,
+                    height:screen.availHeight
+                }
+            };
+            this.sockets.subscribe("user", (data) => {
+                this.socketConnected = true;
+                this.user = parseInt(data.user.user_cnt);
+                this.judger = parseInt(data.judger ? data.judger.length : 0);
+                this.$store.commit("setOnlineUser", {onlineUser: data.user.user});
+            });
+            this.sockets.subscribe("connect", () => {
+                this.socketConnected = true;
+                this.$socket.emit("auth", auth_msg);
+            });
+            this.sockets.subscribe("judgerChange", (data) => {
+                this.judger = data.length;
+            });
+            this.sockets.subscribe("disconnect", () => {
+                this.socketConnected = false;
+            });
+            this.sockets.subscribe("msg", (data) => {
+                setTimeout(() => {
+                    $(".item.online_num").attr("data-html", "<div class='header'>From:" + data['user_id'] + "<br>" + data['nick'] + "</div><div class='content'>" + data['content'] + "</div>")
+                        .popup("show").popup("set position", "bottom center");
+                }, 500);
+            });
+            $("body").on('click', function () {
+                $(".msg.header.item").popup("hide").removeAttr("data-html");
+            })
         }
     }
 </script>
