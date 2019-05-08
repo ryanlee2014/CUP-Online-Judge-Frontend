@@ -249,7 +249,7 @@ export default {
             Samples.utils.srand(Date.now());
 
         }(window));
-
+        // TODO: modify notie
         if (navigator.userAgent.indexOf("MSIE") !== -1) {
             location.href = "notie.php";
         }
