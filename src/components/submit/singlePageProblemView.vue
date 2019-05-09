@@ -102,7 +102,7 @@
 </template>
 
 <script>
-    const markdownIt = require("../../lib/markdownIt/markdownIt").default;
+    import markdownIt from '../../lib/markdownIt/markdownIt'
     export default {
         name: "singlePageProblemView",
         props: {

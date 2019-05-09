@@ -9,10 +9,12 @@
     "ui": "vue ui"
   },
   "dependencies": {
-    "@amcharts/amcharts4": "^4.4.2",
+    "@amcharts/amcharts4": "^4.4.4",
     "@antv/data-set": "^0.10.2",
     "@antv/g2": "^3.5.3",
+    "@ryanlee2014/markdown-it": "^1.0.2",
     "@ryanlee2014/markdown-it-katex": "^1.0.4",
+    "@ryanlee2014/mavon-editor": "^1.0.1",
     "ace-builds": "^1.4.4",
     "animejs": "^3.0.1",
     "axios": "^0.18.0",

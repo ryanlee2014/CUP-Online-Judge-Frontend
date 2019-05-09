@@ -58,5 +58,4 @@
     @import "./static/css/github-markdown.css";
     @import "./static/css/github.min.css";
     @import "./static/css/katex.min.css";
-
 </style>

@@ -30,6 +30,11 @@ module.exports = {
                 target: 'https://www.cupacm.com',
                 secure: false,
                 changeOrigin: true
+            },
+            '/assets': {
+                target: 'https://www.cupacm.com',
+                secure: false,
+                changeOrigin: true
             }
         }
 

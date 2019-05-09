@@ -6,6 +6,8 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import VueSocketIO from 'vue-socket.io'
+import mavonEditor from '@ryanlee2014/mavon-editor'
+import '@ryanlee2014/mavon-editor/dist/css/index.css';
 Vue.config.productionTip = false;
 Vue.use(new VueSocketIO({
     debug: process.env.NODE_ENV === "development",
@@ -14,6 +16,7 @@ Vue.use(new VueSocketIO({
         store
     }
 }));
+Vue.use(mavonEditor);
 const $ = require("jquery");
 
 new Vue({

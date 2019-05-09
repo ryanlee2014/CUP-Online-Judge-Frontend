@@ -51,10 +51,10 @@
         computed: {
             img_url: function() {
                 if(this.avatar && this.user_id.length > 0) {
-                    return "../avatar/" + this.user_id + ".jpg";
+                    return "/avatar/" + this.user_id + ".jpg";
                 }
                 else {
-                    return "../assets/images/wireframe/white-image.png";
+                    return "/assets/images/wireframe/white-image.png";
                 }
             }
         },

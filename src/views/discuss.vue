@@ -37,7 +37,11 @@
             <tbody>
             <tr :key="key" v-for="(row,key) in table">
                 <td>{{row.article_id}}</td>
-                <td><a :href="'discusscontext.php?id='+row.article_id" target='_blank'>{{row.title}}</a></td>
+                <td>
+                    <router-link :to="`/discuss/thread/${row.article_id}`">
+                        {{row.title}}
+                    </router-link>
+                </td>
                 <td><a :href="'userinfo.php?user='+row.user_id" target='_blank'>{{row.user_id}}</a></td>
                 <td>{{dayjs(row.create_time).format("YYYY-MM-DD HH:mm:ss")}}</td>
                 <td>{{dayjs(row.edit_time).format("YYYY-MM-DD HH:mm:ss")}}</td>

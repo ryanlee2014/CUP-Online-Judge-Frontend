@@ -181,7 +181,7 @@
 </template>
 
 <script>
-    const markdownIt = require("../../lib/markdownIt/markdownIt").default;
+    import markdownIt from '../../lib/markdownIt/markdownIt'
     const $ = require("jquery");
     window.$ = window.jQuery = $;
     require("../../static/js/semantic.min");

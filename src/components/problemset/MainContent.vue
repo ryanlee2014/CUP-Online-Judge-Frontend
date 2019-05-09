@@ -76,7 +76,7 @@
 
 <script>
     // eslint-disable-next-line no-unused-vars
-    const markdownIt = require("../../lib/markdownIt/markdownIt").default;
+    import markdownIt from '../../lib/markdownIt/markdownIt'
     const lodash = require("lodash");
     export default {
         name: "mainContent",
