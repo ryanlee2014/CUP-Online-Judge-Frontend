@@ -42,24 +42,24 @@
                     <div class="three wide column">
                         <div class="row half_padding">
                             <div class="sixteen wide column">
-                                <div class="ui toggle checkbox" id="show_tag">
-                                    <input @click="check" type="checkbox">
+                                <div class="ui toggle checkbox" id="show_tag" @click="check">
+                                    <input type="checkbox">
                                     <label>显示标签</label>
                                 </div>
                             </div>
                         </div>
                         <div class="row half_padding">
                             <div class="sixteen wide column">
-                                <div class="ui toggle checkbox" id="hide_currect" >
-                                    <input @click="hide" type="checkbox">
+                                <div class="ui toggle checkbox" id="hide_currect" @click="hide">
+                                    <input type="checkbox">
                                     <label>隐藏通过题目</label>
                                 </div>
                             </div>
                         </div>
                         <div class="row half_padding">
                             <div class="sixteen wide column">
-                                <div class="ui toggle checkbox" id="show_cloud">
-                                    <input @click="cloud" type="checkbox">
+                                <div class="ui toggle checkbox" id="show_cloud" @click="cloud">
+                                    <input type="checkbox">
                                     <label>显示标签云</label>
                                 </div>
                             </div>

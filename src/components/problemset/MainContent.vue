@@ -1,25 +1,25 @@
 <template>
-    <table v-if="!dim" v-tableUpdated id='problemset' width='90%'
-           class='ui unstackable very basic center aligned large table'>
+    <table class='ui unstackable very basic center aligned large table' id='problemset' v-if="!dim" v-tableUpdated
+           width='90%'>
         <thead>
         <tr class='toprow'>
             <!--<th width='2%'></th>-->
-            <th width='10%' @click="sort('problem_id',$event)">
-                <a><i v-show="order_target == 'problem_id'"
-                      :class="'sort numeric icon '+(order?'down':'up')"></i>
-                    <i v-show="order_target != 'problem_id'"
-                       :class="'sort numeric icon '+(order?'down':'up')" style="opacity: 0"></i>
+            <th @click="sort('problem_id',$event)" width='10%'>
+                <a><i :class="'sort numeric icon '+(order?'down':'up')"
+                      v-show="order_target == 'problem_id'"></i>
+                    <i :class="'sort numeric icon '+(order?'down':'up')"
+                       style="opacity: 0" v-show="order_target != 'problem_id'"></i>
                     编号
                 </a></th>
-            <th width='56%' class="left aligned">标题</th>
+            <th class="left aligned" width='56%'>标题</th>
             <th width='15%'>
-                <a @click="sort('accepted',$event,1)"><i v-show="order_target == 'accepted'"
-                                                         :class="'sort numeric icon '+(order?'down':'up')"></i>正确
-                </a> / <a @click="sort('submit',$event,1)"><i v-show="order_target == 'submit'"
-                                                              :class="'sort numeric icon '+(order?'down':'up')"></i>提交
+                <a @click="sort('accepted',$event,1)"><i :class="'sort numeric icon '+(order?'down':'up')"
+                                                         v-show="order_target == 'accepted'"></i>正确
+                </a> / <a @click="sort('submit',$event,1)"><i :class="'sort numeric icon '+(order?'down':'up')"
+                                                              v-show="order_target == 'submit'"></i>提交
             </a></th>
             <th style="cursor:hand" width='10%'><a @click="sort('present',$event,1)"><i
-                    v-show="order_target == 'present'" :class="'sort numeric icon '+(order?'down':'up')"></i>正确率</a>
+                    :class="'sort numeric icon '+(order?'down':'up')" v-show="order_target == 'present'"></i>正确率</a>
             </th>
         </tr>
         </thead>
@@ -42,14 +42,13 @@
             </td>
             <td>
                 <div class="left aligned">
-                    <a :href="'newsubmitpage.php?id='+row.problem_id+'&js'" target="_blank"
-                       v-html="markdownIt.renderRaw(row.title)" :style="show_tag ? 'vertical-align:sub':''">
-                    </a>
+                    <router-link :style="show_tag ? 'vertical-align:sub':''" :to="`/problem/submit/${row.problem_id}`"
+                                 v-html="markdownIt.renderRaw(row.title)"></router-link>
                     <sub v-if="row.new">New</sub>
                     <div class="show_tag_controled" style="float:right;">
                     <span :key="_tag" class="ui header" v-for="_tag in row.label">
-                        <a @click="tag(_tag,$event)" v-show="show_tag"
-                           :class="(typeof result.color[_tag] !== 'undefined'?result.color[_tag]:(result.color[_tag] = lodash.values(result.color)[Math.floor(Math.random() * lodash.values(result.color).length)],result.color[_tag]))+' ui label'">
+                        <a :class="(typeof result.color[_tag] !== 'undefined'?result.color[_tag]:(result.color[_tag] = lodash.values(result.color)[Math.floor(Math.random() * lodash.values(result.color).length)],result.color[_tag]))+' ui label'" @click="tag(_tag,$event)"
+                           v-show="show_tag">
                             {{_tag}}
                         </a>
                     </span>

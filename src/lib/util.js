@@ -108,7 +108,7 @@ export default {
         } else
             tmp.place = "未知";
     },
-    init: function(){
+    init: function(homepage, finished){
         jQuery.event.special.touchstart = {
             setup: function( _, ns, handle ){
                 if ( ns.includes("noPreventDefault") ) {
@@ -264,13 +264,13 @@ export default {
             if ($('.ui.menu .ui.dropdown').html())
                 $('.ui.menu .ui.dropdown').dropdown({
                     on: 'hover',
-                    onShow:function(e){
+                    onShow:function(){
                         if($(".following.bar").length > 1)
                             $(".topmenu").css({
                                 zIndex:999
                             })
                     },
-                    onHide:function(e){
+                    onHide:function(){
                         if($(".following.bar").length > 1)
                             $(".topmenu").css({
                                 zIndex:99

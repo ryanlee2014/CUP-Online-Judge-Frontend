@@ -75,6 +75,14 @@ const router = new Router({
       meta: {
         auth: true
       }
+    },
+    {
+      path: '/problem/submit/:problem_id',
+      name: 'normal problem submit',
+      component: () => import('./views/problem/submit.vue'),
+      meta: {
+        auth: true
+      }
     }
   ]
 });

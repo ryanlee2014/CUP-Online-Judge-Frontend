@@ -6,13 +6,6 @@
             <Nano></Nano>
         </div>
         <ProfileCard :admin="admin" :avatar="avatar" :nick="nick" :user_id="user_id"></ProfileCard>
-        <div class="ui vertical center aligned segment hidemenu" style="border-bottom:0px;display:none">
-            <div class="ui container">
-                <div class="ui inverted borderless large pointing menu" style="opacity:0">
-
-                </div>
-            </div>
-        </div>
     </div>
 </template>
 
@@ -50,6 +43,10 @@
                 default: false
             },
             logined: {
+                type: Boolean,
+                default: false
+            },
+            homepage: {
                 type: Boolean,
                 default: false
             }
