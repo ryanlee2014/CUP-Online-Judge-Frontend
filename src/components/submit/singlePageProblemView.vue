@@ -24,8 +24,9 @@
                 <div class="row no padding">
                     <div class="column">
                         <div class='ui buttons'>
-                            <a :href="'problemstatus.php?id='+original_id"
-                               class='ui button orange'>历史</a>
+                            <router-link :to="`/status/problem/${original_id}`" class="ui button orange">
+                                历史
+                            </router-link>
                             <a @click.prevent="switch_screen($event)"
                             class='ui button blue'>切换双屏</a>
                             <a v-if="normal_problem"
@@ -58,7 +59,9 @@
             </div>
             <br>
             <div class='ui buttons'>
-                <a :href="'problemstatus.php?id='+original_id" class='ui button orange'>历史</a>
+                <router-link :to="`/status/problem/${original_id}`" class="ui button orange">
+                    历史
+                </router-link>
                 <a @click.prevent="switch_screen($event)"
                 class='ui button blue'>切换双屏</a>
                 <a v-if="normal_problem"
@@ -206,5 +209,40 @@
 </script>
 
 <style scoped>
+    script {
+        display: none;
+    }
 
+    .not-compile {
+        display: none;
+    }
+
+    .sample_input {
+        color: #ad1457;
+    }
+
+    .sample_output {
+        color: #ad1457;
+    }
+
+    .following.bar.title.light.fixed {
+        top: 40px;
+        transition: top 0.4s;
+    }
+
+    .following.bar.title {
+        top: 60px;
+        transition: top 0.4s;
+    }
+
+    .row.no.padding {
+        padding-top: 0em;
+        padding-bottom: 0em;
+    }
+
+    .main.submit.layout img {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
 </style>

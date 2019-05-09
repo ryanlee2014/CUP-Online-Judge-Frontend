@@ -29,12 +29,15 @@
                         <img class="ui avatar image" src="/image/default-user.png" v-else style="object-fit: cover;">
                     </div>
                     <div class="twelve wide column">
-                        <a :href="'userinfo.php?user='+row.user_id">{{row.user_id}}<br>{{row.nick}}</a>
+                        <router-link :to="`/user/${row.user_id}`">
+                            {{row.user_id}}<br>{{row.nick}}
+                        </router-link>
                     </div>
                 </div>
             </td>
             <td>
-                <div class=center><a :href="'newsubmitpage.php?id='+Math.abs(row.problem_id)">{{Math.abs(row.problem_id)}}</a>
+                <div class=center>
+                    <router-link :to="`/problem/submit/${Math.abs(row.problem_id)}`">{{Math.abs(row.problem_id)}}</router-link>
                 </div>
             </td>
             <td><a :href="(row.result == 11?'ce':'re')+'info.php?sid='+row.solution_id"

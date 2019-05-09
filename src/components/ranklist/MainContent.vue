@@ -69,8 +69,11 @@
                 <tbody>
                 <tr :key="key" v-for="(row,key,index) in ranklist">
                     <td class="center head">{{page*50+key+1}}</td>
-                    <td class="center head"><a :href="'/userinfo.php?user='+row.user_id"
-                                               target="_blank">{{row.user_id}}</a></td>
+                    <td class="center head">
+                        <router-link :to="`/user/${row.user_id}`">
+                            {{row.user_id}}
+                        </router-link>
+                    </td>
                     <td>
                         <img class="ui avatar image" :src="'/avatar/'+row.user_id+'.jpg'" v-if="row.avatar"
                              style="object-fit: cover;">

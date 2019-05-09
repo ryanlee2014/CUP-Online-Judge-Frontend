@@ -39,6 +39,14 @@ const router = new Router({
             component: () => import('./views/status.vue')
         },
         {
+            path: '/status/problem/:id',
+            name: 'problem status',
+            meta: {
+                auth: true
+            },
+            component: () => import('./views/status/problem.vue')
+        },
+        {
             path: '/ranklist',
             name: 'ranklist',
             meta: {
@@ -93,6 +101,19 @@ const router = new Router({
             meta: {
                 auth: true
             }
+        },
+        {
+            path: '/user/:user_id',
+            name: 'user information',
+            component: () => import('./views/user.vue'),
+            meta: {
+                auth: true
+            }
+        },
+        {
+            path: '/other_contest_schedure',
+            name: 'other oj contest schedure',
+            component: () => import('./views/other_contest_schedure.vue')
         },
         {
             path: "*",
