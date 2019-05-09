@@ -1,7 +1,10 @@
 <template>
     <div class="ui container pusher">
         <div class="padding">
-            <div class="ui grid">
+            <h2 class="ui dividing header" v-show="!finished">
+                加载中,请稍后
+            </h2>
+            <div class="ui grid" v-show="finished">
                 <div class="row">
                     <div class="five wide column">
                         <div class="ui card" id="user_card" style="width: 100%; ">
@@ -453,7 +456,7 @@
     import mixins from '../mixin/init'
     import * as d3 from 'd3';
     import markdownIt from '../lib/markdownIt/markdownIt'
-    import calendarHeatmap from '../lib/calendar-heapmap'
+    import calendarHeatmap from '../lib/calendar-heapmap';
     const dayjs = require("dayjs");
     const $ = require("jquery");
     const _ = require("lodash");
@@ -511,6 +514,7 @@
                 same_problem_time: 0,
                 same_aver_length: 0,
                 total_same: 0,
+                finished: false,
                 user_id: this.$route.params.user_id
             }
         },
@@ -681,6 +685,7 @@
                 })
                     .then(data => {
                         Object.assign(this, data);
+                        this.finished = true;
                     })
                     .then(() => {
                         $("#preload").hide();
@@ -1005,34 +1010,9 @@
 </script>
 
 <style scoped>
+    @import "../static/css/calendarHeatmap.css";
+
     text{
         font-size:10px;
     }
-    text.month-name,
-    text.calendar-heatmap-legend-text,
-    text.day-initial {
-        font-size: 10px;
-        font-family: Helvetica, arial, 'Open Sans', sans-serif;
-    }
-    rect.day-cell:hover {
-        stroke: #555555;
-        stroke-width: 1px;
-    }
-    .day-cell-tooltip {
-        position: absolute;
-        z-index: 9999;
-        padding: 5px 9px;
-        color: #bbbbbb;
-        font-size: 12px;
-        background: rgba(0, 0, 0, 0.85);
-        border-radius: 3px;
-        text-align: center;
-    }
-    .day-cell-tooltip > span {
-        font-family: Helvetica, arial, 'Open Sans', sans-serif
-    }
-    .calendar-heatmap {
-        box-sizing: initial;
-    }
-
 </style>
