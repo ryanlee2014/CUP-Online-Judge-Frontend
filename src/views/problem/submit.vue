@@ -33,11 +33,12 @@
     import singlePageProblemView from '../../components/submit/singlePageProblemView'
     import markdownIt from '../../lib/markdownIt/markdownIt'
     import Fingerprint2 from 'fingerprintjs2'
-
+    import mixins from '../../mixin/init'
     const _ = require("lodash");
     const $ = require("jquery");
     export default {
         name: "submitter",
+        mixins: [mixins],
         components: {
             singlePageProblemView
         },

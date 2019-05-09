@@ -49,14 +49,14 @@
 </template>
 
 <script>
-    import util from "../lib/util"
     const $ = require("jquery");
     window.$ = window.jQuery = $;
     const dayjs = require("dayjs");
     require("../static/js/semantic.min");
-    util.init();
+    import mixins from '../mixin/init'
     export default {
         name: "discuss",
+        mixins: [mixins],
         data:function(){
             return {
                 page:parseInt(this.$route.hash.page)||0,

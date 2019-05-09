@@ -49,11 +49,12 @@
 </template>
 
 <script>
+    import mixins from '../mixin/init'
     const $ = require("jquery");
     window.$ = window.jQuery = $;
-
     export default {
         name: "login",
+        mixins: [mixins],
         data: function() {
             return {
                 user_id: "",

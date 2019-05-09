@@ -173,14 +173,13 @@
     import * as am4core from "@amcharts/amcharts4/core";
     import * as am4charts from "@amcharts/amcharts4/charts";
     import am4themes_animated from "@amcharts/amcharts4/themes/animated";
-    import util from "../lib/util"
+    import mixins from '../mixin/init'
     const $ = require("jquery"), jQuery = $;
     const _ = require("lodash");
     const Chart = require("chart.js");
     const Cookies = require("js-cookie");
     window.$ = window.jQuery = $;
     require("../static/js/semantic.min");
-    util.init();
     function draw(_result) {
         var result = _result.result;
         var _label = _result.label;
@@ -632,6 +631,7 @@
         components: {
             statusTable
         },
+        mixins: [mixins],
         data: function () {
             return {
                 problem_list: [],

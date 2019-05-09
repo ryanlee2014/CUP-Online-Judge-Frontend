@@ -11,13 +11,13 @@
 
 <script>
     import RankList from "../components/ranklist/MainContent";
-    import util from "../lib/util"
+    import mixins from '../mixin/init'
     const $ = require("jquery");
     window.$ = window.jQuery = $;
     require("../static/js/semantic.min");
-    util.init();
     export default {
         name: "ranklist",
+        mixins: [mixins],
         components: {
             RankList
         },

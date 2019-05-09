@@ -24,10 +24,12 @@
 </template>
 
 <script>
+    import mixins from '../mixin/init'
     import addressList from '../components/online/addressList';
     import userList from '../components/online/userList';
     export default {
         name: "online",
+        mixins: [mixins],
         data: () => {
             return {
                 refresh: localStorage.getItem("refresh") === "true"

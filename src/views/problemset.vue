@@ -118,7 +118,7 @@
     import Pagination from '@/components/problemset/pagination.vue'
     import selectedTag from '@/components/problemset/selected-tag.vue'
     import mainContent from '@/components/problemset/MainContent.vue'
-    import util from "../lib/util"
+    import mixins from '../mixin/init'
     // eslint-disable-next-line no-unused-vars
     const $ = require("jquery"), jQuery = $;
     window.jQuery = $;
@@ -126,7 +126,6 @@
     import DataSet from '@antv/data-set';
     const _ = require("lodash");
     require("../static/js/semantic.min");
-    util.init();
     $('#show_tag')
         .checkbox()
         .first().checkbox({
@@ -181,6 +180,7 @@
     var query_string = parseQueryString(window.location.hash.substring(1));
     export default {
         name: "problemset",
+        mixins: [mixins],
         components: {
             mainContent,
             Pagination,

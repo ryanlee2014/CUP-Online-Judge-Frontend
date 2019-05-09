@@ -7,6 +7,7 @@
 
 <script>
     import markdownIt from '../lib/markdownIt/markdownIt'
+    import mixins from '../mixin/init'
     const help_content = `<div class="ui warning message">
 <div class="header">提示</div>
 若您对平台使用方法、OJ模式相关问题不够了解，建议使用Google、百度等搜索引擎搜索后，再阅读本<b>FAQ</b>中的内容(如<a href="https://zh.wikipedia.org/wiki/%E5%9C%A8%E7%BA%BF%E5%88%A4%E9%A2%98%E7%B3%BB%E7%BB%9F" target="_blank">Wikipedia-在线评测系统</a>)。
@@ -189,6 +190,7 @@ print(sum(map(int,input().split()))
 `;
     export default {
         name: "faq",
+        mixins: [mixins],
         data: function() {
             return {
                 html_content: markdownIt.render(help_content)
