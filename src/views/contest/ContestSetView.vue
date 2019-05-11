@@ -122,16 +122,26 @@
             }
         },
         mounted() {
+            function sleep(ms) {
+                return new Promise(resolve => setTimeout(resolve, ms));
+            }
             this.axios.get("/api/contest/list", this.$route.query)
                 .then(({data}) => {
-                    this.contest_list = data.data;
-                    this.$nextTick(() => {
-                        this.bindPopup();
-                        $('.multiple.search')
-                            .dropdown({
-                                fullTextSearch: true
-                            })
-                    });
+                    (async () => {
+                        while(data.data.length > 0) {
+                            for(let i = 0; i < 25 && data.data.length > 0; ++i) {
+                                this.contest_list.push(data.data.shift());
+                            }
+                            await sleep(10);
+                            this.$nextTick(() => {
+                                this.bindPopup();
+                                $('.multiple.search')
+                                    .dropdown({
+                                        fullTextSearch: true
+                                    })
+                            });
+                        }
+                    })();
                 });
             this.init();
         },

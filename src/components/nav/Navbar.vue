@@ -15,6 +15,7 @@
     import Nano from "./size/nano";
     import ProfileCard from "./components/ProfileCard";
     import init from '../../mixin/init'
+
     const $ = require("jquery");
     export default {
         name: "Navbar",
@@ -53,24 +54,30 @@
         },
         data: function () {
             return {
-                user: 0,
+                user: 1,
                 judger: 0,
-                socketConnected: false
+                socketConnected: this.$socket.connected
             }
         },
-        updated() {
-        },
         mounted() {
-            const auth_msg={
+            const auth_msg = {
                 url: this.$route.fullPath,
-                version:window.navigator.appVersion,
-                platform:window.navigator.platform,
-                browser_core:window.navigator.product,
-                useragent:window.navigator.userAgent,
-                screen:{
-                    width:screen.availWidth,
-                    height:screen.availHeight
+                version: window.navigator.appVersion,
+                platform: window.navigator.platform,
+                browser_core: window.navigator.product,
+                useragent: window.navigator.userAgent,
+                screen: {
+                    width: screen.availWidth,
+                    height: screen.availHeight
                 }
+            };
+            const _subscribe = this.sockets.subscribe;
+            this.sockets.subscribe = (events, callback) => {
+                const that = this;
+                _subscribe.call(this.sockets, events, function () {
+                    that.socketConnected = true;
+                    callback.apply(that, arguments);
+                });
             };
             this.sockets.subscribe("user", (data) => {
                 this.socketConnected = true;
