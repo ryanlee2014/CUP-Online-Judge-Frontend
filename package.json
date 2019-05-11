@@ -65,7 +65,7 @@
     },
     "rules": {
       "vue/no-unused-vars": "off",
-      "vue/no-unused-components": "warning"
+      "vue/no-unused-components": "1"
     }
   },
   "postcss": {

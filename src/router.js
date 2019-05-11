@@ -116,6 +116,22 @@ const router = new Router({
             component: () => import('./views/other_contest_schedure.vue')
         },
         {
+            path: '/contest',
+            name: 'contest set',
+            component: () => import('./views/contest/ContestSetView.vue'),
+            meta: {
+                auth: true
+            }
+        },
+        {
+            path: '/tutorial/:problem_id',
+            name: 'problem tutorial/solution manual',
+            component: () => import('./views/tutorial.vue'),
+            meta: {
+                auth: true
+            }
+        },
+        {
             path: "*",
             redirect: "/"
         }

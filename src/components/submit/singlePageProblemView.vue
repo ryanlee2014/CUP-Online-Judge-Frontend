@@ -29,11 +29,9 @@
                             </router-link>
                             <a @click.prevent="switch_screen($event)"
                             class='ui button blue'>切换双屏</a>
-                            <a v-if="normal_problem"
-                               :href="'tutorial.php?id='+original_id" class="ui button teal">
+                            <router-link class="ui button teal" :to="`/tutorial/${original_id}`" v-if="normal_problem">
                                 查看题解
-                            </a>
-
+                            </router-link>
                             <a class='ui button violet' v-if="iseditor||isadmin"
                                :href="'/problem_edit.php'+location.search" target="_blank">Edit</a>
                             <a class='ui button purple' v-if="isadmin"
@@ -64,10 +62,9 @@
                 </router-link>
                 <a @click.prevent="switch_screen($event)"
                 class='ui button blue'>切换双屏</a>
-                <a v-if="normal_problem"
-                   :href="'tutorial.php?id='+original_id" class="ui button teal">
+                <router-link class="ui button teal" :to="`/tutorial/${original_id}`" v-if="normal_problem">
                     查看题解
-                </a>
+                </router-link>
 
                 <a class='ui button violet' v-if="iseditor||isadmin"
                    :href="'/problem_edit.php?id='+original_id" target="_blank">Edit</a>

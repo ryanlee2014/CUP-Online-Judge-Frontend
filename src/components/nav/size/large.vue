@@ -8,7 +8,7 @@
             </router-link>
             <router-link class="item" to="/ranklist"><i class="trophy icon"></i>排名</router-link>
             <router-link class="item" to="/discuss"><i class="comment alternate icon"></i>讨论</router-link>
-            <a class="item" href="/contest.php"><i class="puzzle icon"></i>竞赛&amp;作业</a>
+            <router-link class="item" to="/contest"><i class="puzzle icon"></i>竞赛&amp;作业</router-link>
             <div class="ui dropdown item" tabindex="0">
                 <div class="text"><i class="options icon"></i>功能</div>
                 <i class="dropdown icon"></i>
