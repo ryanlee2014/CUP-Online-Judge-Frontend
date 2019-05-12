@@ -2,9 +2,9 @@
     <div>
         <div>
             <div class="ui inverted vertical masthead center aligned segment gr5" id="background">
-                <video autoplay id="myVideo" muted style="display:none">
+                <!--<video autoplay id="myVideo" muted style="display:none">
                     <source src="/video/icpc.mp4" type="video/mp4">
-                </video>
+                </video>-->
                 <div class="unvisible" id="main_container">
                     <div class="ui container">
                         <div class="ui large secondary inverted pointing menu">
@@ -187,28 +187,13 @@
     export default {
         name: 'home',
         mounted() {
+            util.init(true, true);
             $(document).ready(function () {
                 $('.image').visibility({
                     type: 'image',
                     transition: 'vertical flip in',
                     duration: 500
                 });
-
-                /*
-                window.backpic = setInterval(function () {
-                        $("#background").addClass('zoomed');
-
-                    setTimeout(function () {
-                            $("#background")
-                                .removeClass(window.picid)
-                                .addClass((window.picid = 'bg' + getRandomIntInclusive(14, 18)))
-                                .removeClass('zoomed')
-                            ;
-                        }, 1900);
-
-                    }
-                    , 15000)*/
-
             });
             $('.club').attr("data-title", "点击访问GitHub")
                 .popup({
@@ -257,11 +242,9 @@
 //document.getElementById('myVideo').addEventListener('ended',false);
 
             (function () {
-
                 window.picid = 5;
                 $(".ui.borderless.network.secondary.menu").addClass("inverted");
-                document.getElementById('myVideo').style.opacity = "0.4";
-                $.get("../api/login/", function (data) {
+                $.get("/api/login/", function (data) {
                     var logined = data.logined;
                     setTimeout(function () {
                         $("#main_container").removeClass("unvisible");
@@ -317,8 +300,7 @@
                             });
                         }
                     }, 300);
-                })
-                util.init(true, true);
+                });
             })();
         }
     }
