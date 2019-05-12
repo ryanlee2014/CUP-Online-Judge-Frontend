@@ -23,7 +23,7 @@
     "clipboard": "^2.0.4",
     "core-js": "^2.6.5",
     "d3": "^5.9.2",
-    "dayjs": "^1.8.13",
+    "dayjs": "^1.8.14",
     "dragscroll": "0.0.8",
     "file-saver": "^2.0.1",
     "fingerprintjs2": "^2.0.6",
@@ -41,7 +41,7 @@
     "vue-axios": "^2.1.4",
     "vue-router": "^3.0.3",
     "vue-socket.io": "^3.0.7",
-    "vuex": "^3.0.1",
+    "vuex": "^3.1.1",
     "xlsx": "^0.14.3"
   },
   "devDependencies": {
