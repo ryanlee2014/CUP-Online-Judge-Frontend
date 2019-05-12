@@ -1,6 +1,6 @@
 <template>
     <div id="app">
-        <Navbar :homepage="homepage" :admin="admin" :avatar="avatar" :logined="logined" :nick="nick" :user_id="user_id"></Navbar>
+        <Navbar :homepage="homepage" :contest="contest" :admin="admin" :avatar="avatar" :logined="logined" :nick="nick" :user_id="user_id"></Navbar>
         <transition name="fade">
             <router-view/>
         </transition>
@@ -18,7 +18,8 @@
         components: {Navbar, Bottom},
         data: function () {
             return {
-                homepage: this.$route.path === "/"
+                homepage: this.$route.path === "/",
+                contest: this.$route.fullPath.includes("contest")
             }
         },
         mounted() {
@@ -27,6 +28,9 @@
         watch: {
             $route(to) {
                 this.homepage = to.path === "/";
+                const matchedPath = to.matched[0].path.substring(1);
+                this.contest = matchedPath !== "contest" && matchedPath.includes("contest");
+                this.$store.commit("setRouteInfo", {path: to.path, fullPath: to.fullPath});
                 this.$socket.emit("updateURL", {url: to.fullPath});
                 this.initForRouter();
             }

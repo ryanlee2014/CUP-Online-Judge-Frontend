@@ -5,7 +5,9 @@ const getters = {
     avatar: state => !!state.userInfo.userInfo.avatar,
     admin: state => !!state.userInfo.userInfo.admin,
     token: state => state.userInfo.token,
-    onlineUser: state => state.socket.onlineUser
+    onlineUser: state => state.socket.onlineUser,
+    path: state => state.routeInfo.path,
+    fullPath: state => state.routeInfo.fullPath
 };
 
 export default getters;

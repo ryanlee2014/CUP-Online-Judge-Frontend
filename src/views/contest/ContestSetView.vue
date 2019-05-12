@@ -76,7 +76,7 @@
                     </div>
                 </div>
                 <div class="two wide column">
-                    <a @click="run(1)" class="primary button ui">Go</a>
+                    <router-link class="primary button ui" :to="`/contest/rank/${select1}`">Go</router-link>
                 </div>
             </div>
             <h3 class="ui dividing header">用户提交信息统计</h3>
@@ -148,7 +148,6 @@
         methods: {
             init: function () {
                 const diff = new Date().getTime() - new Date().getTime();
-
                 function clock() {
                     let x, h, m, s, n, y, mon, d;
                     x = new Date(new Date().getTime() + diff);
@@ -162,7 +161,7 @@
                     n = y + "-" + mon + "-" + d + " " + (h >= 10 ? h : "0" + h) + ":" + (m >= 10 ? m : "0" + m) + ":" + (s >= 10 ? s : "0" + s);
                     $(".server_time").text(n)
                 }
-
+                clock();
                 setInterval(clock, 1000);
             },
             bindPopup: function () {
@@ -206,7 +205,6 @@
                 let sec = String(second % 60);
                 sec = fill_zero(sec);
                 return `${day}天${hour}小时${minute}分${sec}秒`;
-                ;
             },
             contestTimeFormat: function (row) {
                 const start_time = dayjs(row.start_time), end_time = dayjs(row.end_time), current_time = dayjs();

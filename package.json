@@ -24,6 +24,8 @@
     "core-js": "^2.6.5",
     "d3": "^5.9.2",
     "dayjs": "^1.8.13",
+    "dragscroll": "0.0.8",
+    "file-saver": "^2.0.1",
     "fingerprintjs2": "^2.0.6",
     "jquery": "^3.4.1",
     "js-cookie": "^2.2.0",
@@ -39,7 +41,8 @@
     "vue-axios": "^2.1.4",
     "vue-router": "^3.0.3",
     "vue-socket.io": "^3.0.7",
-    "vuex": "^3.0.1"
+    "vuex": "^3.0.1",
+    "xlsx": "^0.14.3"
   },
   "devDependencies": {
     "@cnamts/vue-cli-plugin-proxy": "^2.2.1",
@@ -65,7 +68,9 @@
     },
     "rules": {
       "vue/no-unused-vars": "off",
-      "vue/no-unused-components": "1"
+      "vue/no-unused-components": "1",
+      "no-console": "off",
+      "no-unused-vars": "off"
     }
   },
   "postcss": {

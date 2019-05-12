@@ -1,7 +1,8 @@
 <template>
     <div>
         <div class="following bar topmenu" style="z-index: 900;">
-            <Large :connected="socketConnected" :judger="judger" :logined="logined" :nick="nick" :user="user"></Large>
+            <Large :connected="socketConnected" :judger="judger" :logined="logined" :nick="nick" :user="user" v-if="!contest"></Large>
+            <LargeContest :connected="socketConnected" :judger="judger" :logined="logined" :nick="nick" :user="user" v-else></LargeContest>
             <Small></Small>
             <Nano></Nano>
         </div>
@@ -10,9 +11,10 @@
 </template>
 
 <script>
-    import Large from "./size/large";
-    import Small from "./size/Small";
-    import Nano from "./size/nano";
+    import Large from "./size/large/large";
+    import LargeContest from './size/large/ContestNav'
+    import Small from "./size/Small/Small";
+    import Nano from "./size/nano/nano";
     import ProfileCard from "./components/ProfileCard";
     import init from '../../mixin/init'
 
@@ -24,7 +26,8 @@
             Large,
             Small,
             Nano,
-            ProfileCard
+            ProfileCard,
+            LargeContest
         },
         props: {
             user_id: {
@@ -48,6 +51,10 @@
                 default: false
             },
             homepage: {
+                type: Boolean,
+                default: false
+            },
+            contest: {
                 type: Boolean,
                 default: false
             }

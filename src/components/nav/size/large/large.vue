@@ -26,29 +26,19 @@
             </div>
             <a class="item" href="/vjudgeindex.php"><i class="lab icon"></i>Virtual
                 Judge</a>
-            <div class="right menu" v-if="logined">
-                <router-link to="/online" class="item online_num" v-html="serverInfo"></router-link>
-                <div class="ui dropdown item detail" tabindex="0">
-                    <div class="text"><span class="profile_group">{{nick}}</span></div>
-                    <i class="dropdown icon"></i>
-                    <div class="menu"></div>
-                </div>
-            </div>
-            <div class="right menu" v-else>
-                <div class="item">
-                    <router-link class="ui button" to="/login">登录</router-link>
-                </div>
-                <div class="item">
-                    <router-link class="ui primary button" to="/register">注册</router-link>
-                </div>
-            </div>
+            <SocketMenu :nick="nick" :logined="logined" :user="user" :judger="judger" :connected="connected"
+            ></SocketMenu>
         </div>
     </div>
 </template>
 
 <script>
+    import SocketMenu from '../../components/SocketMenu'
     export default {
         name: "large",
+        components: {
+            SocketMenu
+        },
         props: {
             nick: {
                 type: String,
@@ -70,22 +60,6 @@
                 type: Boolean,
                 default: false
             }
-        },
-        data: function () {
-            return {}
-        },
-        computed: {
-            serverInfo: function () {
-                if(this.connected) {
-                    return "<i class='users icon'></i>" + this.user + "人" + "&nbsp;<i class='microchip icon'></i>" + this.judger;
-                }
-                else {
-                    return "与服务器连接丢失";
-                }
-            }
-        },
-        mounted() {
-
         }
     }
 </script>

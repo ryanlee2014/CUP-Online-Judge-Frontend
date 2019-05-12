@@ -132,6 +132,30 @@ const router = new Router({
             }
         },
         {
+            path: '/contest/:contest_id',
+            name: 'contest problem view',
+            component: () => import('./views/contest/ContestProblemView.vue'),
+            meta: {
+                auth: true
+            }
+        },
+        {
+            path: '/contest/status/:contest_id',
+            name: 'contest status view',
+            component: () => import('./views/status/contest.vue'),
+            meta: {
+                auth: true
+            }
+        },
+        {
+            path: '/contest/rank/:contest_id',
+            name: 'contest rank view',
+            component: () => import('./views/contest/ContestRank.vue'),
+            meta: {
+                auth: true
+            }
+        },
+        {
             path: "*",
             redirect: "/"
         }
