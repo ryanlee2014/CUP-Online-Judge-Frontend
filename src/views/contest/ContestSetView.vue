@@ -127,21 +127,7 @@
             }
             this.axios.get("/api/contest/list", this.$route.query)
                 .then(({data}) => {
-                    (async () => {
-                        while(data.data.length > 0) {
-                            for(let i = 0; i < 25 && data.data.length > 0; ++i) {
-                                this.contest_list.push(data.data.shift());
-                            }
-                            await sleep(10);
-                            this.$nextTick(() => {
-                                this.bindPopup();
-                                $('.multiple.search')
-                                    .dropdown({
-                                        fullTextSearch: true
-                                    })
-                            });
-                        }
-                    })();
+                    this.contest_list = data.data;
                 });
             this.init();
         },

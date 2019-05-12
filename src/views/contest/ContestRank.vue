@@ -41,11 +41,11 @@
                         </thead>
                         <tbody>
                         <tr :key="key" v-for="(row,key) in submitter">
-                            <td style="text-align:center;font-weight:bold">{{row.rank}}</td>
-                            <td style="text-align:center">
+                            <td style="text-align:center;font-weight:bold;position: sticky; left: 0">{{row.rank}}</td>
+                            <td class="ui white">
                                 <router-link :to="`/user/${row.user_id}`">{{row.user_id}}</router-link>
                             </td>
-                            <td style="text-align:center">
+                            <td class="ui white">
                                 <router-link :to="`/user/${row.user_id}`">{{convertHTML(row.nick)}}</router-link>
                             </td>
                             <td style="text-align:center" v-if="add_name">{{convertHTML(row.real_name)}}</td>
@@ -158,14 +158,20 @@
                     if (r == 1) {
                         cell.innerHTML = "Winner";
 //cell.style.cssText="background-color:gold;color:red";
-                        cell.className = "ui yellow";
+                        $(cell).addClass("ui yellow");
                     }
-                    if (r > 1 && r <= total * .10 + 1)
-                        cell.className = "ui yellow";
-                    if (r > total * .10 + 1 && r <= total * .30 + 1)
-                        cell.className = "ui grey";
-                    if (r > total * .30 + 1 && r <= total * .60 + 1)
-                        cell.className = "ui orange";
+                    else if (r > 1 && r <= total * .10 + 1) {
+                        $(cell).addClass("ui yellow");
+                    }
+                    else if (r > total * .10 + 1 && r <= total * .30 + 1) {
+                        $(cell).addClass("ui grey");
+                    }
+                    else if (r > total * .30 + 1 && r <= total * .60 + 1) {
+                        $(cell).addClass("ui orange");
+                    }
+                    else {
+                        $(cell).addClass("ui white");
+                    }
                     /*
                     if(r>total*.45+1&&ac>0)
                     cell.className="ui grey";
@@ -197,7 +203,9 @@
                 waiting_queue: [],
                 state: true,
                 errormsg: "",
-                dayjs
+                dayjs,
+                select: $,
+                console
             }
         },
         computed: {
@@ -659,6 +667,19 @@
                             d.title = "未设置标题";
                         }
                         that.title = d.title;
+                        that.$nextTick(function () {
+                            $("#rank").find("tr").each(function(i) {
+                                $(this).find("td").eq(2).css({
+                                    position: "sticky",
+                                    left: $(this).find("td").eq(2).prev().outerWidth() + $(this).find("td").eq(1).prev().outerWidth(),
+                                    borderRight: "1px solid rgba(34,36,38,.1)"
+                                });
+                                $(this).find("td").eq(1).css({
+                                    position: "sticky",
+                                    left: $(this).find("td").eq(1).prev().outerWidth()
+                                })
+                            })
+                        });
                     });
                 }
             })()
@@ -677,6 +698,10 @@
 
     .ui.orange {
         background-color: #FE9A76;
+    }
+
+    .ui.white {
+        background-color: #FFFFFF;
     }
 
     .accept {
@@ -706,5 +731,14 @@
 
     td {
         white-space: nowrap!important;
+        text-align: center!important;
     }
+
+    .ui.table thead tr:first-child > th {
+        position: sticky !important;
+        top: 0;
+        z-index: 2;
+    }
+
+
 </style>
