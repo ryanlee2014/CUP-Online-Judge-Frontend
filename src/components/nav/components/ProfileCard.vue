@@ -18,8 +18,8 @@
                                 class='book icon'></i>我的竞赛&作业</a><br>
                         <a class='logout item' @click.prevent="logout"><i
                                 class='remove user icon'></i>注销</a>&nbsp;<br>
-                        <a v-if="admin" class='item' href=admin/><i
-                                class='write icon'></i>管理</a>&nbsp;<br>
+                        <a v-if="admin" class='item' href="/admin/">
+                            <i class='write icon'></i>管理</a>&nbsp;<br>
                         <a v-if="admin" class='item' href=announce.php><i
                                 class='send outline icon'></i>在线用户推送</a>&nbsp;
                     </div>

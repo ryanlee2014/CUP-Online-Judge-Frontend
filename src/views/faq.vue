@@ -43,7 +43,7 @@
 - CPU:Intel(R) Xeon(R) CPU E5-2609 0 @ 2.40GHz
 - RAM:16GB
 - OS:CentOS 7
-- GCC:8.3.0
+- GCC:9.1.0
 - Clang:LLVM 6.0.0
 - Java:6/7/8/10(OpenJDK)
 - JavaScript:Node.JS Latest

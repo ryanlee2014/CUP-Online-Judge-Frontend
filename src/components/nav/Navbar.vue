@@ -17,6 +17,7 @@
     import Nano from "./size/nano/nano";
     import ProfileCard from "./components/ProfileCard";
     import init from '../../mixin/init'
+    const Promise = require("bluebird");
 
     const $ = require("jquery");
     export default {
@@ -63,10 +64,42 @@
             return {
                 user: 1,
                 judger: 0,
-                socketConnected: this.$socket.connected
+                socketConnected: this.$socket.connected,
+                intervalId: -1
+            }
+        },
+        methods: {
+            async connectTry(times) {
+                while(times-- > 0 && !this.$socket.connected) {
+                    this.$socket.connect();
+                    await Promise.delay(500);
+                }
+            },
+            bindSocketObserver() {
+                const that = this;
+                this.$socket._connected = this.$socket.connected;
+                Object.defineProperty(this.$socket, "connect", {
+                    get: function () {
+                        return this._connected;
+                    },
+                    set: function (val) {
+                        if (val === false) {
+                            that.intervalId = setInterval(() => {
+                                that.connectTry(1);
+                            },1000);
+                        }
+                        else {
+                            if (that.intervalId !== -1) {
+                                clearInterval(that.intervalId);
+                            }
+                        }
+                        that.socketConnected = this._connected = val;
+                    }
+                });
             }
         },
         mounted() {
+            this.bindSocketObserver();
             const auth_msg = {
                 url: this.$route.fullPath,
                 version: window.navigator.appVersion,
@@ -78,6 +111,7 @@
                     height: screen.availHeight
                 }
             };
+
             const _subscribe = this.sockets.subscribe;
             this.sockets.subscribe = (events, callback) => {
                 const that = this;
@@ -110,7 +144,11 @@
             });
             $("body").on('click', function () {
                 $(".msg.header.item").popup("hide").removeAttr("data-html");
-            })
+            });
+
+            setTimeout(() => {
+                this.connectTry(5);
+            }, 500);
         }
     }
 </script>
