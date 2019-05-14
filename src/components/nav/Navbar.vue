@@ -64,7 +64,7 @@
             return {
                 user: 1,
                 judger: 0,
-                socketConnected: this.$socket.connected,
+                socketConnected: false,
                 intervalId: -1
             }
         },
@@ -98,8 +98,12 @@
                 });
             }
         },
-        mounted() {
+        async mounted() {
+            while(!this.$socket) {
+                await Promise.delay(50);
+            }
             this.bindSocketObserver();
+            this.socketConnected = this.$socket.connected;
             const auth_msg = {
                 url: this.$route.fullPath,
                 version: window.navigator.appVersion,

@@ -1,46 +1,57 @@
 <template>
-    <div class="ui container">
-        <div class="main screen">
-            <div class="main submit layout">
-                <single-page-problem-view
-                        :accepted="accepted"
-                        :bodyOnTop="bodyOnTop"
-                        :description="description"
-                        :hint="hint"
-                        :input="input"
-                        :iseditor="iseditor"
-                        :memory="memory"
-                        :normal_problem="normal_problem"
-                        :original_id="original_id"
-                        :output="output"
-                        :problem_id="problem_id"
-                        :sampleinput="sampleinput"
-                        :sampleoutput="sampleoutput"
-                        :source="source"
-                        :spj="spj"
-                        :submit="submit"
-                        :switch_screen="switch_screen"
-                        :time="time"
-                        :title="temp_title"
-                        :uploader="uploader">
-                </single-page-problem-view>
-            </div>
+    <div class="main screen">
+        <div class="main submit layout">
+            <singlePageProblemView
+                    :accepted="accepted"
+                    :bodyOnTop="bodyOnTop"
+                    :description="description"
+                    :hint="hint"
+                    :input="input"
+                    :iseditor="iseditor"
+                    :memory="memory"
+                    :normal_problem="normal_problem"
+                    :original_id="original_id"
+                    :output="output"
+                    :problem_id="problem_id"
+                    :sampleinput="sampleinput"
+                    :sampleoutput="sampleoutput"
+                    :source="source"
+                    :spj="spj"
+                    :submit="submit"
+                    :switch_screen="switch_screen"
+                    :time="time"
+                    :title="temp_title"
+                    :uploader="uploader" v-show="single_page">
+            </singlePageProblemView>
+            <sideProblemView :accepted="accepted" :description="description" :hint="hint" :input="input" :isadmin="isadmin"
+                             :iseditor="iseditor" :memory="memory" :normal_problem="normal_problem"
+                             :original_id="original_id" :output="output" :problem_id="problem_id" :sampleinput="sampleinput"
+                             :sampleoutput="sampleoutput" :source="source"
+                             :spj="spj" :submit="submit" :switch_screen="switch_screen"
+                             :time="time" :title="temp_title"
+                             :uploader="uploader" v-show="!single_page" :lang_list="lang_list">
+
+            </sideProblemView>
         </div>
     </div>
 </template>
 
 <script>
     import singlePageProblemView from '../../components/submit/singlePageProblemView'
+    import sideProblemView from '../../components/submit/sideProblemView'
     import markdownIt from '../../lib/markdownIt/markdownIt'
     import Fingerprint2 from 'fingerprintjs2'
     import mixins from '../../mixin/init'
+
     const _ = require("lodash");
-    const $ = require("jquery");
+    const $ = window.$ = window.jQuery = require("jquery");
+    require("../../static/js/semantic.min");
     export default {
         name: "submitter",
         mixins: [mixins],
         components: {
-            singlePageProblemView
+            singlePageProblemView,
+            sideProblemView
         },
         data: function () {
             return {
@@ -77,7 +88,7 @@
                 show_style: "preview",
                 not_show_toolbar: false,
                 spj: false,
-                single_page: true,
+                single_page: false,
                 source_code: "",
                 language_name: "",
                 prepend: [],
@@ -281,7 +292,7 @@
                         return component.value
                     })
                     that.fingerprintRaw = Fingerprint2.x64hash128(values.join(''), 31);
-                    $.get("../api/status/ip", function (data) {
+                    $.get("/api/status/ip", function (data) {
                         var ip = data.ip;
                         values.push(ip);
                         that.fingerprint = Fingerprint2.x64hash128(values.join(''), 31);
@@ -307,6 +318,28 @@
                         boxShadow: ""
                     });
                 }
+            }
+
+        },
+        computed: {
+            lang_list: function () {
+                const len = this.language_name.length - 1;
+                const _langmask = ~this.langmask;
+                let result = [];
+                for (var cnt = 0; cnt < len; ++cnt) {
+                    if (_langmask & (1 << cnt)) {
+                        result.push({
+                            num: cnt,
+                            name: this.language_name[cnt]
+                        })
+                    }
+                }
+                result.sort(function (a, b) {
+                    if (a.name < b.name) return -1;
+                    else if (a.name > b.name) return 1;
+                    else return 0;
+                })
+                return result;
             }
         }
     }

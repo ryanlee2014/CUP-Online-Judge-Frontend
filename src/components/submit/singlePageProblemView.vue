@@ -1,5 +1,5 @@
 <template>
-    <div class="not-compile">
+    <div class="ui container">
         <div class="following bar title" v-show="!bodyOnTop"
              :style="(!bodyOnTop?'opacity:1;':'opacity:0;') + 'z-index:99'">
             <div :class="'ui vertical center aligned grid'">
