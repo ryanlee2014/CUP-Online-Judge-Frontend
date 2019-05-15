@@ -1,26 +1,27 @@
 <template>
-    <div style="width:65%;position:relative;float:left;" id="right-side">
-        <textarea style="display:none" cols=40 rows=5 name="input_text"
-                  id="ipt" class="sample_input">样例输入</textarea>
-        <div id="modeBar" style="margin: 0;
+    <div id="right-side" style="width:65%;position:relative;float:left;">
+        <textarea class="sample_input" cols=40 id="ipt" name="input_text"
+                  rows=5 style="display:none">样例输入</textarea>
+        <div class="ui menu borderless" id="modeBar" style="margin: 0;
         padding: 0;
         position: relative;
         height: 35px;
-        color: black;width:100%;text-align:right" class="ui menu borderless">
+        color: black;width:100%;text-align:right">
             <div class="item not-compile">
-                <select class="not-compile" v-cloak :class="'ui dropdown selection'" id="language"
-                        name="language" v-model="selected_language">
-                    <option :key="language.num" v-for="language in lang_list" :value="language.num">{{language.name}}</option>
+                <select :class="'ui dropdown selection'" class="not-compile" id="language" name="language"
+                        v-cloak v-model="selected_language">
+                    <option :key="language.num" :value="language.num" v-for="language in lang_list">{{language.name}}
+                    </option>
                 </select>
                 <div class="item">
                     <div class="ui toggle checkbox" v-cloak>
-                        <input type="checkbox" name="auto_detect" v-model="auto_detect">
+                        <input name="auto_detect" type="checkbox" v-model="auto_detect">
                         <label>自动选择</label>
                     </div>
                 </div>
                 <a
-                        :class="'item'" class="not-compile" v-cloak id="clipbtn" data-clipboard-action="copy"
-                        style="float:left;" v-if="prepend||append">复制代码</a>
+                        :class="'item'" class="not-compile" data-clipboard-action="copy" id="clipbtn" style="float:left;"
+                        v-cloak v-if="prepend||append">复制代码</a>
 
             </div>
             <div class="right menu">
@@ -28,7 +29,7 @@
                 </div>
 
                 <div class="item">
-                    <span>主题:</span><select v-model="theme" class="ui selection dropdown search" id="theme" size="1">
+                    <span>主题:</span><select class="ui selection dropdown search" id="theme" size="1" v-model="theme">
 
                     <optgroup label="Bright">
                         <option value="ace/theme/chrome">Chrome</option>
@@ -72,58 +73,58 @@
                 </select></div>
             </div>
         </div>
-        <div v-if="prepend" class="prepend code"
+        <div :ace-mode="'ace/mode/'+language_template[selected_language]" ace-theme="ace/theme/monokai"
+             class="prepend code"
+             id="prepend"
              style="width: 100%;padding:0px;line-height:1.2;text-align:left;margin-bottom:0px;"
-             :ace-mode="'ace/mode/'+language_template[selected_language]"
-             ace-theme="ace/theme/monokai"
-             id="prepend" v-text="current_prepend">
+             v-if="prepend" v-text="current_prepend">
         </div>
-        <div style="width:100%;height:460px" :style="{width:'100%',height:'460px',fontSize:fontSize+'px'}"
-             cols=180 rows=20
-             id="source"></div>
-        <div v-if="append" id="append" class="append code"
+        <div :style="{width:'100%',height:'460px',fontSize:fontSize+'px'}" cols=180
+             id="source" rows=20
+             style="width:100%;height:460px"></div>
+        <div :ace-mode="'ace/mode/'+language_template[selected_language]" ace-theme="ace/theme/monokai" class="append code"
+             id="append"
              style="width: 100%; padding:0px; line-height:1.2;text-align:left;margin-bottom:0px;"
-             :ace-mode="'ace/mode/'+language_template[selected_language]"
-             ace-theme="ace/theme/monokai" v-html="current_append">
+             v-html="current_append" v-if="append">
         </div>
-        <div id="statusBar" style="margin: 0;
+        <div class="ui menu borderless" id="statusBar" style="margin: 0;
         padding: 0;
         position: relative;
         height: 30px;
-        color: black;width:100%" class="ui menu borderless">
-            <div style="text-align:center;" class="item">
+        color: black;width:100%">
+            <div class="item" style="text-align:center;">
                 CUP Online Judge&nbsp;&nbsp;
                 <div class="item">
                     <div class="ui toggle checkbox" v-cloak v-if="!iscontest">
-                        <input type="checkbox" name="share" v-model="share">
+                        <input name="share" type="checkbox" v-model="share">
                         <label>允许他人查看代码</label>
                     </div>
                 </div>
                 <div class="item"><span class="item">字号:</span>
-                    <div class="ui input"><input type="text" v-model="fontSize"
-                                                 style="width:60px;text-align:center;height:30px"
-                                                 id="fontsize"></div>
+                    <div class="ui input"><input id="fontsize" style="width:60px;text-align:center;height:30px"
+                                                 type="text"
+                                                 v-model="fontSize"></div>
                 </div>
             </div>
             <div class="ui right menu">
                 <div class="ui buttons">
-                    <input id="Submit" class="ui button green " :disabled="submitDisabled" type=button
-                           value="提交"
-                           @click="do_submit">
+                    <input :disabled="submitDisabled" @click="do_submit" class="ui button green " id="Submit"
+                           type=button
+                           value="提交">
                     <div class="or"></div>
-                    <input id="TestRun" class="ui button blue" @click="pre_test_run" :disabled="submitDisabled"
+                    <input :disabled="submitDisabled" @click="pre_test_run" class="ui button blue" id="TestRun"
                            type=button value="测试运行"
                     >&nbsp;<!--<span class="btn" id=result>状态</span>-->
                 </div>
             </div>
         </div>
-        <div class="ui teal progress result" data-value="0" data-total="3" id="progress" style="display:none">
+        <div class="ui teal progress result" data-total="3" data-value="0" id="progress" style="display:none">
             <div class="bar">
                 <div class="progress"></div>
             </div>
             <div class="label progess_text"></div>
         </div>
-        <div class="ui warning message hidden" :class="'ui warning message '+(hide_warning?'hidden':'')">
+        <div :class="'ui warning message '+(hide_warning?'hidden':'')" class="ui warning message hidden">
             <i class="close icon"></i>
             <div class="header compile">
             </div>
@@ -135,6 +136,9 @@
 
 <script>
     const ace = require("brace");
+    const detectLang = require("../../../lib/langDetector");
+    const _ = require("lodash");
+    const $ = require("jquery");
     window.ace = ace;
     require('../../../lib/brace/braceMode');
     require('../../../lib/brace/braceTheme');
@@ -146,8 +150,8 @@
             tabSize: 4
         }
     };
-    const language = ["c_cpp", "c_cpp", "pascal", "java", "ruby", "bash", "python", "php", "perl", "csharp", "objectivec", "text", "scheme", "c_cpp", "c_cpp", "lua", "javascript", "go","python","c_cpp","c_cpp","c_cpp", "text","java","java","python","python","java","c_cpp","c_cpp"];
-    const language_ext = ["c", "cc", "pas", "java", "rb", "sh", "py", "php", "pl", "cs", "m", "bas", "scm", "c", "cc", "lua", "js", "go","py","cpp","cpp","c","kt","java","java","python","python","java","c","cc"];
+    const language = ["c_cpp", "c_cpp", "pascal", "java", "ruby", "bash", "python", "php", "perl", "csharp", "objectivec", "text", "scheme", "c_cpp", "c_cpp", "lua", "javascript", "go", "python", "c_cpp", "c_cpp", "c_cpp", "text", "java", "java", "python", "python", "java", "c_cpp", "c_cpp"];
+    const language_ext = ["c", "cc", "pas", "java", "rb", "sh", "py", "php", "pl", "cs", "m", "bas", "scm", "c", "cc", "lua", "js", "go", "py", "cpp", "cpp", "c", "kt", "java", "java", "python", "python", "java", "c", "cc"];
     export default {
         name: "rightPanel",
         data() {
@@ -157,17 +161,19 @@
                 share: false,
                 fontSize: 18,
                 theme: "ace/theme/monokai",
-                editor: null
+                editor: null,
+                prependView: null,
+                appendView: null
             }
         },
         props: {
             prepend: {
-                type: Boolean,
-                default: false
+                type: Object,
+                default: () => {return {}}
             },
             append: {
-                type: Boolean,
-                default: false
+                type: Object,
+                default: () => {return {}}
             },
             iscontest: {
                 type: Boolean,
@@ -197,11 +203,13 @@
             },
             do_submit: {
                 type: Function,
-                default: () => {}
+                default: () => {
+                }
             },
             pre_test_run: {
                 type: Function,
-                default: () => {}
+                default: () => {
+                }
             },
             submitDisabled: {
                 type: Boolean,
@@ -217,11 +225,90 @@
                 require(`brace/mode/${language[val]}`);
                 const editor = this.editor;
                 editor.getSession().setMode(`ace/mode/${language[val]}`);
+                $("#language").dropdown("set selected", val.toString());
+                let prepend = this.prepend;
+                let append = this.append;
+                if (prepend && prepend[val] !== this.current_prepend) {
+                    this.current_prepend = prepend[val];
+                    if(this.prependView) {
+                        this.prependView.getSession().setValue(this.current_prepend);
+                    }
+                }
+                if (append && append[val] !== this.current_append) {
+                    this.current_append = append[val];
+                    if(this.appendView) {
+                        this.appendView.getSession().setValue(this.current_append);
+                    }
+                }
             },
             theme: function (val) {
-                require(val.replace("ace", "brace"));
                 const editor = this.editor;
-                editor.getSession().setTheme(val);
+                editor.setTheme(val);
+                const prependView = this.prependView;
+                if(prependView) {
+                    this.prependView.setTheme(val);
+                }
+                const appendView = this.appendView;
+                if(appendView) {
+                    this.appendView.setTheme(val);
+                }
+            },
+            auto_detect: function (newVal, oldVal) {
+                const that = this;
+                const editor = this.editor;
+                if (newVal === oldVal) {
+                    return;
+                }
+                if (newVal) {
+                    const detectLanguageDebouncer = _.debounce(function () {
+                        const detected_lang = detectLang(editor.getSession().getValue(), that.lang_list.map(function (e) {
+                            return e.num
+                        }));
+                        console.log("detectLang", detected_lang);
+                        console.log("that.selected_language", that.selected_language);
+                        if (that.selected_language != detected_lang) {
+                            that.selected_language = detected_lang;
+                        }
+                    }, 100);
+                    detectLanguageDebouncer();
+                    editor.on("change", function (event) {
+                        detectLanguageDebouncer();
+                    });
+                } else {
+                    editor.off("change");
+                }
+            },
+            prepend: function(val) {
+                if(!val) {
+                    return;
+                }
+                const prependView = this.prependView = ace.edit("prepend");
+                $("#prepend").css({
+                    fontSize: "18px"
+                });
+                if(!val[this.selected_language]) {
+                    this.selected_language = parseInt(Object.keys(val)[0]);
+                }
+                prependView.getSession().setMode(`ace/mode/${language[this.selected_language]}`);
+                prependView.setTheme(this.theme);
+                prependView.setReadOnly(true);
+                prependView.getSession().setValue(val[this.selected_language]);
+            },
+            append: function(val) {
+                if(!val) {
+                    return;
+                }
+                let appendView = this.appendView;
+                if(this.appendView === null) {
+                    appendView = this.appendView = ace.edit("append");
+                }
+                if(!val[this.selected_language]) {
+                    this.selected_language = parseInt(Object.keys(val)[0]);
+                }
+                appendView.getSession().setMode(`ace/mode/${language[this.selected_language]}`);
+                appendView.setTheme(this.theme);
+                appendView.getSession().setValue(val[this.selected_language]);
+                appendView.setReadOnly(true);
             }
         },
         mounted() {
@@ -230,6 +317,13 @@
         methods: {
             initEditor() {
                 const editor = this.editor = ace.edit("source");
+                editor.on("change", () => {
+                    this.$store.commit("setCodeInfo", {
+                        share: this.share,
+                        code: this.editor.getSession().getValue(),
+                        language: this.selected_language
+                    });
+                });
                 editor.getSession().setMode(`ace/mode/${language[this.selected_language]}`);
                 editor.setTheme(this.theme);
             }

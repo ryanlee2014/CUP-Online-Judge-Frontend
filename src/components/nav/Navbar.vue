@@ -71,7 +71,9 @@
         methods: {
             async connectTry(times) {
                 while(times-- > 0 && !this.$socket.connected) {
-                    this.$socket.connect();
+                    if (this.$socket && this.$socket.connect && typeof this.$socket.connect === "function") {
+                        this.$socket.connect();
+                    }
                     await Promise.delay(500);
                 }
             },

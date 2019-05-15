@@ -6,7 +6,8 @@
         :iseditor="iseditor" :isadmin="isadmin" :description="description" :input="input" :output="output" :sampleinput="sampleinput"
         :sampleoutput="sampleoutput" :hint="hint" :uploader="uploader" :switch_screen="switch_screen" :normal_problem="normal_problem"
         :source="source" :problem_id="problem_id"></leftPanel>
-        <rightPanel :lang_list="lang_list"></rightPanel>
+        <rightPanel :lang_list="lang_list" :do_submit="do_submit" :pre_test_run="pre_test_run"
+        :prepend="prepend" :append="append"></rightPanel>
 
     </div>
 </template>
@@ -104,6 +105,22 @@
             lang_list: {
                 type: Array,
                 default: () => []
+            },
+            do_submit: {
+                type: Function,
+                default: () => {}
+            },
+            pre_test_run: {
+                type: Function,
+                default: () => {}
+            },
+            prepend: {
+                type: Object,
+                default: () => {return {}}
+            },
+            append: {
+                type: Object,
+                default: () => {return {}}
             }
         }
     }

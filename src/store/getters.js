@@ -7,7 +7,10 @@ const getters = {
     token: state => state.userInfo.token,
     onlineUser: state => state.socket.onlineUser,
     path: state => state.routeInfo.path,
-    fullPath: state => state.routeInfo.fullPath
+    fullPath: state => state.routeInfo.fullPath,
+    code: state => state.code.code,
+    share: state => state.code.share,
+    language: state => state.code.language
 };
 
 export default getters;
