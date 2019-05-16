@@ -62,4 +62,5 @@
     @import "./static/css/github-markdown.css";
     @import "./static/css/github.min.css";
     @import "./static/css/katex.min.css";
+    @import "../node_modules/@ryanlee2014/mavon-editor/dist/css/index.css";
 </style>

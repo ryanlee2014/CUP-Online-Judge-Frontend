@@ -1,5 +1,6 @@
 <template>
-    <div class="ui container padding">
+    <ContestMode v-if="contest_mode"></ContestMode>
+    <div v-else class="ui container padding">
         <h2 class="ui dividing header">
             Source Code
         </h2>
@@ -88,12 +89,16 @@
 
 <script>
     import mixins from '../mixin/init'
+    import ContestMode from '../components/contestMode/block'
     const Clipboard = require('clipboard');
     const clipboard = new Clipboard("#copy");
     const $ = require("jquery");
     export default {
         name: "usercode",
         mixins: [mixins],
+        components: {
+            ContestMode
+        },
         mounted() {
             this.bindClipboardDOM();
             this.initData();
@@ -111,6 +116,7 @@
                 icon: [],
                 from: "",
                 statement: false,
+                contest_mode: false,
                 privilege: false,
                 error: false
             }
@@ -128,6 +134,10 @@
                                 this.from = "";
                             }
                         } else {
+                            if(data.contest_mode) {
+                                this.contest_mode = true;
+                                return;
+                            }
                             this.code = false;
                             this.statement = data.statement;
                             this.error = true;

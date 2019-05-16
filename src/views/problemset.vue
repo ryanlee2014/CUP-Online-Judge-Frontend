@@ -1,6 +1,7 @@
 <template>
     <div class="ui left aligned container">
-        <div class="padding">
+        <ContestMode v-if="contest_mode"></ContestMode>
+        <div class="padding" v-else>
             <h2 class="ui dividing header">
                 Problem Set
                 <div class="sub header" v-cloak>
@@ -118,6 +119,7 @@
     import Pagination from '@/components/problemset/pagination.vue'
     import selectedTag from '@/components/problemset/selected-tag.vue'
     import mainContent from '@/components/problemset/MainContent.vue'
+    import ContestMode from '../components/contestMode/block'
     import mixins from '../mixin/init'
     // eslint-disable-next-line no-unused-vars
     const $ = require("jquery"), jQuery = $;
@@ -184,7 +186,8 @@
         components: {
             mainContent,
             Pagination,
-            selectedTag
+            selectedTag,
+            ContestMode
         },
         data: function () {
             return {

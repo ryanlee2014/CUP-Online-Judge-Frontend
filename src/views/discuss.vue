@@ -1,5 +1,6 @@
 <template>
-    <div class="ui container padding">
+    <ContestMode v-if="contest_mode"></ContestMode>
+    <div class="ui container padding" v-else>
         <h2 class="ui dividing header">Discuss</h2>
         <div class="ui grid">
             <div class="row">
@@ -53,6 +54,7 @@
 </template>
 
 <script>
+    import ContestMode from '../components/contestMode/block'
     const $ = require("jquery");
     window.$ = window.jQuery = $;
     const dayjs = require("dayjs");
@@ -61,6 +63,9 @@
     export default {
         name: "discuss",
         mixins: [mixins],
+        components: {
+            ContestMode
+        },
         data:function(){
             return {
                 page:parseInt(this.$route.hash.page)||0,

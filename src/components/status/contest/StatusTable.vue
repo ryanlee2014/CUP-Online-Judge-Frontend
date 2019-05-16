@@ -22,7 +22,7 @@
             <img class="ui avatar image" src="/image/default-user.png" v-else style="object-fit: cover;">
             </div>
             <div class="twelve wide column">
-            <a :href="'userinfo.php?user='+row.user_id">{{row.user_id}}<br>{{row.nick}}</a>
+                <router-link :to="`/user/${row.user_id}`">{{row.user_id}}<br>{{row.nick}}</router-link>
             </div>
             </div>
             </td>
@@ -45,11 +45,12 @@
                 <br>
                 <span class="boldstatus">{{time_parse(row.time)}}</span></div>
             </td>
-            <td><a class="boldstatus" v-if="self === row.user_id || isadmin" target=_blank :href="'showsource.php?'+((!row.oj_name || row.oj_name === 'local')?'':'h')+'id='+row.solution_id">查看</a>
+            <td>
+                <router-link class="boldstatus" v-if="self === row.user_id || isadmin" :to="`/usercode/local/${row.solution_id}`">查看</router-link>
                 <span class="boldstatus" v-else>{{language_name[(!row.oj_name?'local':row.oj_name.toLowerCase())][row.language]}}</span>
                 <span v-if="(self === row.user_id || isadmin) && row.problem_id"> / </span>
-                <a class="boldstatus" v-if="(self === row.user_id || isadmin) && row.problem_id" target="_blank"
-                   :href="(row.oj_name === 'local'?'new':(!row.oj_name?'new':row.oj_name.toLowerCase()))+'submitpage.php?cid='+Math.abs(row.contest_id)+'&pid='+row.num+'&sid='+row.solution_id">编辑</a>
+                <router-link class="boldstatus" v-if="(self === row.user_id || isadmin) && row.problem_id" :to="`/contest/problem/${Math.abs(row.contest_id)}/${row.num}/${row.solution_id}`"
+                >编辑</router-link>
                 <br>
                 <span class="boldstatus" v-if="self === row.user_id || isadmin">{{language_name[(!row.oj_name?'local':row.oj_name.toLowerCase())][row.language]}}  / </span>
                 <span class="boldstatus">{{row.length}}B</span>

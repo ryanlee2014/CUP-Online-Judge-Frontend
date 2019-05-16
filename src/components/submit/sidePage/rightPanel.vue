@@ -20,7 +20,8 @@
                     </div>
                 </div>
                 <a
-                        :class="'item'" class="not-compile" data-clipboard-action="copy" id="clipbtn" style="float:left;"
+                        :class="'item'" class="not-compile" data-clipboard-action="copy" id="clipbtn"
+                        style="float:left;"
                         v-cloak v-if="prepend||append">复制代码</a>
 
             </div>
@@ -73,17 +74,17 @@
                 </select></div>
             </div>
         </div>
-        <div :ace-mode="'ace/mode/'+language_template[selected_language]" ace-theme="ace/theme/monokai"
+        <div :ace-mode="'ace/mode/'+language[selected_language]" :ace-theme="theme"
              class="prepend code"
-             id="prepend"
+             id="prependCodeHighlight"
              style="width: 100%;padding:0px;line-height:1.2;text-align:left;margin-bottom:0px;"
              v-if="prepend" v-text="current_prepend">
         </div>
         <div :style="{width:'100%',height:'460px',fontSize:fontSize+'px'}" cols=180
              id="source" rows=20
              style="width:100%;height:460px"></div>
-        <div :ace-mode="'ace/mode/'+language_template[selected_language]" ace-theme="ace/theme/monokai" class="append code"
-             id="append"
+        <div :ace-mode="'ace/mode/'+language[selected_language]" :ace-theme="theme" class="append code"
+             id="appendCodeHighlight"
              style="width: 100%; padding:0px; line-height:1.2;text-align:left;margin-bottom:0px;"
              v-html="current_append" v-if="append">
         </div>
@@ -136,12 +137,15 @@
 
 <script>
     const ace = require("brace");
+    const Clipboard = require("clipboard");
     const detectLang = require("../../../lib/langDetector");
     const _ = require("lodash");
     const $ = require("jquery");
     window.ace = ace;
     require('../../../lib/brace/braceMode');
     require('../../../lib/brace/braceTheme');
+    require("brace/ext/static_highlight");
+
     const defaultConfig = {
         lang: 'c_cpp',
         theme: 'monokai',
@@ -163,17 +167,29 @@
                 theme: "ace/theme/monokai",
                 editor: null,
                 prependView: null,
-                appendView: null
+                appendView: null,
+                language,
+                current_prepend: "",
+                current_append: "",
+                highlight: new Promise((resolve) => {
+                    ace.acequire(["ace/ext/static_highlight"], function (fn) {
+                        resolve(fn);
+                    })
+                })
             }
         },
         props: {
             prepend: {
                 type: Object,
-                default: () => {return {}}
+                default: () => {
+                    return {}
+                }
             },
             append: {
                 type: Object,
-                default: () => {return {}}
+                default: () => {
+                    return {}
+                }
             },
             iscontest: {
                 type: Boolean,
@@ -188,14 +204,6 @@
             lang_list: {
                 type: Array,
                 default: () => []
-            },
-            current_prepend: {
-                type: String,
-                default: ""
-            },
-            current_append: {
-                type: String,
-                default: ""
             },
             language_template: {
                 type: Array,
@@ -218,10 +226,19 @@
             hide_warning: {
                 type: Boolean,
                 default: false
+            },
+            source_code: {
+                type: String,
+                default: ""
             }
         },
         watch: {
             selected_language: function (val) {
+                this.$store.commit("setCodeInfo", {
+                    share: this.share,
+                    code: this.editor.getSession().getValue(),
+                    language: val
+                });
                 require(`brace/mode/${language[val]}`);
                 const editor = this.editor;
                 editor.getSession().setMode(`ace/mode/${language[val]}`);
@@ -230,13 +247,13 @@
                 let append = this.append;
                 if (prepend && prepend[val] !== this.current_prepend) {
                     this.current_prepend = prepend[val];
-                    if(this.prependView) {
+                    if (this.prependView) {
                         this.prependView.getSession().setValue(this.current_prepend);
                     }
                 }
                 if (append && append[val] !== this.current_append) {
                     this.current_append = append[val];
-                    if(this.appendView) {
+                    if (this.appendView) {
                         this.appendView.getSession().setValue(this.current_append);
                     }
                 }
@@ -245,12 +262,23 @@
                 const editor = this.editor;
                 editor.setTheme(val);
                 const prependView = this.prependView;
-                if(prependView) {
+                if (prependView) {
                     this.prependView.setTheme(val);
                 }
                 const appendView = this.appendView;
-                if(appendView) {
+                if (appendView) {
                     this.appendView.setTheme(val);
+                }
+                if (this.current_prepend || this.current_append) {
+                    this.current_prepend = this.current_append = "";
+                    this.$forceUpdate();
+                    this.$nextTick(() => {
+                        this.$nextTick(() => {
+                            this.current_prepend = this.prepend[this.selected_language] || "";
+                            this.current_append = this.append[this.selected_language] || "";
+                            this.$forceUpdate();
+                        });
+                    });
                 }
             },
             auto_detect: function (newVal, oldVal) {
@@ -264,8 +292,6 @@
                         const detected_lang = detectLang(editor.getSession().getValue(), that.lang_list.map(function (e) {
                             return e.num
                         }));
-                        console.log("detectLang", detected_lang);
-                        console.log("that.selected_language", that.selected_language);
                         if (that.selected_language != detected_lang) {
                             that.selected_language = detected_lang;
                         }
@@ -278,41 +304,81 @@
                     editor.off("change");
                 }
             },
-            prepend: function(val) {
-                if(!val) {
+            prepend: function (val) {
+                if (!val) {
                     return;
                 }
-                const prependView = this.prependView = ace.edit("prepend");
-                $("#prepend").css({
-                    fontSize: "18px"
-                });
-                if(!val[this.selected_language]) {
+                if (!val[this.selected_language] && val.length && val.length > 0) {
                     this.selected_language = parseInt(Object.keys(val)[0]);
                 }
-                prependView.getSession().setMode(`ace/mode/${language[this.selected_language]}`);
-                prependView.setTheme(this.theme);
-                prependView.setReadOnly(true);
-                prependView.getSession().setValue(val[this.selected_language]);
+                this.current_prepend = val[this.selected_language];
             },
-            append: function(val) {
-                if(!val) {
+            append: function (val) {
+                if (!val) {
                     return;
                 }
-                let appendView = this.appendView;
-                if(this.appendView === null) {
-                    appendView = this.appendView = ace.edit("append");
-                }
-                if(!val[this.selected_language]) {
+                if (!val[this.selected_language] && val.length && val.length > 0) {
                     this.selected_language = parseInt(Object.keys(val)[0]);
                 }
-                appendView.getSession().setMode(`ace/mode/${language[this.selected_language]}`);
-                appendView.setTheme(this.theme);
-                appendView.getSession().setValue(val[this.selected_language]);
-                appendView.setReadOnly(true);
+                this.current_append = val[this.selected_language];
+            },
+            current_append: function (val) {
+                if (!val) {
+                    return;
+                }
+                const h = this.highlight;
+                h.then((highlight) => {
+                    this.$nextTick(() => {
+                        _.forEach(document.querySelectorAll("#appendCodeHighlight"), function (val, index) {
+                            highlight(val, {
+                                mode: val.getAttribute("ace-mode"),
+                                theme: val.getAttribute("ace-theme"),
+                                startLineNumber: 1,
+                                showGutter: val.getAttribute("ace-gutter"),
+                                trim: true
+                            }, function (highlighted) {
+                            });
+                        });
+                    })
+                })
+            },
+            current_prepend: function (val) {
+                if (!val) {
+                    return;
+                }
+                const h = this.highlight;
+                h.then((highlight) => {
+                    this.$nextTick(() => {
+                        _.forEach(document.querySelectorAll("#prependCodeHighlight"), function (val, index) {
+                            highlight(val, {
+                                mode: val.getAttribute("ace-mode"),
+                                theme: val.getAttribute("ace-theme"),
+                                startLineNumber: 1,
+                                showGutter: val.getAttribute("ace-gutter"),
+                                trim: true
+                            }, function (highlighted) {
+                            });
+                        });
+                    })
+                });
+            },
+            share: function (val) {
+                this.$store.commit("setCodeInfo", {
+                    share: !!val,
+                    code: this.editor.getSession().getValue(),
+                    language: this.selected_language
+                });
+            },
+            source_code: function (val) {
+                const that = this;
+                const editor = this.editor;
+                editor.getSession().setValue(val);
             }
         },
         mounted() {
             this.initEditor();
+            this.initClipboard();
+            this.initSolutionCode();
         },
         methods: {
             initEditor() {
@@ -326,6 +392,43 @@
                 });
                 editor.getSession().setMode(`ace/mode/${language[this.selected_language]}`);
                 editor.setTheme(this.theme);
+            },
+            initClipboard() {
+                let obj = document.getElementById('clipbtn');
+                const that = this;
+                if (obj) {
+                    var clipboard = new Clipboard(obj, {
+                        text: function (trigger) {
+                            var mergetext = that.prepend[that.selected_language];
+                            mergetext += "\n/*请在下方编写你的代码,仅需提交填写的部分*/\n";
+                            if (that.$store.getters.code.length !== 0) {
+                                mergetext += that.$store.getters.code;
+                            } else {
+                                mergetext += "\n\n\n\n";
+                            }
+                            mergetext += "\n/*请在上方填写你的代码,仅需提交填写的部分*/\n";
+                            mergetext += that.append[that.selected_language];
+                            return mergetext;
+                        }
+                    });
+                    clipboard.on('success', function (e) {
+                        alert("复制到剪贴板成功!");
+                        console.log(e);
+                    });
+                    clipboard.on('error', function (e) {
+                        console.error(e);
+                        console.log("复制失败！请手动复制代码");
+                        console.log("Firefox 有一定几率报错，待修复");
+                    });
+                }
+            },
+            initSolutionCode() {
+                if (this.$route.params.solution_id) {
+                    this.axios.get("/api/status/solution", {params: {sid: this.$route.params.solution_id}})
+                        .then(({data}) => {
+                            this.selected_language = parseInt(data.data.language);
+                        });
+                }
             }
         }
     }
@@ -334,6 +437,12 @@
 <style scoped>
     .ui.modal {
         top: 3%;
+    }
+
+    .code {
+        width: 50%;
+        white-space: pre-wrap;
+        border: solid lightgrey 1px
     }
 
     script {

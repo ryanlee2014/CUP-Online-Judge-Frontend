@@ -156,6 +156,38 @@ const router = new Router({
             }
         },
         {
+            path: '/contest/problem/:contest_id/:num',
+            name: 'contest problem',
+            component: () => import('./views/problem/submit.vue'),
+            meta: {
+                auth: true
+            }
+        },
+        {
+            path: '/contest/problem/:contest_id/:num/:solution_id',
+            name: 'contest problem with solution_id',
+            component: () => import('./views/problem/submit.vue'),
+            meta: {
+                auth: true
+            }
+        },
+        {
+            path: '/problem/submit/:problem_id/:solution_id',
+            name: 'problem submit with solution_id',
+            component: () => import('./views/problem/submit.vue'),
+            meta: {
+                auth: true
+            }
+        },
+        {
+            path: '/problem/edit/:problem_id',
+            name: 'problem edit view',
+            component: () => import('./views/problem/edit.vue'),
+            meta: {
+                auth: true
+            }
+        },
+        {
             path: "*",
             redirect: "/"
         }

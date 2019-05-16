@@ -70,7 +70,7 @@
         },
         methods: {
             async connectTry(times) {
-                while(times-- > 0 && !this.$socket.connected) {
+                while(times-- > 0) {
                     if (this.$socket && this.$socket.connect && typeof this.$socket.connect === "function") {
                         this.$socket.connect();
                     }
@@ -80,7 +80,7 @@
             bindSocketObserver() {
                 const that = this;
                 this.$socket._connected = this.$socket.connected;
-                Object.defineProperty(this.$socket, "connect", {
+                Object.defineProperty(this.$socket, "connected", {
                     get: function () {
                         return this._connected;
                     },
@@ -102,7 +102,7 @@
         },
         async mounted() {
             while(!this.$socket) {
-                await Promise.delay(50);
+                await Promise.delay(500);
             }
             this.bindSocketObserver();
             this.socketConnected = this.$socket.connected;
@@ -119,8 +119,8 @@
             };
 
             const _subscribe = this.sockets.subscribe;
+            const that = this;
             this.sockets.subscribe = (events, callback) => {
-                const that = this;
                 _subscribe.call(this.sockets, events, function () {
                     that.socketConnected = true;
                     callback.apply(that, arguments);
@@ -155,6 +155,11 @@
             setTimeout(() => {
                 this.connectTry(5);
             }, 500);
+        },
+        updated() {
+            if(this.$socket && this.$socket.connected) {
+                this.$socket.emit("getUser");
+            }
         }
     }
 </script>

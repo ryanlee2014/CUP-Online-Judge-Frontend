@@ -56,8 +56,9 @@
                         :class="answer_icon[row.result]+' icon'" style="opacity:0"></i>Passed:{{(row.pass_rate*100).toFixed(1)}}%</a>
 
             </td>
-            <td v-if="isadmin"><a v-if="row.contest_id" :href="'contest.php?cid='+row.contest_id">{{row.contest_id}}</a><span
-                    v-else>无</span></td>
+            <td v-if="isadmin">
+                <router-link v-if="row.contest_id" :to="`/contest/${row.contest_id}`">{{row.contest_id}}</router-link>
+                <span v-else>无</span></td>
             <td>
                 <div><span class="boldstatus">{{memory_parse(row.memory)}}</span><br><span class="boldstatus">{{time_parse(row.time)}}</span>
                 </div>
@@ -68,9 +69,8 @@
                 </router-link>
                 <span class="boldstatus" v-else>{{language_name[row.language]}}</span>
                 <span v-if="(self === row.user_id || isadmin || row.share == 1) && row.problem_id"> / </span>
-                <a class="boldstatus" v-if="(self === row.user_id || isadmin || row.share == 1) && row.problem_id"
-                   target="_blank"
-                   :href="'newsubmitpage.php?id='+Math.abs(row.problem_id)+'&sid='+Math.abs(row.solution_id)">编辑</a>
+                <router-link class="boldstatus" v-if="(self === row.user_id || isadmin || row.share == 1) && row.problem_id"
+                :to="`/problem/submit/${Math.abs(row.problem_id)}/${Math.abs(row.solution_id)}`">编辑</router-link>
                 <br>
                 <span class="boldstatus" v-if="(self === row.user_id || isadmin || row.share == 1)">{{language_name[row.language]}} / </span>
                 <span class="boldstatus">{{row.length}}B</span>

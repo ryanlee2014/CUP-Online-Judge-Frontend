@@ -1,5 +1,9 @@
 <template>
-    <div class="main screen">
+    <div id="cmod" class="ui container" v-if="contest_mode || limit">
+        <ContestMode v-if="contest_mode"></ContestMode>
+        <LimitHostname v-if="limit" :address="address"></LimitHostname>
+    </div>
+    <div class="main screen" v-else>
         <TestrunView :hide_warning="hide_warning" :sampleinput="sampleinput"
                      :sampleoutput="sampleoutput" :submitDisabled="submitDisabled" :test_run="test_run"
                      v-model="test_run_sampleinput"></TestrunView>
@@ -10,6 +14,7 @@
                     :description="description"
                     :hint="hint"
                     :input="input"
+                    :isadmin="isadmin"
                     :iseditor="iseditor"
                     :memory="memory"
                     :normal_problem="normal_problem"
@@ -26,20 +31,22 @@
                     :title="temp_title"
                     :uploader="uploader" v-show="single_page">
             </singlePageProblemView>
-            <sideProblemView :accepted="accepted" :description="description" :do_submit="do_submit" :hint="hint"
-                             :input="input"
-                             :isadmin="isadmin" :iseditor="iseditor" :lang_list="lang_list"
-                             :memory="memory" :normal_problem="normal_problem" :original_id="original_id"
-                             :output="output"
-                             :pre_test_run="pre_test_run" :problem_id="problem_id"
-                             :sampleinput="sampleinput" :sampleoutput="sampleoutput" :source="source"
-                             :spj="spj" :submit="submit"
-                             :switch_screen="switch_screen" :time="time" :title="temp_title"
-                             :uploader="uploader" v-show="!single_page" :prepend="prepend" :append="append">
+            <sideProblemView :accepted="accepted" :append="append" :description="description" :do_submit="do_submit"
+                             :hint="hint"
+                             :input="input" :isadmin="isadmin" :iseditor="iseditor"
+                             :lang_list="lang_list" :memory="memory" :normal_problem="normal_problem"
+                             :original_id="original_id"
+                             :output="output" :pre_test_run="pre_test_run"
+                             :prepend="prepend" :problem_id="problem_id" :sampleinput="sampleinput"
+                             :sampleoutput="sampleoutput" :source="source"
+                             :source_code="source_code" :spj="spj" :submit="submit"
+                             :switch_screen="switch_screen" :time="time" :title="temp_title" :uploader="uploader"
+                             v-show="!single_page">
 
             </sideProblemView>
         </div>
     </div>
+
 </template>
 
 <script>
@@ -48,10 +55,12 @@
     import TestrunView from '../../components/submit/testrunView'
     import markdownIt from '../../lib/markdownIt/markdownIt'
     import Fingerprint2 from 'fingerprintjs2'
+    import ContestMode from '../../components/contestMode/block'
+    import LimitHostname from '../../components/contestMode/limitHostname'
     import mixins from '../../mixin/init'
 
     const dayjs = require("dayjs");
-
+    const Clipboard = require("clipboard");
     const _ = require("lodash");
     let $;
     $ = window.$ = window.jQuery = require("jquery");
@@ -62,7 +71,9 @@
         components: {
             TestrunView,
             singlePageProblemView,
-            sideProblemView
+            sideProblemView,
+            ContestMode,
+            LimitHostname
         },
         data: function () {
             return {
@@ -70,6 +81,8 @@
                 isRenderBodyOnTop: false,
                 temp_title: "",
                 problem_id: 0,
+                contest_mode: false,
+                limit: false,
                 original_id: 0,
                 iscontest: false,
                 normal_problem: !this.$route.params.contest_id && !this.$route.params.topic_id,
@@ -86,6 +99,7 @@
                 output: "",
                 uploader: "",
                 sampleinput: "",
+                address: "",
                 sampleoutput: "",
                 test_run_sampleinput: "",
                 test_run_sampleoutput: "",
@@ -107,7 +121,7 @@
                 isadmin: false,
                 iseditor: false,
                 share: false,
-                sselected_language: 0,
+                selected_language: 0,
                 language_template: [],
                 fontSize: 18,
                 hide_warning: true,
@@ -118,6 +132,7 @@
             };
         },
         mounted() {
+            this.$store.commit("setCodeInfo", {code: ""});
             this.asyncFunc();
             this.registerSocketListener();
         },
@@ -126,19 +141,19 @@
             this.$nextTick(function () {
                 if (that.single_page && !that.isRenderBodyOnTop) {
                     that.isRenderBodyOnTop = true;
-                    $('.ui.vertical.center.aligned.segment.single')
+                    $('.ui.vertical.segment.single')
                         .visibility({
                             once: false,
-                            offset: 30,
+                            offset: 20,
                             observeChanges: false,
-                            continuous: false,
+                            continuous: true,
                             refreshOnLoad: true,
                             refreshOnResize: true,
-                            onTopPassedReverse: function () {
-                                that.bodyOnTop = true;
+                            onTopPassed: function (val) {
+                                that.bodyOnTop = val.topVisible;
                             },
-                            onTopPassed: function () {
-                                that.bodyOnTop = false;
+                            onTopPassedReverse: function (val) {
+                                that.bodyOnTop = val.topVisible;
                             }
                         });
                     that.bodyOnTop = true;
@@ -162,19 +177,41 @@
         methods: {
             asyncFunc: async function () {
                 let temp_object = JSON.parse(JSON.stringify(this.$route.params));
-                for (let i in temp_object) {
-                    if (typeof temp_object[i] === "undefined") {
-                        temp_object[i] = "";
-                    }
-                }
-                let {problem_id, contest_id, topic_id, num} = temp_object;
+                let {problem_id, contest_id, topic_id, num, solution_id} = temp_object;
+                let parseData = {
+                    id: problem_id,
+                    cid: contest_id,
+                    tid: topic_id,
+                    pid: num,
+                    sid: solution_id
+                };
+                this.escapeParameter(parseData);
                 await new Promise((resolve => {
-                    this.axios.get(`/api/problem/local?id=${problem_id}&cid=${contest_id}&tid=${topic_id}&num=${num}`)
+                    this.axios.get(`/api/problem/local`, {params: parseData})
                         .then(({data}) => {
+                            if(data.status == "error") {
+                                if (data.statement) {
+                                    alert(data.statement);
+                                }
+                                this.contest_mode = data.contest_mode;
+                                this.limit = false;
+                                return;
+                            }
+                            let addr = data.limit_hostname;
+                            if(data.isadmin) {
+                                addr = null;
+                            }
+                            if(addr && location.href.indexOf("addr") === -1) {
+                                this.limit = true;
+                                this.contest_mode = false;
+                                this.address = addr;
+                                return;
+                            }
                             const d = data.problem;
                             const source_code = data.source;
                             const iseditor = data.editor;
                             const isadmin = data.isadmin;
+                            this.$store.commit("setCodeInfo", {code: source_code});
                             let _data = {
                                 temp_title: d.title,
                                 problem_id: d.problem_id,
@@ -243,6 +280,27 @@
                         })
                 }));
                 this.markdownItRender();
+                const copy_content = new Clipboard(".copy.context", {
+                    text: function (trigger) {
+                        return $(trigger).parent().next().text().trim();
+                    }
+                });
+                copy_content.on("success", function (e) {
+                    $(e.trigger)
+                        .popup({
+                            title: 'Finished',
+                            content: 'Context is in your clipboard',
+                            on: 'click'
+                        })
+                        .popup("show");
+                })
+            },
+            escapeParameter: function (val) {
+                for (let i in val) {
+                    if (typeof val[i] === "undefined") {
+                        delete val[i];
+                    }
+                }
             },
             markdownItRender: function () {
                 const that = this;
@@ -531,22 +589,19 @@
                     $('.progress.result').progress({
                         percent: 20
                     });
-                }
-                else if (status == 2) {
+                } else if (status == 2) {
                     $(".progess_text").text(judge_result[status]);
                     //setTimeout("frush_result(" + runner_id + ")", 250);
                     $('.progress.result').progress({
                         percent: 40
                     });
-                }
-                else if (status == 3) {
+                } else if (status == 3) {
                     $(".progess_text").text(judge_result[status] + " 已通过测试点:" + pass_point + "  通过率:" + pass_rate.toString().substring(0, 3) + "%");
                     // setTimeout("frush_result(" + runner_id + ")", 250);
                     $('.progress.result').progress({
                         percent: 40
                     });
-                }
-                else if (status == 4) {
+                } else if (status == 4) {
                     //count=0;
                     var str = judge_result[status] + " 内存使用:" + memory + "KB 运行时间:" + time + "ms";
                     if (sim) {
@@ -567,8 +622,7 @@
                             var str = "<a class='item'><h3>剩下未完成的题目</h3></a>";
                             if (json.length == 0) {
                                 str += "<a class='item'><h2>恭喜AK</h2>";
-                            }
-                            else {
+                            } else {
                                 console.log(typeof json);
                                 json.sort(function (a, b) {
                                     if (a['num'] > b['num']) return 1;
@@ -579,25 +633,22 @@
                             for (let i in json) {
                                 str += "<a class='item' href='" + json[i]['url'] + "'><div class='ui small teal label'>通过:&nbsp;" + json[i]['accept'] + "</div><div class='ui small label'>提交:&nbsp;" + json[i]['submit'] + "</div>" + json[i]['num'] + " . " + json[i]['title'] + "</a>";
                             }
-                            var plain_html = '<div id="next_problem"><div class="ui massive vertical menu" style="position:relative;float:left;margin-left:20px">'+ str +'</div></div>';
-                            if($(".ui.massive.vertical.menu").length == 0) {
+                            var plain_html = '<div id="next_problem"><div class="ui massive vertical menu" style="position:relative;float:left;margin-left:20px">' + str + '</div></div>';
+                            if ($(".ui.massive.vertical.menu").length == 0) {
                                 $("#total_control").append(plain_html);
-                            }
-                            else {
+                            } else {
                                 $(".ui.massive.vertical.menu").html(str).fadeIn();
                             }
                         });
                     }
-                }
-                else if (status == 5 || status == 6) {
+                } else if (status == 5 || status == 6) {
                     //count=0;
                     $(".progess_text").text("在第" + (pass_point + 1) + "个测试点发生 " + judge_result[status] + "  通过率:" + pass_rate.toString().substring(0, 3) + "%");
                     $('.progress.result').progress({
                         percent: 100
                     });
                     $(".progress.result").progress('set error');
-                }
-                else if(status == 13) {
+                } else if (status == 13) {
                     if (typeof compile_info != "undefined") compile_info = this.nl2br(compile_info);
                     else compile_info = "";
                     $(".progess_text").text("在第" + (pass_point + 1) + "个测试点发生 " + judge_result[status] + " 内存使用:" + memory + "KB 运行时间:" + time + "ms");
@@ -609,8 +660,7 @@
                         percent: 100
                     });
                     $(".progress.result").progress('set warning');
-                }
-                else {
+                } else {
                     //count=0;
                     if (typeof compile_info != "undefined") compile_info = "<br>" + this.nl2br(compile_info);
                     else compile_info = "";

@@ -1,13 +1,16 @@
 <template>
     <div
-         style="max-width:1300px;position:relative;margin:auto;height: 540px;border-radius: 10px"
-         id="total_control">
-        <leftPanel :title="title" :time="time" :memory="memory" :spj="spj" :submit="submit" :accepted="accepted" :original_id="original_id"
-        :iseditor="iseditor" :isadmin="isadmin" :description="description" :input="input" :output="output" :sampleinput="sampleinput"
-        :sampleoutput="sampleoutput" :hint="hint" :uploader="uploader" :switch_screen="switch_screen" :normal_problem="normal_problem"
-        :source="source" :problem_id="problem_id"></leftPanel>
-        <rightPanel :lang_list="lang_list" :do_submit="do_submit" :pre_test_run="pre_test_run"
-        :prepend="prepend" :append="append"></rightPanel>
+            id="total_control"
+            style="max-width:1300px;position:relative;margin:auto;height: 540px;border-radius: 10px">
+        <leftPanel :accepted="accepted" :description="description" :hint="hint" :input="input" :isadmin="isadmin" :iseditor="iseditor"
+                   :memory="memory"
+                   :normal_problem="normal_problem" :original_id="original_id" :output="output" :problem_id="problem_id" :sampleinput="sampleinput"
+                   :sampleoutput="sampleoutput"
+                   :source="source" :spj="spj" :submit="submit" :switch_screen="switch_screen"
+                   :time="time"
+                   :title="title" :uploader="uploader"></leftPanel>
+        <rightPanel :append="append" :do_submit="do_submit" :lang_list="lang_list"
+                    :pre_test_run="pre_test_run" :prepend="prepend" :source_code="source_code"></rightPanel>
 
     </div>
 </template>
@@ -15,14 +18,19 @@
 <script>
     import leftPanel from './sidePage/leftPanel'
     import rightPanel from './sidePage/rightPanel'
+
     export default {
         name: "sideProblemView.vue",
-        components:{
+        components: {
             leftPanel,
             rightPanel
         },
         props: {
             title: {
+                type: String,
+                default: ""
+            },
+            source_code: {
                 type: String,
                 default: ""
             },
@@ -108,19 +116,25 @@
             },
             do_submit: {
                 type: Function,
-                default: () => {}
+                default: () => {
+                }
             },
             pre_test_run: {
                 type: Function,
-                default: () => {}
+                default: () => {
+                }
             },
             prepend: {
                 type: Object,
-                default: () => {return {}}
+                default: () => {
+                    return {}
+                }
             },
             append: {
                 type: Object,
-                default: () => {return {}}
+                default: () => {
+                    return {}
+                }
             }
         }
     }
@@ -141,6 +155,12 @@
 
     .sample_input {
         color: #ad1457;
+    }
+
+    #total_control {
+        min-height: -moz-available; /* WebKit-based browsers will ignore this. */
+        min-height: -webkit-fill-available; /* Mozilla-based browsers will ignore this. */
+        min-height: fill-available;
     }
 
     .sample_output {

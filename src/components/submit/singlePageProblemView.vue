@@ -1,75 +1,82 @@
 <template>
     <div class="ui container">
-        <div class="following bar title" v-show="!bodyOnTop"
-             :style="(!bodyOnTop?'opacity:1;':'opacity:0;') + 'z-index:99'">
-            <div :class="'ui vertical center aligned grid'">
-                <div class="row no padding">
-                    <div :class="'sixteen wide center aligned column'">
-                        <div class="ui header" id="probid" v-html="temp_title" style="font-size:1.71428571rem"></div>
-                    </div>
-                    <div class="eight wide center aligned column">
-                        <div class='ui labels'>
-                            <li class='ui label red' id="tlimit"
-                                v-text="time"></li>
-                            <li class='ui label red' id="mlimit"
-                                v-text="memory"></li>
-                            <li class='ui label orange' id="spj" v-cloak v-show="spj">Special Judge</li>
-                            <li class='ui label grey' id="totsub"
-                                v-text="submit"></li>
-                            <li class='ui label green' id="totac"
-                                v-text="accepted"></li>
+        <div :style="(!bodyOnTop?'opacity:1;':'opacity:0;') + 'z-index:99'" class="following bar title"
+             v-show="!bodyOnTop">
+            <div class="ui container">
+                <div :class="(!bodyOnTop ? '' : 'center aligned') + ' ui vertical grid'">
+                    <div class="row no padding">
+                        <div :class="(!bodyOnTop ? 'five' :'sixteen center aligned' ) + ' wide column light element'">
+                            <div class="ui header" id="probid" style="font-size:1.71428571rem"
+                                 v-html="temp_title"></div>
                         </div>
-                    </div>
-                </div>
-                <div class="row no padding">
-                    <div class="column">
-                        <div class='ui buttons'>
-                            <router-link :to="`/status/problem/${original_id}`" class="ui button orange">
-                                历史
-                            </router-link>
-                            <a @click.prevent="switch_screen($event)"
-                            class='ui button blue'>切换双屏</a>
-                            <router-link class="ui button teal" :to="`/tutorial/${original_id}`" v-if="normal_problem">
-                                查看题解
-                            </router-link>
-                            <a class='ui button violet' v-if="iseditor||isadmin"
-                               :href="'/problem_edit.php'+location.search" target="_blank">Edit</a>
-                            <a class='ui button purple' v-if="isadmin"
-                               :href="'admin/quixplorer/index.php?action=list&dir='+original_id+'&order=name&srt=yes'">TestData</a>
-
+                        <div :class="(!bodyOnTop ? 'five' :'sixteen' ) + ' wide center aligned column light element'">
+                            <div class='ui mini buttons'>
+                                <router-link :to="`/status/problem/${original_id}`" class="ui button orange">
+                                    历史
+                                </router-link>
+                                <a @click.prevent="switch_screen($event)"
+                                   class='ui button blue'>切换双屏</a>
+                                <router-link :to="`/tutorial/${original_id}`" class="ui button teal"
+                                             v-if="normal_problem || isadmin">
+                                    查看题解
+                                </router-link>
+                                <router-link v-if="iseditor||isadmin" :to="`/problem/edit/${original_id}`" class="ui button violet">编辑题目</router-link>
+                            </div>
+                        </div>
+                        <div :class="(!bodyOnTop ? 'six' :'eight' ) + ' wide center aligned column light element'">
+                            <div class='ui labels'>
+                                <li class='ui label red'
+                                    v-text="time"></li>
+                                <li class='ui label red'
+                                    v-text="memory"></li>
+                                <li class='ui label orange' v-cloak v-show="spj">Special Judge</li>
+                                <li class='ui label grey'
+                                    v-text="submit"></li>
+                                <li class='ui label green'
+                                    v-text="accepted"></li>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="ui vertical center aligned segment single" :style="bodyOnTop?'opacity:1':'opacity:0'">
-            <div class="ui header" v-html="temp_title"  style="font-size:1.71428571rem"></div>
-            <div class='ui labels'>
-                <li class='ui label red'
-                    v-text="time"></li>
-                <li class='ui label red'
-                    v-text="memory"></li>
-                <li class='ui label orange' v-cloak v-show="spj">Special Judge</li>
-                <li class='ui label grey'
-                    v-text="submit"></li>
-                <li class='ui label green'
-                    v-text="accepted"></li>
-            </div>
-            <br>
-            <div class='ui buttons'>
-                <router-link :to="`/status/problem/${original_id}`" class="ui button orange">
-                    历史
-                </router-link>
-                <a @click.prevent="switch_screen($event)"
-                class='ui button blue'>切换双屏</a>
-                <router-link class="ui button teal" :to="`/tutorial/${original_id}`" v-if="normal_problem">
-                    查看题解
-                </router-link>
-
-                <a class='ui button violet' v-if="iseditor||isadmin"
-                   :href="'/problem_edit.php?id='+original_id" target="_blank">Edit</a>
-                <a class='ui button purple' v-if="isadmin"
-                   :href="'admin/quixplorer/index.php?action=list&dir='+original_id+'&order=name&srt=yes'">TestData</a>
+        <div :style="(bodyOnTop?'opacity:1;':'opacity:0;')" class="ui vertical segment single">
+            <div class="ui container">
+                <div class="ui vertical grid">
+                    <div class="row no padding">
+                        <div class="five wide column">
+                            <div class="ui header" style="font-size:1.71428571rem"
+                                 v-html="temp_title"></div>
+                        </div>
+                        <div class="five wide center aligned column">
+                            <div class='ui mini buttons'>
+                                <router-link :to="`/status/problem/${original_id}`" class="ui button orange">
+                                    历史
+                                </router-link>
+                                <a @click.prevent="switch_screen($event)"
+                                   class='ui button blue'>切换双屏</a>
+                                <router-link :to="`/tutorial/${original_id}`" class="ui button teal"
+                                             v-if="normal_problem || isadmin">
+                                    查看题解
+                                </router-link>
+                                <router-link v-if="iseditor||isadmin" :to="`/problem/edit/${original_id}`" class="ui button violet">编辑题目</router-link>
+                            </div>
+                        </div>
+                        <div class="six wide center aligned column">
+                            <div class='ui labels'>
+                                <li class='ui label red'
+                                    v-text="time"></li>
+                                <li class='ui label red'
+                                    v-text="memory"></li>
+                                <li class='ui label orange' v-cloak v-show="spj">Special Judge</li>
+                                <li class='ui label grey'
+                                    v-text="submit"></li>
+                                <li class='ui label green'
+                                    v-text="accepted"></li>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -81,13 +88,13 @@
         <div class='ui hidden' v-html="output||''"></div>
         <h2 class='ui header hidden'>样例输入</h2>
         <div class="ui bottom attached segment hidden sample_input">
-            <div class="ui top attached label"><a data-clipboard-target=".sample_input" class="copy context">Copy
+            <div class="ui top attached label"><a class="copy context" data-clipboard-target=".sample_input">Copy
                 Sample Input</a></div>
             <pre v-text='sampleinput'></pre>
         </div>
         <h2 class='ui header'>样例输出</h2>
         <div class="ui bottom attached segment">
-            <div class="ui top attached label"><a data-clipboard-target=".sample_output" class="copy context">Copy
+            <div class="ui top attached label"><a class="copy context" data-clipboard-target=".sample_output">Copy
                 Sample Output</a></div>
             <pre class='sample_output' v-text='sampleoutput'></pre>
         </div>
@@ -96,18 +103,20 @@
         <h2 class='ui header'>来源</h2>
         <div class='ui'><p><a :href='"problemset.php?tag="+encodeURI(source)' id='problem_source'
                               v-text='source'></a></p>
-            <p>上传者:<a target="_blank" v-if="uploader!=='Administrator'" :href="'userinfo.php?user='+uploader">{{uploader}}</a><a v-else>Administrator</a></p>
+            <p>上传者:<a :href="'userinfo.php?user='+uploader" target="_blank" v-if="uploader!=='Administrator'">{{uploader}}</a><a
+                    v-else>Administrator</a></p>
         </div>
     </div>
 </template>
 
 <script>
     import markdownIt from '../../lib/markdownIt/markdownIt'
+
     export default {
         name: "singlePageProblemView",
         props: {
             bodyOnTop: {
-                type:Boolean,
+                type: Boolean,
                 default: true
             },
             time: {
@@ -144,7 +153,8 @@
             },
             switch_screen: {
                 type: Function,
-                default: () => {}
+                default: () => {
+                }
             },
             normal_problem: {
                 type: Boolean,
@@ -179,7 +189,7 @@
                 default: ""
             },
             hint: {
-                type:String,
+                type: String,
                 default: ""
             },
             source: {
@@ -194,7 +204,8 @@
         data() {
             return {
                 encodeURI,
-                markdownIt
+                markdownIt,
+                location
             }
         },
         computed: {
@@ -235,6 +246,14 @@
     .row.no.padding {
         padding-top: 0em;
         padding-bottom: 0em;
+    }
+
+    .ui.vertical.grid {
+        padding: 25px
+    }
+
+    .light.element {
+        transition: all 0.4s;
     }
 
     .main.submit.layout img {

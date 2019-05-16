@@ -47,12 +47,10 @@
                                 <td><i class='checkmark icon' v-if="row.ac === 1"></i>
                                     <i class="remove icon" v-else-if="row.ac === -1"></i>
                                     <i class="checkmark icon" style="opacity: 0" v-else></i>
-
-                                    <a :href="detect_source(row) + 'submitpage.php?cid='+cid+'&pid='+row.pnum"
-                                       v-html="contest(markdownIt.renderRaw(row.title),row.pnum)"
-                                       v-if="dayjs().isBefore(end_time) && dayjs().isAfter(start_time)"></a>
-                                    <a :href="detect_source(row) + 'submitpage.php?id=' + row.pid" v-else
-                                       v-html="contest(markdownIt.renderRaw(row.title),row.pnum)"></a>
+                                    <router-link v-if="dayjs().isBefore(end_time) && dayjs().isAfter(start_time)" :to="`/contest/problem/${cid}/${row.pnum}`" v-html="contest(markdownIt.renderRaw(row.title), row.pnum)">
+                                    </router-link>
+                                    <router-link :to="`/problem/submit/${row.pid}`" v-else v-html="contest(markdownIt.renderRaw(row.title), row.pnum)">
+                                    </router-link>
                                 </td>
                                 <td v-if="now.isAfter(end_time)">
                                     <a :href="'tutorial.php?from=' + (row.oj_name?row.oj_name:'local') + '&id=' + row.pid"

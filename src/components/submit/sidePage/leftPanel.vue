@@ -17,17 +17,11 @@
             </div>
             <br>
             <div class='ui buttons'>
-                <a :href="'problemstatus.php?id='+original_id" class='ui button orange'>历史</a>
-                <a @click.prevent="switch_screen()"
+                <router-link class="ui button orange" :to="`/status/problem/${original_id}`">历史</router-link>
+                <a @click.prevent="switch_screen"
                    class='ui button blue'>切换单屏</a>
-                <a v-if="normal_problem"
-                   :href="'tutorial.php?id='+original_id" class="ui button teal">
-                    查看题解
-                </a>
-                <a v-if="iseditor||isadmin" class='ui button violet'
-                   :href="'/problem_edit.php?id='+original_id" target="_blank">Edit</a>
-                <a class='ui button purple' v-if="isadmin"
-                   :href="'admin/quixplorer/index.php?action=list&dir='+original_id+'&order=name&srt=yes'">TestData</a>
+                <router-link :to="`/tutorial/${original_id}`" class="ui button teal">查看题解</router-link>
+                <router-link v-if="iseditor||isadmin" :to="`/problem/edit/${original_id}`" class="ui button violet">编辑题目</router-link>
             </div>
         </div>
         <br>
