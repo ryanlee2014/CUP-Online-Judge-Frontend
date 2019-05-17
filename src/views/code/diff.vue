@@ -1,7 +1,7 @@
 <template>
     <div class="ui container padding">
         <h2 class="ui dividing header">
-            Code Compare
+            ode Cfsa3121ompare
         </h2>
         <div class="ui grid">
             <div class="row">
@@ -67,12 +67,17 @@
             console.log(monaco.languages.getLanguages());
             this.$forceUpdate();
             this.$nextTick(() => {
-                const diffEditor = monaco.editor.createDiffEditor(document.getElementById("container"));
+                const diffEditor = this.diffEditor = monaco.editor.createDiffEditor(document.getElementById("container"));
                 diffEditor.setModel({
                     original: originalModel,
                     modified: modifiedModel
                 });
             });
+        },
+        beforeDestroy() {
+            if (this.diffEditor) {
+                this.diffEditor.dispose();
+            }
         }
     }
 </script>

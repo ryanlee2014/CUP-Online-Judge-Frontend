@@ -72,8 +72,13 @@
             async connectTry(times) {
                 while(times-- > 0) {
                     if (this.$socket && this.$socket.connect && typeof this.$socket.connect === "function") {
-                        this.$socket.connect();
-                        this.$socket.emit("getUser");
+                        if(!this.$socket.connected) {
+                            this.$socket.connect();
+                            this.$socket.emit("getUser");
+                        }
+                        else {
+                            break;
+                        }
                     }
                     await Promise.delay(500);
                 }
@@ -154,8 +159,15 @@
             });
 
             setTimeout(() => {
+                if(this.socketConnected === false && this.$socket.connected) {
+                    this.$socket.disconnect();
+                    this.$socket.connect();
+                }
+            });
+
+            setTimeout(() => {
                 this.connectTry(10);
-            }, 500);
+            }, 1500);
         },
         updated() {
 

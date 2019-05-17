@@ -19,8 +19,7 @@
                         <label>自动选择</label>
                     </div>
                 </div>
-                <a
-                        :class="'item'" class="not-compile" data-clipboard-action="copy" id="clipbtn"
+                <a :class="'item'" class="not-compile" data-clipboard-action="copy" id="clipbtn"
                         style="float:left;"
                         v-cloak v-if="prepend||append">复制代码</a>
 
@@ -29,49 +28,10 @@
                 <div class="item">
                 </div>
 
-                <div class="item">
-                    <span>主题:</span><select class="ui selection dropdown search" id="theme" size="1" v-model="theme">
 
-                    <optgroup label="Bright">
-                        <option value="ace/theme/chrome">Chrome</option>
-                        <option value="ace/theme/clouds">Clouds</option>
-                        <option value="ace/theme/crimson_editor">Crimson Editor</option>
-                        <option value="ace/theme/dawn">Dawn</option>
-                        <option value="ace/theme/dreamweaver">Dreamweaver</option>
-                        <option value="ace/theme/eclipse">Eclipse</option>
-                        <option value="ace/theme/github">GitHub</option>
-                        <option value="ace/theme/iplastic">IPlastic</option>
-                        <option value="ace/theme/solarized_light">Solarized Light</option>
-                        <option value="ace/theme/textmate">TextMate</option>
-                        <option value="ace/theme/tomorrow">Tomorrow</option>
-                        <option value="ace/theme/xcode">XCode</option>
-                        <option value="ace/theme/kuroir">Kuroir</option>
-                        <option value="ace/theme/katzenmilch">KatzenMilch</option>
-                        <option value="ace/theme/sqlserver">SQL Server</option>
-                    </optgroup>
-                    <optgroup label="Dark">
-                        <option value="ace/theme/ambiance">Ambiance</option>
-                        <option value="ace/theme/chaos">Chaos</option>
-                        <option value="ace/theme/clouds_midnight">Clouds Midnight</option>
-                        <option value="ace/theme/cobalt">Cobalt</option>
-                        <option value="ace/theme/gruvbox">Gruvbox</option>
-                        <option value="ace/theme/idle_fingers">idle Fingers</option>
-                        <option value="ace/theme/kr_theme">krTheme</option>
-                        <option value="ace/theme/merbivore">Merbivore</option>
-                        <option value="ace/theme/merbivore_soft">Merbivore Soft</option>
-                        <option value="ace/theme/mono_industrial">Mono Industrial</option>
-                        <option value="ace/theme/monokai">Monokai</option>
-                        <option value="ace/theme/pastel_on_dark">Pastel on dark</option>
-                        <option value="ace/theme/solarized_dark">Solarized Dark</option>
-                        <option value="ace/theme/terminal">Terminal</option>
-                        <option value="ace/theme/tomorrow_night">Tomorrow Night</option>
-                        <option value="ace/theme/tomorrow_night_blue">Tomorrow Night Blue</option>
-                        <option value="ace/theme/tomorrow_night_bright">Tomorrow Night Bright</option>
-                        <option value="ace/theme/tomorrow_night_eighties">Tomorrow Night 80s</option>
-                        <option value="ace/theme/twilight">Twilight</option>
-                        <option value="ace/theme/vibrant_ink">Vibrant Ink</option>
-                    </optgroup>
-                </select></div>
+                    <ace-theme-selector v-model="theme" v-if="!editorPackage"></ace-theme-selector>
+                    <monaco-theme-selector v-model="theme" v-else></monaco-theme-selector>
+
             </div>
         </div>
         <div :ace-mode="'ace/mode/'+language[selected_language]" :ace-theme="theme"
@@ -80,9 +40,12 @@
              style="width: 100%;padding:0px;line-height:1.2;text-align:left;margin-bottom:0px;"
              v-if="prepend" v-text="current_prepend">
         </div>
-        <div :style="{width:'100%',height:'460px',fontSize:fontSize+'px'}" cols=180
-             id="source" rows=20
-             style="width:100%;height:460px"></div>
+        <ace-editor v-if="!editorPackage" :fontSize="fontSize" :selected_language="selected_language"
+        :theme="theme" v-model="code"></ace-editor>
+        <monaco-editor v-else :fontSize="fontSize" :selected_language="selected_language"
+        :theme="theme" v-model="code">
+
+        </monaco-editor>
         <div :ace-mode="'ace/mode/'+language[selected_language]" :ace-theme="theme" class="append code"
              id="appendCodeHighlight"
              style="width: 100%; padding:0px; line-height:1.2;text-align:left;margin-bottom:0px;"
@@ -98,10 +61,16 @@
                 <div class="item">
                     <div class="ui toggle checkbox" v-cloak v-if="!iscontest">
                         <input name="share" type="checkbox" v-model="share">
-                        <label>允许他人查看代码</label>
+                        <label>公开代码</label>
                     </div>
                 </div>
-                <div class="item"><span class="item">字号:</span>
+                <div class="item">
+                    <div class="ui toggle checkbox">
+                        <input v-model="editorPackage" type="checkbox">
+                        <label>切换编辑器</label>
+                    </div>
+                </div>
+                <div class="item" v-show="!editorPackage"><span class="item">字号:</span>
                     <div class="ui input"><input id="fontsize" style="width:60px;text-align:center;height:30px"
                                                  type="text"
                                                  v-model="fontSize"></div>
@@ -136,6 +105,10 @@
 </template>
 
 <script>
+    import aceEditor from '../../../components/submit/codeEditor/aceEditor'
+    import aceThemeSelector from '../../../components/submit/codeEditor/aceComponent/aceThemeSelector'
+    import monacoEditor from '../../../components/submit/codeEditor/monacoEditor'
+    import monacoThemeSelector from '../../../components/submit/codeEditor/monacoComponent/monacoThemeSelector'
     const ace = require("brace");
     const Clipboard = require("clipboard");
     const detectLang = require("../../../lib/langDetector");
@@ -158,16 +131,23 @@
     const language_ext = ["c", "cc", "pas", "java", "rb", "sh", "py", "php", "pl", "cs", "m", "bas", "scm", "c", "cc", "lua", "js", "go", "py", "cpp", "cpp", "c", "kt", "java", "java", "python", "python", "java", "c", "cc"];
     export default {
         name: "rightPanel",
+        components: {
+            aceEditor,
+            aceThemeSelector,
+            monacoEditor,
+            monacoThemeSelector
+        },
         data() {
             return {
                 selected_language: 0,
                 auto_detect: false,
                 share: false,
-                fontSize: 18,
+                fontSize: "16",
                 theme: "ace/theme/monokai",
-                editor: null,
                 prependView: null,
                 appendView: null,
+                editorPackage: false,
+                code: "",
                 language,
                 current_prepend: "",
                 current_append: "",
@@ -235,13 +215,9 @@
         watch: {
             selected_language: function (val) {
                 this.$store.commit("setCodeInfo", {
-                    share: this.share,
-                    code: this.editor.getSession().getValue(),
                     language: val
                 });
                 require(`brace/mode/${language[val]}`);
-                const editor = this.editor;
-                editor.getSession().setMode(`ace/mode/${language[val]}`);
                 $("#language").dropdown("set selected", val.toString());
                 let prepend = this.prepend;
                 let append = this.append;
@@ -259,8 +235,9 @@
                 }
             },
             theme: function (val) {
-                const editor = this.editor;
-                editor.setTheme(val);
+                if(!this.editorPackage) {
+                    return;
+                }
                 const prependView = this.prependView;
                 if (prependView) {
                     this.prependView.setTheme(val);
@@ -281,27 +258,9 @@
                     });
                 }
             },
-            auto_detect: function (newVal, oldVal) {
-                const that = this;
-                const editor = this.editor;
-                if (newVal === oldVal) {
-                    return;
-                }
-                if (newVal) {
-                    const detectLanguageDebouncer = _.debounce(function () {
-                        const detected_lang = detectLang(editor.getSession().getValue(), that.lang_list.map(function (e) {
-                            return e.num
-                        }));
-                        if (that.selected_language != detected_lang) {
-                            that.selected_language = detected_lang;
-                        }
-                    }, 100);
-                    detectLanguageDebouncer();
-                    editor.on("change", function (event) {
-                        detectLanguageDebouncer();
-                    });
-                } else {
-                    editor.off("change");
+            auto_detect: function (val) {
+                if (val) {
+                    this.detectLanguageDebouncer();
                 }
             },
             prepend: function (val) {
@@ -364,35 +323,23 @@
             },
             share: function (val) {
                 this.$store.commit("setCodeInfo", {
-                    share: !!val,
-                    code: this.editor.getSession().getValue(),
-                    language: this.selected_language
+                    share: !!val
                 });
             },
             source_code: function (val) {
-                const that = this;
-                const editor = this.editor;
-                editor.getSession().setValue(val);
+                this.code = val;
+            },
+            code: function (val) {
+                if (val) {
+                    this.detectLanguageDebouncer();
+                }
             }
         },
         mounted() {
-            this.initEditor();
             this.initClipboard();
             this.initSolutionCode();
         },
         methods: {
-            initEditor() {
-                const editor = this.editor = ace.edit("source");
-                editor.on("change", () => {
-                    this.$store.commit("setCodeInfo", {
-                        share: this.share,
-                        code: this.editor.getSession().getValue(),
-                        language: this.selected_language
-                    });
-                });
-                editor.getSession().setMode(`ace/mode/${language[this.selected_language]}`);
-                editor.setTheme(this.theme);
-            },
             initClipboard() {
                 let obj = document.getElementById('clipbtn');
                 const that = this;
@@ -429,6 +376,17 @@
                             this.selected_language = parseInt(data.data.language);
                         });
                 }
+            },
+            detectLanguageDebouncer() {
+                const that = this;
+                (_.debounce(() => {
+                    const detected_lang = detectLang(that.code, that.lang_list.map(function (e) {
+                        return e.num
+                    }));
+                    if (that.selected_language != detected_lang) {
+                        that.selected_language = detected_lang;
+                    }
+                }, 100))();
             }
         }
     }

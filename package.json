@@ -3,11 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
+    "serve": "npx --max_old_space_size=8192 vue-cli-service serve",
+    "build": "npx --max_old_space_size=8192 vue-cli-service build",
     "lint": "vue-cli-service lint",
     "ui": "vue ui",
-    "fix-memory-limit": "cross-env LIMIT=4096 increase-memory-limit"
+    "fix-memory-limit": "cross-env LIMIT=8192 increase-memory-limit"
   },
   "dependencies": {
     "@amcharts/amcharts4": "^4.4.4",
@@ -24,13 +24,11 @@
     "chart.js": "^2.8.0",
     "clipboard": "^2.0.4",
     "core-js": "^2.6.5",
-    "cross-env": "^5.2.0",
     "d3": "^5.9.2",
     "dayjs": "^1.8.14",
     "dragscroll": "0.0.8",
     "file-saver": "^2.0.1",
     "fingerprintjs2": "^2.0.6",
-    "increase-memory-limit": "^1.0.6",
     "jquery": "^3.4.1",
     "js-cookie": "^2.2.0",
     "katex": "^0.10.1",
@@ -55,6 +53,8 @@
     "@vue/cli-plugin-eslint": "^3.7.0",
     "@vue/cli-service": "^3.7.0",
     "babel-eslint": "^10.0.1",
+    "cross-env": "^5.2.0",
+    "increase-memory-limit": "^1.0.6",
     "eslint": "^5.16.0",
     "eslint-plugin-vue": "^5.0.0",
     "monaco-editor-webpack-plugin": "^1.7.0",
