@@ -64,7 +64,7 @@
             return {
                 user: 1,
                 judger: 0,
-                socketConnected: false,
+                socketConnected: true,
                 intervalId: -1
             }
         },
@@ -73,6 +73,7 @@
                 while(times-- > 0) {
                     if (this.$socket && this.$socket.connect && typeof this.$socket.connect === "function") {
                         this.$socket.connect();
+                        this.$socket.emit("getUser");
                     }
                     await Promise.delay(500);
                 }
@@ -153,13 +154,11 @@
             });
 
             setTimeout(() => {
-                this.connectTry(5);
+                this.connectTry(10);
             }, 500);
         },
         updated() {
-            if(this.$socket && this.$socket.connected) {
-                this.$socket.emit("getUser");
-            }
+
         }
     }
 </script>

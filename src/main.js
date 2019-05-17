@@ -34,7 +34,6 @@ Vue.directive('tableUpdated', {
           observeChanges: false,
           refreshOnLoad: true,
           refreshOnResize: true,
-        })
-    ;
+        });
   }
 });

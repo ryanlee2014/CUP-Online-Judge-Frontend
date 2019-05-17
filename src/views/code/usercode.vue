@@ -88,8 +88,8 @@
 </template>
 
 <script>
-    import mixins from '../mixin/init'
-    import ContestMode from '../components/contestMode/block'
+    import mixins from '../../mixin/init'
+    import ContestMode from '../../components/contestMode/block'
     const Clipboard = require('clipboard');
     const clipboard = new Clipboard("#copy");
     const $ = require("jquery");

@@ -47,11 +47,10 @@
                 <a v-if="row.result == 3 && !!row.pass_point && !!row.total_point" :class="answer_class[row.result]"
                    v-cloak><i :class="answer_icon[row.result]+' icon'" style="opacity:0"></i>({{row.pass_point ||
                     0}}/{{row.total_point || 0}})</a>
-                <a v-if="row.sim" :href="'comparesource.php?left='+row.solution_id+'&right='+row.sim_id" v-cloak
-                   :class="answer_class[row.result]">
+                <router-link :class="answer_class[row.result]" v-if="row.sim" :to="`/compare/${row.solution_id}/${row.sim_id}`">
                     <br v-if="row.result == 3">
                     {{(Boolean(row.sim) === false?'':row.sim_id+' ('+row.sim+'%)')}}
-                </a>
+                </router-link>
                 <a :class="answer_class[row.result]" v-if="row.result !== 4 && row.pass_rate > 0.05"><i
                         :class="answer_icon[row.result]+' icon'" style="opacity:0"></i>Passed:{{(row.pass_rate*100).toFixed(1)}}%</a>
 

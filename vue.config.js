@@ -1,8 +1,9 @@
+const MonacoEditorPlugin = require('monaco-editor-webpack-plugin');
+
 module.exports = {
     runtimeCompiler: true,
-
     css: {
-        modules: true
+        modules: false
     },
     devServer: {
         proxy: {
@@ -38,6 +39,11 @@ module.exports = {
             }
         }
 
+    },
+    configureWebpack: {
+        plugins: [
+            new MonacoEditorPlugin()
+        ]
     },
     assetsDir: './static'
 };

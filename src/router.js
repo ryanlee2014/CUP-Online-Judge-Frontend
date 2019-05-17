@@ -81,7 +81,7 @@ const router = new Router({
         {
             path: '/usercode/:from/:solution_id',
             name: 'usercode',
-            component: () => import('./views/usercode.vue'),
+            component: () => import('./views/code/usercode.vue'),
             meta: {
                 auth: true
             }
@@ -183,6 +183,14 @@ const router = new Router({
             path: '/problem/edit/:problem_id',
             name: 'problem edit view',
             component: () => import('./views/problem/edit.vue'),
+            meta: {
+                auth: true
+            }
+        },
+        {
+            path: '/compare/:left/:right',
+            name: 'compare two code',
+            component: () => import('./views/code/diff.vue'),
             meta: {
                 auth: true
             }
