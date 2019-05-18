@@ -27,14 +27,16 @@
             </div>
             </td>
             <td>
-                <div class=center><a :href="(row.oj_name === 'local'?'new':(!row.oj_name?'new':row.oj_name.toLowerCase()))+'submitpage.php?cid='+row.contest_id+'&pid='+row.num">{{end?((row.oj_name === "local"?"":row.oj_name.toUpperCase())+row.problem_id):(row.num + 1001)}}</a>
+                <div class=center>
+                    <router-link :to="`/contest/problem/${Math.abs(row.contest_id)}/${row.num}`">{{end?((row.oj_name === "local"?"":row.oj_name.toUpperCase())+row.problem_id):(row.num + 1001)}}</router-link>
                 </div>
             </td>
             <td><a :href="(row.result == 11?'ce':'re')+'info.php?sid='+row.solution_id"
                    v-cloak :class="answer_class[row.result]" title='点击看详细'><i v-cloak :class="answer_icon[row.result]+' icon'"></i>{{result[row.result]}}</a>
-                   <a v-if="row.sim" :href="'comparesource.php?left='+row.solution_id+'&right='+row.sim_id" v-cloak :class="answer_class[row.result]"><br>
-                   {{(Boolean(row.sim) === false?'':row.sim_id+' ('+row.sim+'%)')}}
-                   </a>
+                    <router-link v-if="row.sim" :to="`/compare/${row.solution_id}/${row.sim_id}`" :class="answer_class[row.result]">
+                        <br>
+                        {{(Boolean(row.sim) === false?'':row.sim_id+' ('+row.sim+'%)')}}
+                    </router-link>
                    <br>
                    <a :class="answer_class[row.result]" v-if="row.result !== 4 && row.pass_rate > 0.05"><i :class="answer_icon[row.result]+' icon'" style="opacity:0"></i>Passed:{{(row.pass_rate*100).toString().substring(0,4)}}%</a>
 

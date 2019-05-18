@@ -2,7 +2,7 @@
     <div class="ui container padding">
         <h2 class="ui dividing header">Discuss</h2>
         <div class="ui breadcrumb">
-            <a class="section" href="/discuss.php">讨论主页</a>
+            <router-link class="section" to="/discuss">讨论主页</router-link>
             <i class="right angle icon divider"></i>
             <div class="active section">Discuss ID:{{id}}</div>
         </div>

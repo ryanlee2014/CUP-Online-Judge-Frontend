@@ -14,7 +14,7 @@
 <br>平台开发相关信息，请访问<a href="about.php" target="_blank">关于</a><br>关于本平台使用的开源项目，请访问<a href="opensource.php" target="_blank">开放源代码声明</a><br>想要了解关于<b>ICPC竞赛</b>的资讯，请善用搜索引擎，并阅读<a href="icpc.php" target="_blank">什么是ICPC</a>
 </div>
 
-作者:[Ryan Lee(李昊元)](/userinfo.php?user=2016011253)
+作者:[Ryan Lee(李昊元)](/user/2016011253)
 
 <div class="ui message">
 <div class="header">兼容性提示</div>
