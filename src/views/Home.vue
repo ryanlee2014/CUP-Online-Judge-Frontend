@@ -2,9 +2,6 @@
     <div>
         <div>
             <div class="ui inverted vertical masthead center aligned segment gr5" id="background">
-                <!--<video autoplay id="myVideo" muted style="display:none">
-                    <source src="/video/icpc.mp4" type="video/mp4">
-                </video>-->
                 <div class="unvisible" id="main_container">
                     <div class="ui container">
                         <div class="ui large secondary inverted pointing menu">
@@ -19,21 +16,20 @@
 
                             </h1>
                             <div class="column buttonset">
-
-                                <a class="ui inverted large button download basic" href="icpc.php" target="_blank">
+                                <router-link class="ui inverted large button download basic" to="/about/icpc">
                                     <i class="newspaper outline icon"></i>
                                     关于ICPC
-                                </a>
-                                <a class="ui inverted large button download basic" href="fame.php" target="_blank">
+                                </router-link>
+                                <router-link class="ui inverted large button download basic" to="/about/fame">
                                     <i class="chess queen icon"></i>
                                     Hall of Fame
-                                </a>
-
+                                </router-link>
                             </div>
                             <br>
 
                             <div class="column">
-                                <a class="ui white basic label maintain" href='update_log.php' target="_blank"></a>
+                                <router-link class="ui white basic label maintain" to="/update">
+                                </router-link>
                                 <!-- Place this tag where you want the button to render. -->
                                 <a class="github_button"
                                    href="https://travis-ci.com/CUP-ACM-Programming-Club/CUP-Online-Judge-Express"
@@ -42,7 +38,8 @@
                                         style="vertical-align: middle;"></a>
                                 <a class="github_button"
                                    href="https://codebeat.co/projects/github-com-cup-acm-programming-club-cup-online-judge-express-master-7e8760db-7670-4c22-9862-1262dddcb4ec"><img
-                                        alt="codebeat badge" src="https://codebeat.co/badges/bf69c0eb-2bdf-4fbe-a6f0-2bf2a98a597a"
+                                        alt="codebeat badge"
+                                        src="https://codebeat.co/badges/bf69c0eb-2bdf-4fbe-a6f0-2bf2a98a597a"
                                         style="vertical-align: middle;"/></a>
                                 <a class="github_button"
                                    href="https://codecov.io/gh/CUP-ACM-Programming-Club/CUP-Online-Judge-Express">
@@ -51,7 +48,8 @@
                                 </a>
 
                             </div>
-                            <br><a class="ui inverted large button download basic vultr" href="https://www.cubecloud.net/aff.php?aff=1461"
+                            <br><a class="ui inverted large button download basic vultr"
+                                   href="https://www.cubecloud.net/aff.php?aff=1461"
                                    target="_blank">
                             Hosted by CubeCloud
                         </a>
@@ -91,16 +89,7 @@
 
                     </div>
                     <br>
-                    <!--
-                    <div class="ui text shape">
-                        <div class="sides">
-                            <div class="ui header side text inverted active typed-element"></div>
-                        </div>
-                    </div>
-                    <br><br>-->
-
                 </div>
-                <!--<div class="ui huge primary button" onclick="location.href='<?php /* if (isset($_SESSION['user_id'])) echo "problemset.php"; else echo "newloginpage.php"; ?>'"><?php if (!isset($_SESSION['user_id'])) echo "Login"; else echo "Get Started";*/ ?><i class="right arrow icon"></i></div>-->
             </div>
 
         </div>
@@ -121,30 +110,11 @@
                     </div>
                     <div class="six wide right floated column">
                         <img class="ui large borderless rounded image"
-                             src="/template/semantic-ui/picture/jetbrains.png">
+                             src="../static/image/jetbrains.png">
                     </div>
                 </div>
             </div>
         </div>
-
-        <!--
-            <div class="ui vertical stripe quote segment">
-                <div class="ui equal width stackable internally celled grid">
-                    <div class="center aligned row">
-                        <div class="column">
-                            <h3>"What a Company"</h3>
-                            <p>That is what they all say about us</p>
-                        </div>
-                        <div class="column">
-                            <h3>"I shouldn't have gone with their competitor."</h3>
-                            <p>
-                                <img src="assets/images/avatar/nan.jpg" class="ui avatar image"> <b>Nan</b> Chief Fun Officer Acme Toys
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>-->
-
         <div class="ui vertical stripe segment">
             <div class="ui text container">
                 <h3 class="ui header">ICPC</h3>
@@ -152,7 +122,7 @@
                     国际大学生程序设计竞赛（英语：International Collegiate Programming Contest,
                     ICPC）是一项旨在展示大学生创新能力、团队精神和在压力下编写程序、分析和解决问题能力的年度竞赛。经过40多年的发展，国际大学生程序设计竞赛已经发展成为最具影响力的大学生计算机竞赛。赛事之前仅由IBM公司赞助，2017年新增JetBrains公司赞助,
                     2018年起，美国计算机协会（ACM）不再赞助ICPC。（Wikipedia）</p>
-                <a class="ui large button" href="icpc.php" target="_blank">More Information</a>
+                <router-link class="ui large buttons" to="/about/icpc">More Information</router-link>
                 <h4 class="ui horizontal header divider">
                     <a href="#">Developer</a>
                 </h4>

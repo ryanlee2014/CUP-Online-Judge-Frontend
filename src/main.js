@@ -1,7 +1,14 @@
 import Vue from 'vue'
 import VueAxios from 'vue-axios'
 import axios from 'axios';
+import VueLazyload from 'vue-lazyload'
 Vue.use(VueAxios, axios);
+Vue.use(VueLazyload, {
+    preLoad: 1.3,
+    error: '/assets/images/wireframe/white-image.png',
+    loading: '/assets/images/wireframe/white-image.png',
+    attempt: 2
+})
 import App from './App.vue'
 import router from './router'
 import store from './store'

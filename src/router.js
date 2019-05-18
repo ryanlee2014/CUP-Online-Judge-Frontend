@@ -211,6 +211,21 @@ const router = new Router({
             component: () => import('./views/about/copyright.vue')
         },
         {
+            path: '/update',
+            name: 'update log view',
+            component: () => import('./views/system/update.vue')
+        },
+        {
+            path: '/about/icpc',
+            name: 'icpc introduction view',
+            component: () => import('./views/about/icpc.vue')
+        },
+        {
+            path: '/about/fame',
+            name: 'hall of fame view',
+            component: () => import('./views/about/fame.vue')
+        },
+        {
             path: "*",
             redirect: "/"
         }

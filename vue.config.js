@@ -36,6 +36,11 @@ module.exports = {
                 target: 'https://www.cupacm.com',
                 secure: false,
                 changeOrigin: true
+            },
+            '/glory_image': {
+                target: 'https://www.cupacm.com',
+                secure: false,
+                changeOrigin: true
             }
         }
 
