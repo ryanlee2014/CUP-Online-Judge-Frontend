@@ -13,6 +13,6 @@ before_install:
   - npm i
 
 script:
-  - nyc npm test && nyc report --reporter=text-lconv > coverage.lcov && codecov
+  - nyc npm test && nyc report --reporter=text-lcov > coverage.lcov && codecov
 
 dist: xenial
