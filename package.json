@@ -3,13 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "npx --max_old_space_size=8192 vue-cli-service serve",
-    "build": "npx --max_old_space_size=8192 vue-cli-service build",
-    "modern": "npx --max_old_space_size=8192 vue-cli-service build --mode production --dest dist --target app --modern --dashboard",
+    "serve": "npx --max_old_space_size=16000 vue-cli-service serve",
+    "build": "npx --max_old_space_size=16000 vue-cli-service build",
+    "modern": "npx --max_old_space_size=4096 vue-cli-service build --mode production --dest dist --target app --modern --dashboard",
     "lint": "vue-cli-service lint",
     "ui": "vue ui",
-    "test": "npm run modern",
-    "fix-memory-limit": "cross-env LIMIT=8192 increase-memory-limit"
+    "test": "npx --max_old_space_size=16000 vue-cli-service build",
+    "fix-memory-limit": "cross-env LIMIT=16000 increase-memory-limit"
   },
   "dependencies": {
     "@amcharts/amcharts4": "^4.4.4",
@@ -81,7 +81,9 @@
       "vue/no-unused-vars": "off",
       "vue/no-unused-components": "1",
       "no-console": "off",
-      "no-unused-vars": "off"
+      "no-unused-vars": "off",
+      "no-useless-escape": "off",
+      "no-undef": "warn"
     }
   },
   "postcss": {
