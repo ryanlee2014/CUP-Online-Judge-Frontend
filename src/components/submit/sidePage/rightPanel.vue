@@ -20,8 +20,8 @@
                     </div>
                 </div>
                 <a :class="'item'" class="not-compile" data-clipboard-action="copy" id="clipbtn"
-                        style="float:left;"
-                        v-cloak v-if="prepend||append">复制代码</a>
+                   style="float:left;"
+                   v-cloak v-if="prepend||append">复制代码</a>
 
             </div>
             <div class="right menu">
@@ -29,8 +29,8 @@
                 </div>
 
 
-                    <ace-theme-selector v-model="theme" v-if="!editorPackage"></ace-theme-selector>
-                    <monaco-theme-selector v-model="theme" v-else></monaco-theme-selector>
+                <ace-theme-selector v-model="theme" v-if="!editorPackage"></ace-theme-selector>
+                <monaco-theme-selector v-model="theme" v-else></monaco-theme-selector>
 
             </div>
         </div>
@@ -41,9 +41,9 @@
              v-if="prepend" v-text="current_prepend">
         </div>
         <ace-editor v-if="!editorPackage" :fontSize="fontSize" :selected_language="selected_language"
-        :theme="theme" v-model="code"></ace-editor>
+                    :theme="theme" v-model="code"></ace-editor>
         <monaco-editor v-else :fontSize="fontSize" :selected_language="selected_language"
-        :theme="theme" v-model="code">
+                       :theme="theme" v-model="code">
 
         </monaco-editor>
         <div :ace-mode="'ace/mode/'+language[selected_language]" :ace-theme="theme" class="append code"
@@ -119,14 +119,6 @@
     require('../../../lib/brace/braceTheme');
     require("brace/ext/static_highlight");
 
-    const defaultConfig = {
-        lang: 'c_cpp',
-        theme: 'monokai',
-        options: {
-            useSoftTabs: true,
-            tabSize: 4
-        }
-    };
     const language = ["c_cpp", "c_cpp", "pascal", "java", "ruby", "bash", "python", "php", "perl", "csharp", "objectivec", "text", "scheme", "c_cpp", "c_cpp", "lua", "javascript", "go", "python", "c_cpp", "c_cpp", "c_cpp", "text", "java", "java", "python", "python", "java", "c_cpp", "c_cpp"];
     const language_ext = ["c", "cc", "pas", "java", "rb", "sh", "py", "php", "pl", "cs", "m", "bas", "scm", "c", "cc", "lua", "js", "go", "py", "cpp", "cpp", "c", "kt", "java", "java", "python", "python", "java", "c", "cc"];
     export default {
@@ -138,13 +130,14 @@
             monacoThemeSelector
         },
         data() {
-            return {
+            let _baseData = {
                 selected_language: 0,
                 auto_detect: false,
                 share: false,
                 fontSize: "16",
                 theme: "ace/theme/monokai",
                 prependView: null,
+                config: {},
                 appendView: null,
                 editorPackage: false,
                 code: "",
@@ -156,7 +149,11 @@
                         resolve(fn);
                     })
                 })
-            }
+            };
+            const config = this.initConfig();
+            Object.assign(_baseData, config);
+            Object.assign(_baseData.config, config);
+            return _baseData;
         },
         props: {
             prepend: {
@@ -174,12 +171,6 @@
             iscontest: {
                 type: Boolean,
                 default: false
-            },
-            config: {
-                type: Object,
-                default: function () {
-                    return defaultConfig
-                }
             },
             lang_list: {
                 type: Array,
@@ -234,8 +225,24 @@
                     }
                 }
             },
+            editorPackage(val, oldVal) {
+                this.config.editorPackage = val;
+                localStorage.submitConfig = JSON.stringify(this.config);
+                if (val) {
+                    this.theme = "vs-dark";
+
+                }
+                else {
+                    this.theme = "ace/theme/monokai";
+                }
+            },
             theme: function (val) {
-                if(!this.editorPackage) {
+                if (val === "") {
+                    return;
+                }
+                this.config.theme = val;
+                localStorage.submitConfig = JSON.stringify(this.config);
+                if(this.editorPackage) {
                     return;
                 }
                 const prependView = this.prependView;
@@ -330,16 +337,41 @@
                 this.code = val;
             },
             code: function (val) {
-                if (val) {
+                if (val && this.auto_detect) {
                     this.detectLanguageDebouncer();
                 }
+            },
+            fontSize(val) {
+                this.config.fontSize = val;
+                localStorage.submitConfig = JSON.stringify(this.config);
             }
         },
         mounted() {
+            this.initConfig();
             this.initClipboard();
             this.initSolutionCode();
         },
         methods: {
+            initConfig() {
+                const defaultConfig = {
+                    editorPackage: false,
+                    theme: "ace/theme/monokai",
+                    fontSize: 16
+                };
+                let config;
+                if (!localStorage.submitConfig) {
+                    localStorage.submitConfig = JSON.stringify(config = defaultConfig);
+                }
+                else {
+                    try {
+                        config = JSON.parse(localStorage.submitConfig);
+                    }
+                    catch (e) {
+                        config = defaultConfig;
+                    }
+                }
+                return config;
+            },
             initClipboard() {
                 let obj = document.getElementById('clipbtn');
                 const that = this;

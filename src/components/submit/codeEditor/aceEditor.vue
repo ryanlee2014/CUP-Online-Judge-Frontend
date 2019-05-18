@@ -38,6 +38,7 @@
             }
         },
         mounted() {
+            console.log("aceEditor get value", this.value);
             this.initEditor();
         },
         watch: {
@@ -54,7 +55,12 @@
                 this.editor.getSession().setMode(`ace/mode/${language[val]}`);
             },
             theme(val) {
-                this.editor.setTheme(val);
+                if (val.includes("ace")) {
+                    this.editor.setTheme(val);
+                }
+                else {
+                    this.editor.setTheme("ace/theme/monokai");
+                }
             }
         },
         methods: {
@@ -68,7 +74,19 @@
                     });
                 });
                 editor.getSession().setMode(`ace/mode/${language[this.selected_language]}`);
-                editor.setTheme(this.theme);
+                editor.setTheme(this.getThemeFromStorage());
+            },
+            getThemeFromStorage() {
+                let defaultTheme = "ace/theme/monokai";
+                let theme;
+                try {
+                    theme = JSON.parse(localStorage.submitConfig).theme;
+                }
+                catch (e) {
+                    theme = defaultTheme;
+                }
+                console.log("getTheme", theme);
+                return theme;
             }
         }
     }

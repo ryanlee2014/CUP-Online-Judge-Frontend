@@ -1,7 +1,7 @@
 const $ = require("jquery");
 const jQuery = $;
 export default {
-    detectIP: function(tmp) {
+    detectIP: function (tmp) {
         if (tmp.ip && !tmp.intranet_ip) {
             tmp.intranet_ip = tmp.ip;
         }
@@ -108,13 +108,13 @@ export default {
         } else
             tmp.place = "未知";
     },
-    init: function(homepage, finished){
+    init: function (homepage, finished) {
         jQuery.event.special.touchstart = {
-            setup: function( _, ns, handle ){
-                if ( ns.includes("noPreventDefault") ) {
-                    this.addEventListener("touchstart", handle, { passive: false });
+            setup: function (_, ns, handle) {
+                if (ns.includes("noPreventDefault")) {
+                    this.addEventListener("touchstart", handle, {passive: false});
                 } else {
-                    this.addEventListener("touchstart", handle, { passive: true });
+                    this.addEventListener("touchstart", handle, {passive: true});
                 }
             }
         };
@@ -128,7 +128,7 @@ export default {
             grey: 'rgb(201, 203, 207)'
         };
 
-        (function(global) {
+        (function (global) {
             var Months = [
                 'January',
                 'February',
@@ -161,11 +161,11 @@ export default {
 
             Samples.utils = {
                 // Adapted from http://indiegamr.com/generate-repeatable-random-numbers-in-js/
-                srand: function(seed) {
+                srand: function (seed) {
                     this._seed = seed;
                 },
 
-                rand: function(min, max) {
+                rand: function (min, max) {
                     var seed = this._seed;
                     min = min === undefined ? 0 : min;
                     max = max === undefined ? 1 : max;
@@ -173,7 +173,7 @@ export default {
                     return min + (this._seed / 233280) * (max - min);
                 },
 
-                numbers: function(config) {
+                numbers: function (config) {
                     var cfg = config || {};
                     var min = cfg.min || 0;
                     var max = cfg.max || 1;
@@ -197,7 +197,7 @@ export default {
                     return data;
                 },
 
-                labels: function(config) {
+                labels: function (config) {
                     var cfg = config || {};
                     var min = cfg.min || 0;
                     var max = cfg.max || 100;
@@ -216,7 +216,7 @@ export default {
                     return values;
                 },
 
-                months: function(config) {
+                months: function (config) {
                     var cfg = config || {};
                     var count = cfg.count || 12;
                     var section = cfg.section;
@@ -231,18 +231,18 @@ export default {
                     return values;
                 },
 
-                color: function(index) {
+                color: function (index) {
                     return COLORS[index % COLORS.length];
                 },
 
-                transparentize: function(color, opacity) {
+                transparentize: function (color, opacity) {
                     var alpha = opacity === undefined ? 0.5 : 1 - opacity;
                     return Color(color).alpha(alpha).rgbString();
                 }
             };
 
             // DEPRECATED
-            window.randomScalingFactor = function() {
+            window.randomScalingFactor = function () {
                 return Math.round(Samples.utils.rand(-100, 100));
             };
             // INITIALIZATION
@@ -264,16 +264,16 @@ export default {
             if ($('.ui.menu .ui.dropdown').html())
                 $('.ui.menu .ui.dropdown').dropdown({
                     on: 'hover',
-                    onShow:function(){
-                        if($(".following.bar").length > 1)
+                    onShow: function () {
+                        if ($(".following.bar").length > 1)
                             $(".topmenu").css({
-                                zIndex:999
+                                zIndex: 999
                             })
                     },
-                    onHide:function(){
-                        if($(".following.bar").length > 1)
+                    onHide: function () {
+                        if ($(".following.bar").length > 1)
                             $(".topmenu").css({
-                                zIndex:99
+                                zIndex: 99
                             })
                     }
                 });
@@ -320,8 +320,9 @@ export default {
                 if (typeof homepage === "boolean" && homepage && finished)
                     $('.network.menu').removeClass('inverted');
             }
+
             function lightout() {
-                $('.following.bar').removeClass('light fixed')
+                $('.following.bar').removeClass('light fixed');
                 $('.fixed.menu').transition('fade out');
                 //('.network.menu').removeClass('secondary');
                 if (typeof homepage === "boolean" && homepage && finished)
@@ -354,138 +355,32 @@ export default {
                 popup: ".flowing.popup.dropdown_menu_group"
             })
         }
-        (function(a){a.fn.scrollToTop=function(c){var d={speed:800};c&&a.extend(d,{speed:c});return this.each(function(){var b=a(this);a(window).scroll(function(){100<a(this).scrollTop()?b.fadeIn():b.fadeOut()});b.click(function(b){b.preventDefault();a("body, html").animate({scrollTop:0},d.speed)})})}})(jQuery);
+
+        (function (a) {
+            a.fn.scrollToTop = function (c) {
+                var d = {speed: 800};
+                c && a.extend(d, {speed: c});
+                return this.each(function () {
+                    var b = a(this);
+                    a(window).scroll(function () {
+                        100 < a(this).scrollTop() ? b.fadeIn() : b.fadeOut()
+                    });
+                    b.click(function (b) {
+                        b.preventDefault();
+                        a("body, html").animate({scrollTop: 0}, d.speed)
+                    })
+                })
+            }
+        })(jQuery);
         $(document)
             .ready(function () {
                 binding_method();
-                /*(function addFirework() {
-                    var canvasEl = document.querySelector('.fireworks');
-                    var ctx = canvasEl.getContext('2d');
-                    var numberOfParticules = 30;
-                    var pointerX = 0;
-                    var pointerY = 0;
-                    var tap = ('ontouchstart' in window || navigator.msMaxTouchPoints) ? 'touchstart' : 'mousedown';
-                    var colors = ['#FF1461', '#18FF92', '#5A87FF', '#FBF38C'];
-
-                    function setCanvasSize() {
-                        canvasEl.width = window.innerWidth * 2;
-                        canvasEl.height = window.innerHeight * 2;
-                        canvasEl.style.width = window.innerWidth + 'px';
-                        canvasEl.style.height = window.innerHeight + 'px';
-                        canvasEl.style.marginTop = window.scrollY + 'px';
-                        canvasEl.getContext('2d').scale(2, 2);
-                    }
-
-                    function updateCoords(e) {
-                        pointerX = e.clientX || e.touches[0].clientX;
-                        pointerY = e.clientY || e.touches[0].clientY;
-                    }
-
-                    function setParticuleDirection(p) {
-                        var angle = anime.random(0, 360) * Math.PI / 180;
-                        var value = anime.random(50, 180);
-                        var radius = [-1, 1][anime.random(0, 1)] * value;
-                        return {
-                            x: p.x + radius * Math.cos(angle),
-                            y: p.y + radius * Math.sin(angle)
-                        }
-                    }
-
-                    function createParticule(x, y) {
-                        var p = {};
-                        p.x = x;
-                        p.y = y;
-                        p.color = colors[anime.random(0, colors.length - 1)];
-                        p.radius = anime.random(16, 32);
-                        p.endPos = setParticuleDirection(p);
-                        p.draw = function () {
-                            ctx.beginPath();
-                            ctx.arc(p.x, p.y, p.radius, 0, 2 * Math.PI, true);
-                            ctx.fillStyle = p.color;
-                            ctx.fill();
-                        }
-                        return p;
-                    }
-
-                    function createCircle(x, y) {
-                        var p = {};
-                        p.x = x;
-                        p.y = y;
-                        p.color = '#FFF';
-                        p.radius = 0.1;
-                        p.alpha = .5;
-                        p.lineWidth = 6;
-                        p.draw = function () {
-                            ctx.globalAlpha = p.alpha;
-                            ctx.beginPath();
-                            ctx.arc(p.x, p.y, p.radius, 0, 2 * Math.PI, true);
-                            ctx.lineWidth = p.lineWidth;
-                            ctx.strokeStyle = p.color;
-                            ctx.stroke();
-                            ctx.globalAlpha = 1;
-                        }
-                        return p;
-                    }
-
-                    function renderParticule(anim) {
-                        for (var i = 0; i < anim.animatables.length; i++) {
-                            anim.animatables[i].target.draw();
-                        }
-                    }
-
-                    function animateParticules(x, y) {
-                        var circle = createCircle(x, y);
-                        var particules = [];
-                        for (var i = 0; i < numberOfParticules; i++) {
-                            particules.push(createParticule(x, y));
-                        }
-                        anime.timeline().add({
-                            targets: particules,
-                            x: function (p) {
-                                return p.endPos.x;
-                            },
-                            y: function (p) {
-                                return p.endPos.y;
-                            },
-                            radius: 0.1,
-                            duration: anime.random(1200, 1800),
-                            easing: 'easeOutExpo',
-                            update: renderParticule
-                        })
-                            .add({
-                                targets: circle,
-                                radius: anime.random(80, 160),
-                                lineWidth: 0,
-                                alpha: {
-                                    value: 0,
-                                    easing: 'linear',
-                                    duration: anime.random(600, 800),
-                                },
-                                duration: anime.random(1200, 1800),
-                                easing: 'easeOutExpo',
-                                update: renderParticule,
-                                offset: 0
-                            });
-                    }
-
-                    var render = anime({
-                        duration: Infinity,
-                        update: function () {
-                            ctx.clearRect(0, 0, canvasEl.width, canvasEl.height);
-                        }
-                    });
-
-                    document.addEventListener(tap, function (e) {
-                        render.play();
-                        updateCoords(e);
-                        animateParticules(pointerX, pointerY);
-                    }, false);
-
-                    var centerX = window.innerWidth / 2;
-                    var centerY = window.innerHeight / 2;
-                    setCanvasSize();
-                    $(document).on("resize", setCanvasSize).on("scroll", setCanvasSize);
-                });*/
+                $(function () {
+                    setTimeout(function () {
+                        $("body").prepend('<a href="#top" id="toTop" style="z-index:999"><i class="arrow alternate huge circle up icon"></i></a>');
+                        $("#toTop").scrollToTop();
+                    }, 50);
+                });
             });
     }
 }

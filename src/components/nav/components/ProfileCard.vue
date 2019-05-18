@@ -8,14 +8,19 @@
                     </h4>
                     <p><i class='yen sign icon'></i>0</p></div>
                 <div class='column'>
-                    <div class='ui link list'><a class='item' href='/modifypage.php'><i
+                    <div class='ui link list'>
+                        <a class='item' href='/modifypage.php'><i
                             class='edit icon'></i>修改帐号</a><br>
-                        <a class='item' href='/userinfo.php?user=2016011253'><i
-                                class='archive icon'></i>个人信息</a><br>
-                        <a class='item' href='/status.php?user_id=2016011253'><i
-                                class='send icon'></i>我的提交</a><br>
-                        <a class='item'><i
-                                class='book icon'></i>我的竞赛&作业</a><br>
+                        <router-link class="item" :to="`/user/${user_id}`">
+                            <i class='archive icon'></i>个人信息
+                        </router-link>
+                        <br>
+                        <router-link class="item" :to="`/status/?user_id=${user_id}`">
+                            <i class='send icon'></i>我的提交
+                        </router-link>
+                        <br>
+                        <router-link class="item" to="/contest?my"><i class='book icon'></i>我的竞赛&作业</router-link>
+                        <br>
                         <a class='logout item' @click.prevent="logout"><i
                                 class='remove user icon'></i>注销</a>&nbsp;<br>
                         <a v-if="admin" class='item' href="/admin/">
@@ -31,11 +36,20 @@
 
 <script>
     import store from '../../../store'
+    import mixins from '../../../mixin/init'
+    import util from '../../../lib/util'
     export default {
         name: "ProfileCard",
+        mixins: [mixins],
         props: {
-            user_id: String,
-            nick: String,
+            user_id: {
+                type: String,
+                default: ""
+            },
+            nick: {
+                type: String,
+                default: ""
+            },
             avatar: {
                 type: Boolean,
                 default: false
@@ -69,6 +83,9 @@
                         }
                     })
             }
+        },
+        updated() {
+            util.init();
         }
     }
 </script>

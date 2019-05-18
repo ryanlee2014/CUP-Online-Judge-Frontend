@@ -84,8 +84,7 @@
                     <td class="center head" v-html="markdownIt.renderRaw(row.biography||'')"></td>
                     <td class="center head">
                         <router-link :to="`/status?user_id=${row.user_id}&jresult=4`">{{row.solved || 0}}</router-link>
-                        <a
-                            :href="'status.php?user_id='+row.user_id+'&jresult=4'">{{row.solved||0}}</a></td>
+                    </td>
                     <!--<td><a :href="'hdu_status.php?user_id='+row.user_id+'&jresult=4'">{{row.vjudge_solved||0}}</a></td>
                     <td><a :href="'status.php?user_id='+row.user_id">{{row.submit||0}}</a></td>
                     <td>{{(((row.solved*100/(row.submit||0)||0)).toString().substring(0,5)+"%")}}</td>-->

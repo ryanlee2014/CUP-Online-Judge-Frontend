@@ -196,6 +196,21 @@ const router = new Router({
             }
         },
         {
+            path: '/opensource',
+            name: 'open source announcement',
+            component: () => import('./views/about/opensource.vue')
+        },
+        {
+            path: '/privacy',
+            name: 'privacy view',
+            component: () => import('./views/about/privacy.vue')
+        },
+        {
+            path: '/copyright',
+            name: 'copyright view',
+            component: () => import('./views/about/copyright.vue')
+        },
+        {
             path: "*",
             redirect: "/"
         }

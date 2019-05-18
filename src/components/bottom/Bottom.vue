@@ -3,17 +3,14 @@
         <div class="ui container">
             <div class="ui stackable inverted equal height stackable grid">
                 <div class="three wide column">
-                    <h3 class="ui inverted header"><a href="about.php" class="white link" target="_blank">关于
-                        <div class="sub header">
-                            常见问题
-                        </div>
-                    </a>
+                    <h3 class="ui inverted header">
+                        <router-link to="/about" class="white link">关于</router-link>
                     </h3>
                     <div class="ui inverted link list">
                         <a href="mailto:gxlhybh@gmail.com" class="item">联系开发者</a>
-                        <a href="opensource.php" class="item">开放源代码声明</a>
-                        <a href="privacy.php" class="item">隐私政策</a>
-                        <a href="copyright.php" class="item">著作权声明</a>
+                        <router-link to="/opensource" class="item">开放源代码声明</router-link>
+                        <router-link to="/privacy" class="item">隐私政策</router-link>
+                        <router-link to="copyright" class="item">著作权声明</router-link>
                     </div>
                 </div>
                 <div class="four wide column">
@@ -42,7 +39,7 @@
                         <div class="sub header">
                             <i class="address card outline icon"></i>
                             Current Member:
-                            <a href="/ranklist.php?acm" target="_blank">List</a>
+                            <a href="/ranklist/?acm" target="_blank">List</a>
                         </div>
                     </h3>
                 </div>

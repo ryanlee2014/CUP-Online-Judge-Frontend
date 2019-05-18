@@ -64,7 +64,9 @@
         watch: {
             value(val) {
                 if(this.theme !== val) {
-                    this.theme = val;
+                    if(val.includes("ace")) {
+                        this.theme = val;
+                    }
                 }
             },
             theme(val) {
@@ -72,7 +74,9 @@
             }
         },
         mounted() {
-            this.$emit("input", this.theme);
+            if (this.value.includes("ace")) {
+                this.theme = this.value;
+            }
         }
     }
 </script>

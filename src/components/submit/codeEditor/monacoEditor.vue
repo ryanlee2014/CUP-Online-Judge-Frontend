@@ -87,7 +87,12 @@
             },
             theme(val) {
                 if(this.editor) {
-                    monaco.editor.setTheme(val);
+                    if (val.includes("vs") || val.includes("hc-black")) {
+                        monaco.editor.setTheme(val);
+                    }
+                    else {
+                        monaco.editor.setTheme("vs-dark");
+                    }
                 }
             }
         },
@@ -104,13 +109,24 @@
                     fontLigatures: true
                 });
                 const currentModel = this.editor.getModel();
-                monaco.editor.setTheme(this.theme);
+                monaco.editor.setTheme(this.getThemeFromStorage());
                 currentModel.onDidChangeContent(() => {
                     this.source_code = this.editor.getModel().getValue();
                     this.$store.commit("setCodeInfo", {
                         code: this.source_code
                     });
                 });
+            },
+            getThemeFromStorage() {
+                let defaultTheme = "vs-dark";
+                let theme;
+                try {
+                    theme = JSON.parse(localStorage.submitConfig).theme;
+                }
+                catch (e) {
+                    theme = defaultTheme;
+                }
+                return theme;
             }
         }
     }

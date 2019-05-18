@@ -28,7 +28,9 @@
         watch: {
             value(val) {
                 if(this.theme !== val) {
-                    this.theme = val;
+                    if (val.includes("vs") || val.includes("hc-black")) {
+                        this.theme = val;
+                    }
                 }
             },
             theme(val) {
@@ -36,7 +38,9 @@
             }
         },
         mounted() {
-            this.$emit("input", this.theme);
+            if (this.value.includes("vs") || this.value.includes("hc-black")) {
+                this.theme = this.value;
+            }
         }
     }
 </script>
