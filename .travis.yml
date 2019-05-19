@@ -7,7 +7,6 @@ env:
     - CODECOV_TOKEN: c2a929f8-91d9-476d-87ae-d0a2aca1b055
 node_js:
   - "node"
-  - "10"
 
 before_install:
   - npm i

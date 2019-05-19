@@ -43,12 +43,15 @@ module.exports = {
                 changeOrigin: true
             }
         }
-
     },
+
     configureWebpack: {
         plugins: [
             new MonacoEditorPlugin()
         ]
+
     },
-    assetsDir: './static'
+
+    assetsDir: './static',
+    productionSourceMap: false
 };
