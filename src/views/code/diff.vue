@@ -1,7 +1,7 @@
 <template>
     <div class="ui container padding">
         <h2 class="ui dividing header">
-            ode Cfsa3121ompare
+            Code Compare
         </h2>
         <div class="ui grid">
             <div class="row">

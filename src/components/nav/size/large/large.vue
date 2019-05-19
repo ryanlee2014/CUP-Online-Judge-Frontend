@@ -17,8 +17,8 @@
                     <a class="item" href="/specialsubject.php"><i class="rocket icon"></i>ACM专题</a>
                     <a class="item" href="/recent-contest.php"><i class="sitemap icon"></i>名校联赛</a>
                     <a class="item" href="/acmmanager.php"><i class="road icon"></i>ACM管理系统</a>
-                    <a class="item" href="/software.php"><i class="plug icon"></i>常用软件</a>
-                    <a class="item" href="/whiteboard.php"><i class="calendar outline icon"></i>白板(β版测试)</a>
+                    <router-link class="item" to="/extra/software"><i class="plug icon"></i>常用软件</router-link>
+                    <router-link class="item" to="/extra/whiteboard"><i class="calendar outline icon"></i>白板(β版测试)</router-link>
                     <a class="item tutorial" target="_blank"><i class="question circle outline icon"></i>C/C++语言参考手册</a>
                     <a class="item" href="https://wiki.cupacm.com"><i class="book icon"></i>Wiki</a>
                     <router-link class="item" to="/about/fame"><i class="chess queen icon"></i>Hall of Fame</router-link>

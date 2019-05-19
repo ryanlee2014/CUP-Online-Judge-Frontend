@@ -95,7 +95,7 @@
                     </div>
                 </div>
                 <div class="two wide column">
-                    <a @click="run(2)" class="primary button ui">Go</a>
+                    <router-link class="primary button ui" :to="`/status/user/contest/${select2}`">Go</router-link>
                 </div>
             </div>
         </div>
@@ -203,6 +203,7 @@
                 }
             },
             run: function () {
+
             }
         }
     }

@@ -226,6 +226,30 @@ const router = new Router({
             component: () => import('./views/about/fame.vue')
         },
         {
+            path: '/extra/software',
+            name: 'software view',
+            component: () => import('./views/extra/software.vue'),
+            meta: {
+                auth: true
+            }
+        },
+        {
+            path: '/extra/whiteboard',
+            name: 'white board',
+            component: () => import('./views/extra/whiteboard.vue'),
+            meta: {
+                auth: true
+            }
+        },
+        {
+            path: '/status/user/contest/:contest_id',
+            name: 'user status within contests',
+            component: () => import('./views/status/user.vue'),
+            meta: {
+                auth: true
+            }
+        },
+        {
             path: "*",
             redirect: "/"
         }
