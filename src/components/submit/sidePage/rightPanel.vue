@@ -70,7 +70,7 @@
                         <label>切换编辑器</label>
                     </div>
                 </div>
-                <div class="item" v-show="!editorPackage"><span class="item">字号:</span>
+                <div class="item"><span class="item">字号:</span>
                     <div class="ui input"><input id="fontsize" style="width:60px;text-align:center;height:30px"
                                                  type="text"
                                                  v-model="fontSize"></div>

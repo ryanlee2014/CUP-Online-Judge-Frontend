@@ -94,6 +94,13 @@
                         monaco.editor.setTheme("vs-dark");
                     }
                 }
+            },
+            fontSize(val) {
+                if (this.editor && !isNaN(val)) {
+                    this.editor.updateOptions({
+                        fontSize: parseInt(val)
+                    })
+                }
             }
         },
         mounted() {
@@ -107,6 +114,9 @@
                     value: this.value,
                     language: languageMap[this.selected_language],
                     fontLigatures: true
+                });
+                this.editor.updateOptions({
+                    fontSize: 16
                 });
                 const currentModel = this.editor.getModel();
                 monaco.editor.setTheme(this.getThemeFromStorage());
