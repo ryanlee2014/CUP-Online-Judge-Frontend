@@ -129,6 +129,7 @@
         },
         updated: function () {
             const table_of_contents = $(".table-of-contents");
+            console.log(table_of_contents.html());
             let $content = table_of_contents.html();
             let $container = $("#contentContainer");
             if (!$content) $content = "";
@@ -139,6 +140,12 @@
             $("#sticky_content").sticky({
                 context: "#main_context",
                 offset: 50
+            });
+            $container.find("a").on("click", function() {
+                $([document.documentElement, document.body]).animate({
+                    scrollTop: $(document.getElementById(this.getAttribute("href").substring(1))).offset().top - 50
+                }, 600);
+                return false;
             });
             this.content = $content && $content.trim && $content.trim().length > 0 || ($container && $container.html() && $container.html().trim().length > 0);
         },

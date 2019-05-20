@@ -157,7 +157,9 @@
     export default {
         name: 'home',
         mounted() {
-            util.init(true, true);
+            setTimeout(() => {
+                util.init(true, true);
+            }, 500);
             $(document).ready(function () {
                 $('.image').visibility({
                     type: 'image',

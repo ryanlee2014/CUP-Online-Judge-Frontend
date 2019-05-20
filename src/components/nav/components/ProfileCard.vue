@@ -25,8 +25,8 @@
                                 class='remove user icon'></i>注销</a>&nbsp;<br>
                         <a v-if="admin" class='item' href="/admin/">
                             <i class='write icon'></i>管理</a>&nbsp;<br>
-                        <a v-if="admin" class='item' href=announce.php><i
-                                class='send outline icon'></i>在线用户推送</a>&nbsp;
+                        <router-link to="/extra/broadcast" v-if="admin" class="item"><i
+                                class='send outline icon'></i>在线用户推送</router-link>
                     </div>
                 </div>
             </div>

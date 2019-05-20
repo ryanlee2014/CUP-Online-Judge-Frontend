@@ -300,6 +300,7 @@ function checkAdmin(meta, admin, next) {
 }
 
 function getLoginInfo(to, next) {
+    const meta = to.meta;
     getSelfInfo().then(response => {
         if (response.data.data && response.data.data.user_id) {
             store.commit("loginMutate", {login: true});
