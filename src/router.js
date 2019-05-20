@@ -250,35 +250,81 @@ const router = new Router({
             }
         },
         {
+            path: '/extra/broadcast',
+            name: 'administrator broadcast view',
+            component: () => import('./views/extra/broadcast.vue'),
+            meta: {
+                auth: true,
+                admin: true
+            }
+        },
+        {
             path: "*",
             redirect: "/"
         }
     ]
 });
 
+function getSelfInfo() {
+    return Vue.axios.get("/api/user/self");
+}
+
+function checkAdmin(meta, admin, next) {
+    if(meta.admin) {
+        if(admin) {
+            next();
+        }
+        else {
+            getSelfInfo().then(({data}) => {
+                if (data.data && data.data.user_id) {
+                    store.commit("setUserData", data.data);
+                    store.commit("loginMutate", {login: true});
+                    if (data.data.admin) {
+                        next();
+                    }
+                    else {
+                        next({
+                            path: '/admin_only',
+                            query: {
+                                from: to.fullPath
+                            }
+                        })
+                    }
+                }
+            })
+        }
+    }
+    else if(!meta.admin) {
+        next();
+    }
+}
+
+function getLoginInfo(to, next) {
+    getSelfInfo().then(response => {
+        if (response.data.data && response.data.data.user_id) {
+            store.commit("loginMutate", {login: true});
+            sessionStorage.isLogined = true;
+            checkAdmin(meta, store.getters.admin, next);
+        } else {
+            next({
+                path: '/login',
+                query: {
+                    redirect: to.fullPath
+                }
+            })
+        }
+    });
+}
+
 router.beforeEach((to, from, next) => {
     if (to.meta.auth) {
         if (store.getters.logined) {
-            next();
+            checkAdmin(to.meta, store.getters.admin, next);
         } else if (sessionStorage.isLogined === "true") {
             store.commit("loginMutate", {login: true});
-            next();
+            checkAdmin(to.meta, store.getters.admin, next);
         } else {
-            Vue.axios.get("/api/user/self").then(response => {
-                if (response.data.data && response.data.data.user_id) {
-                    store.commit("loginMutate", {login: true});
-                    sessionStorage.isLogined = true;
-                    next();
-                } else {
-                    next({
-                        path: '/login',
-                        query: {
-                            redirect: to.fullPath
-                        }
-                    })
-                }
-            });
-
+            getLoginInfo(to, next);
         }
     } else {
         next();

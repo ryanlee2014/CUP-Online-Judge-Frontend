@@ -9,7 +9,7 @@
 
                 <div class="ui sticky left">
                     <h3 class="ui header">目录</h3>
-                    <div class="ui link list" style="overflow-y:auto">
+                    <div class="ui link list" style="overflow-y:auto" id="linkedlist">
 
                     </div>
                 </div>
@@ -64,6 +64,7 @@
                 <img class="ui image" data-src="/glory_image/QINHUANGDAO.jpg">
             </div>
             <div class="ui segment" id="example2">
+                <h3 class="ui header contents">2017 青岛(中国石油大学(华东))</h3>
                 <div class="right ui rail">
                     <div class="ui sticky two">
                         <h3 class="ui header">ICPC2017 青岛</h3>
@@ -72,7 +73,6 @@
                         <p>成员:陈哲 季来虎 王智健</p>
                     </div>
                 </div>
-                <h3 class="ui header contents">2017 青岛(中国石油大学(华东))</h3>
                 <img class="ui image" data-src="/glory_image/QINGDAO.jpg">
             </div>
             <div class="ui segment" id="icpc2017beijing">
@@ -159,7 +159,7 @@
                         <p>成员:季来虎 陈哲 王智健</p>
                     </div>
                 </div>
-                <img data-src="/glory_image/CCPC2018QINHUANGDAO.jpg" class="ui image">
+                <img class="ui image" data-src="/glory_image/CCPC2018QINHUANGDAO.jpg">
             </div>
             <div class="ui segment" id="icpc2018nanjing">
                 <h3 class="ui header contents">2018 南京(南京航空航天大学)</h3>
@@ -174,8 +174,8 @@
                         <p>成员:高宇翔 连浩丞 许思睿</p>
                     </div>
                 </div>
-                <img data-src="/glory_image/ICPC2018NANJING.jpg" class="ui image">
-                <img data-src="/glory_image/ICPC2018NANJING2.jpg" class="ui image">
+                <img class="ui image" data-src="/glory_image/ICPC2018NANJING.jpg">
+                <img class="ui image" data-src="/glory_image/ICPC2018NANJING2.jpg">
             </div>
             <div class="ui segment" id="icpc2018qingdao">
                 <h3 class="ui header contents"><a name="2018qingdao"></a>2018 青岛(中国石油大学(华东))</h3>
@@ -193,9 +193,9 @@
                         <p>成员:夏方略 赵云霄 王亚奇</p>
                     </div>
                 </div>
-                <img data-src="/glory_image/ICPC2018QINGDAO1.jpg" class="ui image">
-                <img data-src="/glory_image/ICPC2018QINGDAO2.jpg" class="ui image">
-                <img data-src="/glory_image/ICPC2018QINGDAO3.jpg" class="ui image">
+                <img class="ui image" data-src="/glory_image/ICPC2018QINGDAO1.jpg">
+                <img class="ui image" data-src="/glory_image/ICPC2018QINGDAO2.jpg">
+                <img class="ui image" data-src="/glory_image/ICPC2018QINGDAO3.jpg">
             </div>
             <div class="ui segment" id="ccpc2018shenzhen">
                 <h3 class="ui header contents">2018 深圳(哈尔滨工业大学(深圳)) Final</h3>
@@ -207,7 +207,7 @@
                         <p>成员:冯云豪 李昊元 吕博枫</p>
                     </div>
                 </div>
-                <img data-src="/glory_image/CCPC2018SHENZHEN.jpg" class="ui image">
+                <img class="ui image" data-src="/glory_image/CCPC2018SHENZHEN.jpg">
             </div>
             <div class="ui segment" id="icpc2018ecfinal">
                 <h3 class="ui header contents">2018 西安(西北工业大学)EC-Final</h3>
@@ -219,7 +219,7 @@
                         <p>成员:冯云豪 李昊元 吕博枫</p>
                     </div>
                 </div>
-                <img data-src="/glory_image/ICPC2018ECFINAL.jpg" class="ui image">
+                <img class="ui image" data-src="/glory_image/ICPC2018ECFINAL.jpg">
             </div>
             <div class="ui segment" id="tianti2019">
                 <h3 class="ui header contents">2019 北京(北京工业大学)</h3>
@@ -248,7 +248,7 @@
                         <p>成员: You...?</p>
                     </div>
                 </div>
-                <img data-src="/assets/images/wireframe/white-image.png" class="ui image">
+                <img class="ui image" data-src="/assets/images/wireframe/white-image.png">
             </div>
         </div>
 
@@ -257,6 +257,7 @@
 
 <script>
     import mixins from '../../mixin/init'
+
     const $ = require("jquery");
     window.$ = window.jQuery = $;
     const _ = require("lodash");
@@ -264,106 +265,13 @@
         name: "fame",
         mixins: [mixins],
         mounted() {
-            $('.ui.sticky.one')
-                .sticky({
-                    context: '#ccpc2017',
+            this.$Lazyload.$on("loaded", (el) => {
+                const $parent = $(el.el).parent();
+                $parent.find(".sticky").sticky({
+                    context: `#${$parent.attr("id")}`,
                     offset: 50
                 });
-            $(".ui.sticky.beijing")
-                .sticky({
-                    context:"#icpc2015beijing",
-                    offset: 50
-                });
-            $(".ui.sticky.beijing2017")
-                .sticky({
-                    context:"#icpc2017beijing",
-                    offset: 50
-                });
-            $(".ui.sticky.qingdao2016")
-                .sticky({
-                    context:"#icpc2016qingdao",
-                    offset: 50
-                })
-            $(".ui.sticky.ningxia2018")
-                .sticky({
-                    context:"#icpc2018ningxia",
-                    offset: 50
-                });
-            $(".ui.sticky.ICPC2017ECFINAL")
-                .sticky({
-                    context:"#icpc2017ecfinal",
-                    offset: 50
-                });
-            $(".ui.sticky.changchun")
-                .sticky({
-                    context:"#icpc2015changchun",
-                    offset: 50
-                });
-            $(".ui.sticky.tianti2018")
-                .sticky({
-                    context: "#tianti2018",
-                    offset: 50
-                });
-            $(".ui.sticky.jilin2018")
-                .sticky({
-                    context: "#ccpc2018jilin",
-                    offset: 50
-                });
-            $(".ui.sticky.XIAOMI2018")
-                .sticky({
-                    context:"#2018xiaomi",
-                    offset: 50
-                });
-            $(".ui.sticky.CCPC2018QINHUANGDAO")
-                .sticky({
-                    context:"#ccpc2018qinhuangdao",
-                    offset: 50
-                });
-            $(".ui.sticky.ICPC2018NANJING")
-                .sticky({
-                    context:"#icpc2018nanjing",
-                    offset: 50
-                });
-            $(".ui.sticky.ICPC2018QINGDAO")
-                .sticky({
-                    context:"#icpc2018qingdao",
-                    offset: 50
-                });
-            $(".ui.sticky.CCPC2018SHENZHEN")
-                .sticky({
-                    context:"#ccpc2018shenzhen",
-                    offset: 50
-                });
-            $(".ui.sticky.ICPC2018ECFINAL")
-                .sticky({
-                    context:"#icpc2018ecfinal",
-                    offset: 50
-                });
-            $(".ui.sticky.tianti2019")
-                .sticky({
-                    context: "#tianti2019",
-                    offset: 50
-                });
-            $(".ui.sticky.YOURLEGEND")
-                .sticky({
-                    context: "#yourlegend",
-                    offset: 50
-                });
-            $('.ui.sticky.two')
-                .sticky({
-                    context: '#example2',
-                    offset: 50
-                });
-            $('.ui.sticky.three')
-                .sticky({
-                    context: '#example3',
-                    offset: 50
-                });
-            $('.ui.sticky.four')
-                .sticky({
-                    context: '#example4',
-                    offset: 50
-                });
+            });
             //var headerArr = $(".ui.container.text .ui.segment .ui.header.contents");
             //var len = headerArr.length;
             //for(var i = 0;i<len;++i)
@@ -372,22 +280,22 @@
             //}
             var $headers = $(".ui.header.contents");
             var len = $headers.length;
-            var list = $(".ui.link.list");
-            for(var i = 0;i< len;++i) {
+            var list = $("#linkedlist");
+            for (var i = 0; i < len; ++i) {
                 var id = $headers.eq(i).parent().attr("id");
                 var name = $headers.eq(i).text();
-                var ahtml = "<a name='" +id+"' ></a>";
+                var ahtml = "<a name='" + id + "' ></a>";
                 $headers.eq(i).append(ahtml);
-                ahtml = "<a class='quick item' href='#" +id+"' >" + name +"</a>";
+                ahtml = "<a class='quick item' href='#" + id + "' >" + name + "</a>";
                 list.append(ahtml);
             }
             this.$nextTick(() => {
                 $(".ui.sticky.left")
                     .sticky({
-                        context:"#mainContent",
-                        offset:100,
+                        context: "#mainContent",
+                        offset: 100,
                     });
-                $(".quick.item").on('click',function(d){
+                $(".quick.item").on('click', function (d) {
                     $([document.documentElement, document.body]).animate({
                         scrollTop: $(this.getAttribute("href")).offset().top - 50
                     }, 600);
