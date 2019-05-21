@@ -316,3 +316,8 @@ a {
 .grid-table-move {
     transition: transform 1s;
 }
+.main.submit.layout img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}

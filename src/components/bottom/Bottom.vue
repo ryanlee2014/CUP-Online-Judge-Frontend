@@ -39,7 +39,7 @@
                         <div class="sub header">
                             <i class="address card outline icon"></i>
                             Current Member:
-                            <a href="/ranklist/?acm" target="_blank">List</a>
+                            <router-link to="/ranklisk/?acm">List</router-link>
                         </div>
                     </h3>
                 </div>

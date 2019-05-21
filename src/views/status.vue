@@ -16,7 +16,7 @@
         </div>
         <div class="ui bottom attached segment" v-show="current_tag == 'status'">
             <div align=center class="input-append">
-                <form id=simform class="ui form segment" action="status.php" method="get">
+                <form id=simform class="ui form segment" method="get">
                     <div class="four fields">
                         <div class="field">
                             <label>{{target.problem_id}}</label>

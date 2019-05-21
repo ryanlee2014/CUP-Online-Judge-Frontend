@@ -43,7 +43,9 @@
                         {{row.title}}
                     </router-link>
                 </td>
-                <td><a :href="'userinfo.php?user='+row.user_id" target='_blank'>{{row.user_id}}</a></td>
+                <td>
+                    <router-link :to="`/user/${row.user_id}`">{{row.user_id}}</router-link>
+                </td>
                 <td>{{dayjs(row.create_time).format("YYYY-MM-DD HH:mm:ss")}}</td>
                 <td>{{dayjs(row.edit_time).format("YYYY-MM-DD HH:mm:ss")}}</td>
                 <td>{{dayjs(row.last_post).format("YYYY-MM-DD HH:mm:ss")}}</td>

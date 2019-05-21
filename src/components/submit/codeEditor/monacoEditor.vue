@@ -116,7 +116,7 @@
                     fontLigatures: true
                 });
                 this.editor.updateOptions({
-                    fontSize: 16
+                    fontSize: this.getFontSizeFromStorage()
                 });
                 const currentModel = this.editor.getModel();
                 monaco.editor.setTheme(this.getThemeFromStorage());
@@ -127,16 +127,21 @@
                     });
                 });
             },
-            getThemeFromStorage() {
-                let defaultTheme = "vs-dark";
-                let theme;
+            getDataFromStorage(defaultValue, key) {
+                let data;
                 try {
-                    theme = JSON.parse(localStorage.submitConfig).theme;
+                    data = JSON.parse(localStorage.submitConfig)[key];
                 }
                 catch (e) {
-                    theme = defaultTheme;
+                    data = defaultValue;
                 }
-                return theme;
+                return data;
+            },
+            getThemeFromStorage() {
+                return this.getDataFromStorage("vs-dark", "theme");
+            },
+            getFontSizeFromStorage() {
+                return this.getDataFromStorage(16, "fontSize");
             }
         }
     }

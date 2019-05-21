@@ -12,7 +12,9 @@
             <tbody id="online_user_table" refresh="true">
             <tr :key="idx" style="text-align:center" v-cloak v-for="(value,idx) in user">
                 <td>{{ value.user_id }}</td>
-                <td><a :href="'userinfo.php?user='+value.user_id" target="_blank">{{ value.nick }}</a></td>
+                <td>
+                    <router-link :to="`/user/${value.user_id}`">{{value.nick}}</router-link>
+                </td>
                 <td style="
     width: 450px;
     float: left; /* add this */

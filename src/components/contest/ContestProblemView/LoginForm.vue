@@ -23,7 +23,7 @@
         mounted: function () {
             var that = this;
             $('#contest_form').submit(() => {
-                $.post('../api/contest/password/' + this.$route.params.contest_id, {
+                $.post('/api/contest/password/' + this.$route.params.contest_id, {
                     password: $('#contest_pass').val()
                 }, function (data) {
                     if (data.status == "OK") {

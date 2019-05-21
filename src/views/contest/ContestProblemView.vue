@@ -53,8 +53,7 @@
                                     </router-link>
                                 </td>
                                 <td v-if="now.isAfter(end_time)">
-                                    <a :href="'tutorial.php?from=' + (row.oj_name?row.oj_name:'local') + '&id=' + row.pid"
-                                       target="_blank">题解</a>
+                                    <router-link :to="`/tutorial/${row.pid}`">题解</router-link>
                                 </td>
                                 <td style="text-align:center">{{row.accepted}}/{{row.submit}}</td>
                                 <td style="text-align: center;">{{(row.accepted * 100 /

@@ -38,8 +38,9 @@ Solved {{thread_head.solved}}
         </div>
         <div class="twelve wide column">
             <div class="ui existing full segment" id="main_context">
-                <a :href="'discussedit.php?id='+id" class="ui blue right ribbon label"
-                   v-if="thread_head.user_id + '' === owner">Edit</a>
+                <router-link :to="`/discuss/edit/${id}`" class="ui blue right ribbon label" v-if="thread_head.user_id + '' === owner">
+                    Edit
+                </router-link>
                 <div class="ui info message">
                     <div class="header">
                         阅读本文需要大约{{readTime(thread_head.content)}}分钟

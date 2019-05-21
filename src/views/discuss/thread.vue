@@ -12,20 +12,21 @@
         <h3 class="ui dividing header">Comments</h3>
         <div class="ui comments">
             <div :key="key" class="comment" v-for="(row,key) in reply">
-                <a :href="'userinfo.php?user='+row.user_id" class="avatar">
-                    <img :src="'/avatar/'+row.user_id+'.jpg'" v-if="row.avatar === 1">
-                    <img :src="'/assets/images/wireframe/white-image.png'" v-else>
-                </a>
+                <div class="avatar">
+                <router-link tag="img" :to="`/user/${row.user_id}`" :src="'/avatar/'+row.user_id+'.jpg'" class="avatar" v-if="row.avatar === 1"></router-link>
+                <router-link tag="img" :to="`/user/${row.user_id}`" :src="'/assets/images/wireframe/white-image.png'" v-else></router-link>
+                </div>
                 <div class="content">
-                    <a :href="'userinfo.php?user='+row.user_id" class="author">{{row.nick}}</a>
+                    <router-link :to="`/user/${row.user_id}`" class="author">{{row.nick}}</router-link>
                     <div class="metadata">
                         <span class="date">{{new Date(row.create_time).toLocaleString()}}</span>
                     </div>
                     <div class="text" v-html="row.content">
                     </div>
                     <div class="actions">
-                        <a :href="'discussedit.php?id='+id+'&comment_id='+row.comment_id" class="reply"
-                           v-if="row.user_id + '' === owner">Edit</a>
+                        <router-link :to="`/discuss/edit/${id}/${row.comment_id}`" class="reply" v-if="row.user_id + '' === owner">
+                            Edit
+                        </router-link>
                         <a @click="block_reply(row.comment_id)" class="reply" v-if="isadmin">屏蔽</a>
                         <!--<a class="reply">Reply</a>-->
                     </div>
@@ -183,17 +184,17 @@
                     captcha: this.captcha
                 };
                 var that = this;
-                $.post("../api/discuss/reply/" + this.id, send, function (data) {
+                $.post("/api/discuss/reply/" + this.id, send, function (data) {
                     if (data.status == "OK") {
                         alert("回复成功");
-                        location.href = "/discusscontext.php?id=" + that.id;
+                        location.reload();
                     } else {
                         alert("回复失败！服务器发生未知错误");
                     }
                 })
             },
             block_reply: function (comment_id) {
-                $.get("../api/discuss/update/reply/block/" + this.id + "/" + comment_id, function (data) {
+                $.get("/api/discuss/update/reply/block/" + this.id + "/" + comment_id, function (data) {
                     if (data.status == "OK") {
                         alert("操作成功");
                     } else {

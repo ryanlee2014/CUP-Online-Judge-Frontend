@@ -49,13 +49,13 @@
 
                             </div>
                             <br><a class="ui inverted large button download basic vultr"
-                                   href="https://www.cubecloud.net/aff.php?aff=1461"
+                                   href="https://www.cubecloud.net/aff?aff=1461"
                                    target="_blank">
                             Hosted by CubeCloud
                         </a>
                             <!--<a class="vultr" href="https://www.vultr.com/?ref=7250019" target="_blank"><img src="./image/vultr.png" class="ui small image main title" style="display:inline-block"></a>-->
                             <!--<h4></h4>-->
-                            <!--<a class="ui huge inverted download button" href="cprogrammingcontest.php">查看复赛情况</a>-->
+                            <!--<a class="ui huge inverted download button" href="cprogrammingcontest">查看复赛情况</a>-->
                         </div>
                         <div class="ui text container transition main title eight wide column" id="right"
                              style="opacity: 0">

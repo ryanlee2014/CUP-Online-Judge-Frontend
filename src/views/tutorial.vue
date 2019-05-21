@@ -11,10 +11,7 @@
                 <div class="thirteen wide column">
                 </div>
                 <div class="three wide right aligned column">
-                    <a :href="'newtutorialpost.php?from='+source+'&id='+id"
-                       class="ui labeled icon blue mini button" target="_blank"><i class="write icon"></i>
-                        Post
-                    </a>
+                    <router-link :to="`/tutorial/new/${id}`" class="ui labeled icon blue mini button"><i class="write icon"></i>Post</router-link>
                 </div>
             </div>
         </div>
@@ -22,16 +19,15 @@
             <div class="four wide column">
                 <div class="ui link card">
                     <div class="image">
-                        <img :src="'../avatar/'+thread_head.user_id+'.jpg'" @click="location.href='userinfo.php?user='+thread_head.user_id"
-                             v-if="thread_head.avatar === 1">
+                        <router-link tag="img" :src="`/avatar/${thread_head.user_id}.jpg`" :to="`/user/${thread_head.user_id}`" v-if="thread_head.avatar === 1"></router-link>
                         <img src="/assets/images/wireframe/white-image.png" v-else>
                     </div>
                     <div class="content">
-                        <div class="header"><a :href="'userinfo.php?user='+thread_head.user_id" class="black"
-                                               target="_blank">{{thread_head.nick}}</a></div>
+                        <div class="header">
+                            <router-link :to="`/user/${thread_head.user_id}`" class="black">{{thread_head.nick}}</router-link>
+                        </div>
                         <div class="meta">
-                            <a :href="'userinfo.php?user='+thread_head.user_id"
-                               target="_blank">{{thread_head.user_id}}</a>
+                            <router-link :to="`/user/${thread_head.user_id}`">{{thread_head.user_id}}</router-link>
                         </div>
                         <div class="description" v-html="markdownIt.renderRaw(thread_head.biography||'')">
                         </div>
@@ -49,8 +45,7 @@
             </div>
             <div class="twelve wide column">
                 <div class="ui existing full segment">
-                    <a :href="'tutorialedit.php?tutorial_id='+thread_head.tutorial_id+'&from='+thread_head.source.toLowerCase()+'&id='+thread_head.problem_id" class="ui blue right ribbon label"
-                       v-if="thread_head.user_id + '' ===  owner">Edit</a>
+                    <router-link :to="`/tutorial/edit/${thread_head.tutorial_id}`" class="ui blue right ribbon label" v-if="thread_head.user_id + '' === owner">Edit</router-link>
                     <div class="ui vertical segment" v-html="markdownIt.render(thread_head.content||'')"></div>
 
                     <div class="ui raised segment">

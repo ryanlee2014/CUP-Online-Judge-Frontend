@@ -1,6 +1,6 @@
 <template>
     <div class="right menu" v-if="logined">
-        <router-link to="/online" class="item online_num" v-html="serverInfo"></router-link>
+        <router-link to="/online" exact-active-class="active" class="item online_num" v-html="serverInfo"></router-link>
         <div class="ui dropdown item detail" tabindex="0">
             <div class="text"><span class="profile_group">{{nick}}</span></div>
             <i class="dropdown icon"></i>

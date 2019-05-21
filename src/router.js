@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from './views/Home.vue'
-import store from './store'
 import adminAuth from './lib/router'
+import guard from './router/util/guard'
 
 Vue.use(Router);
 
@@ -17,10 +17,7 @@ const router = new Router({
         {
             path: '/about',
             name: 'about',
-            // route level code-splitting
-            // this generates a separate chunk (about.[hash].js) for this route
-            // which is lazy-loaded when the route is visited.
-            component: () => import(/* webpackChunkName: "about" */ './views/About.vue')
+            component: () => import('./views/About.vue')
         },
         {
             path: '/problemset',
@@ -259,77 +256,52 @@ const router = new Router({
             }
         },
         {
+            path: '/tutorial/edit/:tutorial_id',
+            name: 'tutorial edit view',
+            component: () => import('./views/tutorial/edit.vue'),
+            meta: {
+                auth: true
+            }
+        },
+        {
+            path: '/tutorial/new/:problem_id',
+            name: 'Add new tutorial view',
+            component: () => import('./views/tutorial/add.vue'),
+            meta: {
+                auth: true
+            }
+        },
+        {
+            path: '/problem/upload',
+            name: 'problem upload view',
+            component: () => import('./views/problem/upload.vue'),
+            meta: {
+                auth: true
+            }
+        },
+        {
+            path: '/discuss/edit/:article_id',
+            name: 'edit discuss main article',
+            component: () => import('./views/discuss/edit.vue'),
+            meta: {
+                auth: true
+            }
+        },
+        {
+            path: '/discuss/edit/:article_id/:comment_id',
+            name: 'edit discuss reply',
+            component: () => import('./views/discuss/edit.vue'),
+            meta: {
+                auth: true
+            }
+        },
+        {
             path: "*",
             redirect: "/"
         }
     ]
 });
 
-function getSelfInfo() {
-    return Vue.axios.get("/api/user/self");
-}
-
-function checkAdmin(meta, admin, next) {
-    if(meta.admin) {
-        if(admin) {
-            next();
-        }
-        else {
-            getSelfInfo().then(({data}) => {
-                if (data.data && data.data.user_id) {
-                    store.commit("setUserData", data.data);
-                    store.commit("loginMutate", {login: true});
-                    if (data.data.admin) {
-                        next();
-                    }
-                    else {
-                        next({
-                            path: '/admin_only',
-                            query: {
-                                from: to.fullPath
-                            }
-                        })
-                    }
-                }
-            })
-        }
-    }
-    else if(!meta.admin) {
-        next();
-    }
-}
-
-function getLoginInfo(to, next) {
-    const meta = to.meta;
-    getSelfInfo().then(response => {
-        if (response.data.data && response.data.data.user_id) {
-            store.commit("loginMutate", {login: true});
-            sessionStorage.isLogined = true;
-            checkAdmin(meta, store.getters.admin, next);
-        } else {
-            next({
-                path: '/login',
-                query: {
-                    redirect: to.fullPath
-                }
-            })
-        }
-    });
-}
-
-router.beforeEach((to, from, next) => {
-    if (to.meta.auth) {
-        if (store.getters.logined) {
-            checkAdmin(to.meta, store.getters.admin, next);
-        } else if (sessionStorage.isLogined === "true") {
-            store.commit("loginMutate", {login: true});
-            checkAdmin(to.meta, store.getters.admin, next);
-        } else {
-            getLoginInfo(to, next);
-        }
-    } else {
-        next();
-    }
-});
+router.beforeEach(guard);
 
 export default router;

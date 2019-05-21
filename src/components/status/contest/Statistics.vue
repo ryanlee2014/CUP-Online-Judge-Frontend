@@ -7,21 +7,27 @@
             <table class="ui padded selectable unstackable table" style="text-align:center" v-if="finish" width="90%">
                 <thead v-cloak>
                 <th>Problem</th>
-                <th :key="key" v-for="(i,key) in statistics.total_result"><a :href="'status.php?cid='+cid+'&jresult='+i" target="_blank">{{statistics.status[i]}}</a>
+                <th :key="key" v-for="(i,key) in statistics.total_result">
+                    <router-link :to="`/contest/status/${cid}?jresult=${i}`">{{statistics.status[i]}}</router-link>
                 </th>
                 <th>Total</th>
                 </thead>
                 <tbody>
                 <tr :key="i" v-for="i in Array.from(Array(statistics.total_problem + 1).keys())">
-                    <td><a :href="'status.php?cid='+cid+'&problem_id='+(i)" target="_blank">{{(1001 + i)}}</a></td>
-                    <td :key="key" :class="row>0?'active positive':''" v-for="(row,key) in statistics.stat_data[i]"><a
-                            :href="'status.php?cid='+cid+'&problem_id='+(i)+'&jresult='+key">{{row}}</a></td>
+                    <td>
+                        <router-link :to="`/contest/status/${cid}?problem_id=${i}`">{{(1001 + i)}}</router-link>
+                    </td>
+                    <td :key="key" :class="row>0?'active positive':''" v-for="(row,key) in statistics.stat_data[i]">
+                        <router-link :to="`/contest/status/${cid}?problem_id=${i}&jresult=${key}`">{{row}}</router-link>
+                    </td>
                     <td>{{statistics.totalSumResult[i]}}</td>
                 </tr>
                 <tr>
-                    <td><a :href="'status.php?cid='+cid" target="_blank">Total</a></td>
+                    <td>
+                        <router-link :to="`/contest/status/${cid}`">Total</router-link>
+                    </td>
                     <td :key="key" :class="row > 0?'active positive':''" v-for="(row,key) in statistics.stat_sum">
-                        <a :href="'status.php?cid='+cid+'&jresult='+key" target="_blank">{{row}}</a>
+                        <router-link :to="`/contest/status/${cid}?jresult=${key}`">{{row}}</router-link>
                     </td>
                     <td>{{statistics.total_submit}}</td>
                 </tr>
@@ -35,22 +41,27 @@
             <table class="ui padded selectable unstackable table" style="text-align:center" v-if="finish" width="90%">
                 <thead v-cloak>
                 <th>Problem</th>
-                <th :key="key" v-for="(i,key) in statistics.used_lang"><a :href="'status.php?cid='+cid+'&language='+i" target="_blank">{{language_name.local[i]}}</a>
+                <th :key="key" v-for="(i,key) in statistics.used_lang">
+                    <router-link :to="`/contest/status/${cid}?language=${i}`">{{language_name.local[i]}}</router-link>
                 </th>
                 <th>Total</th>
                 </thead>
                 <tbody>
                 <tr :key="i" v-for="i in Array.from(Array(statistics.total_problem + 1).keys())">
-                    <td><a :href="'status.php?cid='+cid+'&problem_id='+(1001 + i)" target="_blank">{{(1001 + i)}}</a>
+                    <td>
+                        <router-link :to="`/contest/status/${cid}?problem_id=${(1001 + i)}`">{{(1001 + i)}}</router-link>
                     </td>
-                    <td :key="key" :class="row>0?'active positive':''" v-for="(row,key) in statistics.lang_data[i]"><a
-                            :href="'status.php?cid='+cid+'&problem_id='+(1001 + i)+'&language='+key">{{row}}</a></td>
+                    <td :key="key" :class="row>0?'active positive':''" v-for="(row,key) in statistics.lang_data[i]">
+                        <router-link :to="`/contest/status/${cid}?problem_id=${(1001 + i)}&language=${key}`">{{row}}</router-link>
+                    </td>
                     <td>{{statistics.totalSumProblem[i]}}</td>
                 </tr>
                 <tr>
-                    <td><a :href="'status.php?cid='+cid" target="_blank">Total</a></td>
+                    <td>
+                        <router-link :to="`/contest/status/${cid}`">Total</router-link>
+                    </td>
                     <td :key="key" :class="row > 0?'active positive':''" v-for="(row,key) in statistics.lang_sum">
-                        <a :href="'status.php?cid='+cid+'&language='+key" target="_blank">{{row}}</a>
+                        <router-link :to="`/contest/status/${cid}?language=${key}`">{{row}}</router-link>
                     </td>
                     <td>{{statistics.total_submit}}</td>
                 </tr>

@@ -10,9 +10,13 @@
             </thead>
             <tbody id="user_list_table" refresh="true">
             <tr :key="value.user_id" style='text-align:center' v-cloak v-for="value in user">
-                <td><a :href="'userinfo.php?user='+value.user_id">{{ value.user_id }}</a></td>
-                <td><a :href="'userinfo.php?user='+value.user_id">{{
-                    value.nick||localStorage.getItem(value.user_id) }}</a></td>
+                <td>
+                    <router-link :to="`/user/${value.user_id}`">{{value.user_id}}</router-link>
+                </td>
+                <td>
+                    <router-link :to="`/user/${value.user_id}`">{{
+                        value.nick||localStorage.getItem(value.user_id) }}</router-link>
+                </td>
                 <td :data-html="'<b>IP</b><p>内网IP:'+value.intranet_ip+'<br>外网IP:'+value.ip+'</p>'"
                     width=30%>{{
                     value.place }}

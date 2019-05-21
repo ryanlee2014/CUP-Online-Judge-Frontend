@@ -59,9 +59,12 @@
             </div>
 
             <div class='title'>来源<i class="dropdown icon"></i></div>
-            <div class='content'><p><a :href='"problemset.php?tag="+encodeURI(source)' id='problem_source'
-                                       v-text='source'></a></p>
-                <p>上传者:<a target="_blank" v-if="uploader!=='Administrator'" :href="'userinfo.php?user='+uploader">{{uploader}}</a><a v-else>Administrator</a></p></div>
+            <div class='content'><p>
+                <router-link :to="`/problemset?tag=${encodeURI(source)}`" id="problem_source" v-text="source"></router-link>
+            </p>
+                <p>上传者:
+                    <router-link :to="`/user/${uploader}`" v-if="uploader!=='Administrator'">{{uploader}}</router-link>
+                    <a v-else>Administrator</a></p></div>
 
         </div>
     </div>
@@ -200,11 +203,5 @@
     .row.no.padding {
         padding-top: 0em;
         padding-bottom: 0em;
-    }
-
-    .main.submit.layout img {
-        display: block;
-        margin-left: auto;
-        margin-right: auto;
     }
 </style>

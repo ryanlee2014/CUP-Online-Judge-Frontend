@@ -125,8 +125,9 @@
                 <tbody>
                 <tr :key="key" v-for="(row,key,index) in acmmem">
                     <td class="center head">{{page*50+key+1}}</td>
-                    <td class="center head"><a :href="'/userinfo.php?user='+row.user_id"
-                                               target="_blank">{{row.user_id}}</a></td>
+                    <td class="center head">
+                        <router-link :to="`/user/${row.user_id}`">{{row.user_id}}</router-link>
+                    </td>
                     <td>
                         <img class="ui avatar image" :src="'/avatar/'+row.user_id+'.jpg'" v-if="row.avatar"
                              style="object-fit: cover;">
@@ -135,11 +136,9 @@
                         {{convertHTML(row.nick)}}
                     </td>
                     <td class="center head" v-html="markdownIt.renderRaw(row.biography||'')"></td>
-                    <td class="center head"><a
-                            :href="'status.php?user_id='+row.user_id+'&jresult=4'">{{row.solved||0}}</a></td>
-                    <!--<td><a :href="'hdu_status.php?user_id='+row.user_id+'&jresult=4'">{{row.vjudge_solved||0}}</a></td>
-                    <td><a :href="'status.php?user_id='+row.user_id">{{row.submit||0}}</a></td>
-                    <td>{{(((row.solved*100/(row.submit||0)||0)).toString().substring(0,5)+"%")}}</td>-->
+                    <td class="center head">
+                        <router-link :to="`/status?user_id=${row.user_id}&jresult=4`">{{row.solved||0}}</router-link>
+                    </td>
                 </tr>
                 </tbody>
             </table>

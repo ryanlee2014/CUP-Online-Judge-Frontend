@@ -101,10 +101,13 @@
         <h2 class='ui header'>提示</h2>
         <div class='ui' v-html="hint"></div>
         <h2 class='ui header'>来源</h2>
-        <div class='ui'><p><a :href='"problemset.php?tag="+encodeURI(source)' id='problem_source'
-                              v-text='source'></a></p>
-            <p>上传者:<a :href="'userinfo.php?user='+uploader" target="_blank" v-if="uploader!=='Administrator'">{{uploader}}</a><a
-                    v-else>Administrator</a></p>
+        <div class='ui'><p>
+            <router-link :to="`/problemset?tag=${encodeURI(source)}`" id="problem_source" v-text="source"></router-link>
+        </p>
+            <p>上传者:
+                <router-link :to="`/user/${uploader}`" v-if="uploader!=='Administrator'">{{uploader}}</router-link>
+                <a v-else>Administrator</a>
+            </p>
         </div>
     </div>
 </template>

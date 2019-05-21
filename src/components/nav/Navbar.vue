@@ -2,9 +2,9 @@
     <div>
         <div class="following bar topmenu" style="z-index: 900;">
             <Large :connected="socketConnected" :judger="judger" :logined="logined" :nick="nick" :user="user" v-if="!contest"></Large>
-            <LargeContest :connected="socketConnected" :judger="judger" :logined="logined" :nick="nick" :user="user" v-else></LargeContest>
-            <Small></Small>
-            <Nano></Nano>
+            <Small :connected="socketConnected" :judger="judger" :logined="logined" :nick="nick" :user="user" v-if="!contest"></Small>
+            <Nano :connected="socketConnected" :judger="judger" :logined="logined" :nick="nick" :user="user" v-if="!contest"></Nano>
+            <LargeContest :connected="socketConnected" :judger="judger" :logined="logined" :nick="nick" :user="user" v-if="contest"></LargeContest>
         </div>
         <ProfileCard :admin="admin" :avatar="avatar" :nick="nick" :user_id="user_id"></ProfileCard>
     </div>

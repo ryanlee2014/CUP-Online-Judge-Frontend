@@ -1,6 +1,6 @@
 {
   "name": "CUP-Online-Judge-NG-Frontend",
-  "version": "0.10.0",
+  "version": "0.11.0",
   "private": true,
   "scripts": {
     "serve": "npx --max_old_space_size=16000 vue-cli-service serve",
@@ -17,7 +17,7 @@
     "@antv/g2": "^3.5.3",
     "@ryanlee2014/markdown-it": "^1.0.2",
     "@ryanlee2014/markdown-it-katex": "^1.0.4",
-    "@ryanlee2014/mavon-editor": "^1.0.1",
+    "@ryanlee2014/mavon-editor": "^1.0.2",
     "animejs": "^3.0.1",
     "axios": "^0.18.0",
     "bluebird": "^3.5.4",
@@ -62,7 +62,10 @@
     "increase-memory-limit": "^1.0.6",
     "monaco-editor-webpack-plugin": "^1.7.0",
     "nyc": "^14.1.1",
+    "raw-loader": "^2.0.0",
     "style-loader": "^0.23.1",
+    "stylus-loader": "^3.0.2",
+    "vue-markdown-loader": "^2.4.1",
     "vue-template-compiler": "^2.5.21"
   },
   "eslintConfig": {

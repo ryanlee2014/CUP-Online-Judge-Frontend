@@ -13,7 +13,7 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import VueSocketIO from 'vue-socket.io'
-import mavonEditor from '@ryanlee2014/mavon-editor'
+import mavonEditor from './lib/mavon-editor/mavon-editor'
 
 Vue.config.productionTip = false;
 Vue.use(new VueSocketIO({
