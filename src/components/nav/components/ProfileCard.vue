@@ -19,7 +19,9 @@
                             <i class='send icon'></i>我的提交
                         </router-link>
                         <br>
-                        <router-link class="item" to="/contest?my"><i class='book icon'></i>我的竞赛&作业</router-link>
+                        <router-link class="item" to="/contest?myContest">
+                            <i class='book icon'></i>我的竞赛&作业
+                        </router-link>
                         <br>
                         <a class='logout item' @click.prevent="logout"><i
                                 class='remove user icon'></i>注销</a>&nbsp;<br>

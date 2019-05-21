@@ -125,7 +125,17 @@
             function sleep(ms) {
                 return new Promise(resolve => setTimeout(resolve, ms));
             }
-            this.axios.get("/api/contest/list", this.$route.query)
+            console.log(this.$route.query);
+            this.axios.get("/api/contest/list", {
+                params: (params => {
+                    for(let key in params) {
+                        if (params[key] === null || params[key] === undefined) {
+                            params[key] = "1"
+                        }
+                    }
+                    return params;
+                })(this.$route.query)
+            })
                 .then(({data}) => {
                     this.contest_list = data.data;
                 });
