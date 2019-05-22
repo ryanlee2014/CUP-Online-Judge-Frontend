@@ -427,6 +427,7 @@
         updated: function() {
         },
         mounted: function () {
+            document.title = `Problem Set -- ${document.title}`;
             $('.ui.search')
                 .search({
                     apiSettings: {

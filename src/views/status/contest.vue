@@ -665,10 +665,11 @@
             })
         },
         mounted: function () {
+            document.title = `Contest ${this.cid} Status -- ${document.title}`;
             var that = this;
             $.get("/api/status/graph?cid="+this.cid,function(data){
                 draw(data);
-            })
+            });
             $.get("/api/contest/statistics/"+this.cid,function(data){
                 that.statistics = data;
             })

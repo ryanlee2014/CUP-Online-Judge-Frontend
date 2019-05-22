@@ -40,6 +40,7 @@
             userList
         },
         mounted() {
+            document.title = `Online user -- ${document.title}`;
         },
         updated() {
 

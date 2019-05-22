@@ -579,6 +579,7 @@
             $("title").html("ContestRank: " + this.title);
         },
         mounted: function () {
+            document.title = `Contest Rank ${this.cid} -- ${document.title}`;
             const that = this;
             bindDragEvent();
             (() => {

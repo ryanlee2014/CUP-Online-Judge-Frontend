@@ -100,6 +100,8 @@
             ContestMode
         },
         mounted() {
+            const solution_id = this.$route.params.solution_id;
+            document.title = `Solution ${solution_id} -- ${document.title}`;
             this.bindClipboardDOM();
             this.initData();
         },

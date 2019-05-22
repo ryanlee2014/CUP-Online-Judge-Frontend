@@ -33,6 +33,9 @@
                 return markdownIt.render(this.contents);
             }
         },
+        mounted() {
+            document.title = `User broadcase -- ${document.title}`;
+        },
         methods: {
             submit() {
                 this.$socket.emit("msg", {

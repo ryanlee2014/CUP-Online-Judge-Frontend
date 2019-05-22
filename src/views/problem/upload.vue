@@ -5,17 +5,21 @@
             <div class="row">
                 <div class="ui center aligned segment" style="min-height:400px">
                     <div class="ui main container">
-                        <form action="/api/upload/user" method="post" class="ui form" enctype="multipart/form-data">
+                        <form action="/api/upload/user" class="ui form" enctype="multipart/form-data" method="post">
                             <h3>Import Problem(RPK):</h3>
                             <div class="field">
-                                <a class="ui button" @click="selectFile">{{fileStatus}}</a>
-                                <input style="display:none" type="file" name="fps" id="file" @change="fileChange">
+                                <a @click="selectFile" class="ui button">{{fileStatus}}</a>
+                                <input @change="fileChange" id="file" name="fps" style="display:none" type="file">
                             </div>
                             <div class="two field">
-                                <div class="ui left input" style="width: auto;"><input name="captcha" type="text" placeholder="验证码" id="vcode"><img alt="click to change" id="vcode_graph" src="/api/captcha?from=upload" onclick="this.src='/api/captcha?from=upload&random='+Math.random()" height="40px"></div>
+                                <div class="ui left input" style="width: auto;"><input id="vcode" name="captcha"
+                                                                                       placeholder="验证码" type="text"><img
+                                        alt="click to change" height="40px" id="vcode_graph"
+                                        onclick="this.src='/api/captcha?from=upload&random='+Math.random()"
+                                        src="/api/captcha?from=upload"></div>
                             </div>
                             <div class="field">
-                                <input type="submit" class="ui blue button" value="Import">
+                                <input class="ui blue button" type="submit" value="Import">
                             </div>
                         </form>
                     </div>
@@ -26,18 +30,24 @@
 </template>
 
 <script>
+    import mixins from '../../mixin/init'
+
     export default {
         name: "upload",
-        data:function(){
+        mixins: [mixins],
+        data: function () {
             return {
-                fileStatus:"选择文件"
+                fileStatus: "选择文件"
             };
         },
-        methods:{
-            selectFile:function(){
+        mounted() {
+            document.title = `Upload problem -- ${document.title}`;
+        },
+        methods: {
+            selectFile: function () {
                 $("#file").click();
             },
-            fileChange:function($event) {
+            fileChange: function ($event) {
                 this.fileStatus = $event.target.files[0].name;
             }
         }

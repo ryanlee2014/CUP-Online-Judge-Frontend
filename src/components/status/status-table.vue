@@ -1,5 +1,5 @@
 <template>
-    <table class="ui padded selectable unstackable table" align="center" width="90%" v-cloak>
+    <table align="center" class="ui padded selectable unstackable table" v-cloak width="90%">
         <thead>
         <tr class='toprow'>
             <th width="8%">{{target.solution_id}}</th>
@@ -18,15 +18,15 @@
         </tr>
         </thead>
         <tbody>
-        <tr :key="row.solution_id" v-for="row in problem_lists" :class="row.sim?'warning':''"
-            :data-html="'<b>IP:'+row.ip+'</b><br><p>类型:'+detect_place(row.ip)+'</p><p>用户指纹:<br>'+row.fingerprint+'<br>硬件指纹:<br>'+row.fingerprintRaw+'</p>'">
+        <tr :class="row.sim?'warning':''" :data-html="'<b>IP:'+row.ip+'</b><br><p>类型:'+detect_place(row.ip)+'</p><p>用户指纹:<br>'+row.fingerprint+'<br>硬件指纹:<br>'+row.fingerprintRaw+'</p>'" :key="row.solution_id"
+            v-for="row in problem_lists">
             <td>{{row.solution_id}}</td>
             <td>
                 <div class="ui grid">
                     <div class="three wide column" style="margin:auto">
-                        <img class="ui avatar image" :src="'/avatar/'+row.user_id+'.jpg'"
-                             v-if="row.avatar||user[row.user_id].avatar" style="object-fit: cover;">
-                        <img class="ui avatar image" src="/image/default-user.png" v-else style="object-fit: cover;">
+                        <img :src="'/avatar/'+row.user_id+'.jpg'" class="ui avatar image"
+                             style="object-fit: cover;" v-if="row.avatar||user[row.user_id].avatar">
+                        <img class="ui avatar image" src="/image/default-user.png" style="object-fit: cover;" v-else>
                     </div>
                     <div class="twelve wide column">
                         <router-link :to="`/user/${row.user_id}`">
@@ -37,17 +37,21 @@
             </td>
             <td>
                 <div class=center>
-                    <router-link :to="`/problem/submit/${Math.abs(row.problem_id)}`">{{Math.abs(row.problem_id)}}</router-link>
+                    <router-link :to="`/problem/submit/${Math.abs(row.problem_id)}`">{{Math.abs(row.problem_id)}}
+                    </router-link>
                 </div>
             </td>
-            <td><a :href="(row.result == 11?'ce':'re')+'info.php?sid='+row.solution_id"
-                   v-cloak :class="answer_class[row.result]" title='点击看详细'><i v-cloak
-                                                                              :class="answer_icon[row.result]+' icon'"></i>{{result[row.result]}}</a>
+            <td>
+                <router-link :class="answer_class[row.result]" :to="`/status/info/${infoRoute(row.result)}/${row.solution_id}`">
+                    <i :class="answer_icon[row.result]+' icon'"></i>
+                    {{result[row.result]}}
+                </router-link>
                 <br v-if="row.sim||row.pass_rate>0.05 || row.result == 3">
-                <a v-if="row.result == 3 && !!row.pass_point && !!row.total_point" :class="answer_class[row.result]"
-                   v-cloak><i :class="answer_icon[row.result]+' icon'" style="opacity:0"></i>({{row.pass_point ||
+                <a :class="answer_class[row.result]" v-cloak
+                   v-if="row.result == 3 && !!row.pass_point && !!row.total_point"><i :class="answer_icon[row.result]+' icon'" style="opacity:0"></i>({{row.pass_point ||
                     0}}/{{row.total_point || 0}})</a>
-                <router-link :class="answer_class[row.result]" v-if="row.sim" :to="`/compare/${row.solution_id}/${row.sim_id}`">
+                <router-link :class="answer_class[row.result]" :to="`/compare/${row.solution_id}/${row.sim_id}`"
+                             v-if="row.sim">
                     <br v-if="row.result == 3">
                     {{(Boolean(row.sim) === false?'':row.sim_id+' ('+row.sim+'%)')}}
                 </router-link>
@@ -56,20 +60,23 @@
 
             </td>
             <td v-if="isadmin">
-                <router-link v-if="row.contest_id" :to="`/contest/${row.contest_id}`">{{row.contest_id}}</router-link>
+                <router-link :to="`/contest/${row.contest_id}`" v-if="row.contest_id">{{row.contest_id}}</router-link>
                 <span v-else>无</span></td>
             <td>
                 <div><span class="boldstatus">{{memory_parse(row.memory)}}</span><br><span class="boldstatus">{{time_parse(row.time)}}</span>
                 </div>
             </td>
             <td>
-                <router-link class="boldstatus" v-if="self === row.user_id || isadmin || row.share == 1" :to="`/usercode/local/${row.solution_id}`">
+                <router-link :to="`/usercode/local/${row.solution_id}`" class="boldstatus"
+                             v-if="self === row.user_id || isadmin || row.share == 1">
                     查看
                 </router-link>
                 <span class="boldstatus" v-else>{{language_name[row.language]}}</span>
                 <span v-if="(self === row.user_id || isadmin || row.share == 1) && row.problem_id"> / </span>
-                <router-link class="boldstatus" v-if="(self === row.user_id || isadmin || row.share == 1) && row.problem_id"
-                :to="`/problem/submit/${Math.abs(row.problem_id)}/${Math.abs(row.solution_id)}`">编辑</router-link>
+                <router-link :to="`/problem/submit/${Math.abs(row.problem_id)}/${Math.abs(row.solution_id)}`"
+                             class="boldstatus"
+                             v-if="(self === row.user_id || isadmin || row.share == 1) && row.problem_id">编辑
+                </router-link>
                 <br>
                 <span class="boldstatus" v-if="(self === row.user_id || isadmin || row.share == 1)">{{language_name[row.language]}} / </span>
                 <span class="boldstatus">{{row.length}}B</span>
@@ -82,6 +89,7 @@
 
 <script>
     import util from "../../lib/util"
+
     const _ = require("lodash");
     const dayjs = require("dayjs");
     export default {
@@ -94,11 +102,14 @@
             language_name: Array,
             result: Array,
             self: String,
-            isadmin: Boolean
+            isadmin: {
+                type: Boolean,
+                default: false
+            }
         },
         data: function () {
             return {
-                user:{},
+                user: {},
                 dayjs
             };
         },
@@ -123,26 +134,32 @@
                 }
                 return time.toString().substring(0, 5) + unit[cnt];
             },
-            detect_place: function(ip) {
-                if(!ip) {
+            detect_place: function (ip) {
+                if (!ip) {
                     return "未知";
                 }
                 var tmp = {
-                    intranet_ip:ip,
-                    place:""
+                    intranet_ip: ip,
+                    place: ""
                 };
                 util.detectIP(tmp);
                 return tmp.place;
+            },
+            infoRoute: function (result) {
+                if (parseInt(result) === 11) {
+                    return "compile"
+                }
+                return "runtime";
             }
         },
         computed: {
             problem_lists: function () {
                 var that = this;
-                _.forEach(this.problem_list,function(i){
+                _.forEach(this.problem_list, function (i) {
                     that.user[i.user_id] = that.user[i.user_id] || i;
                 })
                 var doc = document.createElement("div");
-                _.forEach(this.problem_list,function(val,i){
+                _.forEach(this.problem_list, function (val, i) {
                     doc.innerHTML = that.problem_list[i].nick;
                     that.problem_list[i].nick = doc.innerText;
                 })

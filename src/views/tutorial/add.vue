@@ -87,6 +87,9 @@
                     }
                 })
             }
+        },
+        mounted() {
+            document.title = `Add Tutorial -- ${document.title}`;
         }
     }
 </script>

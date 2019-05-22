@@ -132,6 +132,7 @@
             };
         },
         mounted() {
+            document.title = `Problem ${this.problem_id} -- ${document.title}`;
             this.$store.commit("setCodeInfo", {code: ""});
             this.asyncFunc();
             this.registerSocketListener();

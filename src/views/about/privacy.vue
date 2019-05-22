@@ -42,8 +42,13 @@
 </template>
 
 <script>
+    import mixins from '../../mixin/init'
     export default {
-        name: "privacy"
+        name: "privacy",
+        mixins: [mixins],
+        mounted() {
+            document.title = `Privacy -- ${document.title}`;
+        }
     }
 </script>
 

@@ -48,6 +48,7 @@
             }
         },
         async mounted() {
+            document.title = `Code compare -- ${document.title}`;
             let leftPromise = new Promise(resolve => {
                     this.axios.get(`/api/source/local/${this.$route.params.left}?raw=1`).then(({data}) => {
                         resolve(data)
@@ -64,7 +65,6 @@
             this.problem_id = leftData.data.code.problem_id;
             let originalModel = monaco.editor.createModel(leftData.data.code.source, "cpp");
             let modifiedModel = monaco.editor.createModel(rightData.data.code.source, "cpp");
-            console.log(monaco.languages.getLanguages());
             this.$forceUpdate();
             this.$nextTick(() => {
                 const diffEditor = this.diffEditor = monaco.editor.createDiffEditor(document.getElementById("container"));

@@ -156,6 +156,7 @@
             })
         },
         mounted: function () {
+            document.title = `Tutorial -- ${document.title}`;
             this.axios.get(`/api/tutorial/${this.source}/${this.id}`)
                 .then(({data}) => {
                     const d = data;

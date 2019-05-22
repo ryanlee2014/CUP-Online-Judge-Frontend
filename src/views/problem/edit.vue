@@ -327,8 +327,7 @@
             }
         },
         mounted:function(){
-            const that = this;
-            const id = this.id;
+            document.title = `Problem ${this.id} Edit -- ${document.title}`;
             this.initData();
         }
     }

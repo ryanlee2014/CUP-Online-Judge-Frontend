@@ -31,8 +31,11 @@
                     <router-link :to="`/contest/problem/${Math.abs(row.contest_id)}/${row.num}`">{{end?((row.oj_name === "local"?"":row.oj_name.toUpperCase())+row.problem_id):(row.num + 1001)}}</router-link>
                 </div>
             </td>
-            <td><a :href="(row.result == 11?'ce':'re')+'info.php?sid='+row.solution_id"
-                   v-cloak :class="answer_class[row.result]" title='点击看详细'><i v-cloak :class="answer_icon[row.result]+' icon'"></i>{{result[row.result]}}</a>
+            <td>
+                <router-link :to="`/status/info/${infoRoute(row.result)}/${row.solution_id}`" :class="answer_class[row.result]">
+                    <i v-cloak :class="answer_icon[row.result]+' icon'"></i>
+                    {{result[row.result]}}
+                </router-link>
                     <router-link v-if="row.sim" :to="`/compare/${row.solution_id}/${row.sim_id}`" :class="answer_class[row.result]">
                         <br>
                         {{(Boolean(row.sim) === false?'':row.sim_id+' ('+row.sim+'%)')}}
@@ -124,6 +127,12 @@
                 };
                 utils.detectIP(tmp);
                 return tmp.place;
+            },
+            infoRoute: function (result) {
+                if (parseInt(result) === 11) {
+                    return "compile"
+                }
+                return "runtime";
             }
         },
         computed: {

@@ -4,12 +4,11 @@
             <a @click="mode=1" :class="(mode === 1?'active':'')+' item'">所有用户</a>
             <a @click="mode=2" :class="(mode === 2?'active':'')+' item'">现役队员</a>
             <a @click="mode=3" :class="(mode === 3?'active':'')+' item'">退役队员</a>
+            <a @click="mode=4" :class="(mode === 4?'active':'')+' item'">新用户</a>
         </div>
         <div class="ui bottom attached segment" v-show="mode === 1">
             <div class="ui stack segment">
-
                 <div class="ui grid">
-
                     <div class="row">
                         <div class="four wide column">
                             <div class="ui mini statistic" style="margin:0">
@@ -61,9 +60,6 @@
                     <th width="15%"><b>{{_name.nick}}</b></th>
                     <th width="55%" class="center head">个人介绍</th>
                     <th width="10%" class="center head"><b>{{_name.accept}}</b></th>
-                    <!--<th width="7%"><b>{{_name.vjudge_accept}}</b></th>
-                    <th width="7%"><b>{{_name.submit}}</b></th>
-                    <th width="7%"><b>{{_name.ratio}}</b></th>-->
                 </tr>
                 </thead>
                 <tbody>
@@ -77,6 +73,7 @@
                     <td>
                         <img class="ui avatar image" :src="'/avatar/'+row.user_id+'.jpg'" v-if="row.avatar"
                              style="object-fit: cover;">
+                        <img class="ui avatar image" src="/image/default-user.png" style="object-fit: cover;" v-else>
                     </td>
                     <td>
                         {{convertHTML(row.nick)}}
@@ -85,9 +82,6 @@
                     <td class="center head">
                         <router-link :to="`/status?user_id=${row.user_id}&jresult=4`">{{row.solved || 0}}</router-link>
                     </td>
-                    <!--<td><a :href="'hdu_status.php?user_id='+row.user_id+'&jresult=4'">{{row.vjudge_solved||0}}</a></td>
-                    <td><a :href="'status.php?user_id='+row.user_id">{{row.submit||0}}</a></td>
-                    <td>{{(((row.solved*100/(row.submit||0)||0)).toString().substring(0,5)+"%")}}</td>-->
                 </tr>
                 </tbody>
             </table>
@@ -107,85 +101,15 @@
                 Next
             </a>
         </div>
-        <div class="ui bottom attached segment" v-show="mode === 2" @click="mode = 2">
-            <table style="width:100%" class="ui padded borderless selectable table">
-                <thead>
-                <tr>
-                    <th width="7%" class="center head">{{_name.rank}}</th>
-                    <th width="10%" class="center head"><b>{{_name.user}}</b></th>
-                    <th width="3%"></th>
-                    <th width="15%"><b>{{_name.nick}}</b></th>
-                    <th width="55%" class="center head">个人介绍</th>
-                    <th width="10%" class="center head"><b>{{_name.accept}}</b></th>
-                    <!--<th width="7%"><b>{{_name.vjudge_accept}}</b></th>
-                    <th width="7%"><b>{{_name.submit}}</b></th>
-                    <th width="7%"><b>{{_name.ratio}}</b></th>-->
-                </tr>
-                </thead>
-                <tbody>
-                <tr :key="key" v-for="(row,key,index) in acmmem">
-                    <td class="center head">{{page*50+key+1}}</td>
-                    <td class="center head">
-                        <router-link :to="`/user/${row.user_id}`">{{row.user_id}}</router-link>
-                    </td>
-                    <td>
-                        <img class="ui avatar image" :src="'/avatar/'+row.user_id+'.jpg'" v-if="row.avatar"
-                             style="object-fit: cover;">
-                    </td>
-                    <td>
-                        {{convertHTML(row.nick)}}
-                    </td>
-                    <td class="center head" v-html="markdownIt.renderRaw(row.biography||'')"></td>
-                    <td class="center head">
-                        <router-link :to="`/status?user_id=${row.user_id}&jresult=4`">{{row.solved||0}}</router-link>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-        <div class="ui bottom attached segment" v-show="mode === 3" @click="mode = 3">
-            <table style="width:100%" class="ui padded borderless selectable table">
-                <thead>
-                <tr>
-                    <th width="7%" class="center head">{{_name.rank}}</th>
-                    <th width="10%" class="center head"><b>{{_name.user}}</b></th>
-                    <th width="3%"></th>
-                    <th width="15%"><b>{{_name.nick}}</b></th>
-                    <th width="55%" class="center head">个人介绍</th>
-                    <th width="10%" class="center head"><b>{{_name.accept}}</b></th>
-                    <!--<th width="7%"><b>{{_name.vjudge_accept}}</b></th>
-                    <th width="7%"><b>{{_name.submit}}</b></th>
-                    <th width="7%"><b>{{_name.ratio}}</b></th>-->
-                </tr>
-                </thead>
-                <tbody>
-                <tr :key="key" v-for="(row,key,index) in retiremem">
-                    <td class="center head">{{page*50+key+1}}</td>
-                    <td class="center head">
-                        <router-link :to="`/user/${row.user_id}`">
-                            {{row.user_id}}
-                        </router-link>
-                    </td>
-                    <td>
-                        <img class="ui avatar image" :src="'/avatar/'+row.user_id+'.jpg'" v-if="row.avatar"
-                             style="object-fit: cover;">
-                    </td>
-                    <td>
-                        {{convertHTML(row.nick)}}
-                    </td>
-                    <td class="center head" v-html="markdownIt.renderRaw(row.biography||'')"></td>
-                    <td class="center head">
-                        <router-link :to="`/status?user_id=${row.user_id}&jresult=4`">{{row.solved || 0}}</router-link>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
+        <table-card :content="acmmem" :page="page" :_name="_name" v-show="mode === 2" @click="mode = 2"></table-card>
+        <table-card :content="retiremem" :page="page" :_name="_name" v-show="mode === 3" @click="mode = 3"></table-card>
+        <table-card :content="recent_register" :page="page" :_name="_name" v-show="mode === 4" @click="mode = 4"></table-card>
     </div>
 </template>
 
 <script>
     import markdownIt from '../../lib/markdownIt/markdownIt'
+    import tableCard from './components/tableCard'
     const $ = require("jquery");
     window.$ = window.jQuery = $;
     require("../../static/js/semantic.min");
@@ -193,6 +117,9 @@
         name: "MainContent",
         props: {
             rank: Object
+        },
+        components: {
+            tableCard
         },
         data: function () {
             return {
@@ -204,6 +131,7 @@
                 time_stamp: "",
                 acmmember: {ranklist: []},
                 retiremember: {ranklist: []},
+                recent_register: [],
                 markdownIt,
                 ranklistData: {}
             };
@@ -279,7 +207,11 @@
             });
             $.get("/api/ranklist/oldmember", function (data) {
                 that.retiremem = data;
-            })
+            });
+            this.axios.get("/api/user/recent_register")
+                .then(({data}) => {
+                    this.recent_register = data.data;
+                });
         }
     }
 </script>

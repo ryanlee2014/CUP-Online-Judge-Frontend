@@ -107,6 +107,7 @@
 
         },
         mounted:function(){
+            document.title = `Discuss -- ${document.title}`;
             var page = this.page * 20;
             var that = this;
             $.get("/api/discuss?page="+page,function(data){

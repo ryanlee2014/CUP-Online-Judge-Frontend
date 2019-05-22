@@ -149,14 +149,14 @@
     // @ is an alias to /src
     import anime from 'animejs';
     import util from '../lib/util';
-
+    import mixins from '../mixin/init';
     const dayjs = require("dayjs");
     const $ = require("jquery");
-    window.$ = window.jQuery = $;
-    require("../static/js/semantic.min");
     export default {
         name: 'home',
+        mixins: [mixins],
         mounted() {
+            document.title = `Home -- ${document.title}`;
             setTimeout(() => {
                 util.init(true, true);
             }, 500);

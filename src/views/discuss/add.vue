@@ -72,6 +72,9 @@
                     }
                 })
             }
+        },
+        mounted() {
+            document.title = `Add Thread -- ${document.title}`;
         }
     }
 </script>

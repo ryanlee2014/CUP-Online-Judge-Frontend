@@ -52,6 +52,7 @@
             }
         },
         mounted() {
+            document.title = `Edit Tutorial -- ${document.title}`;
             this.axios.get(`/api/tutorial/${this.tutorial_id}`)
                 .then(({data}) => {
                     const d = data;

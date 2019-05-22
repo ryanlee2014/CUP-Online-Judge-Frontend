@@ -27,6 +27,7 @@
             }
         },
         mounted: function () {
+            document.title = `Ranklist -- ${document.title}`;
             this.axios.get(`/api/ranklist/${this.$route.query.page ? `?page=${this.$route.query.page}` : ''}`)
                 .then((response) => this.ranklist = response.data);
         }

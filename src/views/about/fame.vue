@@ -9,7 +9,7 @@
 
                 <div class="ui sticky left">
                     <h3 class="ui header">目录</h3>
-                    <div class="ui link list" style="overflow-y:auto" id="linkedlist">
+                    <div class="ui link list" id="linkedlist" style="overflow-y:auto">
 
                     </div>
                 </div>
@@ -265,6 +265,7 @@
         name: "fame",
         mixins: [mixins],
         mounted() {
+            document.title = `Hall of fame -- ${document.title}`;
             this.$Lazyload.$on("loaded", (el) => {
                 const $parent = $(el.el).parent();
                 $parent.find(".sticky").sticky({
@@ -272,12 +273,6 @@
                     offset: 50
                 });
             });
-            //var headerArr = $(".ui.container.text .ui.segment .ui.header.contents");
-            //var len = headerArr.length;
-            //for(var i = 0;i<len;++i)
-            //{
-            //$("#contents .segment").append("<a href='#" + headerArr.eq(i).parent().attr("id")+"'>"+headerArr.eq(i).text()+"</a><br>");
-            //}
             var $headers = $(".ui.header.contents");
             var len = $headers.length;
             var list = $("#linkedlist");
@@ -293,7 +288,7 @@
                 $(".ui.sticky.left")
                     .sticky({
                         context: "#mainContent",
-                        offset: 100,
+                        offset: 50,
                     });
                 $(".quick.item").on('click', function (d) {
                     $([document.documentElement, document.body]).animate({
@@ -302,6 +297,13 @@
                     return false;
                 });
             });
+        },
+        updated() {
+            $(".ui.sticky.left")
+                .sticky({
+                    context: "#mainContent",
+                    offset: 50,
+                });
         }
     }
 </script>

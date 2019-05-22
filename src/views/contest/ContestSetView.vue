@@ -106,8 +106,6 @@
     import mixins from '../../mixin/init'
 
     const $ = require("jquery");
-    window.$ = window.jQuery;
-    require("../../static/js/semantic.min");
     const dayjs = require("dayjs");
     export default {
         name: "ContestSetView",
@@ -122,6 +120,7 @@
             }
         },
         mounted() {
+            document.title = `Contest Set -- ${document.title}`;
             function sleep(ms) {
                 return new Promise(resolve => setTimeout(resolve, ms));
             }

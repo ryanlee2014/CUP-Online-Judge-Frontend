@@ -1004,6 +1004,7 @@
             }
         },
         mounted:async function () {
+            document.title = `User ${this.user_id} -- ${document.title}`;
             this.initData();
         }
     }

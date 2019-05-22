@@ -151,6 +151,7 @@
             this.content = $content && $content.trim && $content.trim().length > 0 || ($container && $container.html() && $container.html().trim().length > 0);
         },
         mounted: function () {
+            document.title = `Thread ${this.id} -- ${document.title}`;
             var page = this.page * 20;
             var that = this;
             $.get("/api/discuss/" + this.id + "?page=" + page, function (data) {

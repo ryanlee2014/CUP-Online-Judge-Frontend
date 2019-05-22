@@ -139,6 +139,8 @@
             }
         },
         mounted: function () {
+            const contest_id = this.$route.params.contest_id;
+            document.title = `Contest ${contest_id} -- ${document.title}`;
             this.run(this.run);
         },
         updated: function () {
@@ -146,8 +148,8 @@
         },
         methods: {
             run: function (resolve) {
-                var contest_id = this.$route.params.contest_id;
-                var that = this;
+                const contest_id = this.$route.params.contest_id;
+                const that = this;
                 this.cid = parseInt(contest_id);
                 $.get("/api/contest/problem/" + contest_id, function (_d) {
                     if (_d.status !== "OK") {

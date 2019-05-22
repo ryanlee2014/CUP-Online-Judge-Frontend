@@ -296,6 +296,22 @@ const router = new Router({
             }
         },
         {
+            path: '/status/info/compile/:solution_id',
+            name: 'compile info view',
+            component: () => import('./views/status/info/compile.vue'),
+            meta: {
+                auth: true
+            }
+        },
+        {
+            path: '/status/info/runtime/:solution_id',
+            name: 'runtime info view',
+            component: () => import('./views/status/info/runtime.vue'),
+            meta: {
+                auth: true
+            }
+        },
+        {
             path: "*",
             redirect: "/"
         }

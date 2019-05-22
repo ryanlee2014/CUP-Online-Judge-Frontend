@@ -167,6 +167,7 @@
         name: "software",
         mixins: [mixins],
         mounted() {
+            document.title = `Software -- ${document.title}`;
             var userAgent=window.navigator.userAgent;
             var $chrome_val=$(".header.chrome").html();
             var $clion_val=$(".header.clion").html();

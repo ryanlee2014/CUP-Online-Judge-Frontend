@@ -910,6 +910,7 @@
             });
         },
         mounted: function () {
+            document.title = `Status -- ${document.title}`;
             $.get("/api/status/graph", function (data) {
                 draw(data);
                 drawDynamicInteractiveLineChart();

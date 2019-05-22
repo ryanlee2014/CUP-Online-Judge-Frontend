@@ -62,6 +62,9 @@
     export default {
         name: "login",
         mixins: [mixins],
+        mounted() {
+            document.title = `Login -- ${document.title}`;
+        },
         data: function () {
             return {
                 user_id: "",

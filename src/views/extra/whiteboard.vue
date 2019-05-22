@@ -118,7 +118,7 @@
             }
         },
         mounted() {
-
+            document.title = `Whiteboard -- ${document.title}`;
         },
         methods: {
             detectLanguageDebouncer() {

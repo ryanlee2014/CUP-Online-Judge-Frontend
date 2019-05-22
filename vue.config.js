@@ -2,6 +2,13 @@ const MonacoEditorPlugin = require('monaco-editor-webpack-plugin');
 
 module.exports = {
     runtimeCompiler: true,
+    chainWebpack: config => {
+        config.module.rule('md')
+            .test(/\.md/)
+            .use("raw-loader")
+            .loader("raw-loader")
+            .end()
+    },
     devServer: {
         proxy: {
             '/api': {

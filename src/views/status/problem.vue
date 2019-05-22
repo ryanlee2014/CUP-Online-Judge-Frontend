@@ -355,6 +355,7 @@
             }
         },
         mounted: function () {
+            document.title = `Problem ${this.pid} Statistics -- ${document.title}`;
             var that = this;
             var current_title = $("title").text();
             $("title").text("Status:Problem " + this.pid + " - " + current_title);

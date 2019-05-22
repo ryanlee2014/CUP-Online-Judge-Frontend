@@ -56,6 +56,7 @@
             }
         },
         mounted: function () {
+            document.title = `Edit Thread -- ${document.title}`;
             const isMainContent = !this.reply;
             const that = this;
             if (isMainContent) {

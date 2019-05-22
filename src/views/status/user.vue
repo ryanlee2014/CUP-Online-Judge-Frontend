@@ -258,10 +258,7 @@
                     cidArray = cidArray.split(",");
                 }
                 this.cidArray = cidArray;
-                var h = "Contest " + cidArray.map(function(el){
-                    return "<a target='_blank' href='/contest.php?cid=" + el + "'>" + el + "</a>";
-                }).join(",");
-                this.header = h;
+                this.header = cidArray;
             },
             getData: function() {
                 var that = this;

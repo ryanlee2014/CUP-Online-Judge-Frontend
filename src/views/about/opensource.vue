@@ -140,8 +140,13 @@
 </template>
 
 <script>
+    import mixins from '../../mixin/init'
     export default {
-        name: "opensource"
+        name: "opensource",
+        mixins: [mixins],
+        mounted() {
+            document.title = `Open Source -- ${document.title}`;
+        }
     }
 </script>
 
