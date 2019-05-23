@@ -6,7 +6,6 @@
 
 <script>
     const ace = require("brace");
-    const detectLang = require("../../../lib/langDetector");
     window.ace = ace;
     require("../../../lib/brace/braceMode");
     require("../../../lib/brace/braceTheme");

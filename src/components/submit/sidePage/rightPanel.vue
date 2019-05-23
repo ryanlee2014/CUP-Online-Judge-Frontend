@@ -40,9 +40,9 @@
              style="width: 100%;padding:0px;line-height:1.2;text-align:left;margin-bottom:0px;"
              v-if="prepend" v-text="current_prepend">
         </div>
-        <ace-editor v-if="!editorPackage" :fontSize="fontSize" :selected_language="selected_language"
+        <ace-editor v-if="!editorPackage" :fontSize="fontSize + ''" :selected_language="selected_language"
                     :theme="theme" v-model="code"></ace-editor>
-        <monaco-editor v-else :fontSize="fontSize" :selected_language="selected_language"
+        <monaco-editor v-else :fontSize="fontSize + ''" :selected_language="selected_language"
                        :theme="theme" v-model="code">
 
         </monaco-editor>
@@ -356,7 +356,7 @@
                 const defaultConfig = {
                     editorPackage: false,
                     theme: "ace/theme/monokai",
-                    fontSize: 16
+                    fontSize: "16"
                 };
                 let config;
                 if (!localStorage.submitConfig) {
