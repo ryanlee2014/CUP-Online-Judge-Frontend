@@ -130,7 +130,6 @@
         },
         updated: function () {
             const table_of_contents = $(".table-of-contents");
-            console.log(table_of_contents.html());
             let $content = table_of_contents.html();
             let $container = $("#contentContainer");
             if (!$content) $content = "";

@@ -116,15 +116,12 @@
                 contest_list: [],
                 select1: "",
                 select2: "",
-                current_column: "contest"
+                current_column: "contest",
+                current_time: dayjs()
             }
         },
         mounted() {
             document.title = `Contest Set -- ${document.title}`;
-            function sleep(ms) {
-                return new Promise(resolve => setTimeout(resolve, ms));
-            }
-            console.log(this.$route.query);
             this.axios.get("/api/contest/list", {
                 params: (params => {
                     for(let key in params) {
@@ -137,6 +134,9 @@
             })
                 .then(({data}) => {
                     this.contest_list = data.data;
+                    this.intervalID = setInterval(() => {
+                        this.current_time = dayjs();
+                    }, 1000);
                 });
             this.init();
         },
@@ -180,7 +180,7 @@
                     })
             },
             contestIsRunning: function (row) {
-                const start_time = dayjs(row.start_time), end_time = dayjs(row.end_time), current_time = dayjs();
+                const start_time = dayjs(row.start_time), end_time = dayjs(row.end_time), current_time = this.current_time;
                 return current_time.isBefore(end_time) && current_time.isAfter(start_time) ? "positive" : "";
             },
             formatDate: function (second) {
@@ -192,23 +192,23 @@
                     }
                 };
                 second = Math.abs(second);
-                let day = String(parseInt(second / 3600 / 24));
-                let hour = String(parseInt(second / 3600));
-                hour = fill_zero(hour);
-                let minute = String(parseInt((second - hour * 3600) / 60));
-                minute = fill_zero(minute);
-                let sec = String(second % 60);
-                sec = fill_zero(sec);
+                let day = parseInt(second / 3600 / 24);
+                let hour = parseInt((second - day * 3600 * 24) / 3600);
+                let minute = parseInt((second - day * 3600 * 24 - hour * 3600) / 60);
+                let sec = second % 60;
+                hour = fill_zero(hour + "");
+                minute = fill_zero(minute + "");
+                sec = fill_zero(sec + "");
                 return `${day}天${hour}小时${minute}分${sec}秒`;
             },
             contestTimeFormat: function (row) {
-                const start_time = dayjs(row.start_time), end_time = dayjs(row.end_time), current_time = dayjs();
+                const start_time = dayjs(row.start_time), end_time = dayjs(row.end_time), current_time = this.current_time;
                 if (current_time.isAfter(end_time)) {
                     return `已于${end_time.format("YYYY-MM-DD HH:mm:ss")}结束`;
                 } else if (current_time.isBefore(start_time)) {
                     return `将于${start_time.format("YYYY-MM-DD HH:mm:ss")}开始`;
                 } else {
-                    return `于${start_time.format("YYYY-MM-DD HH:mm:ss")}开始<br>已进行${this.formatDate(current_time.diff(start_time, 'second'))}`;
+                    return `于${start_time.format("YYYY-MM-DD HH:mm:ss")}开始<br>还有${this.formatDate(end_time.diff(current_time, 'second'))}结束`;
                 }
             },
             run: function () {

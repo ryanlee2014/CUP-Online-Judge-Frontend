@@ -376,9 +376,9 @@
                 let obj = document.getElementById('clipbtn');
                 const that = this;
                 if (obj) {
-                    var clipboard = new Clipboard(obj, {
-                        text: function (trigger) {
-                            var mergetext = that.prepend[that.selected_language];
+                    const clipboard = new Clipboard(obj, {
+                        text: function () {
+                            let mergetext = that.prepend[that.selected_language] || "";
                             mergetext += "\n/*请在下方编写你的代码,仅需提交填写的部分*/\n";
                             if (that.$store.getters.code.length !== 0) {
                                 mergetext += that.$store.getters.code;
@@ -386,7 +386,7 @@
                                 mergetext += "\n\n\n\n";
                             }
                             mergetext += "\n/*请在上方填写你的代码,仅需提交填写的部分*/\n";
-                            mergetext += that.append[that.selected_language];
+                            mergetext += that.append[that.selected_language] || "";
                             return mergetext;
                         }
                     });
@@ -397,7 +397,6 @@
                     clipboard.on('error', function (e) {
                         console.error(e);
                         console.log("复制失败！请手动复制代码");
-                        console.log("Firefox 有一定几率报错，待修复");
                     });
                 }
             },

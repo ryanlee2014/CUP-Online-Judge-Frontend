@@ -1,7 +1,7 @@
 <template>
-    <div id="cmod" class="ui container" v-if="contest_mode || limit">
+    <div class="ui container" id="cmod" v-if="contest_mode || limit">
         <ContestMode v-if="contest_mode"></ContestMode>
-        <LimitHostname v-if="limit" :address="address"></LimitHostname>
+        <LimitHostname :address="address" v-if="limit"></LimitHostname>
     </div>
     <div class="main screen" v-else>
         <TestrunView :hide_warning="hide_warning" :sampleinput="sampleinput"
@@ -139,7 +139,7 @@
         },
         updated() {
             const that = this;
-            this.$nextTick(function () {
+            this.$nextTick(() => {
                 if (that.single_page && !that.isRenderBodyOnTop) {
                     that.isRenderBodyOnTop = true;
                     $('.ui.vertical.segment.single')
@@ -190,7 +190,7 @@
                 await new Promise((resolve => {
                     this.axios.get(`/api/problem/local`, {params: parseData})
                         .then(({data}) => {
-                            if(data.status == "error") {
+                            if (data.status == "error") {
                                 if (data.statement) {
                                     alert(data.statement);
                                 }
@@ -199,10 +199,10 @@
                                 return;
                             }
                             let addr = data.limit_hostname;
-                            if(data.isadmin) {
+                            if (data.isadmin) {
                                 addr = null;
                             }
-                            if(addr && location.href.indexOf("addr") === -1) {
+                            if (addr && location.href.indexOf("addr") === -1) {
                                 this.limit = true;
                                 this.contest_mode = false;
                                 this.address = addr;
@@ -311,7 +311,7 @@
                 var outputMarkdownIt = this.outputMarkdownIt = markdownIt.newInstance("output", that.original_id);
                 var hintMarkdownIt = this.hintMarkdownIt = markdownIt.newInstance("hint", that.original_id);
                 $.get("/api/photo/description/" + id, function (data) {
-                    if (data.status == "OK") {
+                    if (data.status === "OK") {
                         descriptionMarkdownIt.__image = {};
                         _.forEach(data.data, function (val) {
                             descriptionMarkdownIt.__image[val.name] = val.data;
@@ -320,7 +320,7 @@
                     }
                 });
                 $.get("/api/photo/input/" + id, function (data) {
-                    if (data.status == "OK") {
+                    if (data.status === "OK") {
                         inputMarkdownIt.__image = {};
                         _.forEach(data.data, function (val) {
                             inputMarkdownIt.__image[val.name] = val.data;
@@ -329,7 +329,7 @@
                     }
                 });
                 $.get("/api/photo/output/" + id, function (data) {
-                    if (data.status == "OK") {
+                    if (data.status === "OK") {
                         outputMarkdownIt.__image = {};
                         _.forEach(data.data, function (val) {
                             outputMarkdownIt.__image[val.name] = val.data;
@@ -338,7 +338,7 @@
                     }
                 });
                 $.get("/api/photo/hint/" + id, function (data) {
-                    if (data.status == "OK") {
+                    if (data.status === "OK") {
                         hintMarkdownIt.__image = {};
                         _.forEach(data.data, function (val) {
                             hintMarkdownIt.__image[val.name] = val.data;
@@ -347,16 +347,16 @@
                     }
                 });
                 Fingerprint2.get(function (components) {
-                    var values = components.map(function (component) {
+                    let values = components.map(function (component) {
                         return component.value
-                    })
+                    });
                     that.fingerprintRaw = Fingerprint2.x64hash128(values.join(''), 31);
                     $.get("/api/status/ip", function (data) {
-                        var ip = data.ip;
+                        const ip = data.ip;
                         values.push(ip);
                         that.fingerprint = Fingerprint2.x64hash128(values.join(''), 31);
                     })
-                })
+                });
 
                 this.description = descriptionMarkdownIt.render(this.description || '');
                 this.input = inputMarkdownIt.render(this.input || '');
@@ -390,7 +390,7 @@
                         .modal({
                             offset: 400,
                             onShow: function () {
-                                that.confirm_text = "<h2><center>代码过短</center></h2>";
+                                that.confirm_text = `<h2><div style="text-align: center;">代码过短</div></h2>`;
                             }, onApprove: function () {
                                 that.presubmit();
                             }
@@ -415,10 +415,11 @@
                 this.submitDisabled = true;
                 $(".ui.teal.progress").show();
                 $(".progess_text").text("提交");
-                $('.progress.result').progress({
+                const $progressResult = $(".progress.result");
+                $progressResult.progress({
                     percent: 0
                 });
-                $(".progress.result").progress('set active');
+                $progressResult.progress('set active');
                 let postdata = {
                     id: this.$route.params.problem_id,
                     cid: this.$route.params.contest_id,
@@ -505,7 +506,7 @@
                 }
                 if (window.handler_interval) window.clearInterval(window.handler_interval);
                 if (this.$store.getters.code.length < 10) return alert("too short!");
-                var type = "problem";
+                let type = "problem";
                 if (!isNaN(this.$route.params.contest_id)) {
                     type = "contest";
                 } else if (!isNaN(this.$route.params.topic_id)) {
@@ -569,14 +570,15 @@
                     "系统错误",
                     ""
                 ];
-                var status = parseInt(data["state"]);
-                var compile_info = data["compile_info"]
-                var pass_point = data["pass_point"];
-                var time = data["time"];
-                var memory = data["memory"];
-                var sim = data.sim;
-                var sim_s_id = data.sim_s_id;
-                var pass_rate = (data["pass_rate"] ? data["pass_rate"] : 1) * 100;
+                let status = parseInt(data["state"]);
+                let compile_info = data["compile_info"]
+                let pass_point = data["pass_point"];
+                let time = data["time"];
+                let memory = data["memory"];
+                let sim = data.sim;
+                let sim_s_id = data.sim_s_id;
+                let pass_rate = (data["pass_rate"] ? data["pass_rate"] : 1) * 100;
+                let $progressResult = $('.progress.result');
                 if (status > 3) {
                     this.submitDisabled = false;
                     this.resume();
@@ -587,19 +589,19 @@
                 if (status == 0) {
                     $(".progess_text").text(judge_result[status]);
                     //setTimeout("frush_result(" + runner_id + ")", 250);
-                    $('.progress.result').progress({
+                    $progressResult.progress({
                         percent: 20
                     });
                 } else if (status == 2) {
                     $(".progess_text").text(judge_result[status]);
                     //setTimeout("frush_result(" + runner_id + ")", 250);
-                    $('.progress.result').progress({
+                    $progressResult.progress({
                         percent: 40
                     });
                 } else if (status == 3) {
                     $(".progess_text").text(judge_result[status] + " 已通过测试点:" + pass_point + "  通过率:" + pass_rate.toString().substring(0, 3) + "%");
                     // setTimeout("frush_result(" + runner_id + ")", 250);
-                    $('.progress.result').progress({
+                    $progressResult.progress({
                         percent: 40
                     });
                 } else if (status == 4) {
@@ -609,32 +611,38 @@
                         str += " 触发判重 与运行号: " + sim_s_id + "代码重复 重复率:" + sim + "%";
                     }
                     $(".progess_text").text(str);
-                    $('.progress.result').progress({
+                    $progressResult.progress({
                         percent: 100
                     });
-                    $(".progress.result").progress('set success');
+                    $progressResult.progress('set success');
                     let contest_id = parseInt(this.$route.params.contest_id);
                     if (!isNaN(contest_id) && contest_id > 1000) {
-                        $.get("contest_problem_ajax.php?cid=" + contest_id, function (data) {
-                            var json = JSON.parse(data);
+                        $.get(`/api/contest/rest/${contest_id}`, function (data) {
+                            let json = data.data;
+                            for(let i of json) {
+                                for(let j in i) {
+                                    if (i[j] === null) {
+                                        i[j] = 0;
+                                    }
+                                }
+                            }
                             setTimeout(function () {
                                 $(".mainwindow").html("").animate({width: 0, borderRadius: 0, padding: 0});
                             }, 500);
-                            var str = "<a class='item'><h3>剩下未完成的题目</h3></a>";
-                            if (json.length == 0) {
+                            let str = "<a class='item'><h3>剩下未完成的题目</h3></a>";
+                            if (json.length === 0) {
                                 str += "<a class='item'><h2>恭喜AK</h2>";
                             } else {
-                                console.log(typeof json);
                                 json.sort(function (a, b) {
-                                    if (a['num'] > b['num']) return 1;
-                                    else if (a['num'] == b['num']) return 0;
+                                    if (a['pnum'] > b['pnum']) return 1;
+                                    else if (a['pnum'] == b['pnum']) return 0;
                                     else return -1;
                                 })
                             }
                             for (let i in json) {
-                                str += "<a class='item' href='" + json[i]['url'] + "'><div class='ui small teal label'>通过:&nbsp;" + json[i]['accept'] + "</div><div class='ui small label'>提交:&nbsp;" + json[i]['submit'] + "</div>" + json[i]['num'] + " . " + json[i]['title'] + "</a>";
+                                str += "<a class='item' href='" + `/contest/problem/${contest_id}/${json[i].pnum}` + "'><div class='ui small teal label'>通过:&nbsp;" + json[i]['accepted'] + "</div><div class='ui small label'>提交:&nbsp;" + json[i]['submit'] + "</div>" + json[i]['pnum'] + " . " + json[i]['title'] + "</a>";
                             }
-                            var plain_html = '<div id="next_problem"><div class="ui massive vertical menu" style="position:relative;float:left;margin-left:20px">' + str + '</div></div>';
+                            let plain_html = '<div id="next_problem"><div class="ui massive vertical menu" style="position:relative;float:left;margin-left:20px">' + str + '</div></div>';
                             if ($(".ui.massive.vertical.menu").length == 0) {
                                 $("#total_control").append(plain_html);
                             } else {
@@ -643,12 +651,11 @@
                         });
                     }
                 } else if (status == 5 || status == 6) {
-                    //count=0;
                     $(".progess_text").text("在第" + (pass_point + 1) + "个测试点发生 " + judge_result[status] + "  通过率:" + pass_rate.toString().substring(0, 3) + "%");
-                    $('.progress.result').progress({
+                    $progressResult.progress({
                         percent: 100
                     });
-                    $(".progress.result").progress('set error');
+                    $progressResult.progress('set error');
                 } else if (status == 13) {
                     if (typeof compile_info != "undefined") compile_info = this.nl2br(compile_info);
                     else compile_info = "";
@@ -657,10 +664,10 @@
                         $(".compile.header").html("<br>" + compile_info);
                         $(".warning.message").show();
                     }
-                    $('.progress.result').progress({
+                    $progressResult.progress({
                         percent: 100
                     });
-                    $(".progress.result").progress('set warning');
+                    $progressResult.progress('set warning');
                 } else {
                     //count=0;
                     if (typeof compile_info != "undefined") compile_info = "<br>" + this.nl2br(compile_info);
@@ -670,10 +677,10 @@
                         $(".compile.header").html(compile_info);
                         $(".warning.message").show();
                     }
-                    $('.progress.result').progress({
+                    $progressResult.progress({
                         percent: 100
                     });
-                    $(".progress.result").progress('set warning');
+                    $progressResult.progress('set warning');
                 }
             },
             wsfs_result: function (data) {
@@ -687,7 +694,7 @@
                 }
             },
             nl2br: function (str, is_xhtml) {
-                var breakTag = (is_xhtml || typeof is_xhtml === 'undefined') ? '<br />' : '<br>';
+                let breakTag = (is_xhtml || typeof is_xhtml === 'undefined') ? '<br />' : '<br>';
                 return (str + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + breakTag + '$2');
             }
         },
@@ -696,7 +703,7 @@
                 const len = this.language_name.length - 1;
                 const _langmask = ~this.langmask;
                 let result = [];
-                for (var cnt = 0; cnt < len; ++cnt) {
+                for (let cnt = 0; cnt < len; ++cnt) {
                     if (_langmask & (1 << cnt)) {
                         result.push({
                             num: cnt,
@@ -708,7 +715,7 @@
                     if (a.name < b.name) return -1;
                     else if (a.name > b.name) return 1;
                     else return 0;
-                })
+                });
                 return result;
             }
         }

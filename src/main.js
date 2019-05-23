@@ -33,14 +33,5 @@ new Vue({
 }).$mount('#app');
 
 Vue.directive('tableUpdated', {
-  componentUpdated: function () {
-    $('.ui.sticky.element')
-        .sticky({
-          context: '#problemset',
-          offset: 40,
-          observeChanges: false,
-          refreshOnLoad: true,
-          refreshOnResize: true,
-        });
-  }
+
 });

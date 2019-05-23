@@ -135,6 +135,8 @@
         <h2 class="ui header">MarkdownIt Browser</h2>
         <p><i class="github icon"></i>&nbsp;<a href="https://github.com/ryanlee2014/markdown-it-browser" target="_blank">https://github.com/ryanlee2014/markdown-it-browser</a></p>
         <p>Copyright©️<a href="https://github.com/ryanlee2014" target="_blank">Ryan Lee</a></p>
+        <h2 class="ui header">Monaco Editor</h2>
+        <p></p>
         <h1></h1>
     </div>
 </template>

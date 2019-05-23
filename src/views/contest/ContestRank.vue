@@ -520,7 +520,9 @@
                 //table.export2file(d.data,d.mimeType,filename,d.fileExtension,d.merges)
             },
             handleNewSubmit: function (data) {
+                console.log("handled", data);
                 if (parseInt(data.contest_id) === parseInt(this.cid)) {
+                    console.log("in");
                     if (data.finish === 1) {
                         var ndata = {
                             nick: data.nick,
@@ -579,6 +581,8 @@
             $("title").html("ContestRank: " + this.title);
         },
         mounted: function () {
+            window.datas = [];
+            temp_data = [];
             document.title = `Contest Rank ${this.cid} -- ${document.title}`;
             const that = this;
             bindDragEvent();
@@ -597,46 +601,47 @@
                 var finished = false;
                 function work(){
                     cid = cidArr.shift();
-                    $.get("/api/scoreboard/"+cid);
-                    $.get("/api/scoreboard/"+cid,function(d){
-                        if(d.status != "OK") {
-                            that.state = false;
-                            that.submitter = {};
-                            var str;
-                            if(d.contest_mode === true) {
-                                str ="根据设置，内容非公开";
+                    $.get("/api/scoreboard/"+cid, () => {
+                        $.get("/api/scoreboard/"+cid,function(d){
+                            if(d.status != "OK") {
+                                that.state = false;
+                                that.submitter = {};
+                                var str;
+                                if(d.contest_mode === true) {
+                                    str ="根据设置，内容非公开";
+                                }
+                                else {
+                                    str = "Contest " + cid +":\n" +  d.statement;
+                                }
+                                str = str.replace(/\n/g,"<br>");
+                                that.errormsg = str;
+                                return;
+                            }
+                            _.forEach(d.data,function(val,idx){
+                                val.num += cnt;
+                                val.start_time = dayjs(d.start_time);
+                            });
+                            _.forEach(d.data,function(val){
+                                data.push(val);
+                            });
+                            _.forEach(d.users, function(val){
+                                users.add(val);
+                            });
+
+                            cnt += d.total;
+
+                            if(cidArr.length > 0) {
+                                convert_flag = true;
+                                work();
                             }
                             else {
-                                str = "Contest " + cid +":\n" +  d.statement;
+                                finished = true;
+                                that.total = cnt;
+                                that.users = Array.from(users);
+                                that.scoreboard = data;
                             }
-                            str = str.replace(/\n/g,"<br>");
-                            that.errormsg = str;
-                            return;
-                        }
-                        _.forEach(d.data,function(val,idx){
-                            val.num += cnt;
-                            val.start_time = dayjs(d.start_time);
                         });
-                        _.forEach(d.data,function(val){
-                            data.push(val);
-                        });
-                        _.forEach(d.users, function(val){
-                            users.add(val);
-                        });
-
-                        cnt += d.total;
-
-                        if(cidArr.length > 0) {
-                            convert_flag = true;
-                            work();
-                        }
-                        else {
-                            finished = true;
-                            that.total = cnt;
-                            that.users = Array.from(users);
-                            that.scoreboard = data;
-                        }
-                    });
+                    })
                 }
                 if(cidArr.length > 1) {
                     that.title = cidArr.join(",");
@@ -644,47 +649,56 @@
                 }
                 else {
                     cid = cidArr.shift();
-                    $.get("/api/scoreboard/"+cid);
-                    $.get("/api/scoreboard/"+cid,function(d){
-                        if(d.status != "OK" && !d.statement) {
-                            that.state = false;
-                            that.submitter = {};
-                            var str ="根据设置，内容非公开";
-                            str = str.replace(/\n/g,"<br>");
-                            that.errormsg = str;
-                            return;
-                        }
-                        finished = true;
-                        that.total = d.total;
-                        that.users = d.users;
-                        that.start_time = window.start_time = dayjs(d.start_time);
-                        _.forEach(d.data,function(val){
-                            val.start_time = dayjs(d.start_time);
-                        });
-                        that.scoreboard = d.data;
-                        temp_data = d.data;
-                        data = d.data;
-                        if(typeof d.title === "string" && d.title.length === 0) {
-                            d.title = "未设置标题";
-                        }
-                        that.title = d.title;
-                        that.$nextTick(function () {
-                            $("#rank").find("tr").each(function(i) {
-                                $(this).find("td").eq(2).css({
-                                    position: "sticky",
-                                    left: $(this).find("td").eq(2).prev().outerWidth() + $(this).find("td").eq(1).prev().outerWidth(),
-                                    borderRight: "1px solid rgba(34,36,38,.1)"
-                                });
-                                $(this).find("td").eq(1).css({
-                                    position: "sticky",
-                                    left: $(this).find("td").eq(1).prev().outerWidth()
+                    $.get("/api/scoreboard/"+cid, () => {
+                        $.get("/api/scoreboard/"+cid,function(d){
+                            if(d.status != "OK" && !d.statement) {
+                                that.state = false;
+                                that.submitter = {};
+                                var str ="根据设置，内容非公开";
+                                str = str.replace(/\n/g,"<br>");
+                                that.errormsg = str;
+                                return;
+                            }
+                            finished = true;
+                            that.total = d.total;
+                            that.users = d.users;
+                            that.start_time = window.start_time = dayjs(d.start_time);
+                            _.forEach(d.data,function(val){
+                                val.start_time = dayjs(d.start_time);
+                            });
+                            that.scoreboard = d.data;
+                            temp_data = d.data;
+                            data = d.data;
+                            if(typeof d.title === "string" && d.title.length === 0) {
+                                d.title = "未设置标题";
+                            }
+                            that.title = d.title;
+                            that.$nextTick(function () {
+                                $("#rank").find("tr").each(function(i) {
+                                    $(this).find("td").eq(2).css({
+                                        position: "sticky",
+                                        left: $(this).find("td").eq(2).prev().outerWidth() + $(this).find("td").eq(1).prev().outerWidth(),
+                                        borderRight: "1px solid rgba(34,36,38,.1)"
+                                    });
+                                    $(this).find("td").eq(1).css({
+                                        position: "sticky",
+                                        left: $(this).find("td").eq(1).prev().outerWidth()
+                                    })
                                 })
-                            })
+                            });
                         });
-                    });
+                    })
                 }
             })()
         },
+        sockets: {
+            submit: function (data) {
+                this.handleNewSubmit(data);
+            },
+            result: function (data) {
+                this.handleNewSubmit(data);
+            }
+        }
     }
 </script>
 

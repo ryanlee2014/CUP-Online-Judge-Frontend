@@ -116,9 +116,9 @@
 
 <script>
     // eslint-disable-next-line no-unused-vars
-    import Pagination from '@/components/problemset/pagination.vue'
-    import selectedTag from '@/components/problemset/selected-tag.vue'
-    import mainContent from '@/components/problemset/MainContent.vue'
+    import Pagination from '../components/problemset/pagination.vue'
+    import selectedTag from '../components/problemset/selected-tag.vue'
+    import mainContent from '../components/problemset/MainContent.vue'
     import ContestMode from '../components/contestMode/block'
     import mixins from '../mixin/init'
     // eslint-disable-next-line no-unused-vars

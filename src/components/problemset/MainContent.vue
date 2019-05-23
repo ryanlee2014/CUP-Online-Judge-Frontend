@@ -80,6 +80,21 @@
     const lodash = require("lodash");
     export default {
         name: "mainContent",
+        directives: {
+            tableUpdated: {
+                componentUpdated: function () {
+                    console.log("directives");
+                    $('.ui.sticky.element')
+                        .sticky({
+                            context: '#problemset',
+                            offset: 40,
+                            observeChanges: false,
+                            refreshOnLoad: true,
+                            refreshOnResize: true,
+                        });
+                }
+            }
+        },
         props: {
             data: Object,
             dim: {

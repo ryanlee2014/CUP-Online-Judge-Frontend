@@ -59,7 +59,7 @@
                     <th width="3%"></th>
                     <th width="15%"><b>{{_name.nick}}</b></th>
                     <th width="55%" class="center head">个人介绍</th>
-                    <th width="10%" class="center head"><b>{{_name.accept}}</b></th>
+                    <th width="10%" class="center head" style="text-align: center"><b>{{_name.accept}}</b></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -79,7 +79,7 @@
                         {{convertHTML(row.nick)}}
                     </td>
                     <td class="center head" v-html="markdownIt.renderRaw(row.biography||'')"></td>
-                    <td class="center head">
+                    <td class="center head" style="text-align: center">
                         <router-link :to="`/status?user_id=${row.user_id}&jresult=4`">{{row.solved || 0}}</router-link>
                     </td>
                 </tr>

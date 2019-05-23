@@ -1,5 +1,5 @@
 <template>
-    <div class="padding ui container" v-cloak>
+    <div class="padding ui container">
         <h2 class="ui dividing header">
             Status
         </h2>
@@ -813,6 +813,9 @@
                 if (this.privilege && (data.val.id <= 0 || (data.val.cid && data.val.cid <= 0))) {
                     return;
                 }
+                if (this.sim_checkbox || this.privilege) {
+                    return;
+                }
                 if ((!this.user_id || this.user_id === data.user_id) && (this.problem_result === -1) && (this.language === -1 || this.language === data.val.language) && !this.page_cnt && (!this.problem_id || parseInt(this.problem_id) === Math.abs(data.val.id))) {
                     var obj = {};
                     obj.problem_id = Math.abs(data.val.id);
@@ -918,11 +921,9 @@
         },
         sockets: {
             submit: function (data) {
-                console.log("get submit", data);
                 this.Submit(data);
             },
             result: function (data) {
-                console.log("get result", data);
                 this.Update(data);
             }
         }

@@ -206,7 +206,6 @@
                 if(!!newVal === false) {
                     newVal = 10;
                 }
-                console.log(newVal);
                 drawgraph(this.data_set, newVal);
             },
             lower: function(newVal, oldVal) {

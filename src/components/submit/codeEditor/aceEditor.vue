@@ -85,7 +85,6 @@
                 catch (e) {
                     theme = defaultTheme;
                 }
-                console.log("getTheme", theme);
                 return theme;
             }
         }

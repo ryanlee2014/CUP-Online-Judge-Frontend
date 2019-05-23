@@ -10,7 +10,7 @@
         </div>
         <div class="ui bottom attached segment" v-show="current_tag == 'status'">
             <div align=center class="input-append">
-                <form id=simform class="ui form segment" action="status.php" method="get">
+                <form class="ui form segment" method="get">
                     <div class="four fields">
                         <div class="field">
                             <label>编号</label>
@@ -577,7 +577,7 @@
                     })
                 });
             },
-            submit: function (data) {
+            Submit: function (data) {
                 if(!this.auto_refresh) {
                     return;
                 }
@@ -587,7 +587,7 @@
                     obj.solution_id = data.submission_id;
                     obj.nick = data.nick;
                     obj.user_id = data.user_id;
-                    obj.contest_id = parseInt(data.contest_id);
+                    obj.contest_id = Math.abs(parseInt(data.val.cid));
                     obj.num = parseInt(data.val.pid);
                     obj.length = data.val.source.length;
                     obj.sim = false;
@@ -604,11 +604,11 @@
                     this.problem_list.unshift(obj);
                 }
             },
-            update: function (data) {
+            Update: function (data) {
                 if(!this.auto_refresh) {
                     return;
                 }
-                if(this.privilege && (data.val.id <= 0 || (data.val.cid && data.val.cid <= 0))) {
+                if(this.privilege && isNaN(data.contest_id)) {
                     return;
                 }
                 var solution_id = data.solution_id;
@@ -622,6 +622,7 @@
                 var sim_s_id = parseInt(data.sim_s_id);
                 for (let i of this.problem_list) {
                     if (i.solution_id == solution_id) {
+                        console.warn("int", i);
                         i.result = status;
                         i.time = time;
                         i.memory = memory;
@@ -673,6 +674,18 @@
             $.get("/api/contest/statistics/"+this.cid,function(data){
                 that.statistics = data;
             })
+        },
+        sockets: {
+            submit: function (data) {
+                if (!isNaN(data.val.cid) && Math.abs(parseInt(data.val.cid)) === this.cid) {
+                    this.Submit(data);
+                }
+            },
+            result: function (data) {
+                if (!isNaN(data.contest_id) && Math.abs(parseInt(data.contest_id)) === this.cid) {
+                    this.Update(data);
+                }
+            }
         }
     }
 </script>

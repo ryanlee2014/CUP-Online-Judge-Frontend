@@ -12,7 +12,7 @@
                         <input type="text" v-model="title">
                     </div>
                 </div>
-                <div class="column">
+                <div class="column" style="z-index: 1700;">
                     <select multiple class="ui search dropdown label selection"  @change="label = select('.label.selection.ui.dropdown').dropdown('get value');">
                         <option :key="lb" v-for="lb in all_label" :value="lb" v-text="lb"></option>
                     </select>
