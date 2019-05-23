@@ -1,3 +1,5 @@
+import browserUpdate from 'browser-update';
+browserUpdate({required:{e:-3,f:-3,o:-3,s:-3,c:-6},insecure:true,unsupported:true,api:2019.05 });
 import Vue from 'vue'
 import VueAxios from 'vue-axios'
 import axios from 'axios';
