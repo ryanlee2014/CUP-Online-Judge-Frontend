@@ -8,6 +8,7 @@
 
 <script>
     import mixins from '../../../mixin/init'
+    const doc = document.createElement("div");
     export default {
         name: "compile",
         mixins: [mixins],
@@ -22,12 +23,18 @@
             this.axios.get(`/api/status/compile_info/${this.solution_id}`)
                 .then(({data}) => {
                     if(data.status === "OK") {
-                        this.info = data.data.info.split("\n").join("<br>").split(" ").join("&nbsp;");
+                        this.info = this.convertHTML(data.data.info).split(" ").join("&nbsp;");
                     }
                     else {
                         this.info = "您无权访问";
                     }
                 })
+        },
+        methods: {
+            convertHTML(html) {
+                doc.innerText = html;
+                return doc.innerHTML;
+            }
         }
     }
 </script>

@@ -56,8 +56,14 @@
                                 <br>
                                 <a>
                                     <i class="check icon"></i>其他平台&nbsp;通过 {{other_accepted - vjudge_solved}}&nbsp;题
-
                                 </a>
+                                <br>
+                                <span :key="idx" v-for="(row,idx) in accepted_details">
+                                    <a>
+                                        <i class="check icon"></i>{{idx}} 通过 {{row.length}} 题
+                                    </a>
+                                    <br>
+                                </span>
                             </div>
                         </div>
                         <div class="ui card" style="width:100%;">
@@ -475,6 +481,7 @@
                 const_variable: {},
                 article_publish: [],
                 nick: '',
+                accepted_details: {},
                 reg_time: 0,
                 school: '',
                 github: '',
@@ -525,19 +532,19 @@
                 this.axios.get(`/api/user/${user_id}`)
                     .then(({data}) => {
                         let d = data;
-                        var submission = d.data.submission;
-                        var local = [], local_accept = [];
-                        var hdu = [], hdu_accept = [];
-                        var poj = [], poj_accept = [];
-                        var uva = [], uva_accept = [];
-                        var other = [], other_accept = [];
-                        var pick_ac = function (arr) {
+                        let submission = d.data.submission;
+                        let local = [], local_accept;
+                        let hdu = [], hdu_accept;
+                        let poj = [], poj_accept;
+                        let uva = [], uva_accept;
+                        let other = [], other_accept;
+                        const pick_ac = function (arr) {
                             var res = [];
                             _.forEach(arr, function (val) {
                                 if (val.result === 4 && val.problem_id != 0) {
                                     res.push(val);
                                 }
-                            })
+                            });
                             res = _.uniqBy(res, "problem_id");
                             res.sort(function (a, b) {
                                 if (!isNaN(a.problem_id) && !isNaN(b.problem_id)) {
@@ -551,13 +558,13 @@
                                         return -1;
                                     }
                                 }
-                            })
+                            });
                             return res;
-                        }
-                        var analsubmission = [];
-                        var now = dayjs();
+                        };
+                        let analsubmission = [];
+                        let now = dayjs();
+                        let other_site_submission = {};
                         _.forEach(submission, function (val) {
-
                             if ((val.time = dayjs(val.time)).add(3, "month").isAfter(now)) {
                                 analsubmission.push(val);
                             }
@@ -572,7 +579,12 @@
                             } else {
                                 other.push(val);
                             }
-
+                            if (other_site_submission[val.oj_name] && other_site_submission[val.oj_name].length > 0) {
+                                other_site_submission[val.oj_name].push(val);
+                            }
+                            else {
+                                other_site_submission[val.oj_name] = [val];
+                            }
                         });
                         analsubmission.sort(function (a, b) {
                             if (a.time.isBefore(b.time)) {
@@ -581,10 +593,10 @@
                                 return 1;
                             }
                         });
-                        var timeobj = {};
-                        var acobj = {};
+                        let timeobj = {};
+                        let acobj = {};
                         _.forEach(analsubmission, function (val) {
-                            var daystr = val.time.format("YYYY-MM-DD");
+                            let daystr = val.time.format("YYYY-MM-DD");
                             if (!timeobj[daystr]) {
                                 timeobj[daystr] = 1;
                                 acobj[daystr] = 0;
@@ -604,9 +616,15 @@
                         poj_accept = pick_ac(poj);
                         uva_accept = pick_ac(uva);
                         other_accept = pick_ac(other);
-                        var privilege = d.data.privilege;
+                        if (other_site_submission["LOCAL"]) {
+                            delete other_site_submission["LOCAL"];
+                        }
+                        for(let idx in other_site_submission) {
+                            other_site_submission[idx] = pick_ac(other_site_submission[idx]);
+                        }
+                        let privilege = d.data.privilege;
                         if (privilege && privilege.length > 0) {
-                            for (var i = 0; i < privilege.length; ++i) {
+                            for (let i = 0; i < privilege.length; ++i) {
                                 if (privilege[i].rightstr === "administrator") {
                                     privilege = "管理员";
                                     break;
@@ -622,18 +640,20 @@
                         if (typeof privilege !== "string") {
                             privilege = "普通用户";
                         }
-                        var dsort = function (a, b) {
+                        let dsort = function (a, b) {
                             return b.cnt - a.cnt;
                         };
+                        console.log(other_site_submission);
                         d.data.os.sort(dsort);
                         d.data.browser.sort(dsort);
-                        var github_info = d.data.information.github || "";
+                        let github_info = d.data.information.github || "";
                         if (github_info.lastIndexOf("/") == github_info.length - 1) {
                             github_info = github_info.substring(0, github_info.length - 1);
                         }
                         if (github_info.indexOf("github.com") !== -1) {
                             github_info = github_info.substring(github_info.lastIndexOf("/") + 1);
                         }
+
                         return {
                             award: d.data.award,
                             admin: d.isadmin,
@@ -676,6 +696,7 @@
                             vjudge_rank: d.data.vjudge_rank,
                             last_login: d.data.login_time ? d.data.login_time[0] ? d.data.login_time[0].time : "" : "",
                             local_accepted: local_accept.length,
+                            accepted_details: other_site_submission,
                             other_accepted: hdu_accept.length + poj_accept.length + uva_accept.length + other_accept.length,
                             same_percentage_aver: parseInt(d.data.sim_average_percentage),
                             same_problem_time: parseInt(d.data.sim_count),
@@ -692,14 +713,14 @@
                         let $title = $("title").html();
                         $(".placeholder").remove()
                         this.$nextTick(() => {
-                            var now = dayjs().endOf('day').toDate();
-                            var yearAgo = dayjs().startOf('day').subtract(1, 'year').toDate();
-                            var submission_cnt = this.submission_count;
-                            var countForDate = {};
+                            let now = dayjs().endOf('day').toDate();
+                            let yearAgo = dayjs().startOf('day').subtract(1, 'year').toDate();
+                            let submission_cnt = this.submission_count;
+                            let countForDate = {};
                             _.forEach(submission_cnt, function (row) {
                                 if (row.day < 10) row.day = "0" + row.day;
                                 if (row.month < 10) row.month = "0" + row.month;
-                                var date = row.year + "-" + row.month + "-" + row.day;
+                                let date = row.year + "-" + row.month + "-" + row.day;
                                 if (!countForDate[date]) {
                                     countForDate[date] = row.cnt;
                                 } else {
