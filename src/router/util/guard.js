@@ -1,5 +1,7 @@
 import store from "../../store";
 import Vue from "vue";
+import MiddlewareAdapter from './middlewareAdapter'
+import platfrom from '../middleware/environmentCollector'
 function getSelfInfo() {
     return Vue.axios.get("/api/user/self");
 }
@@ -56,7 +58,15 @@ function getLoginInfo(to, next) {
         }
     });
 }
+
+
 export default function (to, from, next) {
+    const middlewareAdapter = new MiddlewareAdapter();
+    middlewareAdapter.setFrom(from);
+    middlewareAdapter.setTo(to);
+    middlewareAdapter.setNext(next);
+    middlewareAdapter.add(platfrom);
+    next = middlewareAdapter.next;
     if (to.meta.auth) {
         if (store.getters.logined) {
             checkAdmin(to, store.getters.admin, next);
