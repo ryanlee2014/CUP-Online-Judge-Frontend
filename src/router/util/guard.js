@@ -67,6 +67,7 @@ export default function (to, from, next) {
     middlewareAdapter.setNext(next);
     middlewareAdapter.add(platfrom);
     next = middlewareAdapter.next;
+    this.addMiddleware = middlewareAdapter.add;
     if (to.meta.auth) {
         if (store.getters.logined) {
             checkAdmin(to, store.getters.admin, next);

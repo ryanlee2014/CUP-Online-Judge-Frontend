@@ -14,5 +14,11 @@ export default function () {
         browser_name,
         browser_version
     };
+    axios.post("/api/env/client", PlatformInfo)
+        .then(({data}) => {
+            if (data.status !== "OK") {
+                console.error("Error occur while post system config");
+            }
+        });
     console.log(PlatformInfo);
 }
