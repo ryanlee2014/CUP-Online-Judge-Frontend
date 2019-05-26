@@ -312,6 +312,14 @@ const router = new Router({
             }
         },
         {
+            path: '/user/self/info/modify',
+            name: 'modify information for current user',
+            component: () => import('./views/user/modify.vue'),
+            meta: {
+                auth: true
+            }
+        },
+        {
             path: "*",
             redirect: "/"
         }

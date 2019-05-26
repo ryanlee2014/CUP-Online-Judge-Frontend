@@ -1,0 +1,176 @@
+<template>
+    <div class="ui container pusher">
+        <div class="padding">
+            <div class="ui grid">
+                <div class="five wide column">
+                    <div class="column">
+                        <div class="ui card" style="">
+                            <div class="image">
+                                <img id="head" :src="img_src" onclick="document.getElementById('myinput').click()"><input type="file" name="pic[]" multiple id="myinput" style="display:none">
+                            </div>
+                            <div class="content">
+                                <a class="header" href="javascript:buttonclick();"><i class="upload icon"></i>上传头像</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="eleven wide column">
+                    <form action="modify.php" method="post">
+                        <div class="ui top attached block header">Update Information</div>
+                        <div class="ui bottom attached segment">
+                            <table>
+                                <div class="ui form">
+                                    <div class="two fields">
+                                        <div class="field">
+                                            <label>User ID</label>
+                                            <div class="ui disabled input">
+                                                <input size=50 type=text :value="user_id">
+                                            </div>
+                                        </div>
+                                        <div class="field">
+                                            <label>Nick Name</label>
+                                            <input name="nick" size=50 type=text v-model="nick">
+                                        </div>
+                                    </div>
+                                    <div class="three fields">
+                                        <div class="field">
+                                            <label>Old Password</label>
+                                            <input name="opassword" size=20 type=password placeholder="请输入密码后更改其他信息" v-model="password">
+                                        </div>
+                                        <div class="field">
+                                            <label>New Password</label>
+                                            <input name="npassword" size=20 type=password v-model="newpassword">
+                                        </div>
+                                        <div class="field">
+                                            <label>Repeat New Password</label>
+                                            <input name="rptpassword" size=20 type=password v-model="repeatpassword">
+                                        </div>
+                                    </div>
+                                    <div class="two fields">
+                                        <div class="field">
+                                            <label>School</label>
+                                            <input name="school" size=30 type=text v-model="school">
+                                        </div>
+                                        <div class="field">
+                                            <label>Email</label>
+                                            <input name="email" size=30 type=text v-model="email">
+                                        </div>
+                                    </div>
+                                    <div class="two fields">
+                                        <div class="field">
+                                            <label>找回密码问题</label>
+                                            <input name="confirmquestion" size=30 type=text v-model="confirmquestion">
+                                        </div>
+                                        <div class="field">
+                                            <label>找回密码答案</label>
+                                            <input name="confirmanswer" size=30 type=text v-model="confirmanswer">
+                                        </div>
+                                    </div>
+                                    <div class="two fields">
+                                        <div class="field">
+                                            <label>Blog</label>
+                                            <input name="blog" type="text" v-model="blog">
+                                        </div>
+                                        <div class="field">
+                                            <label>GitHub</label>
+                                            <input name="github" type="text" v-model="github">
+                                        </div>
+                                    </div>
+
+                                    <div class="field">
+                                        <label>Biography</label>
+                                        <input name="biography" type="text" v-model="biography">
+                                    </div>
+                                    <div class="fields">
+                                        <div class="field">
+                                            <label></label>
+                                            <input class="ui primary button" value="Submit" name="submit" type="submit" @click="updateInformation">
+                                        </div>
+                                        <div class="field">
+                                            <label></label>
+                                            <input class="ui secondary button" value="Reset" name="reset" type="reset" @click="reset">
+                                        </div>
+                                        <div class="field">
+                                            <label>
+                                            </label>
+                                            <div class="ui button">
+                                                <a href=export_ac_code.php>Download All AC Source</a></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </table>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <br>
+        <br>
+    </div>
+</template>
+
+<script>
+    import { mapGetters } from 'vuex'
+    export default {
+        name: "modify",
+        data() {
+            return {
+                blog: "",
+                github: "",
+                biography: "",
+                confirmquestion: "",
+                confirmanswer: "",
+                password: "",
+                newpassword: "",
+                repeatpassword: "",
+                email: "",
+                school: "",
+                nick: this.$store.getters.nick,
+                avatar: this.$store.getters.avatar
+            }
+        },
+        mounted() {
+            this.axios.get(`/api/user/${this.$store.getters.user_id}`)
+                .then(({data}) => {
+                    Object.assign(this, data.data.information);
+                });
+            this.axios.get(`/api/reset/password`)
+                .then(({data}) => {
+                    Object.assign(this, data.data);
+                });
+        },
+        methods: {
+            updateInformation() {
+                this.axios.post(`/api/user/update/profile`, this.$data)
+                    .then(({data}) => {
+                        if (data.status === "OK") {
+                            alert("更改成功");
+                            location.reload();
+                        }
+                        else {
+                            alert("服务器遇到错误: \n" + data.statement);
+                        }
+                    });
+            },
+            reset() {
+                location.reload();
+            },
+            img_src() {
+                if (this.avatar) {
+                    return `/avatar/${this.user_id}.jpg`;
+                }
+                else {
+                    return `https://semantic-ui.com/images/wireframe/square-image.png`;
+                }
+            }
+        },
+        computed: {
+            ...mapGetters(["user_id"])
+        }
+    }
+</script>
+
+<style scoped>
+
+</style>

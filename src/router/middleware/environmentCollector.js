@@ -1,8 +1,12 @@
-const platform = require("platform");
 import Axios from 'axios'
+
+const platform = require("platform");
+const _ = require("lodash");
+
 function trimMinorVersion(version) {
     return version.split(".")[0];
 }
+
 export default function () {
     const os_name = platform.os.family;
     const os_version = platform.os.version;
@@ -14,11 +18,22 @@ export default function () {
         browser_name,
         browser_version
     };
-    axios.post("/api/env/client", PlatformInfo)
-        .then(({data}) => {
-            if (data.status !== "OK") {
-                console.error("Error occur while post system config");
-            }
-        });
-    console.log(PlatformInfo);
+    let storePlatformInfo = {};
+    try {
+        storePlatformInfo = JSON.parse(localStorage.platformInfo);
+    } catch (e) {
+        storePlatformInfo = {};
+    }
+
+    if (!_.isEqual(PlatformInfo, storePlatformInfo)) {
+        Axios.post("/api/env/client", PlatformInfo)
+            .then(({data}) => {
+                if (data.status !== "OK") {
+                    console.error("Error occur while post system config");
+                }
+                else {
+                    localStorage.platformInfo = JSON.stringify(PlatformInfo);
+                }
+            });
+    }
 }
