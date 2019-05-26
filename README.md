@@ -5,6 +5,8 @@
 
 **Demo: [CUP-NG](http://ng.cupacm.com)**(仅限CUP校内网访问)
 
+**由于vue-cli3打包过程中存在内存泄漏的问题，请保证预留至少4GB的内存空间**
+
 ## Run Vue CLI GUI
 ```
 npm run ui
@@ -16,9 +18,13 @@ npm run serve
 ```
 
 ### Compiles and minifies for production
+#### Build
 ```
 npm run build
 ```
+move files in `dist` to target folder
+##### Apache httpd user
+copy `.htaccess` to folder
 
 ### Compiles modern build
 ```
