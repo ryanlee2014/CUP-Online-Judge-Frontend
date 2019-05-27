@@ -16,6 +16,8 @@
                     ></TimeView>
                 </div>
                 <div class="right aligned five wide column">
+                    <button class="ui primary button" @click="playRanklist" v-if="!playing">播放排名变化</button>
+                    <button class="ui primary button" @click="stopPlayRanklist" v-else>停止</button>
                     <div class="ui toggle checkbox"><input @click="auto_update = !auto_update" type="checkbox">
                         <label>暂停自动更新排名</label></div>
                     <div class="ui toggle checkbox"><input @click="add_name=!add_name" type="checkbox">
@@ -39,9 +41,9 @@
                             </th>
                         </tr>
                         </thead>
-                        <tbody>
-                        <tr :key="key" v-for="(row,key) in submitter">
-                            <td style="text-align:center;font-weight:bold;position: sticky; left: 0">{{row.rank}}</td>
+                        <transition-group name="list-complete" tag="tbody">
+                            <tr class="list-complete-item" :key="key" v-for="(row,key) in submitter">
+                            <td :class="rankClass(row.rank, submitter.length)" style="text-align:center;font-weight:bold;position: sticky; left: 0">{{row.rank}}</td>
                             <td class="ui white">
                                 <router-link :to="`/user/${row.user_id}`">{{row.user_id}}</router-link>
                             </td>
@@ -67,7 +69,7 @@
             </span>
                             </td>
                         </tr>
-                        </tbody>
+                        </transition-group>
                     </table>
                     <table id="save" :style="'display:none;vnd.ms-excel.numberformat:@'">
                         <tbody>
@@ -129,59 +131,6 @@
     require("../../static/js/semantic.min");
     let temp_data = [];
     let convert_flag = false;
-    function getTotal(rows) {
-        var total = 0;
-        for (var i = 0; i < rows.length && total == 0; i++) {
-            try {
-                total = parseInt(rows[rows.length - i].cells[0].innerHTML);
-                if (isNaN(total)) total = 0;
-            } catch (e) {
-                //
-            }
-        }
-        return total;
-    }
-
-    function metal() {
-        var tb = window.document.getElementById('rank');
-        var rows = tb.rows;
-        try {
-            var total = getTotal(rows);
-//alert(total);
-            for (var i = 1; i < rows.length; i++) {
-                var cell = rows[i].cells[0];
-                var acc = rows[i].cells[3];
-                var ac = parseInt(acc.innerText);
-                if (isNaN(ac)) ac = parseInt(acc.textContent);
-                if (cell.innerHTML != "*" && ac > 0) {
-                    var r = parseInt(cell.innerHTML);
-                    if (r == 1) {
-                        cell.innerHTML = "Winner";
-//cell.style.cssText="background-color:gold;color:red";
-                        $(cell).addClass("ui yellow");
-                    }
-                    else if (r > 1 && r <= total * .10 + 1) {
-                        $(cell).addClass("ui yellow");
-                    }
-                    else if (r > total * .10 + 1 && r <= total * .30 + 1) {
-                        $(cell).addClass("ui grey");
-                    }
-                    else if (r > total * .30 + 1 && r <= total * .60 + 1) {
-                        $(cell).addClass("ui orange");
-                    }
-                    else {
-                        $(cell).addClass("ui white");
-                    }
-                    /*
-                    if(r>total*.45+1&&ac>0)
-                    cell.className="ui grey";
-                    */
-                }
-            }
-        } catch (e) {
-//alert(e);
-        }
-    }
 
     export default {
         name: "ContestRank",
@@ -205,7 +154,10 @@
                 errormsg: "",
                 dayjs,
                 select: $,
-                console
+                console,
+                playing: false,
+                playInterval: 0,
+                backup_data: []
             }
         },
         computed: {
@@ -318,7 +270,7 @@
                             } else if (val[i].result >= 5 && val[i].result <= 10) {
                                 submitter[val[i].user_id].problem[val[i].num].submit.push(
                                     val[i].in_date
-                                )
+                                );
                                 submitter[val[i].user_id].problem[val[i].num].start_time = val[i].start_time;
                             }
                         }
@@ -421,15 +373,55 @@
             }
         },
         methods: {
+            rankClass(rank, total) {
+                if (parseInt(rank) === 1) {
+                    return "ui yellow";
+                }
+                else if (rank <= total * 0.1 + 1) {
+                    return "ui yellow";
+                }
+                else if (rank <= total * 0.3 + 1) {
+                    return "ui grey";
+                }
+                else if (rank <= total * 0.6 + 1) {
+                    return "ui orange";
+                }
+                else {
+                    return "ui white";
+                }
+            },
+            playRanklist() {
+                this.auto_update = false;
+                this.playing = true;
+                const backup_temp_data = this.backup_data = temp_data;
+                backup_temp_data.sort((a, b) => {
+                    const atime = dayjs(a.in_date);
+                    const btime = dayjs(b.in_date);
+                    return atime.isAfter(btime) ? 1 : -1;
+                });
+                temp_data = [];
+                this.submitter = {};
+                this.playInterval = setInterval(() => {
+                    this.scoreboard = backup_temp_data.shift();
+                },30);
+                console.log(this.playInterval);
+            },
+            stopPlayRanklist() {
+                this.playing = false;
+                clearInterval(this.playInterval);
+                this.scoreboard = this.backup_data;
+                this.backup_data = [];
+                this.auto_update = true;
+            },
             format_date: function (second, mode = 0) {
-                var fill_zero = function (str) {
+                const fill_zero = function (str) {
                     if (str.length < 2) {
                         return "0" + str;
                     } else {
                         return str;
                     }
-                }
-                var hour = String(parseInt(second / 3600));
+                };
+                let hour = String(parseInt(second / 3600));
                 hour = fill_zero(hour);
 
                 var minute = String(parseInt((second - hour * 3600) / 60));
@@ -442,7 +434,7 @@
                     return hour + ":" + minute + ":" + sec;
             },
             format_color: function (num) {
-                var str = num.toString(16);
+                let str = num.toString(16);
                 if (num < 16) {
                     return "0" + str + "0" + str;
                 } else {
@@ -577,8 +569,21 @@
             }
         },
         updated: function () {
-            metal();
-            $("title").html("ContestRank: " + this.title);
+            const new_title = "ContestRank: " + this.title;
+            if (document.title !== new_title) {
+                document.title = new_title;
+            }
+            $("#rank").find("tr").each(function(i) {
+                $(this).find("td").eq(2).css({
+                    position: "sticky",
+                    left: $(this).find("td").eq(2).prev().outerWidth() + $(this).find("td").eq(1).prev().outerWidth(),
+                    borderRight: "1px solid rgba(34,36,38,.1)"
+                });
+                $(this).find("td").eq(1).css({
+                    position: "sticky",
+                    left: $(this).find("td").eq(1).prev().outerWidth()
+                })
+            })
         },
         mounted: function () {
             window.datas = [];
@@ -603,10 +608,10 @@
                     cid = cidArr.shift();
                     $.get("/api/scoreboard/"+cid, () => {
                         $.get("/api/scoreboard/"+cid,function(d){
-                            if(d.status != "OK") {
+                            if(d.status !== "OK") {
                                 that.state = false;
                                 that.submitter = {};
-                                var str;
+                                let str;
                                 if(d.contest_mode === true) {
                                     str ="根据设置，内容非公开";
                                 }
@@ -666,6 +671,7 @@
                             _.forEach(d.data,function(val){
                                 val.start_time = dayjs(d.start_time);
                             });
+
                             that.scoreboard = d.data;
                             temp_data = d.data;
                             data = d.data;
@@ -673,19 +679,6 @@
                                 d.title = "未设置标题";
                             }
                             that.title = d.title;
-                            that.$nextTick(function () {
-                                $("#rank").find("tr").each(function(i) {
-                                    $(this).find("td").eq(2).css({
-                                        position: "sticky",
-                                        left: $(this).find("td").eq(2).prev().outerWidth() + $(this).find("td").eq(1).prev().outerWidth(),
-                                        borderRight: "1px solid rgba(34,36,38,.1)"
-                                    });
-                                    $(this).find("td").eq(1).css({
-                                        position: "sticky",
-                                        left: $(this).find("td").eq(1).prev().outerWidth()
-                                    })
-                                })
-                            });
                         });
                     })
                 }
@@ -753,6 +746,19 @@
         position: sticky !important;
         top: 0;
         z-index: 2;
+    }
+
+    .list-complete-item {
+        transition: all 1s;
+        display: table-row;
+    }
+    .list-complete-enter, .list-complete-leave-to
+        /* .list-complete-leave-active for below version 2.1.8 */ {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    .list-complete-leave-active {
+        position: absolute;
     }
 
 

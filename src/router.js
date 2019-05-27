@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Home from './views/Home.vue'
 import adminAuth from './lib/router'
-import guard from './router/util/guard'
+import Guard from './router/util/guard'
 
 Vue.use(Router);
 
@@ -326,6 +326,6 @@ const router = new Router({
     ]
 });
 
-router.beforeEach(guard);
+router.beforeEach(Guard);
 
 export default router;

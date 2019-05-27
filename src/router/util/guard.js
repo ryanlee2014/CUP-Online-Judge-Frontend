@@ -59,14 +59,14 @@ function getLoginInfo(to, next) {
     });
 }
 
-
-export default function (to, from, next) {
+const Guard = function (to, from, next) {
     const middlewareAdapter = new MiddlewareAdapter();
     middlewareAdapter.setFrom(from);
     middlewareAdapter.setTo(to);
     middlewareAdapter.setNext(next);
     middlewareAdapter.add(platfrom);
     next = middlewareAdapter.next;
+    console.log(middlewareAdapter);
     this.addMiddleware = middlewareAdapter.add;
     if (to.meta.auth) {
         if (store.getters.logined) {
@@ -80,4 +80,8 @@ export default function (to, from, next) {
     } else {
         next();
     }
-}
+};
+
+export default function (to, from, next) {
+    return new Guard(to, from, next);
+};
