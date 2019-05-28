@@ -16,8 +16,8 @@
                     ></TimeView>
                 </div>
                 <div class="right aligned five wide column">
-                    <button class="ui primary button" @click="playRanklist" v-if="!playing">播放排名变化</button>
-                    <button class="ui primary button" @click="stopPlayRanklist" v-else>停止</button>
+                    <button @click="playRanklist" class="ui primary button" v-if="!playing">播放排名变化</button>
+                    <button @click="stopPlayRanklist" class="ui primary button" v-else>停止</button>
                     <div class="ui toggle checkbox"><input @click="auto_update = !auto_update" type="checkbox">
                         <label>暂停自动更新排名</label></div>
                     <div class="ui toggle checkbox"><input @click="add_name=!add_name" type="checkbox">
@@ -42,36 +42,39 @@
                         </tr>
                         </thead>
                         <transition-group name="list-complete" tag="tbody">
-                            <tr class="list-complete-item" :key="key" v-for="(row,key) in submitter">
-                            <td :class="rankClass(row.rank, submitter.length)" style="text-align:center;font-weight:bold;position: sticky; left: 0">{{row.rank}}</td>
-                            <td class="ui white">
-                                <router-link :to="`/user/${row.user_id}`">{{row.user_id}}</router-link>
-                            </td>
-                            <td class="ui white">
-                                <router-link :to="`/user/${row.user_id}`">{{convertHTML(row.nick)}}</router-link>
-                            </td>
-                            <td style="text-align:center" v-if="add_name">{{convertHTML(row.real_name)}}</td>
-                            <td style="text-align:center">
-                                <router-link :to="`/contest/status/${cid}?user_id=${row.user_id}`">{{row.ac}}</router-link>
-                            </td>
-                            <td style="text-align:center">{{format_date(row.penalty_time)}}</td>
-                            <td :key="key" :class="p.accept.length > 0?p.first_blood ? 'first accept':'accept':''"
-                                style="text-align:center"
-                                v-for="(p,key) in row.problem">
-                                <b :class="'text '+ (p.accept.length > 0 ? p.first_blood?'first accept':'accept':'red')">
-                                    {{ (p.accept.length > 0 || p.submit.length > 0)?'+':''}}
-                                    {{p.try_time > 0 ? p.try_time : p.accept.length == 0 && p.submit.length >
-                                    0?p.submit.length : ""}}</b>
-                                <br v-if="p.accept.length > 0">
-                                <span :class="p.first_blood?'first accept text':''"
-                                      v-if="p.accept.length > 0 && typeof p.accept[0].diff === 'function'">
+                            <tr :key="key" class="list-complete-item" v-for="(row,key) in submitter">
+                                <td :class="rankClass(row.rank, submitter.length)"
+                                    style="text-align:center;font-weight:bold;position: sticky; left: 0">{{row.rank}}
+                                </td>
+                                <td class="ui white">
+                                    <router-link :to="`/user/${row.user_id}`">{{row.user_id}}</router-link>
+                                </td>
+                                <td class="ui white">
+                                    <router-link :to="`/user/${row.user_id}`">{{convertHTML(row.nick)}}</router-link>
+                                </td>
+                                <td style="text-align:center" v-if="add_name">{{convertHTML(row.real_name)}}</td>
+                                <td style="text-align:center">
+                                    <router-link :to="`/contest/status/${cid}?user_id=${row.user_id}`">{{row.ac}}
+                                    </router-link>
+                                </td>
+                                <td style="text-align:center">{{format_date(row.penalty_time)}}</td>
+                                <td :class="p.accept.length > 0?p.first_blood ? 'first accept':'accept':''" :key="key"
+                                    style="text-align:center"
+                                    v-for="(p,key) in row.problem">
+                                    <b :class="'text '+ (p.accept.length > 0 ? p.first_blood?'first accept':'accept':'red')">
+                                        {{ (p.accept.length > 0 || p.submit.length > 0)?'+':''}}
+                                        {{p.try_time > 0 ? p.try_time : p.accept.length == 0 && p.submit.length >
+                                        0?p.submit.length : ""}}</b>
+                                    <br v-if="p.accept.length > 0">
+                                    <span :class="p.first_blood?'first accept text':''"
+                                          v-if="p.accept.length > 0 && typeof p.accept[0].diff === 'function'">
                 {{format_date(p.accept[0].diff(p.start_time,'second'))}}
             </span>
-                            </td>
-                        </tr>
+                                </td>
+                            </tr>
                         </transition-group>
                     </table>
-                    <table id="save" :style="'display:none;vnd.ms-excel.numberformat:@'">
+                    <table :style="'display:none;vnd.ms-excel.numberformat:@'" id="save">
                         <tbody>
                         <tr align=center class=toprow>
                             <td width=5%>Rank
@@ -119,10 +122,12 @@
 
 <script>
     import mixins from '../../mixin/init'
-    import { saveAs } from 'file-saver';
+    import {saveAs} from 'file-saver';
     import utils from '../../lib/util'
     import TimeView from '../../components/contest/ContestRank/timeView'
     import ErrorView from '../../components/contest/ContestRank/errorView'
+    import {SubmitterFactory} from '../../module/ContestRank/ContestRankFactories'
+
     const _ = require("lodash");
     const dayjs = require("dayjs");
     const XLSX = require("xlsx");
@@ -164,13 +169,10 @@
             scoreboard: {
                 get: () => undefined,
                 set: function (val) {
-                    var that = this;
-                    var total = this.total;
-                    console.warn(val);
-                    console.time = console.time || function () {
-                    };
-                    console.timeEnd = console.timeEnd || function () {
-                    };
+                    const that = this;
+                    let total = this.total;
+                    console.time = console.time || (() => {});
+                    console.timeEnd = console.timeEnd || (() => {});
                     try {
                         console.time("count scoreboard use time");
                         if (val && val.length) {
@@ -181,37 +183,21 @@
                         val = temp_data;
                         console.time("part");
                         console.time("init submitter");
-                        var first_blood = [];
-                        var first_blood_person = {};
-                        for (var i = 0; i < that.total; ++i) {
+                        let first_blood = [];
+                        let first_blood_person = {};
+                        for (let i = 0; i < that.total; ++i) {
                             first_blood.push(parseInt(1e11));
                             first_blood_person[i] = -1;
                         }
-                        var submitter = this.submitter = {};
+                        let submitter = this.submitter = {};
                         _.forEach(this.users, function (val) {
                             if (!submitter[val.user_id]) {
-                                submitter[val.user_id] = {
-                                    ac: 0,
-                                    nick: val.nick ? val.nick.trim() : "未注册",
-                                    problem: {},
-                                    penalty_time: 0,
-                                    fingerprintSet: new Set(),
-                                    handwareFingerprintSet: new Set(),
-                                    ipSet: new Set(),
-                                    real_name: ""
-                                }
-                                for (var j = 0; j < total; ++j) {
-                                    submitter[val.user_id].problem[j] = {
-                                        submit: [],
-                                        accept: [],
-                                        sim: 0
-                                    }
-                                }
+                                submitter[val.user_id] = SubmitterFactory(val.nick, total);
                             }
                         });
                         console.timeEnd("init submitter");
-                        var len = val.length;
-                        var private_contest = this.users.length > 0;
+                        const len = val.length;
+                        const private_contest = this.users.length > 0;
                         console.time("generate submitter");
                         for (let i = 0; i < len; ++i) {
 
@@ -224,45 +210,10 @@
                                 if (private_contest) {
                                     continue;
                                 }
-                                submitter[val[i].user_id] = {
-                                    ac: 0,
-                                    nick: val[i].nick,
-                                    problem: {},
-                                    penalty_time: 0,
-                                    fingerprintSet: new Set(),
-                                    handwareFingerprintSet: new Set(),
-                                    ipSet: new Set(),
-                                    real_name: ""
-                                }
-                                for (var j = 0; j < total; ++j) {
-                                    submitter[val[i].user_id].problem[j] = {
-                                        submit: [],
-                                        accept: [],
-                                        sim: 0
-                                    }
-                                }
+                                submitter[val[i].user_id] = SubmitterFactory(val[i].nick, total);
                             }
-
-                            if (typeof submitter[val[i].user_id].problem[val[i].num] === "undefined") {
-                                continue;
-                            }
-                            if (val[i].fingerprint) {
-                                submitter[val[i].user_id].fingerprintSet.add(val[i].fingerprint);
-                            }
-                            if (val[i].fingerprintRaw) {
-                                submitter[val[i].user_id].handwareFingerprintSet.add(val[i].fingerprintRaw);
-                            }
-                            if (val[i].ip) {
-                                submitter[val[i].user_id].ipSet.add(val[i].ip);
-                            }
-                            if (val[i].sim !== null) {
-                                submitter[val[i].user_id].problem[val[i].num].sim = parseInt(val[i].sim);
-                            }
-                            if (submitter[val[i].user_id].problem[val[i].num] === undefined) {
-                                continue;
-                            }
-                            if (val[i].result == 4) {
-                                //console.log(val[i]);
+                            submitter[val[i].user_id].addData(val[i]);
+                            if (parseInt(val[i].result) === 4) {
                                 submitter[val[i].user_id].problem[val[i].num].accept.push(
                                     val[i].in_date
                                 );
@@ -275,7 +226,7 @@
                             }
                         }
                         console.timeEnd("generate submitter");
-                        var _submitter = [];
+                        let _submitter = [];
                         console.time("copy submitter");
                         _.forEach(submitter, function (val, index) {
                             if (!index) {
@@ -291,39 +242,37 @@
                         that.submitter = _submitter;
                         console.time("count penalty");
                         _.forEach(submitter, function (value, key) {
-                            var problems = submitter[key].problem;
+                            let problems = submitter[key].problem;
                             _.forEach(problems, function (value) {
                                 _.forEach(value.submit, function (val, key) {
                                     value.submit[key] = dayjs(val);
-                                })
+                                });
                                 if (value.accept.length > 0) {
                                     _.forEach(value.accept, function (val, key) {
                                         value.accept[key] = dayjs(val);
-                                    })
-                                    var accept_submit = value.accept[0];
-                                    var penalty_time = 0;
-                                    _.forEach(value.submit, function (val, key) {
+                                    });
+                                    let accept_submit = value.accept[0];
+                                    let penalty_time = 0;
+                                    _.forEach(value.submit, function (val) {
                                         if (val.isBefore(accept_submit)) {
                                             ++penalty_time;
                                         }
-                                    })
+                                    });
                                     value.try_time = penalty_time;
                                     penalty_time *= 1200;
                                     ++submitter[key].ac;
                                     submitter[key].penalty_time += penalty_time;
                                 }
                             })
-                            // console.log(submitter[key]);
-                        })
+                        });
                         console.timeEnd("count penalty");
-                        // console.log(submitter);
                         console.time("first blood time");
                         _.forEach(_submitter, function (val) {
                             _.forEach(val.problem, function (v, idx) {
                                 if (v.accept.length > 0) {
-                                    var difftime = v.accept[0].diff(v.start_time, 'second');
+                                    let difftime = v.accept[0].diff(v.start_time, 'second');
                                     val.penalty_time += difftime;
-                                    var prev = first_blood[idx];
+                                    let prev = first_blood[idx];
                                     if (difftime < prev) {
                                         first_blood[idx] = difftime;
                                         if (first_blood_person[idx] === -1) {
@@ -337,19 +286,19 @@
                                     }
                                 }
                             })
-                        })
+                        });
                         console.timeEnd("first blood time");
 
                         console.time("sort");
                         _submitter.sort(function (a, b) {
-                            if (a.ac != b.ac) {
+                            if (a.ac !== b.ac) {
                                 return b.ac - a.ac;
                             } else {
                                 return a.penalty_time - b.penalty_time;
                             }
                         });
                         console.timeEnd("sort");
-                        var rnk = 1;
+                        let rnk = 1;
                         console.time("rank");
                         _.forEach(_submitter, function (val) {
                             if (val.ac > 0)
@@ -376,17 +325,13 @@
             rankClass(rank, total) {
                 if (parseInt(rank) === 1) {
                     return "ui yellow";
-                }
-                else if (rank <= total * 0.1 + 1) {
+                } else if (rank <= total * 0.1 + 1) {
                     return "ui yellow";
-                }
-                else if (rank <= total * 0.3 + 1) {
+                } else if (rank <= total * 0.3 + 1) {
                     return "ui grey";
-                }
-                else if (rank <= total * 0.6 + 1) {
+                } else if (rank <= total * 0.6 + 1) {
                     return "ui orange";
-                }
-                else {
+                } else {
                     return "ui white";
                 }
             },
@@ -403,7 +348,7 @@
                 this.submitter = {};
                 this.playInterval = setInterval(() => {
                     this.scoreboard = backup_temp_data.shift();
-                },30);
+                }, 30);
                 console.log(this.playInterval);
             },
             stopPlayRanklist() {
@@ -445,15 +390,13 @@
                 if (!ip) {
                     return "未知";
                 }
-                var tmp = {
+                return utils.detectIP({
                     intranet_ip: ip,
                     place: ""
-                };
-                utils.detectIP(tmp);
-                return tmp.place;
+                });
             },
             convertHTML: function (str) {
-                var d = document.createElement("div");
+                let d = document.createElement("div");
                 d.innerHTML = str;
                 return d.innerText;
             },
@@ -461,8 +404,8 @@
                 return str.replace("·", "&middot;");
             },
             exportXLS: function () {
-                var doc = document.getElementById("save");
-                var plain_text = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">' + "<head><meta http-equiv='Content-Type' content='application/vnd.ms-excel; charset=utf-8' /></head>";
+                let doc = document.getElementById("save");
+                let plain_text = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">' + "<head><meta http-equiv='Content-Type' content='application/vnd.ms-excel; charset=utf-8' /></head>";
                 plain_text += "<center><h3>Contest " + this.cid + " " + this.title + "</h3></center>";
                 plain_text += "<table border=1>" + doc.innerHTML.replace("<tbody>", "").replace("</tbody>", "");
                 plain_text += "<tr><td colspan='8'>环境指纹指根据用户的硬件环境及IP地址不同而产生的不同的指纹</td></tr>";
@@ -512,11 +455,9 @@
                 //table.export2file(d.data,d.mimeType,filename,d.fileExtension,d.merges)
             },
             handleNewSubmit: function (data) {
-                console.log("handled", data);
                 if (parseInt(data.contest_id) === parseInt(this.cid)) {
-                    console.log("in");
                     if (data.finish === 1) {
-                        var ndata = {
+                        let ndata = {
                             nick: data.nick,
                             user_id: data.user_id,
                             start_time: this.start_time,
@@ -561,7 +502,6 @@
                                     break;
                                 }
                             }
-                            //that.submitter[i].real_name = "t";
                         }
                     })
                 }
@@ -573,7 +513,7 @@
             if (document.title !== new_title) {
                 document.title = new_title;
             }
-            $("#rank").find("tr").each(function(i) {
+            $("#rank").find("tr").each(function (i) {
                 $(this).find("td").eq(2).css({
                     position: "sticky",
                     left: $(this).find("td").eq(2).prev().outerWidth() + $(this).find("td").eq(1).prev().outerWidth(),
@@ -594,52 +534,50 @@
             (() => {
                 var cid = this.$route.params.contest_id;
                 var cidArr = [];
-                if(cid.indexOf(",")!== -1) {
+                if (cid.indexOf(",") !== -1) {
                     cidArr = cid.split(",");
-                }
-                else {
+                } else {
                     cidArr = [cid];
                 }
                 var cnt = 0;
                 var data = [];
                 var users = new Set();
                 var finished = false;
-                function work(){
+
+                function work() {
                     cid = cidArr.shift();
-                    $.get("/api/scoreboard/"+cid, () => {
-                        $.get("/api/scoreboard/"+cid,function(d){
-                            if(d.status !== "OK") {
+                    $.get("/api/scoreboard/" + cid, () => {
+                        $.get("/api/scoreboard/" + cid, function (d) {
+                            if (d.status !== "OK") {
                                 that.state = false;
                                 that.submitter = {};
                                 let str;
-                                if(d.contest_mode === true) {
-                                    str ="根据设置，内容非公开";
+                                if (d.contest_mode === true) {
+                                    str = "根据设置，内容非公开";
+                                } else {
+                                    str = "Contest " + cid + ":\n" + d.statement;
                                 }
-                                else {
-                                    str = "Contest " + cid +":\n" +  d.statement;
-                                }
-                                str = str.replace(/\n/g,"<br>");
+                                str = str.replace(/\n/g, "<br>");
                                 that.errormsg = str;
                                 return;
                             }
-                            _.forEach(d.data,function(val,idx){
+                            _.forEach(d.data, function (val, idx) {
                                 val.num += cnt;
                                 val.start_time = dayjs(d.start_time);
                             });
-                            _.forEach(d.data,function(val){
+                            _.forEach(d.data, function (val) {
                                 data.push(val);
                             });
-                            _.forEach(d.users, function(val){
+                            _.forEach(d.users, function (val) {
                                 users.add(val);
                             });
 
                             cnt += d.total;
 
-                            if(cidArr.length > 0) {
+                            if (cidArr.length > 0) {
                                 convert_flag = true;
                                 work();
-                            }
-                            else {
+                            } else {
                                 finished = true;
                                 that.total = cnt;
                                 that.users = Array.from(users);
@@ -648,19 +586,19 @@
                         });
                     })
                 }
-                if(cidArr.length > 1) {
+
+                if (cidArr.length > 1) {
                     that.title = cidArr.join(",");
                     work();
-                }
-                else {
+                } else {
                     cid = cidArr.shift();
-                    $.get("/api/scoreboard/"+cid, () => {
-                        $.get("/api/scoreboard/"+cid,function(d){
-                            if(d.status != "OK" && !d.statement) {
+                    $.get("/api/scoreboard/" + cid, () => {
+                        $.get("/api/scoreboard/" + cid, function (d) {
+                            if (d.status != "OK" && !d.statement) {
                                 that.state = false;
                                 that.submitter = {};
-                                var str ="根据设置，内容非公开";
-                                str = str.replace(/\n/g,"<br>");
+                                let str = "根据设置，内容非公开";
+                                str = str.replace(/\n/g, "<br>");
                                 that.errormsg = str;
                                 return;
                             }
@@ -668,14 +606,14 @@
                             that.total = d.total;
                             that.users = d.users;
                             that.start_time = window.start_time = dayjs(d.start_time);
-                            _.forEach(d.data,function(val){
+                            _.forEach(d.data, function (val) {
                                 val.start_time = dayjs(d.start_time);
                             });
 
                             that.scoreboard = d.data;
                             temp_data = d.data;
                             data = d.data;
-                            if(typeof d.title === "string" && d.title.length === 0) {
+                            if (typeof d.title === "string" && d.title.length === 0) {
                                 d.title = "未设置标题";
                             }
                             that.title = d.title;
@@ -738,8 +676,8 @@
     }
 
     td {
-        white-space: nowrap!important;
-        text-align: center!important;
+        white-space: nowrap !important;
+        text-align: center !important;
     }
 
     .ui.table thead tr:first-child > th {
@@ -752,11 +690,14 @@
         transition: all 1s;
         display: table-row;
     }
+
     .list-complete-enter, .list-complete-leave-to
-        /* .list-complete-leave-active for below version 2.1.8 */ {
+        /* .list-complete-leave-active for below version 2.1.8 */
+    {
         opacity: 0;
         transform: translateY(30px);
     }
+
     .list-complete-leave-active {
         position: absolute;
     }

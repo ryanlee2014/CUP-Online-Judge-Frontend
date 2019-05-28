@@ -107,6 +107,7 @@ export default {
             }
         } else
             tmp.place = "未知";
+        return tmp.place;
     },
     init: function (homepage, finished) {
         jQuery.event.special.touchstart = {
