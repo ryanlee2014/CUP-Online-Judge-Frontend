@@ -2,19 +2,20 @@ const $ = require("jquery");
 const jQuery = $;
 export default {
     detectIP: function (tmp) {
+        let ip;
         if (tmp.ip && !tmp.intranet_ip) {
             tmp.intranet_ip = tmp.ip;
         }
         if (tmp.intranet_ip) {
             if (tmp.intranet_ip.trim() === "202.204.193.82") {
-                var temp = tmp.intranet_ip;
+                let temp = tmp.intranet_ip;
                 tmp.intranet_ip = tmp.ip;
                 if (tmp.intranet_ip.match(/10\.10\.[0-9]{2}\.[0-9]{1,3}/)) {
                     tmp.place = "润杰有线";
                 } else if (tmp.intranet_ip === "10.200.25.101" && tmp.intranet_ip.match(/10\.200\.25\.1[0-9]{2}/) || tmp.intranet_ip === "10.200.25.200") {
                     tmp.place = "403机房";
                 } else if (tmp.intranet_ip.match(/10\.200\.26\./)) {
-                    var ip = tmp.intranet_ip.substring(tmp.intranet_ip.lastIndexOf(".") + 1);
+                    let ip = tmp.intranet_ip.substring(tmp.intranet_ip.lastIndexOf(".") + 1);
                     if (parseInt(ip) <= 100) {
                         tmp.place = "404机房";
                     } else {
@@ -130,7 +131,7 @@ export default {
         };
 
         (function (global) {
-            var Months = [
+            let Months = [
                 'January',
                 'February',
                 'March',
@@ -145,7 +146,7 @@ export default {
                 'December'
             ];
 
-            var COLORS = [
+            let COLORS = [
                 '#4dc9f6',
                 '#f67019',
                 '#f53794',
@@ -157,8 +158,8 @@ export default {
                 '#8549ba'
             ];
 
-            var Samples = global.Samples || (global.Samples = {});
-            var Color = global.Color;
+            let Samples = global.Samples || (global.Samples = {});
+            let Color = global.Color;
 
             Samples.utils = {
                 // Adapted from http://indiegamr.com/generate-repeatable-random-numbers-in-js/
@@ -167,7 +168,7 @@ export default {
                 },
 
                 rand: function (min, max) {
-                    var seed = this._seed;
+                    let seed = this._seed;
                     min = min === undefined ? 0 : min;
                     max = max === undefined ? 1 : max;
                     this._seed = (seed * 9301 + 49297) % 233280;
@@ -175,16 +176,16 @@ export default {
                 },
 
                 numbers: function (config) {
-                    var cfg = config || {};
-                    var min = cfg.min || 0;
-                    var max = cfg.max || 1;
-                    var from = cfg.from || [];
-                    var count = cfg.count || 8;
-                    var decimals = cfg.decimals || 8;
-                    var continuity = cfg.continuity || 1;
-                    var dfactor = Math.pow(10, decimals) || 0;
-                    var data = [];
-                    var i, value;
+                    let cfg = config || {};
+                    let min = cfg.min || 0;
+                    let max = cfg.max || 1;
+                    let from = cfg.from || [];
+                    let count = cfg.count || 8;
+                    let decimals = cfg.decimals || 8;
+                    let continuity = cfg.continuity || 1;
+                    let dfactor = Math.pow(10, decimals) || 0;
+                    let data = [];
+                    let i, value;
 
                     for (i = 0; i < count; ++i) {
                         value = (from[i] || 0) + this.rand(min, max);
@@ -199,16 +200,16 @@ export default {
                 },
 
                 labels: function (config) {
-                    var cfg = config || {};
-                    var min = cfg.min || 0;
-                    var max = cfg.max || 100;
-                    var count = cfg.count || 8;
-                    var step = (max - min) / count;
-                    var decimals = cfg.decimals || 8;
-                    var dfactor = Math.pow(10, decimals) || 0;
-                    var prefix = cfg.prefix || '';
-                    var values = [];
-                    var i;
+                    let cfg = config || {};
+                    let min = cfg.min || 0;
+                    let max = cfg.max || 100;
+                    let count = cfg.count || 8;
+                    let step = (max - min) / count;
+                    let decimals = cfg.decimals || 8;
+                    let dfactor = Math.pow(10, decimals) || 0;
+                    let prefix = cfg.prefix || '';
+                    let values = [];
+                    let i;
 
                     for (i = min; i < max; i += step) {
                         values.push(prefix + Math.round(dfactor * i) / dfactor);
@@ -218,11 +219,11 @@ export default {
                 },
 
                 months: function (config) {
-                    var cfg = config || {};
-                    var count = cfg.count || 12;
-                    var section = cfg.section;
-                    var values = [];
-                    var i, value;
+                    let cfg = config || {};
+                    let count = cfg.count || 12;
+                    let section = cfg.section;
+                    let values = [];
+                    let i, value;
 
                     for (i = 0; i < count; ++i) {
                         value = Months[Math.ceil(i) % 12];
@@ -237,7 +238,7 @@ export default {
                 },
 
                 transparentize: function (color, opacity) {
-                    var alpha = opacity === undefined ? 0.5 : 1 - opacity;
+                    let alpha = opacity === undefined ? 0.5 : 1 - opacity;
                     return Color(color).alpha(alpha).rgbString();
                 }
             };
@@ -359,10 +360,10 @@ export default {
 
         (function (a) {
             a.fn.scrollToTop = function (c) {
-                var d = {speed: 800};
+                let d = {speed: 800};
                 c && a.extend(d, {speed: c});
                 return this.each(function () {
-                    var b = a(this);
+                    let b = a(this);
                     a(window).scroll(function () {
                         100 < a(this).scrollTop() ? b.fadeIn() : b.fadeOut()
                     });

@@ -13,36 +13,36 @@ module.exports = {
         proxy: {
             '/api': {
                 secure: false,
-                target: 'https://www.cupacm.com',
+                target: 'http://acm.cup.edu.cn',
                 changeOrigin: true
             },
             '/socket.io': {
                 secure: false,
-                target: 'https://www.cupacm.com',
+                target: 'http://acm.cup.edu.cn',
                 changeOrigin: true
             },
             '/avatar': {
-                target: 'https://www.cupacm.com',
+                target: 'http://acm.cup.edu.cn',
                 secure: false,
                 changeOrigin: true
             },
             '/image': {
-                target: 'https://www.cupacm.com',
+                target: 'http://acm.cup.edu.cn',
                 secure: false,
                 changeOrigin: true
             },
             '/img': {
-                target: 'https://www.cupacm.com',
+                target: 'http://acm.cup.edu.cn',
                 secure: false,
                 changeOrigin: true
             },
             '/assets': {
-                target: 'https://www.cupacm.com',
+                target: 'http://acm.cup.edu.cn',
                 secure: false,
                 changeOrigin: true
             },
             '/glory_image': {
-                target: 'https://www.cupacm.com',
+                target: 'http://acm.cup.edu.cn',
                 secure: false,
                 changeOrigin: true
             }

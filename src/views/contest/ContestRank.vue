@@ -60,7 +60,7 @@
                                 <td style="text-align:center">{{format_date(row.penalty_time)}}</td>
                                 <td :class="p.accept.length > 0?p.first_blood ? 'first accept':'accept':''" :key="key"
                                     style="text-align:center"
-                                    v-for="(p,key) in row.problem">
+                                    v-for="(p,key) in row.problem.toArray()">
                                     <b :class="'text '+ (p.accept.length > 0 ? p.first_blood?'first accept':'accept':'red')">
                                         {{ (p.accept.length > 0 || p.submit.length > 0)?'+':''}}
                                         {{p.try_time > 0 ? p.try_time : p.accept.length == 0 && p.submit.length >
@@ -97,14 +97,14 @@
                             <td align="center">{{row.ac}}</td>
                             <td>{{format_date(row.penalty_time)}}</td>
                             <td>{{row.fingerprintSet.size}}</td>
-                            <td>{{row.handwareFingerprintSet.size}}</td>
+                            <td>{{row.hardwareFingerprintSet.size}}</td>
                             <td>{{row.ipSet.size}}</td>
                             <td>{{row.ipSet.size === 1 ? detect_place(Array.from(row.ipSet)[0]) : row.ipSet.size ===
                                 0?"无":"略"}}
                             </td>
                             <td :bgcolor="'#FF' + (format_color(Math.max(Math.floor((1 << 8) - (256 * Math.max(p.sim - 69,0) / 31.0)) - 1, 0)))"
                                 :key="key"
-                                align="left" v-for="(p,key) in row.problem">
+                                align="left" v-for="(p,key) in row.problem.toArray()">
                                 {{ (p.submit.length > 0)?'(-':''}}{{p.try_time > 0 ? p.try_time + ")" : p.submit.length
                                 > 0?p.submit.length + ")" : ""}}{{p.accept.length > 0 ?
                                 format_date(p.accept[0].diff(p.start_time,'second')):""}}{{p.sim > 0?"("+p.sim +
@@ -126,7 +126,7 @@
     import utils from '../../lib/util'
     import TimeView from '../../components/contest/ContestRank/timeView'
     import ErrorView from '../../components/contest/ContestRank/errorView'
-    import {SubmitterFactory} from '../../module/ContestRank/ContestRankFactories'
+    import {SubmitterFactory, firstBloodListFactory, SubmitterComparator} from '../../module/ContestRank/ContestRankFactories'
 
     const _ = require("lodash");
     const dayjs = require("dayjs");
@@ -162,7 +162,10 @@
                 console,
                 playing: false,
                 playInterval: 0,
-                backup_data: []
+                backup_data: [],
+                firstRender: true,
+                userStructure: {},
+                firstBloodList: undefined
             }
         },
         computed: {
@@ -170,151 +173,37 @@
                 get: () => undefined,
                 set: function (val) {
                     const that = this;
-                    let total = this.total;
-                    console.time = console.time || (() => {});
-                    console.timeEnd = console.timeEnd || (() => {});
                     try {
-                        console.time("count scoreboard use time");
-                        if (val && val.length) {
-                            temp_data = temp_data.concat(val);
-                        } else {
-                            temp_data.push(val);
+                        if (!(val && val.length)) {
+                            val = [val];
                         }
-                        val = temp_data;
-                        console.time("part");
-                        console.time("init submitter");
-                        let first_blood = [];
-                        let first_blood_person = {};
-                        for (let i = 0; i < that.total; ++i) {
-                            first_blood.push(parseInt(1e11));
-                            first_blood_person[i] = -1;
+                        val = temp_data = temp_data.concat(val);
+                        if (this.firstRender) {
+                            this.firstRender = false;
+                            this.firstBloodList = firstBloodListFactory(that.total);
+                            let submitter = {};
+                            this.initUserTable(submitter);
+                            this.fillSubmitterList(submitter, val);
+                            this.userStructure = submitter;
+                            this.submitter = submitter = Object.values(submitter);
+                            submitter.forEach(this.updateSubmitter);
+                            this.calculateRank();
                         }
-                        let submitter = this.submitter = {};
-                        _.forEach(this.users, function (val) {
-                            if (!submitter[val.user_id]) {
-                                submitter[val.user_id] = SubmitterFactory(val.nick, total);
-                            }
-                        });
-                        console.timeEnd("init submitter");
-                        const len = val.length;
-                        const private_contest = this.users.length > 0;
-                        console.time("generate submitter");
-                        for (let i = 0; i < len; ++i) {
-
-                            if (!val[i].nick) continue;
-                            val[i].nick = val[i].nick.trim();
-                            if (val[i].user_id.charAt(0) == 'g') {
-                                val[i].user_id = "G" + val[i].user_id.substring(1);
-                            }
-                            if (!submitter[val[i].user_id]) {
-                                if (private_contest) {
-                                    continue;
-                                }
-                                submitter[val[i].user_id] = SubmitterFactory(val[i].nick, total);
-                            }
-                            submitter[val[i].user_id].addData(val[i]);
-                            if (parseInt(val[i].result) === 4) {
-                                submitter[val[i].user_id].problem[val[i].num].accept.push(
-                                    val[i].in_date
-                                );
-                                submitter[val[i].user_id].problem[val[i].num].start_time = val[i].start_time;
-                            } else if (val[i].result >= 5 && val[i].result <= 10) {
-                                submitter[val[i].user_id].problem[val[i].num].submit.push(
-                                    val[i].in_date
-                                );
-                                submitter[val[i].user_id].problem[val[i].num].start_time = val[i].start_time;
-                            }
+                        else {
+                            let submitter = this.userStructure;
+                            let lazyUpdateSet = new Set();
+                            this.fillSubmitterList(submitter, val);
+                            val.forEach(el => lazyUpdateSet.add(submitter[el.user_id.toLowerCase()]));
+                            lazyUpdateSet.forEach(this.updateSubmitter);
+                            this.calculateRank();
                         }
-                        console.timeEnd("generate submitter");
-                        let _submitter = [];
-                        console.time("copy submitter");
-                        _.forEach(submitter, function (val, index) {
-                            if (!index) {
-                                console.log(val);
-                                console.log(index);
-                            } else {
-                                val.user_id = index;
-                                _submitter.push(val);
-                            }
-                        });
-                        console.timeEnd("copy submitter");
-
-                        that.submitter = _submitter;
-                        console.time("count penalty");
-                        _.forEach(submitter, function (value, key) {
-                            let problems = submitter[key].problem;
-                            _.forEach(problems, function (value) {
-                                _.forEach(value.submit, function (val, key) {
-                                    value.submit[key] = dayjs(val);
-                                });
-                                if (value.accept.length > 0) {
-                                    _.forEach(value.accept, function (val, key) {
-                                        value.accept[key] = dayjs(val);
-                                    });
-                                    let accept_submit = value.accept[0];
-                                    let penalty_time = 0;
-                                    _.forEach(value.submit, function (val) {
-                                        if (val.isBefore(accept_submit)) {
-                                            ++penalty_time;
-                                        }
-                                    });
-                                    value.try_time = penalty_time;
-                                    penalty_time *= 1200;
-                                    ++submitter[key].ac;
-                                    submitter[key].penalty_time += penalty_time;
-                                }
-                            })
-                        });
-                        console.timeEnd("count penalty");
-                        console.time("first blood time");
-                        _.forEach(_submitter, function (val) {
-                            _.forEach(val.problem, function (v, idx) {
-                                if (v.accept.length > 0) {
-                                    let difftime = v.accept[0].diff(v.start_time, 'second');
-                                    val.penalty_time += difftime;
-                                    let prev = first_blood[idx];
-                                    if (difftime < prev) {
-                                        first_blood[idx] = difftime;
-                                        if (first_blood_person[idx] === -1) {
-                                            first_blood_person[idx] = v;
-                                            v.first_blood = true;
-                                        } else {
-                                            first_blood_person[idx].first_blood = false;
-                                            first_blood_person[idx] = v;
-                                            v.first_blood = true;
-                                        }
-                                    }
-                                }
-                            })
-                        });
-                        console.timeEnd("first blood time");
-
-                        console.time("sort");
-                        _submitter.sort(function (a, b) {
-                            if (a.ac !== b.ac) {
-                                return b.ac - a.ac;
-                            } else {
-                                return a.penalty_time - b.penalty_time;
-                            }
-                        });
-                        console.timeEnd("sort");
-                        let rnk = 1;
-                        console.time("rank");
-                        _.forEach(_submitter, function (val) {
-                            if (val.ac > 0)
-                                val.rank = rnk++;
-                            else
-                                val.rank = rnk;
-                        });
-                        console.timeEnd("rank");
-                        console.timeEnd("part");
-                        window.datas = _submitter;
-                        console.timeEnd("count scoreboard use time");
+                        window.temp_data = temp_data;
+                        window.datas = this.submitter;
                     } catch (e) {
                         that.state = false;
                         that.submitter = {};
                         console.log(e);
-                        var str = e.stack;
+                        let str = e.stack;
                         str = str.replace(/\n/g, "<br>");
                         that.errormsg = str;
                     }
@@ -322,6 +211,37 @@
             }
         },
         methods: {
+            updateSubmitter(el) {
+                el.calculatePenaltyTime();
+                el.calculateAC();
+                el.calculateFirstBlood(this.firstBloodList);
+            },
+            fillSubmitterList(submitter, val) {
+                const len = val.length;
+                for (let i = 0; i < len; ++i) {
+                    const private_contest = this.users.length > 0;
+                    if (!submitter[val[i].user_id.toLowerCase()]) {
+                        if (private_contest) {
+                            return;
+                        }
+                        submitter[val[i].user_id.toLowerCase()] = SubmitterFactory(val[i].nick, this.total, val[i].user_id);
+                    }
+                    submitter[val[i].user_id.toLowerCase()].addData(val[i]);
+                }
+            },
+            initUserTable(submitter) {
+                _.forEach(this.users, (val) => {
+                    if (!submitter[val.user_id.toLowerCase()]) {
+                        submitter[val.user_id.toLowerCase()] = SubmitterFactory(val.nick, this.total, val.user_id);
+                    }
+                })
+            },
+            calculateRank() {
+                this.submitter.sort(SubmitterComparator("greater"));
+                let rnk = 1;
+                window.submitter = this.submitter;
+                _.forEach(this.submitter, val => val.ac > 0 ? val.rank = rnk++ : val.rank = rnk);
+            },
             rankClass(rank, total) {
                 if (parseInt(rank) === 1) {
                     return "ui yellow";
@@ -346,10 +266,27 @@
                 });
                 temp_data = [];
                 this.submitter = {};
+                this.firstRender = true;
                 this.playInterval = setInterval(() => {
-                    this.scoreboard = backup_temp_data.shift();
+                    if (backup_temp_data.length > 0) {
+                        let data = backup_temp_data.shift();
+                        while (backup_temp_data.length > 0 && data.result < 4 && data.result >= 11) {
+                            data = backup_temp_data.shift();
+                        }
+                        this.scoreboard = data;
+                        if (backup_temp_data.length === 0) {
+                            this.endInterval();
+                        }
+                    }
+                    else {
+                        this.endInterval();
+                    }
                 }, 30);
-                console.log(this.playInterval);
+            },
+            endInterval() {
+                clearInterval(this.playInterval);
+                this.playing = false;
+                this.auto_update = true;
             },
             stopPlayRanklist() {
                 this.playing = false;
@@ -369,9 +306,9 @@
                 let hour = String(parseInt(second / 3600));
                 hour = fill_zero(hour);
 
-                var minute = String(parseInt((second - hour * 3600) / 60));
+                let minute = String(parseInt((second - hour * 3600) / 60));
                 minute = fill_zero(minute);
-                var sec = String(second % 60);
+                let sec = String(second % 60);
                 sec = fill_zero(sec);
                 if (mode) {
                     return hour + "：" + minute + "：" + sec;
@@ -401,6 +338,9 @@
                 return d.innerText;
             },
             decodeHTML: function (str) {
+                if (typeof str !== "string") {
+                    str = "";
+                }
                 return str.replace("·", "&middot;");
             },
             exportXLS: function () {
@@ -482,14 +422,14 @@
                 }
             },
             add_name: function (newVal) {
-                var that = this;
+                let that = this;
                 if (!newVal) return;
-                for (var i = 0; i < this.submitter.length; ++i) {
+                for (let i = 0; i < this.submitter.length; ++i) {
                     $.get("/api/user/nick/" + this.decodeHTML(this.submitter[i].nick), function (data) {
                         if (data && data.data && data.data.length > 0) {
-                            var nick = data.nick;
-                            var nickArray = data.data;
-                            var user_id = "";
+                            let nick = data.nick;
+                            let nickArray = data.data;
+                            let user_id = "";
                             for (let j = 0; j < nickArray.length; ++j) {
                                 if (!isNaN(nickArray[j].user_id)) {
                                     user_id = nickArray[j].user_id;
@@ -497,7 +437,7 @@
                                 }
                             }
                             for (let j = 0; j < that.submitter.length; ++j) {
-                                if (that.decodeHTML(that.submitter[j].nick) == nick) {
+                                if (that.decodeHTML(that.submitter[j].nick) === nick) {
                                     that.submitter[j].real_name = user_id;
                                     break;
                                 }
@@ -532,17 +472,17 @@
             const that = this;
             bindDragEvent();
             (() => {
-                var cid = this.$route.params.contest_id;
-                var cidArr = [];
+                let cid = this.$route.params.contest_id;
+                let cidArr = [];
                 if (cid.indexOf(",") !== -1) {
                     cidArr = cid.split(",");
                 } else {
                     cidArr = [cid];
                 }
-                var cnt = 0;
-                var data = [];
-                var users = new Set();
-                var finished = false;
+                let cnt = 0;
+                let data = [];
+                let users = new Set();
+                let finished = false;
 
                 function work() {
                     cid = cidArr.shift();
@@ -594,7 +534,7 @@
                     cid = cidArr.shift();
                     $.get("/api/scoreboard/" + cid, () => {
                         $.get("/api/scoreboard/" + cid, function (d) {
-                            if (d.status != "OK" && !d.statement) {
+                            if (d.status !== "OK" && !d.statement) {
                                 that.state = false;
                                 that.submitter = {};
                                 let str = "根据设置，内容非公开";
