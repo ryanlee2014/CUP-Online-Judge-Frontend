@@ -169,748 +169,748 @@
 </template>
 
 <script>
-import statusTable from "../components/status/status-table"
-import * as am4core from "@amcharts/amcharts4/core"
-import * as am4charts from "@amcharts/amcharts4/charts"
-import am4themes_animated from "@amcharts/amcharts4/themes/animated"
-import mixins from "../mixin/init"
-const $ = require("jquery"); const jQuery = $
-const _ = require("lodash")
-const Chart = require("chart.js")
-const Cookies = require("js-cookie")
-window.$ = window.jQuery = $
-require("../static/js/semantic.min")
+import statusTable from "../components/status/status-table";
+import * as am4core from "@amcharts/amcharts4/core";
+import * as am4charts from "@amcharts/amcharts4/charts";
+import am4themes_animated from "@amcharts/amcharts4/themes/animated";
+import mixins from "../mixin/init";
+const $ = require("jquery"); const jQuery = $;
+const _ = require("lodash");
+const Chart = require("chart.js");
+const Cookies = require("js-cookie");
+window.$ = window.jQuery = $;
+require("../static/js/semantic.min");
 function draw (_result) {
-  var result = _result.result
-  var _label = _result.label
-  var row = {}
-  _.forEach(result, function (i) {
-    row[i[_label[0]]] = row[i[_label[0]]] || {}
-    row[i[_label[0]]][i[_label[1]]] = {
-      submit: i.submit,
-      accepted: i.accepted || 0
-    }
-  })
+    var result = _result.result;
+    var _label = _result.label;
+    var row = {};
+    _.forEach(result, function (i) {
+        row[i[_label[0]]] = row[i[_label[0]]] || {};
+        row[i[_label[0]]][i[_label[1]]] = {
+            submit: i.submit,
+            accepted: i.accepted || 0
+        };
+    });
 
-  var _labels = []
-  var _submits = []
-  var _accepteds = []
-  var _persent = []
-  _.forEach(row, function (val, i) {
-    _.forEach(row[i], function (val2, j) {
-      _labels.push(i.toString() + "-" + j.toString())
-      _submits.push(row[i][j].submit)
-      _accepteds.push(row[i][j].accepted)
-      _persent.push((row[i][j].accepted / row[i][j].submit * 100).toString().substring(0, 5))
-    })
-  })
-  var config = {
-    type: "line",
-    data: {
-      labels: _labels,
-      datasets: [{
-        label: "总提交",
-        yAxisID: "submit",
-        backgroundColor: window.chartColors.red,
-        borderColor: window.chartColors.red,
-        data: _submits,
-        fill: false
-      }, {
-        label: "正确",
-        yAxisID: "submit",
-        fill: false,
-        backgroundColor: window.chartColors.blue,
-        borderColor: window.chartColors.blue,
-        data: _accepteds
-      }, {
-        label: "正确率",
-        fill: false,
-        yAxisID: "per",
-        backgroundColor: window.chartColors.green,
-        borderColor: window.chartColors.green,
-        data: _persent
-      }]
-    },
-    options: {
-      responsive: true,
-      title: {
-        display: true,
-        text: "统计信息"
-      },
-      tooltips: {
-        mode: "index",
-        intersect: false
-      },
-      hover: {
-        mode: "nearest",
-        intersect: true
-      },
-      scales: {
-        xAxes: [{
-          display: true,
-          scaleLabel: {
-            display: true,
-            labelString: "月份"
-          }
-        }],
-        yAxes: [{
-          id: "submit",
-          position: "left",
-          display: true,
-          scaleLabel: {
-            display: true,
-            labelString: "提交"
-          }
-        }, {
-          id: "per",
-          type: "linear",
-          position: "right",
-          scaleLabel: {
-            display: true,
-            labelString: "正确率"
-          },
-          ticks: {
-            max: 100,
-            min: 0
-          }
-        }]
-      }
-    }
-  }
-  var ctx = document.getElementById("canvas").getContext("2d")
-  window.myLine = new Chart(ctx, config)
+    var _labels = [];
+    var _submits = [];
+    var _accepteds = [];
+    var _persent = [];
+    _.forEach(row, function (val, i) {
+        _.forEach(row[i], function (val2, j) {
+            _labels.push(i.toString() + "-" + j.toString());
+            _submits.push(row[i][j].submit);
+            _accepteds.push(row[i][j].accepted);
+            _persent.push((row[i][j].accepted / row[i][j].submit * 100).toString().substring(0, 5));
+        });
+    });
+    var config = {
+        type: "line",
+        data: {
+            labels: _labels,
+            datasets: [{
+                label: "总提交",
+                yAxisID: "submit",
+                backgroundColor: window.chartColors.red,
+                borderColor: window.chartColors.red,
+                data: _submits,
+                fill: false
+            }, {
+                label: "正确",
+                yAxisID: "submit",
+                fill: false,
+                backgroundColor: window.chartColors.blue,
+                borderColor: window.chartColors.blue,
+                data: _accepteds
+            }, {
+                label: "正确率",
+                fill: false,
+                yAxisID: "per",
+                backgroundColor: window.chartColors.green,
+                borderColor: window.chartColors.green,
+                data: _persent
+            }]
+        },
+        options: {
+            responsive: true,
+            title: {
+                display: true,
+                text: "统计信息"
+            },
+            tooltips: {
+                mode: "index",
+                intersect: false
+            },
+            hover: {
+                mode: "nearest",
+                intersect: true
+            },
+            scales: {
+                xAxes: [{
+                    display: true,
+                    scaleLabel: {
+                        display: true,
+                        labelString: "月份"
+                    }
+                }],
+                yAxes: [{
+                    id: "submit",
+                    position: "left",
+                    display: true,
+                    scaleLabel: {
+                        display: true,
+                        labelString: "提交"
+                    }
+                }, {
+                    id: "per",
+                    type: "linear",
+                    position: "right",
+                    scaleLabel: {
+                        display: true,
+                        labelString: "正确率"
+                    },
+                    ticks: {
+                        max: 100,
+                        min: 0
+                    }
+                }]
+            }
+        }
+    };
+    var ctx = document.getElementById("canvas").getContext("2d");
+    window.myLine = new Chart(ctx, config);
 }
 function drawResult (data, labelName) {
-  data.sort(function (a, b) {
-    return b.cnt - a.cnt
-  })
-  var color = window.chartColors
-  var colorTocolor = {
-    0: color.blue,
-    1: color.blue,
-    2: color.blue,
-    3: color.blue,
-    4: color.green,
-    5: color.red,
-    6: color.red,
-    7: color.yellow,
-    8: color.yellow,
-    9: color.yellow,
-    10: color.yellow,
-    11: color.grey,
-    12: color.blue,
-    13: color.blue,
-    14: color.red,
-    15: color.red
-  }
-  var dataSet = []
-  var labName = []
-  dataSet.push({
-    label: "提交数",
-    backgroundColor: [],
-    borderColor: [],
-    borderWidth: 1,
-    data: []
-  })
-  // eslint-disable-next-line no-unused-vars
-  _.forEach(data, function (val, idx) {
-    labName.push(labelName[val.result])
-    dataSet[0].backgroundColor.push(colorTocolor[val.result])
-    dataSet[0].borderColor.push("white")
-    dataSet[0].data.push(val.cnt)
-  })
-  var barChartData = {
-    labels: labName,
-    datasets: dataSet
-  }
-  barChartData = JSON.parse(JSON.stringify(barChartData))
-  var ctx = document.getElementById("bar").getContext("2d")
-  window.myBar = new Chart(ctx, {
-    type: "bar",
-    data: barChartData,
-    options: {
-      responsive: true,
-      legend: {
-        display: false,
-        position: "top"
-      },
-      title: {
-        display: false,
-        text: "提交统计"
-      }
-    }
-  })
+    data.sort(function (a, b) {
+        return b.cnt - a.cnt;
+    });
+    var color = window.chartColors;
+    var colorTocolor = {
+        0: color.blue,
+        1: color.blue,
+        2: color.blue,
+        3: color.blue,
+        4: color.green,
+        5: color.red,
+        6: color.red,
+        7: color.yellow,
+        8: color.yellow,
+        9: color.yellow,
+        10: color.yellow,
+        11: color.grey,
+        12: color.blue,
+        13: color.blue,
+        14: color.red,
+        15: color.red
+    };
+    var dataSet = [];
+    var labName = [];
+    dataSet.push({
+        label: "提交数",
+        backgroundColor: [],
+        borderColor: [],
+        borderWidth: 1,
+        data: []
+    });
+    // eslint-disable-next-line no-unused-vars
+    _.forEach(data, function (val, idx) {
+        labName.push(labelName[val.result]);
+        dataSet[0].backgroundColor.push(colorTocolor[val.result]);
+        dataSet[0].borderColor.push("white");
+        dataSet[0].data.push(val.cnt);
+    });
+    var barChartData = {
+        labels: labName,
+        datasets: dataSet
+    };
+    barChartData = JSON.parse(JSON.stringify(barChartData));
+    var ctx = document.getElementById("bar").getContext("2d");
+    window.myBar = new Chart(ctx, {
+        type: "bar",
+        data: barChartData,
+        options: {
+            responsive: true,
+            legend: {
+                display: false,
+                position: "top"
+            },
+            title: {
+                display: false,
+                text: "提交统计"
+            }
+        }
+    });
 }
 function drawBar (data) {
-  var login = data.login
-  data = data.submit
-  var color = Chart.helpers.color
-  var config = {
-    type: "radar",
-    data: {
-      labels: [],
-      datasets: [{
-        label: "提交分布",
-        backgroundColor: color(window.chartColors.red).alpha(0.2).rgbString(),
-        borderColor: window.chartColors.red,
-        pointBackgroundColor: window.chartColors.red,
+    var login = data.login;
+    data = data.submit;
+    var color = Chart.helpers.color;
+    var config = {
+        type: "radar",
+        data: {
+            labels: [],
+            datasets: [{
+                label: "提交分布",
+                backgroundColor: color(window.chartColors.red).alpha(0.2).rgbString(),
+                borderColor: window.chartColors.red,
+                pointBackgroundColor: window.chartColors.red,
+                data: []
+            }]
+        },
+        options: {
+            legend: {
+                position: "top"
+            },
+            title: {
+                display: true,
+                text: "提交时间分布"
+            },
+            scale: {
+                ticks: {
+                    beginAtZero: true
+                }
+            }
+        }
+    };
+    _.forEach(data, function (val) {
+        config.data.labels.push(val.hour + ":00");
+        config.data.datasets[0].data.push(val.cnt);
+    });
+    var copyconfig = JSON.parse(JSON.stringify(config));
+    copyconfig.data.datasets = [{
+        label: "登录分布",
+        backgroundColor: color(window.chartColors.blue).alpha(0.2).rgbString(),
+        borderColor: window.chartColors.blue,
+        pointBackgroundColor: window.chartColors.blue,
         data: []
-      }]
-    },
-    options: {
-      legend: {
-        position: "top"
-      },
-      title: {
-        display: true,
-        text: "提交时间分布"
-      },
-      scale: {
-        ticks: {
-          beginAtZero: true
-        }
-      }
-    }
-  }
-  _.forEach(data, function (val) {
-    config.data.labels.push(val.hour + ":00")
-    config.data.datasets[0].data.push(val.cnt)
-  })
-  var copyconfig = JSON.parse(JSON.stringify(config))
-  copyconfig.data.datasets = [{
-    label: "登录分布",
-    backgroundColor: color(window.chartColors.blue).alpha(0.2).rgbString(),
-    borderColor: window.chartColors.blue,
-    pointBackgroundColor: window.chartColors.blue,
-    data: []
-  }]
-  _.forEach(login, function (val) {
-    copyconfig.data.datasets[0].data.push(val.cnt)
-  })
-  copyconfig.options.title.text = "登录时间分布"
-  new Chart(document.getElementById("subtime"), config)
-  new Chart(document.getElementById("logtime"), copyconfig)
-  // console.log(data);
-  // console.log(config);
+    }];
+    _.forEach(login, function (val) {
+        copyconfig.data.datasets[0].data.push(val.cnt);
+    });
+    copyconfig.options.title.text = "登录时间分布";
+    new Chart(document.getElementById("subtime"), config);
+    new Chart(document.getElementById("logtime"), copyconfig);
+    // console.log(data);
+    // console.log(config);
 }
-var hasRendered = {}
+var hasRendered = {};
 function drawDynamicInteractiveLineChart (dataSets, prefix, target) {
-  var adapter_object = {}
-  var full_name = prefix + "_name"
-  var full_version = prefix + "_version"
-  if (hasRendered[target]) {
-    return
-  }
-  if (window.temp_data_object && window.temp_data_object[target]) {
-    adapter_object = window.temp_data_object[target]
-  } else if (dataSets === undefined) {
-    return
-  } else {
-    hasRendered[target] = true
-    _.forEach(dataSets, function (d) {
-      if (!adapter_object[d[full_name]]) {
-        adapter_object[d[full_name]] = {
-          name: d[full_name],
-          version: {}
-        }
-      }
-      if (!adapter_object[d[full_name]].version[d[full_version]]) {
-        adapter_object[d[full_name]].version[d[full_version]] = 1
-      } else {
-        ++adapter_object[d[full_name]].version[d[full_version]]
-      }
-    })
-    adapter_object = _.values(adapter_object)
-
-    _.forEach(adapter_object, function (val, idx) {
-      if (!adapter_object[idx].children) {
-        adapter_object[idx].children = []
-      }
-      _.forEach(val.version, function (v, id) {
-        adapter_object[idx].children.push({
-          name: id,
-          value: v
-        })
-      })
-    })
-    if (!window.temp_data_object) {
-      window.temp_data_object = {}
+    var adapter_object = {};
+    var full_name = prefix + "_name";
+    var full_version = prefix + "_version";
+    if (hasRendered[target]) {
+        return;
     }
-    window.temp_data_object[target] = adapter_object
-  }
+    if (window.temp_data_object && window.temp_data_object[target]) {
+        adapter_object = window.temp_data_object[target];
+    } else if (dataSets === undefined) {
+        return;
+    } else {
+        hasRendered[target] = true;
+        _.forEach(dataSets, function (d) {
+            if (!adapter_object[d[full_name]]) {
+                adapter_object[d[full_name]] = {
+                    name: d[full_name],
+                    version: {}
+                };
+            }
+            if (!adapter_object[d[full_name]].version[d[full_version]]) {
+                adapter_object[d[full_name]].version[d[full_version]] = 1;
+            } else {
+                ++adapter_object[d[full_name]].version[d[full_version]];
+            }
+        });
+        adapter_object = _.values(adapter_object);
 
-  // Themes begin
-  am4core.useTheme(am4themes_animated)
-  // Themes end
+        _.forEach(adapter_object, function (val, idx) {
+            if (!adapter_object[idx].children) {
+                adapter_object[idx].children = [];
+            }
+            _.forEach(val.version, function (v, id) {
+                adapter_object[idx].children.push({
+                    name: id,
+                    value: v
+                });
+            });
+        });
+        if (!window.temp_data_object) {
+            window.temp_data_object = {};
+        }
+        window.temp_data_object[target] = adapter_object;
+    }
 
-  // create chart
-  var chart = am4core.create(target, am4charts.TreeMap)
-  chart.hiddenState.properties.opacity = 0 // this makes initial fade in effect
-  window.chart_graph = chart
-  chart.data = adapter_object
+    // Themes begin
+    am4core.useTheme(am4themes_animated);
+    // Themes end
 
-  chart.colors.step = 2
+    // create chart
+    var chart = am4core.create(target, am4charts.TreeMap);
+    chart.hiddenState.properties.opacity = 0; // this makes initial fade in effect
+    window.chart_graph = chart;
+    chart.data = adapter_object;
 
-  // define data fields
-  chart.dataFields.value = "value"
-  chart.dataFields.name = "name"
-  chart.dataFields.children = "children"
+    chart.colors.step = 2;
 
-  chart.zoomable = true
-  var bgColor = new am4core.InterfaceColorSet().getFor("background")
+    // define data fields
+    chart.dataFields.value = "value";
+    chart.dataFields.name = "name";
+    chart.dataFields.children = "children";
 
-  // level 0 series template
-  var level0SeriesTemplate = chart.seriesTemplates.create("0")
-  var level0ColumnTemplate = level0SeriesTemplate.columns.template
+    chart.zoomable = true;
+    var bgColor = new am4core.InterfaceColorSet().getFor("background");
 
-  level0ColumnTemplate.column.cornerRadius(10, 10, 10, 10)
-  level0ColumnTemplate.fillOpacity = 0
-  level0ColumnTemplate.strokeWidth = 4
-  level0ColumnTemplate.strokeOpacity = 0
+    // level 0 series template
+    var level0SeriesTemplate = chart.seriesTemplates.create("0");
+    var level0ColumnTemplate = level0SeriesTemplate.columns.template;
 
-  // level 1 series template
-  var level1SeriesTemplate = chart.seriesTemplates.create("1")
-  var level1ColumnTemplate = level1SeriesTemplate.columns.template
+    level0ColumnTemplate.column.cornerRadius(10, 10, 10, 10);
+    level0ColumnTemplate.fillOpacity = 0;
+    level0ColumnTemplate.strokeWidth = 4;
+    level0ColumnTemplate.strokeOpacity = 0;
 
-  level1SeriesTemplate.tooltip.animationDuration = 0
-  level1SeriesTemplate.strokeOpacity = 1
+    // level 1 series template
+    var level1SeriesTemplate = chart.seriesTemplates.create("1");
+    var level1ColumnTemplate = level1SeriesTemplate.columns.template;
 
-  level1ColumnTemplate.column.cornerRadius(10, 10, 10, 10)
-  level1ColumnTemplate.fillOpacity = 1
-  level1ColumnTemplate.strokeWidth = 4
-  level1ColumnTemplate.stroke = bgColor
+    level1SeriesTemplate.tooltip.animationDuration = 0;
+    level1SeriesTemplate.strokeOpacity = 1;
 
-  var bullet1 = level1SeriesTemplate.bullets.push(new am4charts.LabelBullet())
-  bullet1.locationY = 0.5
-  bullet1.locationX = 0.5
-  bullet1.label.text = "{name}"
-  bullet1.label.fill = am4core.color("#ffffff")
+    level1ColumnTemplate.column.cornerRadius(10, 10, 10, 10);
+    level1ColumnTemplate.fillOpacity = 1;
+    level1ColumnTemplate.strokeWidth = 4;
+    level1ColumnTemplate.stroke = bgColor;
 
-  chart.maxLevels = 2
+    var bullet1 = level1SeriesTemplate.bullets.push(new am4charts.LabelBullet());
+    bullet1.locationY = 0.5;
+    bullet1.locationX = 0.5;
+    bullet1.label.text = "{name}";
+    bullet1.label.fill = am4core.color("#ffffff");
+
+    chart.maxLevels = 2;
 }
 function drawChordGraph (data, prefix = "chord_graph") {
-  if (hasRendered[prefix]) {
-    return
-  }
-  hasRendered[prefix] = true
-  // Themes begin
-  am4core.useTheme(am4themes_animated)
-  // Themes end
-
-  var chart = am4core.create("chord_graph", am4charts.ChordDiagram)
-
-  _.forEach(data, function (el) {
-    if (el.from > el.to) {
-      var tmp = el.from
-      el.from = el.to
-      el.to = tmp
+    if (hasRendered[prefix]) {
+        return;
     }
-  })
+    hasRendered[prefix] = true;
+    // Themes begin
+    am4core.useTheme(am4themes_animated);
+    // Themes end
 
-  data.sort(function (a, b) {
-    return b.value - a.value
-  })
+    var chart = am4core.create("chord_graph", am4charts.ChordDiagram);
 
-  while (data.length > 30) {
-    data.pop()
-  }
+    _.forEach(data, function (el) {
+        if (el.from > el.to) {
+            var tmp = el.from;
+            el.from = el.to;
+            el.to = tmp;
+        }
+    });
 
-  chart.data = data
+    data.sort(function (a, b) {
+        return b.value - a.value;
+    });
 
-  chart.dataFields.fromName = "from"
-  chart.dataFields.toName = "to"
-  chart.dataFields.value = "value"
-
-  // make nodes draggable
-  var nodeTemplate = chart.nodes.template
-  nodeTemplate.readerTitle = "Click to show/hide or drag to rearrange"
-  nodeTemplate.showSystemTooltip = true
-
-  var nodeLink = chart.links.template
-  var bullet = nodeLink.bullets.push(new am4charts.CircleBullet())
-  bullet.fillOpacity = 1
-  bullet.circle.radius = 5
-  bullet.locationX = 0.5
-
-  // create animations
-  chart.events.on("ready", function () {
-    for (var i = 0; i < chart.links.length; i++) {
-      var link = chart.links.getIndex(i)
-      var bullet = link.bullets.getIndex(0)
-
-      animateBullet(bullet)
+    while (data.length > 30) {
+        data.pop();
     }
-  })
 
-  function animateBullet (bullet) {
-    var duration = 3000 * Math.random() + 2000
-    var animation = bullet.animate([{ property: "locationX", from: 0, to: 1 }], duration)
-    animation.events.on("animationended", function (event) {
-      animateBullet(event.target.object)
-    })
-  }
+    chart.data = data;
+
+    chart.dataFields.fromName = "from";
+    chart.dataFields.toName = "to";
+    chart.dataFields.value = "value";
+
+    // make nodes draggable
+    var nodeTemplate = chart.nodes.template;
+    nodeTemplate.readerTitle = "Click to show/hide or drag to rearrange";
+    nodeTemplate.showSystemTooltip = true;
+
+    var nodeLink = chart.links.template;
+    var bullet = nodeLink.bullets.push(new am4charts.CircleBullet());
+    bullet.fillOpacity = 1;
+    bullet.circle.radius = 5;
+    bullet.locationX = 0.5;
+
+    // create animations
+    chart.events.on("ready", function () {
+        for (var i = 0; i < chart.links.length; i++) {
+            var link = chart.links.getIndex(i);
+            var bullet = link.bullets.getIndex(0);
+
+            animateBullet(bullet);
+        }
+    });
+
+    function animateBullet (bullet) {
+        var duration = 3000 * Math.random() + 2000;
+        var animation = bullet.animate([{ property: "locationX", from: 0, to: 1 }], duration);
+        animation.events.on("animationended", function (event) {
+            animateBullet(event.target.object);
+        });
+    }
 }
 function drawRegisterTimeline (data) {
-  if (hasRendered["timeline"]) {
-    return
-  }
-  hasRendered["timeline"] = true
-  // Themes begin
-  am4core.useTheme(am4themes_animated)
-  // Themes end
+    if (hasRendered["timeline"]) {
+        return;
+    }
+    hasRendered["timeline"] = true;
+    // Themes begin
+    am4core.useTheme(am4themes_animated);
+    // Themes end
 
-  // Create chart instance
-  var chart = am4core.create("register_timeline", am4charts.XYChart)
-  chart.paddingRight = 20
-  var title = chart.titles.create()
-  title.text = "注册人数变化"
-  title.fontSize = 15
-  title.marginBottom = 30
-  // Add data
-  chart.data = data
+    // Create chart instance
+    var chart = am4core.create("register_timeline", am4charts.XYChart);
+    chart.paddingRight = 20;
+    var title = chart.titles.create();
+    title.text = "注册人数变化";
+    title.fontSize = 15;
+    title.marginBottom = 30;
+    // Add data
+    chart.data = data;
 
-  // Create axes
-  var dateAxis = chart.xAxes.push(new am4charts.DateAxis())
-  var valueAxis = chart.yAxes.push(new am4charts.ValueAxis())
+    // Create axes
+    var dateAxis = chart.xAxes.push(new am4charts.DateAxis());
+    var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
 
-  // Create series
-  var series = chart.series.push(new am4charts.LineSeries())
-  series.dataFields.valueY = "value"
-  series.dataFields.dateX = "date"
-  series.tooltipText = "{value}"
-  series.strokeWidth = 2
-  series.minBulletDistance = 15
+    // Create series
+    var series = chart.series.push(new am4charts.LineSeries());
+    series.dataFields.valueY = "value";
+    series.dataFields.dateX = "date";
+    series.tooltipText = "{value}";
+    series.strokeWidth = 2;
+    series.minBulletDistance = 15;
 
-  // Drop-shaped tooltips
-  series.tooltip.background.cornerRadius = 20
-  series.tooltip.background.strokeOpacity = 0
-  series.tooltip.pointerOrientation = "vertical"
-  series.tooltip.label.minWidth = 40
-  series.tooltip.label.minHeight = 40
-  series.tooltip.label.textAlign = "middle"
-  series.tooltip.label.textValign = "middle"
+    // Drop-shaped tooltips
+    series.tooltip.background.cornerRadius = 20;
+    series.tooltip.background.strokeOpacity = 0;
+    series.tooltip.pointerOrientation = "vertical";
+    series.tooltip.label.minWidth = 40;
+    series.tooltip.label.minHeight = 40;
+    series.tooltip.label.textAlign = "middle";
+    series.tooltip.label.textValign = "middle";
 
-  // Make bullets grow on hover
-  var bullet = series.bullets.push(new am4charts.CircleBullet())
-  bullet.circle.strokeWidth = 2
-  bullet.circle.radius = 4
-  bullet.circle.fill = am4core.color("#fff")
+    // Make bullets grow on hover
+    var bullet = series.bullets.push(new am4charts.CircleBullet());
+    bullet.circle.strokeWidth = 2;
+    bullet.circle.radius = 4;
+    bullet.circle.fill = am4core.color("#fff");
 
-  var bullethover = bullet.states.create("hover")
-  bullethover.properties.scale = 1.3
+    var bullethover = bullet.states.create("hover");
+    bullethover.properties.scale = 1.3;
 
-  // Make a panning cursor
-  chart.cursor = new am4charts.XYCursor()
-  chart.cursor.behavior = "panXY"
-  chart.cursor.xAxis = dateAxis
-  chart.cursor.snapToSeries = series
+    // Make a panning cursor
+    chart.cursor = new am4charts.XYCursor();
+    chart.cursor.behavior = "panXY";
+    chart.cursor.xAxis = dateAxis;
+    chart.cursor.snapToSeries = series;
 
-  // Create vertical scrollbar and place it before the value axis
-  chart.scrollbarY = new am4core.Scrollbar()
-  chart.scrollbarY.parent = chart.leftAxesContainer
-  chart.scrollbarY.toBack()
+    // Create vertical scrollbar and place it before the value axis
+    chart.scrollbarY = new am4core.Scrollbar();
+    chart.scrollbarY.parent = chart.leftAxesContainer;
+    chart.scrollbarY.toBack();
 
-  // Create a horizontal scrollbar with previe and place it underneath the date axis
-  chart.scrollbarX = new am4charts.XYChartScrollbar()
-  chart.scrollbarX.series.push(series)
-  chart.scrollbarX.parent = chart.bottomAxesContainer
+    // Create a horizontal scrollbar with previe and place it underneath the date axis
+    chart.scrollbarX = new am4charts.XYChartScrollbar();
+    chart.scrollbarX.series.push(series);
+    chart.scrollbarX.parent = chart.bottomAxesContainer;
 } // end am4core.ready()
 export default {
-  name: "status",
-  components: {
-    statusTable
-  },
-  mixins: [mixins],
-  data: function () {
-    return {
-      problem_list: [],
-      icon_list: [],
-      judge_color: [],
-      judge_icon: [],
-      target: {},
-      language_name: [],
-      result: [],
-      language_icon: [],
-      self: "",
-      isadmin: false,
-      problem_id: null,
-      user_id: null,
-      language: -1,
-      sim_checkbox: 0,
-      privilege: 0,
-      problem_result: -1,
-      auto_refresh: true,
-      page_cnt: 0,
-      current_tag: "status",
-      dim: false
-    }
-  },
-  watch: {
+    name: "status",
+    components: {
+        statusTable
+    },
+    mixins: [mixins],
+    data: function () {
+        return {
+            problem_list: [],
+            icon_list: [],
+            judge_color: [],
+            judge_icon: [],
+            target: {},
+            language_name: [],
+            result: [],
+            language_icon: [],
+            self: "",
+            isadmin: false,
+            problem_id: null,
+            user_id: null,
+            language: -1,
+            sim_checkbox: 0,
+            privilege: 0,
+            problem_result: -1,
+            auto_refresh: true,
+            page_cnt: 0,
+            current_tag: "status",
+            dim: false
+        };
+    },
+    watch: {
     // eslint-disable-next-line no-unused-vars
-    sim_checkbox: function (newVal, oldVal) {
-      var that = this
-      this.search().then(function () {
-        that.search()
-      })
-    },
-    privilege: function (newVal, oldVal) {
-      var that = this
-      this.search().then(function () {
-        that.search()
-      })
-    },
-    auto_refresh: function (newVal, oldVal) {
-      var that = this
-      if (newVal) {
-        this.search().then(function () {
-          that.search()
-        })
-      }
-    },
-    current_tag: function (newVal, oldVal) {
-      if (newVal === "user") {
-        $.get("/api/status/device/browser", function (data) {
-          if (data.status == "OK") {
-            _.delay(drawDynamicInteractiveLineChart, 0, data.data, "browser", "browser_statistics")
-          }
-          $.get("/api/status/device/os", function (data) {
-            if (data.status == "OK") {
-              _.delay(drawDynamicInteractiveLineChart, 0, data.data, "os", "os_statistics")
+        sim_checkbox: function (newVal, oldVal) {
+            var that = this;
+            this.search().then(function () {
+                that.search();
+            });
+        },
+        privilege: function (newVal, oldVal) {
+            var that = this;
+            this.search().then(function () {
+                that.search();
+            });
+        },
+        auto_refresh: function (newVal, oldVal) {
+            var that = this;
+            if (newVal) {
+                this.search().then(function () {
+                    that.search();
+                });
             }
-          })
-          $.get("/api/status/problem/solve_map/", function (data) {
-            if (data.status == "OK") {
-              _.delay(drawChordGraph, 0, data.data)
+        },
+        current_tag: function (newVal, oldVal) {
+            if (newVal === "user") {
+                $.get("/api/status/device/browser", function (data) {
+                    if (data.status == "OK") {
+                        _.delay(drawDynamicInteractiveLineChart, 0, data.data, "browser", "browser_statistics");
+                    }
+                    $.get("/api/status/device/os", function (data) {
+                        if (data.status == "OK") {
+                            _.delay(drawDynamicInteractiveLineChart, 0, data.data, "os", "os_statistics");
+                        }
+                    });
+                    $.get("/api/status/problem/solve_map/", function (data) {
+                        if (data.status == "OK") {
+                            _.delay(drawChordGraph, 0, data.data);
+                        }
+                    });
+                });
+            } else if (newVal === "graph") {
+                $.get("/api/user/register_timeline", function (data) {
+                    if (data.status == "OK") {
+                        _.delay(drawRegisterTimeline, 0, data.data);
+                    }
+                });
             }
-          })
-        })
-      } else if (newVal === "graph") {
-        $.get("/api/user/register_timeline", function (data) {
-          if (data.status == "OK") {
-            _.delay(drawRegisterTimeline, 0, data.data)
-          }
-        })
-      }
-    }
-  },
-  computed: {},
-  methods: {
-    getUserId: function () {
-      if (this.$route.query) {
-        return this.$route.query.user_id
-      }
-      return null
-    },
-    getResult: function () {
-      if (this.$route.query) {
-        return this.$route.query.jresult
-      }
-      return null
-    },
-    getProblemID: function () {
-      if (this.$route.query) {
-        return this.$route.query.problem_id
-      }
-      return null
-    },
-    getLanguage: function () {
-      if (this.$route.query) {
-        return this.$route.query.language
-      }
-      return null
-    },
-    setQuery: function () {
-      var queryobject = {}
-      if (this.user_id && this.user_id.length > 0) { queryobject["user_id"] = this.user_id }
-      if (this.problem_result && this.problem_result !== -1) { queryobject["jresult"] = this.problem_result }
-      if (this.problem_id && this.problem_id !== 0) { queryobject["problem_id"] = this.problem_id }
-      if (this.language && this.language !== -1) { queryobject["language"] = this.language }
-      this.$router.push({ path: this.$route.path, query: queryobject })
-    },
-    search_func: function (data) {
-      var that = this
-      this.setQuery()
-      that.problem_list = data.result
-      that.icon_list = data.const_list.icon_list
-      that.judge_color = data.const_list.judge_color
-      that.target = data.const_list.language.cn.status
-      that.judge_icon = data.const_list.judge_icon
-      that.language_icon = data.const_list.language_icon
-      that.language_name = data.const_list.language_name.local
-      that.result = data.const_list.result.cn
-      that.self = data.self
-      that.isadmin = data.isadmin || data.browse_code
-    },
-    search: function ($event) {
-      var that = this
-      this.dim = true
-      this.page_cnt = 0
-      var problem_id = this.problem_id || "null"
-      var user_id = this.user_id || "null"
-      var language = this.language == -1 ? "null" : this.language
-      var result = this.problem_result == -1 ? "null" : this.problem_result
-      var page_cnt = this.page_cnt * 20
-      var sim = Number(this.sim_checkbox)
-      var pri = Number(this.privilege)
-      return new Promise(function (resolve, reject) {
-        $.get("/api/status/" + problem_id + "/" + user_id + "/" + language + "/" + result + "/" + page_cnt + "/" + sim + "/" + pri, function (data) {
-          that.dim = false
-          that.search_func(data)
-          resolve()
-        })
-      })
-    },
-    list_self_only: function () {
-      var that = this
-      var self_user_id = this.$store.getters.user_id
-      if (this.user_id == null || this.user_id != self_user_id) {
-        this.user_id = self_user_id
-      } else {
-        this.user_id = null
-      }
-      this.search()
-    },
-    page: function (num, $event) {
-      this.dim = true
-      this.page_cnt += num
-      var problem_id = this.problem_id || "null"
-      var user_id = this.user_id || "null"
-      var language = this.language == -1 ? "null" : this.language
-      var result = this.problem_result == -1 ? "null" : this.problem_result
-      var page_cnt = this.page_cnt * 20
-      var sim_checkbox = Number(this.sim_checkbox)
-      var pri = Number(this.privilege)
-      var that = this
-      $.get("/api/status/" + problem_id + "/" + user_id + "/" + language + "/" + result + "/" + page_cnt + "/" + sim_checkbox + "/" + pri, function (data) {
-        that.dim = false
-        that.search_func(data)
-        $.get("/api/status/" + problem_id + "/" + user_id + "/" + language + "/" + result + "/" + page_cnt + "/" + sim_checkbox + "/" + pri, function (data) {
-          that.dim = false
-          that.search_func(data)
-        })
-      })
-    },
-    Submit: function (data) {
-      if (!this.auto_refresh) {
-        return
-      }
-      if (this.privilege && (data.val.id <= 0 || (data.val.cid && data.val.cid <= 0))) {
-        return
-      }
-      if (this.sim_checkbox || this.privilege) {
-        return
-      }
-      if ((!this.user_id || this.user_id === data.user_id) && (this.problem_result === -1) && (this.language === -1 || this.language === data.val.language) && !this.page_cnt && (!this.problem_id || parseInt(this.problem_id) === Math.abs(data.val.id))) {
-        var obj = {}
-        obj.problem_id = Math.abs(data.val.id)
-        obj.solution_id = data.submission_id
-        obj.nick = data.nick
-        obj.user_id = data.user_id
-        obj.length = data.val.source.length
-        obj.language = data.val.language
-        obj.memory = obj.time = 0
-        obj.in_date = new Date().toISOString()
-        obj.judger = "RATH"
-        obj.result = 0
-        obj.ip = data.val.ip
-        obj.total_point = 0
-        obj.fingerprint = data.val.fingerprint
-        obj.fingerprintRaw = data.val.fingerprintRaw
-        obj.sim = false
-        obj.avatar = !!data.val.avatar
-        obj.contest_id = data.val.cid ? Math.abs(data.val.cid) : null
-        obj.sim_id = null
-        this.problem_list.pop()
-        this.problem_list.unshift(obj)
-      }
-    },
-    Update: function (data) {
-      if (!this.auto_refresh) {
-        return
-      }
-      var solution_id = data.solution_id
-      var status = data.state
-      var time = data.time
-      var memory = data.memory
-      var pass_rate = data.pass_rate
-      var sim = data.sim
-      var ip = data.ip
-      var total_point = parseInt(data.total_point) || 0
-      var fingerprint = data.fingerprint
-      var fingerprintRaw = data.fingerprintRaw
-      var pass_point = data.pass_point
-      var that = this
-      _.forEach(this.problem_list, function (val, key) {
-        var i = that.problem_list[key]
-        if (i.solution_id == solution_id) {
-          i.result = status
-          i.time = time
-          i.memory = memory
-          i.sim = data.sim
-          i.sim_id = data.sim_s_id
-          i.pass_rate = pass_rate
-          i.total_point = total_point
-          i.pass_point = pass_point
-          i.contest_id = data.contest_id ? Math.abs(data.contest_id) : null
-          i.ip = ip
-          i.fingerprint = fingerprint
-          i.fingerprintRaw = fingerprintRaw
         }
-      })
     },
-    tag: function (tag_name, $event) {
-      this.current_tag = tag_name
-    }
-  },
-  created: function () {
-    var that = this
-    var problem_id = (this.problem_id = this.getProblemID() || null) || "null"
-    var user_id = (this.user_id = this.getUserId() || null) || "null"
-    var language = (this.language = this.getLanguage() || -1) == -1 ? "null" : this.getLanguage()
-    var result = (this.problem_result = this.getResult() || -1) == -1 ? "null" : this.problem_result
-    $.get("/api/status/" + problem_id + "/" + user_id + "/" + language + "/" + result + "/0/", function (data) {
-      that.dim = false
-      that.search_func(data)
-      $.get("/api/status/result", function (dat) {
-        drawResult(dat.data, data.const_list.result.cn)
-      })
-      $.get("/api/status/submit_hour", function (dat) {
-        var func = function (a, b) {
-          return a.hour - b.hour
+    computed: {},
+    methods: {
+        getUserId: function () {
+            if (this.$route.query) {
+                return this.$route.query.user_id;
+            }
+            return null;
+        },
+        getResult: function () {
+            if (this.$route.query) {
+                return this.$route.query.jresult;
+            }
+            return null;
+        },
+        getProblemID: function () {
+            if (this.$route.query) {
+                return this.$route.query.problem_id;
+            }
+            return null;
+        },
+        getLanguage: function () {
+            if (this.$route.query) {
+                return this.$route.query.language;
+            }
+            return null;
+        },
+        setQuery: function () {
+            var queryobject = {};
+            if (this.user_id && this.user_id.length > 0) { queryobject["user_id"] = this.user_id; }
+            if (this.problem_result && this.problem_result !== -1) { queryobject["jresult"] = this.problem_result; }
+            if (this.problem_id && this.problem_id !== 0) { queryobject["problem_id"] = this.problem_id; }
+            if (this.language && this.language !== -1) { queryobject["language"] = this.language; }
+            this.$router.push({ path: this.$route.path, query: queryobject });
+        },
+        search_func: function (data) {
+            var that = this;
+            this.setQuery();
+            that.problem_list = data.result;
+            that.icon_list = data.const_list.icon_list;
+            that.judge_color = data.const_list.judge_color;
+            that.target = data.const_list.language.cn.status;
+            that.judge_icon = data.const_list.judge_icon;
+            that.language_icon = data.const_list.language_icon;
+            that.language_name = data.const_list.language_name.local;
+            that.result = data.const_list.result.cn;
+            that.self = data.self;
+            that.isadmin = data.isadmin || data.browse_code;
+        },
+        search: function ($event) {
+            var that = this;
+            this.dim = true;
+            this.page_cnt = 0;
+            var problem_id = this.problem_id || "null";
+            var user_id = this.user_id || "null";
+            var language = this.language == -1 ? "null" : this.language;
+            var result = this.problem_result == -1 ? "null" : this.problem_result;
+            var page_cnt = this.page_cnt * 20;
+            var sim = Number(this.sim_checkbox);
+            var pri = Number(this.privilege);
+            return new Promise(function (resolve, reject) {
+                $.get("/api/status/" + problem_id + "/" + user_id + "/" + language + "/" + result + "/" + page_cnt + "/" + sim + "/" + pri, function (data) {
+                    that.dim = false;
+                    that.search_func(data);
+                    resolve();
+                });
+            });
+        },
+        list_self_only: function () {
+            var that = this;
+            var self_user_id = this.$store.getters.user_id;
+            if (this.user_id == null || this.user_id != self_user_id) {
+                this.user_id = self_user_id;
+            } else {
+                this.user_id = null;
+            }
+            this.search();
+        },
+        page: function (num, $event) {
+            this.dim = true;
+            this.page_cnt += num;
+            var problem_id = this.problem_id || "null";
+            var user_id = this.user_id || "null";
+            var language = this.language == -1 ? "null" : this.language;
+            var result = this.problem_result == -1 ? "null" : this.problem_result;
+            var page_cnt = this.page_cnt * 20;
+            var sim_checkbox = Number(this.sim_checkbox);
+            var pri = Number(this.privilege);
+            var that = this;
+            $.get("/api/status/" + problem_id + "/" + user_id + "/" + language + "/" + result + "/" + page_cnt + "/" + sim_checkbox + "/" + pri, function (data) {
+                that.dim = false;
+                that.search_func(data);
+                $.get("/api/status/" + problem_id + "/" + user_id + "/" + language + "/" + result + "/" + page_cnt + "/" + sim_checkbox + "/" + pri, function (data) {
+                    that.dim = false;
+                    that.search_func(data);
+                });
+            });
+        },
+        Submit: function (data) {
+            if (!this.auto_refresh) {
+                return;
+            }
+            if (this.privilege && (data.val.id <= 0 || (data.val.cid && data.val.cid <= 0))) {
+                return;
+            }
+            if (this.sim_checkbox || this.privilege) {
+                return;
+            }
+            if ((!this.user_id || this.user_id === data.user_id) && (this.problem_result === -1) && (this.language === -1 || this.language === data.val.language) && !this.page_cnt && (!this.problem_id || parseInt(this.problem_id) === Math.abs(data.val.id))) {
+                var obj = {};
+                obj.problem_id = Math.abs(data.val.id);
+                obj.solution_id = data.submission_id;
+                obj.nick = data.nick;
+                obj.user_id = data.user_id;
+                obj.length = data.val.source.length;
+                obj.language = data.val.language;
+                obj.memory = obj.time = 0;
+                obj.in_date = new Date().toISOString();
+                obj.judger = "RATH";
+                obj.result = 0;
+                obj.ip = data.val.ip;
+                obj.total_point = 0;
+                obj.fingerprint = data.val.fingerprint;
+                obj.fingerprintRaw = data.val.fingerprintRaw;
+                obj.sim = false;
+                obj.avatar = !!data.val.avatar;
+                obj.contest_id = data.val.cid ? Math.abs(data.val.cid) : null;
+                obj.sim_id = null;
+                this.problem_list.pop();
+                this.problem_list.unshift(obj);
+            }
+        },
+        Update: function (data) {
+            if (!this.auto_refresh) {
+                return;
+            }
+            var solution_id = data.solution_id;
+            var status = data.state;
+            var time = data.time;
+            var memory = data.memory;
+            var pass_rate = data.pass_rate;
+            var sim = data.sim;
+            var ip = data.ip;
+            var total_point = parseInt(data.total_point) || 0;
+            var fingerprint = data.fingerprint;
+            var fingerprintRaw = data.fingerprintRaw;
+            var pass_point = data.pass_point;
+            var that = this;
+            _.forEach(this.problem_list, function (val, key) {
+                var i = that.problem_list[key];
+                if (i.solution_id == solution_id) {
+                    i.result = status;
+                    i.time = time;
+                    i.memory = memory;
+                    i.sim = data.sim;
+                    i.sim_id = data.sim_s_id;
+                    i.pass_rate = pass_rate;
+                    i.total_point = total_point;
+                    i.pass_point = pass_point;
+                    i.contest_id = data.contest_id ? Math.abs(data.contest_id) : null;
+                    i.ip = ip;
+                    i.fingerprint = fingerprint;
+                    i.fingerprintRaw = fingerprintRaw;
+                }
+            });
+        },
+        tag: function (tag_name, $event) {
+            this.current_tag = tag_name;
         }
-        dat.data.submit.sort(func)
-        dat.data.login.sort(func)
-        drawBar(dat.data)
-      })
-      $.get("/api/status/" + problem_id + "/" + user_id + "/" + language + "/" + result + "/0/", function (data) {
-        that.dim = false
-        that.search_func(data)
-      })
-    })
-  },
-  updated: function () {
-    $("tr").popup({
-      on: "hover",
-      hoverable: true,
-      positon: "top center"
-    })
-  },
-  mounted: function () {
-    document.title = `Status -- ${document.title}`
-    $.get("/api/status/graph", function (data) {
-      draw(data)
-      drawDynamicInteractiveLineChart()
-    })
-  },
-  sockets: {
-    submit: function (data) {
-      this.Submit(data)
     },
-    result: function (data) {
-      this.Update(data)
+    created: function () {
+        var that = this;
+        var problem_id = (this.problem_id = this.getProblemID() || null) || "null";
+        var user_id = (this.user_id = this.getUserId() || null) || "null";
+        var language = (this.language = this.getLanguage() || -1) == -1 ? "null" : this.getLanguage();
+        var result = (this.problem_result = this.getResult() || -1) == -1 ? "null" : this.problem_result;
+        $.get("/api/status/" + problem_id + "/" + user_id + "/" + language + "/" + result + "/0/", function (data) {
+            that.dim = false;
+            that.search_func(data);
+            $.get("/api/status/result", function (dat) {
+                drawResult(dat.data, data.const_list.result.cn);
+            });
+            $.get("/api/status/submit_hour", function (dat) {
+                var func = function (a, b) {
+                    return a.hour - b.hour;
+                };
+                dat.data.submit.sort(func);
+                dat.data.login.sort(func);
+                drawBar(dat.data);
+            });
+            $.get("/api/status/" + problem_id + "/" + user_id + "/" + language + "/" + result + "/0/", function (data) {
+                that.dim = false;
+                that.search_func(data);
+            });
+        });
+    },
+    updated: function () {
+        $("tr").popup({
+            on: "hover",
+            hoverable: true,
+            positon: "top center"
+        });
+    },
+    mounted: function () {
+        document.title = `Status -- ${document.title}`;
+        $.get("/api/status/graph", function (data) {
+            draw(data);
+            drawDynamicInteractiveLineChart();
+        });
+    },
+    sockets: {
+        submit: function (data) {
+            this.Submit(data);
+        },
+        result: function (data) {
+            this.Update(data);
+        }
     }
-  }
-}
+};
 </script>
 
 <style scoped>

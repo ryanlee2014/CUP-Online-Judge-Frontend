@@ -59,8 +59,8 @@
 
 <script>
 export default {
-  name: "Bottom"
-}
+    name: "Bottom"
+};
 </script>
 
 <style scoped>

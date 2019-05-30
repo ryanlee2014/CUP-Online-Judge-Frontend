@@ -43,64 +43,64 @@
 </template>
 
 <script>
-import * as monaco from "monaco-editor"
-import mixins from "../../mixin/init"
-const dayjs = require("dayjs")
+import * as monaco from "monaco-editor";
+import mixins from "../../mixin/init";
+const dayjs = require("dayjs");
 export default {
-  name: "diff",
-  mixins: [mixins],
-  data () {
-    return {
-      diffEditor: null,
-      problem_id: 0,
-      leftUserID: "",
-      rightUserID: "",
-      leftSolutionID: this.$route.params.left,
-      rightSolutionID: this.$route.params.right,
-      left: {},
-      right: {},
-      dayjs
+    name: "diff",
+    mixins: [mixins],
+    data () {
+        return {
+            diffEditor: null,
+            problem_id: 0,
+            leftUserID: "",
+            rightUserID: "",
+            leftSolutionID: this.$route.params.left,
+            rightSolutionID: this.$route.params.right,
+            left: {},
+            right: {},
+            dayjs
+        };
+    },
+    async mounted () {
+        document.title = `Code compare -- ${document.title}`;
+        let leftPromise = new Promise(resolve => {
+            this.axios.get(`/api/source/local/${this.$route.params.left}?raw=1`).then(({ data }) => {
+                resolve(data);
+            });
+        });
+        let rightPromise = new Promise(resolve => {
+            this.axios.get(`/api/source/local/${this.$route.params.right}?raw=1`).then(({ data }) => {
+                resolve(data);
+            });
+        });
+        let [leftData, rightData] = await Promise.all([leftPromise, rightPromise]);
+        this.leftUserID = leftData.data.user_id;
+        this.left = leftData.data;
+        this.left.length = this.left.code.source.length;
+        this.left.trimlength = this.left.code.source.split(" ").join("").split("\n").join("").length;
+        this.rightUserID = rightData.data.user_id;
+        this.right = rightData.data;
+        this.right.length = this.right.code.source.length;
+        this.right.trimlength = this.right.code.source.split(" ").join("").split("\n").join("").length;
+        this.problem_id = leftData.data.code.problem_id;
+        let originalModel = monaco.editor.createModel(leftData.data.code.source, "cpp");
+        let modifiedModel = monaco.editor.createModel(rightData.data.code.source, "cpp");
+        this.$forceUpdate();
+        this.$nextTick(() => {
+            const diffEditor = this.diffEditor = monaco.editor.createDiffEditor(document.getElementById("container"));
+            diffEditor.setModel({
+                original: originalModel,
+                modified: modifiedModel
+            });
+        });
+    },
+    beforeDestroy () {
+        if (this.diffEditor) {
+            this.diffEditor.dispose();
+        }
     }
-  },
-  async mounted () {
-    document.title = `Code compare -- ${document.title}`
-    let leftPromise = new Promise(resolve => {
-      this.axios.get(`/api/source/local/${this.$route.params.left}?raw=1`).then(({ data }) => {
-        resolve(data)
-      })
-    })
-    let rightPromise = new Promise(resolve => {
-      this.axios.get(`/api/source/local/${this.$route.params.right}?raw=1`).then(({ data }) => {
-        resolve(data)
-      })
-    })
-    let [leftData, rightData] = await Promise.all([leftPromise, rightPromise])
-    this.leftUserID = leftData.data.user_id
-    this.left = leftData.data
-    this.left.length = this.left.code.source.length
-    this.left.trimlength = this.left.code.source.split(" ").join("").split("\n").join("").length
-    this.rightUserID = rightData.data.user_id
-    this.right = rightData.data
-    this.right.length = this.right.code.source.length
-    this.right.trimlength = this.right.code.source.split(" ").join("").split("\n").join("").length
-    this.problem_id = leftData.data.code.problem_id
-    let originalModel = monaco.editor.createModel(leftData.data.code.source, "cpp")
-    let modifiedModel = monaco.editor.createModel(rightData.data.code.source, "cpp")
-    this.$forceUpdate()
-    this.$nextTick(() => {
-      const diffEditor = this.diffEditor = monaco.editor.createDiffEditor(document.getElementById("container"))
-      diffEditor.setModel({
-        original: originalModel,
-        modified: modifiedModel
-      })
-    })
-  },
-  beforeDestroy () {
-    if (this.diffEditor) {
-      this.diffEditor.dispose()
-    }
-  }
-}
+};
 </script>
 
 <style scoped>

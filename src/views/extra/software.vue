@@ -161,38 +161,38 @@
 </template>
 
 <script>
-import mixins from "../../mixin/init"
-const $ = require("jquery")
+import mixins from "../../mixin/init";
+const $ = require("jquery");
 export default {
-  name: "software",
-  mixins: [mixins],
-  mounted () {
-    document.title = `Software -- ${document.title}`
-    var userAgent = window.navigator.userAgent
-    var $chrome_val = $(".header.chrome").html()
-    var $clion_val = $(".header.clion").html()
-    var $clion_suffix = $(".clion").attr("href")
-    if (userAgent.indexOf("Windows NT") != -1) {
-      $(".clion").attr("href", $clion_suffix + "exe")
-      if (userAgent.indexOf("64") != -1) {
-        $(".chrome").attr("href", "software/63.0.3239.84_chrome_installer_x64.exe")
-        $(".header.chrome").html($chrome_val + " For Windows X64")
-      } else {
-        $(".chrome").attr("href", "software/63.0.3239.84_chrome_installer.exe")
-        $(".header.chrome").html($chrome_val + " For Windows X86")
-      }
-    } else if (userAgent.indexOf("Mac") != -1) {
-      $(".chrome").attr("href", "software/googlechrome.dmg")
-      $(".chrome_content").html("适用于macOS 10.9及以上的系统")
-      $(".header.chrome").html($chrome_val + " For macOS")
-      $(".clion").attr("href", $clion_suffix + "dmg")
-      $(".clion_content").html("适用于macOS 10.9.4及以上的系统")
-    } else {
-      $(".clion").attr("href", $clion_suffix + "tar.gz")
-      $(".clion_content").html("适用于Linux 64位桌面为GNOME或KDE的系统")
+    name: "software",
+    mixins: [mixins],
+    mounted () {
+        document.title = `Software -- ${document.title}`;
+        var userAgent = window.navigator.userAgent;
+        var $chrome_val = $(".header.chrome").html();
+        var $clion_val = $(".header.clion").html();
+        var $clion_suffix = $(".clion").attr("href");
+        if (userAgent.indexOf("Windows NT") != -1) {
+            $(".clion").attr("href", $clion_suffix + "exe");
+            if (userAgent.indexOf("64") != -1) {
+                $(".chrome").attr("href", "software/63.0.3239.84_chrome_installer_x64.exe");
+                $(".header.chrome").html($chrome_val + " For Windows X64");
+            } else {
+                $(".chrome").attr("href", "software/63.0.3239.84_chrome_installer.exe");
+                $(".header.chrome").html($chrome_val + " For Windows X86");
+            }
+        } else if (userAgent.indexOf("Mac") != -1) {
+            $(".chrome").attr("href", "software/googlechrome.dmg");
+            $(".chrome_content").html("适用于macOS 10.9及以上的系统");
+            $(".header.chrome").html($chrome_val + " For macOS");
+            $(".clion").attr("href", $clion_suffix + "dmg");
+            $(".clion_content").html("适用于macOS 10.9.4及以上的系统");
+        } else {
+            $(".clion").attr("href", $clion_suffix + "tar.gz");
+            $(".clion_content").html("适用于Linux 64位桌面为GNOME或KDE的系统");
+        }
     }
-  }
-}
+};
 </script>
 
 <style scoped>

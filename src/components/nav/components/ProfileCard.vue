@@ -9,8 +9,10 @@
                     <p><i class='yen sign icon'></i>0</p></div>
                 <div class='column'>
                     <div class='ui link list'>
-                        <a class='item' href='/modifypage.php'><i
-                            class='edit icon'></i>修改帐号</a><br>
+                        <router-link class="item" to="/user/self/info/modify">
+                            <i class='edit icon'></i>修改帐号
+                        </router-link>
+                        <br>
                         <router-link class="item" :to="`/user/${user_id}`">
                             <i class='archive icon'></i>个人信息
                         </router-link>
@@ -37,58 +39,58 @@
 </template>
 
 <script>
-import store from "../../../store"
-import mixins from "../../../mixin/init"
-import util from "../../../lib/util"
+import store from "../../../store";
+import mixins from "../../../mixin/init";
+import util from "../../../lib/util";
 export default {
-  name: "ProfileCard",
-  mixins: [mixins],
-  props: {
-    user_id: {
-      type: String,
-      default: ""
+    name: "ProfileCard",
+    mixins: [mixins],
+    props: {
+        user_id: {
+            type: String,
+            default: ""
+        },
+        nick: {
+            type: String,
+            default: ""
+        },
+        avatar: {
+            type: Boolean,
+            default: false
+        },
+        admin: {
+            type: Boolean,
+            default: false
+        }
     },
-    nick: {
-      type: String,
-      default: ""
+    data: function () {
+        return {};
     },
-    avatar: {
-      type: Boolean,
-      default: false
+    computed: {
+        img_url: function () {
+            if (this.avatar && this.user_id.length > 0) {
+                return "/avatar/" + this.user_id + ".jpg";
+            } else {
+                return "/assets/images/wireframe/white-image.png";
+            }
+        }
     },
-    admin: {
-      type: Boolean,
-      default: false
+    methods: {
+        logout: function () {
+            this.axios.get("/api/logout")
+                .then(response => {
+                    if (response.data.status === "OK") {
+                        sessionStorage.isLogined = false;
+                        store.commit("loginMutate", { login: false });
+                        location.reload();
+                    }
+                });
+        }
+    },
+    updated () {
+        util.init();
     }
-  },
-  data: function () {
-    return {}
-  },
-  computed: {
-    img_url: function () {
-      if (this.avatar && this.user_id.length > 0) {
-        return "/avatar/" + this.user_id + ".jpg"
-      } else {
-        return "/assets/images/wireframe/white-image.png"
-      }
-    }
-  },
-  methods: {
-    logout: function () {
-      this.axios.get("/api/logout")
-        .then(response => {
-          if (response.data.status === "OK") {
-            sessionStorage.isLogined = false
-            store.commit("loginMutate", { login: false })
-            location.reload()
-          }
-        })
-    }
-  },
-  updated () {
-    util.init()
-  }
-}
+};
 </script>
 
 <style scoped>

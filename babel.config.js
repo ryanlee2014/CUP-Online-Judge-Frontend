@@ -1,11 +1,11 @@
 module.exports = {
-  presets: [
-    [
-      "@vue/app",
-      {
-        useBuiltIns: "usage"
-      }
-    ]
-  ],
-  sourceType: "unambiguous"
-}
+    presets: [
+        [
+            "@vue/app",
+            {
+                useBuiltIns: "usage"
+            }
+        ]
+    ],
+    sourceType: "unambiguous"
+};

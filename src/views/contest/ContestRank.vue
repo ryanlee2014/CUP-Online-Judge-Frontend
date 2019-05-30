@@ -121,454 +121,454 @@
 </template>
 
 <script>
-import mixins from "../../mixin/init"
-import { saveAs } from "file-saver"
-import utils from "../../lib/util"
-import TimeView from "../../components/contest/ContestRank/timeView"
-import ErrorView from "../../components/contest/ContestRank/errorView"
+import mixins from "../../mixin/init";
+import { saveAs } from "file-saver";
+import utils from "../../lib/util";
+import TimeView from "../../components/contest/ContestRank/timeView";
+import ErrorView from "../../components/contest/ContestRank/errorView";
 import {
-  SubmitterFactory,
-  firstBloodListFactory,
-  SubmitterComparator
-} from "../../module/ContestRank/ContestRankFactories"
+    SubmitterFactory,
+    firstBloodListFactory,
+    SubmitterComparator
+} from "../../module/ContestRank/ContestRankFactories";
 
-const _ = require("lodash")
-const dayjs = require("dayjs")
-const XLSX = require("xlsx")
-const $ = window.$ = window.jQuery = require("jquery")
-const { reset: bindDragEvent } = require("dragscroll")
-require("../../static/js/semantic.min")
-let submission_collection = []
-let convert_flag = false
+const _ = require("lodash");
+const dayjs = require("dayjs");
+const XLSX = require("xlsx");
+const $ = window.$ = window.jQuery = require("jquery");
+const { reset: bindDragEvent } = require("dragscroll");
+require("../../static/js/semantic.min");
+let submission_collection = [];
+let convert_flag = false;
 
 export default {
-  name: "ContestRank",
-  mixins: [mixins],
-  components: {
-    ErrorView,
-    TimeView
-  },
-  data: function () {
-    return {
-      cid: this.$route.params.contest_id,
-      submitter: {},
-      total: -1,
-      start_time: dayjs(),
-      title: "",
-      users: [],
-      add_name: false,
-      auto_update: true,
-      waiting_queue: [],
-      state: true,
-      errormsg: "",
-      dayjs,
-      select: $,
-      console,
-      playing: false,
-      playInterval: 0,
-      backup_data: [],
-      firstRender: true,
-      userStructure: {},
-      firstBloodList: undefined
-    }
-  },
-  computed: {
-    scoreboard: {
-      get: () => undefined,
-      set: function (val) {
-        const that = this
-        try {
-          if (!Array.isArray(val)) {
-            val = [val]
-          }
-          val = submission_collection = submission_collection.concat(val)
-          if (this.firstRender) {
-            this.firstRender = false
-            this.firstBloodList = firstBloodListFactory(that.total)
-            let submitter = {}
-            this.initUserTable(submitter)
-            this.fillSubmitterList(submitter, val)
-            this.userStructure = submitter
-            this.submitter = submitter = Object.values(submitter)
-            submitter.forEach(this.updateSubmitter)
-            this.calculateRank()
-          } else {
-            let submitter = this.userStructure
-            let lazyUpdateSet = new Set()
-            this.fillSubmitterList(submitter, val)
-            val.forEach(el => lazyUpdateSet.add(submitter[el.user_id.toLowerCase()]))
-            lazyUpdateSet.forEach(this.updateSubmitter)
-            this.calculateRank()
-          }
-          window.temp_data = submission_collection
-          window.datas = this.submitter
-        } catch (e) {
-          that.state = false
-          that.submitter = {}
-          console.log(e)
-          let str = e.stack
-          str = str.replace(/\n/g, "<br>")
-          that.errormsg = str
-        }
-      }
-    }
-  },
-  methods: {
-    updateSubmitter (el) {
-      el.calculatePenaltyTime()
-      el.calculateAC()
-      el.calculateFirstBlood(this.firstBloodList)
+    name: "ContestRank",
+    mixins: [mixins],
+    components: {
+        ErrorView,
+        TimeView
     },
-    fillSubmitterList (submitter, val) {
-      const len = val.length
-      for (let i = 0; i < len; ++i) {
-        const private_contest = this.users.length > 0
-        if (!submitter[val[i].user_id.toLowerCase()]) {
-          if (private_contest) {
-            return
-          }
-          submitter[val[i].user_id.toLowerCase()] = SubmitterFactory(val[i].nick, this.total, val[i].user_id)
-        }
-        submitter[val[i].user_id.toLowerCase()].addData(val[i])
-      }
+    data: function () {
+        return {
+            cid: this.$route.params.contest_id,
+            submitter: {},
+            total: -1,
+            start_time: dayjs(),
+            title: "",
+            users: [],
+            add_name: false,
+            auto_update: true,
+            waiting_queue: [],
+            state: true,
+            errormsg: "",
+            dayjs,
+            select: $,
+            console,
+            playing: false,
+            playInterval: 0,
+            backup_data: [],
+            firstRender: true,
+            userStructure: {},
+            firstBloodList: undefined
+        };
     },
-    initUserTable (submitter) {
-      _.forEach(this.users, (val) => {
-        if (!submitter[val.user_id.toLowerCase()]) {
-          submitter[val.user_id.toLowerCase()] = SubmitterFactory(val.nick, this.total, val.user_id)
-        }
-      })
-    },
-    calculateRank () {
-      this.submitter.sort(SubmitterComparator("greater"))
-      let rnk = 1
-      window.submitter = this.submitter
-      _.forEach(this.submitter, val => val.ac > 0 ? val.rank = rnk++ : val.rank = rnk)
-    },
-    rankClass (rank, total) {
-      if (parseInt(rank) === 1) {
-        return "ui yellow"
-      } else if (rank <= total * 0.1 + 1) {
-        return "ui yellow"
-      } else if (rank <= total * 0.3 + 1) {
-        return "ui grey"
-      } else if (rank <= total * 0.6 + 1) {
-        return "ui orange"
-      } else {
-        return "ui white"
-      }
-    },
-    playRanklist () {
-      this.auto_update = false
-      this.playing = true
-      const backup_temp_data = this.backup_data = submission_collection
-      backup_temp_data.sort((a, b) => {
-        const atime = dayjs(a.in_date)
-        const btime = dayjs(b.in_date)
-        return atime.isAfter(btime) ? 1 : -1
-      })
-      submission_collection = []
-      this.submitter = {}
-      this.firstRender = true
-      this.playInterval = setInterval(() => {
-        if (backup_temp_data.length > 0) {
-          let data = backup_temp_data.shift()
-          while (backup_temp_data.length > 0 && data.result < 4 && data.result >= 11) {
-            data = backup_temp_data.shift()
-          }
-          this.scoreboard = data
-          if (backup_temp_data.length === 0) {
-            this.endInterval()
-          }
-        } else {
-          this.endInterval()
-        }
-      }, 30)
-    },
-    endInterval () {
-      clearInterval(this.playInterval)
-      this.playing = false
-      this.auto_update = true
-    },
-    stopPlayRanklist () {
-      this.playing = false
-      clearInterval(this.playInterval)
-      this.scoreboard = this.backup_data
-      this.backup_data = []
-      this.auto_update = true
-    },
-    format_date: function (second, mode = 0) {
-      const fill_zero = function (str) {
-        if (str.length < 2) {
-          return "0" + str
-        } else {
-          return str
-        }
-      }
-      let hour = String(parseInt(second / 3600))
-      hour = fill_zero(hour)
-
-      let minute = String(parseInt((second - hour * 3600) / 60))
-      minute = fill_zero(minute)
-      let sec = String(second % 60)
-      sec = fill_zero(sec)
-      if (mode) {
-        return hour + "：" + minute + "：" + sec
-      } else { return hour + ":" + minute + ":" + sec }
-    },
-    format_color: function (num) {
-      let str = num.toString(16)
-      if (num < 16) {
-        return "0" + str + "0" + str
-      } else {
-        return "" + str + "" + str
-      }
-    },
-    detect_place: function (ip) {
-      if (!ip) {
-        return "未知"
-      }
-      return utils.detectIP({
-        intranet_ip: ip,
-        place: ""
-      })
-    },
-    convertHTML: function (str) {
-      let d = document.createElement("div")
-      d.innerHTML = str
-      return d.innerText
-    },
-    decodeHTML: function (str) {
-      if (typeof str !== "string") {
-        str = ""
-      }
-      return str.replace("·", "&middot;")
-    },
-    exportXLS: function () {
-      let doc = document.getElementById("save")
-      let plain_text = "<html xmlns:o=\"urn:schemas-microsoft-com:office:office\" xmlns:x=\"urn:schemas-microsoft-com:office:excel\" xmlns=\"http://www.w3.org/TR/REC-html40\">" + "<head><meta http-equiv='Content-Type' content='application/vnd.ms-excel; charset=utf-8' /></head>"
-      plain_text += "<center><h3>Contest " + this.cid + " " + this.title + "</h3></center>"
-      plain_text += "<table border=1>" + doc.innerHTML.replace("<tbody>", "").replace("</tbody>", "")
-      plain_text += "<tr><td colspan='8'>环境指纹指根据用户的硬件环境及IP地址不同而产生的不同的指纹</td></tr>"
-      plain_text += "<tr><td colspan='8'>硬件指纹指的是不受IP影响的指纹</td></tr>"
-      plain_text += "<tr><td colspan='8'>若环境指纹与硬件指纹均唯一，代表用户使用相同设备在相同地点完成提交</td></tr>"
-      plain_text += "<tr><td colspan='8'>若硬件指纹唯一而环境指纹不唯一，代表同型号机器在不同IP地址提交</td></tr>"
-      plain_text += "<tr><td colspan='8'>若硬件指纹不唯一，代表使用了多台设备进行提交</td></tr>"
-      plain_text += "</table></html>"
-      const wopts = { bookType: "xlsx", bookSST: false, type: "binary" }// 这里的数据是用来定义导出的格式类型
-      // const wopts = { bookType: 'csv', bookSST: false, type: 'binary' };//ods格式
-      // const wopts = { bookType: 'ods', bookSST: false, type: 'binary' };//ods格式
-      // const wopts = { bookType: 'xlsb', bookSST: false, type: 'binary' };//xlsb格式
-      // const wopts = { bookType: 'fods', bookSST: false, type: 'binary' };//fods格式
-      // const wopts = { bookType: 'biff2', bookSST: false, type: 'binary' };//xls格式
-
-      function downloadExl (data, type) {
-        const wb = { SheetNames: ["Sheet1"], Sheets: {}, Props: {} }
-        wb.Sheets["Sheet1"] = XLSX.utils.table_to_sheet(data)// 通过json_to_sheet转成单页(Sheet)数据
-        saveAs(new Blob([s2ab(XLSX.write(wb, wopts))], { type: "application/octet-stream" }), "这里是下载的文件名" + "." + (wopts.bookType === "biff2" ? "xls" : wopts.bookType))
-      }
-
-      function s2ab (s) {
-        if (typeof ArrayBuffer !== "undefined") {
-          let buf = new ArrayBuffer(s.length)
-          let view = new Uint8Array(buf)
-          for (let i = 0; i !== s.length; ++i) view[i] = s.charCodeAt(i) & 0xFF
-          return buf
-        } else {
-          let buf = new Array(s.length)
-          for (let i = 0; i !== s.length; ++i) buf[i] = s.charCodeAt(i) & 0xFF
-          return buf
-        }
-      }
-
-      // downloadExl(doc);
-      let blob
-      blob = new Blob([plain_text], { type: "application/vnd.ms-excel;charset=UTF-8;" })
-      if (convert_flag) {
-        saveAs(blob, "Contest " + this.cid + " 多个contest.xls")
-      } else { saveAs(blob, "Contest " + this.cid + " " + this.title + ".xls") }
-      // var table = TableExport(document.getElementById("save"));
-      // var d = table.getExportData().save.xlsx;
-      // var filename = "Contest " + this.cid;
-      // filename = filename.substring(0,31);
-      // table.export2file(d.data,d.mimeType,filename,d.fileExtension,d.merges)
-    },
-    handleNewSubmit: function (data) {
-      if (parseInt(data.contest_id) === parseInt(this.cid)) {
-        if (data.finish === 1) {
-          let ndata = {
-            nick: data.nick,
-            user_id: data.user_id,
-            start_time: this.start_time,
-            avatar: 0,
-            in_date: data.in_date,
-            num: parseInt(data.num),
-            result: data.state
-          }
-          if (!this.auto_update) {
-            this.waiting_queue.push(ndata)
-          } else {
-            this.scoreboard = ndata
-          }
-        }
-      }
-    }
-  },
-  watch: {
-    auto_update: function () {
-      while (this.waiting_queue.length > 0) {
-        this.scoreboard = this.waiting_queue.shift()
-      }
-    },
-    add_name: function (newVal) {
-      let that = this
-      if (!newVal) return
-      for (let i = 0; i < this.submitter.length; ++i) {
-        $.get("/api/user/nick/" + this.decodeHTML(this.submitter[i].nick), function (data) {
-          if (data && data.data && data.data.length > 0) {
-            let nick = data.nick
-            let nickArray = data.data
-            let user_id = ""
-            for (let j = 0; j < nickArray.length; ++j) {
-              if (!isNaN(nickArray[j].user_id)) {
-                user_id = nickArray[j].user_id
-                break
-              }
+    computed: {
+        scoreboard: {
+            get: () => undefined,
+            set: function (val) {
+                const that = this;
+                try {
+                    if (!Array.isArray(val)) {
+                        val = [val];
+                    }
+                    val = submission_collection = submission_collection.concat(val);
+                    if (this.firstRender) {
+                        this.firstRender = false;
+                        this.firstBloodList = firstBloodListFactory(that.total);
+                        let submitter = {};
+                        this.initUserTable(submitter);
+                        this.fillSubmitterList(submitter, val);
+                        this.userStructure = submitter;
+                        this.submitter = submitter = Object.values(submitter);
+                        submitter.forEach(this.updateSubmitter);
+                        this.calculateRank();
+                    } else {
+                        let submitter = this.userStructure;
+                        let lazyUpdateSet = new Set();
+                        this.fillSubmitterList(submitter, val);
+                        val.forEach(el => lazyUpdateSet.add(submitter[el.user_id.toLowerCase()]));
+                        lazyUpdateSet.forEach(this.updateSubmitter);
+                        this.calculateRank();
+                    }
+                    window.temp_data = submission_collection;
+                    window.datas = this.submitter;
+                } catch (e) {
+                    that.state = false;
+                    that.submitter = {};
+                    console.log(e);
+                    let str = e.stack;
+                    str = str.replace(/\n/g, "<br>");
+                    that.errormsg = str;
+                }
             }
-            for (let j = 0; j < that.submitter.length; ++j) {
-              if (that.decodeHTML(that.submitter[j].nick) === nick) {
-                that.submitter[j].real_name = user_id
-                break
-              }
+        }
+    },
+    methods: {
+        updateSubmitter (el) {
+            el.calculatePenaltyTime();
+            el.calculateAC();
+            el.calculateFirstBlood(this.firstBloodList);
+        },
+        fillSubmitterList (submitter, val) {
+            const len = val.length;
+            for (let i = 0; i < len; ++i) {
+                const private_contest = this.users.length > 0;
+                if (!submitter[val[i].user_id.toLowerCase()]) {
+                    if (private_contest) {
+                        return;
+                    }
+                    submitter[val[i].user_id.toLowerCase()] = SubmitterFactory(val[i].nick, this.total, val[i].user_id);
+                }
+                submitter[val[i].user_id.toLowerCase()].addData(val[i]);
             }
-          }
-        })
-      }
-    }
-  },
-  updated: function () {
-    const new_title = "ContestRank: " + this.title
-    if (document.title !== new_title) {
-      document.title = new_title
-    }
-    $("#rank").find("tr").each(function () {
-      $(this).find("td").eq(2).css({
-        position: "sticky",
-        left: $(this).find("td").eq(2).prev().outerWidth() + $(this).find("td").eq(1).prev().outerWidth(),
-        borderRight: "1px solid rgba(34,36,38,.1)"
-      })
-      $(this).find("td").eq(1).css({
-        position: "sticky",
-        left: $(this).find("td").eq(1).prev().outerWidth()
-      })
-    })
-  },
-  mounted: function () {
-    window.datas = []
-    submission_collection = []
-    document.title = `Contest Rank ${this.cid} -- ${document.title}`
-    const that = this
-    bindDragEvent();
-    (() => {
-      let cid = this.$route.params.contest_id
-      let cidArr = []
-      if (cid.indexOf(",") !== -1) {
-        cidArr = cid.split(",")
-      } else {
-        cidArr = [cid]
-      }
-      let cnt = 0
-      let data = []
-      let users = new Set()
-      let finished = false
-
-      function work () {
-        cid = cidArr.shift()
-        $.get("/api/scoreboard/" + cid, () => {
-          $.get("/api/scoreboard/" + cid, function (d) {
-            if (d.status !== "OK") {
-              that.state = false
-              that.submitter = {}
-              let str
-              if (d.contest_mode === true) {
-                str = "根据设置，内容非公开"
-              } else {
-                str = "Contest " + cid + ":\n" + d.statement
-              }
-              str = str.replace(/\n/g, "<br>")
-              that.errormsg = str
-              return
-            }
-            _.forEach(d.data, function (val) {
-              val.num += cnt
-              val.start_time = dayjs(d.start_time)
-            })
-            _.forEach(d.data, function (val) {
-              data.push(val)
-            })
-            _.forEach(d.users, function (val) {
-              users.add(val)
-            })
-
-            cnt += d.total
-
-            if (cidArr.length > 0) {
-              convert_flag = true
-              work()
+        },
+        initUserTable (submitter) {
+            _.forEach(this.users, (val) => {
+                if (!submitter[val.user_id.toLowerCase()]) {
+                    submitter[val.user_id.toLowerCase()] = SubmitterFactory(val.nick, this.total, val.user_id);
+                }
+            });
+        },
+        calculateRank () {
+            this.submitter.sort(SubmitterComparator("greater"));
+            let rnk = 1;
+            window.submitter = this.submitter;
+            _.forEach(this.submitter, val => val.ac > 0 ? val.rank = rnk++ : val.rank = rnk);
+        },
+        rankClass (rank, total) {
+            if (parseInt(rank) === 1) {
+                return "ui yellow";
+            } else if (rank <= total * 0.1 + 1) {
+                return "ui yellow";
+            } else if (rank <= total * 0.3 + 1) {
+                return "ui grey";
+            } else if (rank <= total * 0.6 + 1) {
+                return "ui orange";
             } else {
-              finished = true
-              that.total = cnt
-              that.users = Array.from(users)
-              that.scoreboard = data
+                return "ui white";
             }
-          })
-        })
-      }
+        },
+        playRanklist () {
+            this.auto_update = false;
+            this.playing = true;
+            const backup_temp_data = this.backup_data = submission_collection;
+            backup_temp_data.sort((a, b) => {
+                const atime = dayjs(a.in_date);
+                const btime = dayjs(b.in_date);
+                return atime.isAfter(btime) ? 1 : -1;
+            });
+            submission_collection = [];
+            this.submitter = {};
+            this.firstRender = true;
+            this.playInterval = setInterval(() => {
+                if (backup_temp_data.length > 0) {
+                    let data = backup_temp_data.shift();
+                    while (backup_temp_data.length > 0 && data.result < 4 && data.result >= 11) {
+                        data = backup_temp_data.shift();
+                    }
+                    this.scoreboard = data;
+                    if (backup_temp_data.length === 0) {
+                        this.endInterval();
+                    }
+                } else {
+                    this.endInterval();
+                }
+            }, 30);
+        },
+        endInterval () {
+            clearInterval(this.playInterval);
+            this.playing = false;
+            this.auto_update = true;
+        },
+        stopPlayRanklist () {
+            this.playing = false;
+            clearInterval(this.playInterval);
+            this.scoreboard = this.backup_data;
+            this.backup_data = [];
+            this.auto_update = true;
+        },
+        format_date: function (second, mode = 0) {
+            const fill_zero = function (str) {
+                if (str.length < 2) {
+                    return "0" + str;
+                } else {
+                    return str;
+                }
+            };
+            let hour = String(parseInt(second / 3600));
+            hour = fill_zero(hour);
 
-      if (cidArr.length > 1) {
-        that.title = cidArr.join(",")
-        work()
-      } else {
-        cid = cidArr.shift()
-        $.get("/api/scoreboard/" + cid, () => {
-          $.get("/api/scoreboard/" + cid, function (d) {
-            if (d.status !== "OK" && !d.statement) {
-              that.state = false
-              that.submitter = {}
-              let str = "根据设置，内容非公开"
-              str = str.replace(/\n/g, "<br>")
-              that.errormsg = str
-              return
+            let minute = String(parseInt((second - hour * 3600) / 60));
+            minute = fill_zero(minute);
+            let sec = String(second % 60);
+            sec = fill_zero(sec);
+            if (mode) {
+                return hour + "：" + minute + "：" + sec;
+            } else { return hour + ":" + minute + ":" + sec; }
+        },
+        format_color: function (num) {
+            let str = num.toString(16);
+            if (num < 16) {
+                return "0" + str + "0" + str;
+            } else {
+                return "" + str + "" + str;
             }
-            finished = true
-            that.total = d.total
-            that.users = d.users
-            that.start_time = window.start_time = dayjs(d.start_time)
-            _.forEach(d.data, function (val) {
-              val.start_time = dayjs(d.start_time)
-            })
+        },
+        detect_place: function (ip) {
+            if (!ip) {
+                return "未知";
+            }
+            return utils.detectIP({
+                intranet_ip: ip,
+                place: ""
+            });
+        },
+        convertHTML: function (str) {
+            let d = document.createElement("div");
+            d.innerHTML = str;
+            return d.innerText;
+        },
+        decodeHTML: function (str) {
+            if (typeof str !== "string") {
+                str = "";
+            }
+            return str.replace("·", "&middot;");
+        },
+        exportXLS: function () {
+            let doc = document.getElementById("save");
+            let plain_text = "<html xmlns:o=\"urn:schemas-microsoft-com:office:office\" xmlns:x=\"urn:schemas-microsoft-com:office:excel\" xmlns=\"http://www.w3.org/TR/REC-html40\">" + "<head><meta http-equiv='Content-Type' content='application/vnd.ms-excel; charset=utf-8' /></head>";
+            plain_text += "<center><h3>Contest " + this.cid + " " + this.title + "</h3></center>";
+            plain_text += "<table border=1>" + doc.innerHTML.replace("<tbody>", "").replace("</tbody>", "");
+            plain_text += "<tr><td colspan='8'>环境指纹指根据用户的硬件环境及IP地址不同而产生的不同的指纹</td></tr>";
+            plain_text += "<tr><td colspan='8'>硬件指纹指的是不受IP影响的指纹</td></tr>";
+            plain_text += "<tr><td colspan='8'>若环境指纹与硬件指纹均唯一，代表用户使用相同设备在相同地点完成提交</td></tr>";
+            plain_text += "<tr><td colspan='8'>若硬件指纹唯一而环境指纹不唯一，代表同型号机器在不同IP地址提交</td></tr>";
+            plain_text += "<tr><td colspan='8'>若硬件指纹不唯一，代表使用了多台设备进行提交</td></tr>";
+            plain_text += "</table></html>";
+            const wopts = { bookType: "xlsx", bookSST: false, type: "binary" };// 这里的数据是用来定义导出的格式类型
+            // const wopts = { bookType: 'csv', bookSST: false, type: 'binary' };//ods格式
+            // const wopts = { bookType: 'ods', bookSST: false, type: 'binary' };//ods格式
+            // const wopts = { bookType: 'xlsb', bookSST: false, type: 'binary' };//xlsb格式
+            // const wopts = { bookType: 'fods', bookSST: false, type: 'binary' };//fods格式
+            // const wopts = { bookType: 'biff2', bookSST: false, type: 'binary' };//xls格式
 
-            that.scoreboard = d.data
-            submission_collection = d.data
-            data = d.data
-            if (typeof d.title === "string" && d.title.length === 0) {
-              d.title = "未设置标题"
+            function downloadExl (data, type) {
+                const wb = { SheetNames: ["Sheet1"], Sheets: {}, Props: {} };
+                wb.Sheets["Sheet1"] = XLSX.utils.table_to_sheet(data);// 通过json_to_sheet转成单页(Sheet)数据
+                saveAs(new Blob([s2ab(XLSX.write(wb, wopts))], { type: "application/octet-stream" }), "这里是下载的文件名" + "." + (wopts.bookType === "biff2" ? "xls" : wopts.bookType));
             }
-            that.title = d.title
-          })
-        })
-      }
-    })()
-  },
-  sockets: {
-    submit: function (data) {
-      this.handleNewSubmit(data)
+
+            function s2ab (s) {
+                if (typeof ArrayBuffer !== "undefined") {
+                    let buf = new ArrayBuffer(s.length);
+                    let view = new Uint8Array(buf);
+                    for (let i = 0; i !== s.length; ++i) view[i] = s.charCodeAt(i) & 0xFF;
+                    return buf;
+                } else {
+                    let buf = new Array(s.length);
+                    for (let i = 0; i !== s.length; ++i) buf[i] = s.charCodeAt(i) & 0xFF;
+                    return buf;
+                }
+            }
+
+            // downloadExl(doc);
+            let blob;
+            blob = new Blob([plain_text], { type: "application/vnd.ms-excel;charset=UTF-8;" });
+            if (convert_flag) {
+                saveAs(blob, "Contest " + this.cid + " 多个contest.xls");
+            } else { saveAs(blob, "Contest " + this.cid + " " + this.title + ".xls"); }
+            // var table = TableExport(document.getElementById("save"));
+            // var d = table.getExportData().save.xlsx;
+            // var filename = "Contest " + this.cid;
+            // filename = filename.substring(0,31);
+            // table.export2file(d.data,d.mimeType,filename,d.fileExtension,d.merges)
+        },
+        handleNewSubmit: function (data) {
+            if (parseInt(data.contest_id) === parseInt(this.cid)) {
+                if (data.finish === 1) {
+                    let ndata = {
+                        nick: data.nick,
+                        user_id: data.user_id,
+                        start_time: this.start_time,
+                        avatar: 0,
+                        in_date: data.in_date,
+                        num: parseInt(data.num),
+                        result: data.state
+                    };
+                    if (!this.auto_update) {
+                        this.waiting_queue.push(ndata);
+                    } else {
+                        this.scoreboard = ndata;
+                    }
+                }
+            }
+        }
     },
-    result: function (data) {
-      this.handleNewSubmit(data)
+    watch: {
+        auto_update: function () {
+            while (this.waiting_queue.length > 0) {
+                this.scoreboard = this.waiting_queue.shift();
+            }
+        },
+        add_name: function (newVal) {
+            let that = this;
+            if (!newVal) return;
+            for (let i = 0; i < this.submitter.length; ++i) {
+                $.get("/api/user/nick/" + this.decodeHTML(this.submitter[i].nick), function (data) {
+                    if (data && data.data && data.data.length > 0) {
+                        let nick = data.nick;
+                        let nickArray = data.data;
+                        let user_id = "";
+                        for (let j = 0; j < nickArray.length; ++j) {
+                            if (!isNaN(nickArray[j].user_id)) {
+                                user_id = nickArray[j].user_id;
+                                break;
+                            }
+                        }
+                        for (let j = 0; j < that.submitter.length; ++j) {
+                            if (that.decodeHTML(that.submitter[j].nick) === nick) {
+                                that.submitter[j].real_name = user_id;
+                                break;
+                            }
+                        }
+                    }
+                });
+            }
+        }
+    },
+    updated: function () {
+        const new_title = "ContestRank: " + this.title;
+        if (document.title !== new_title) {
+            document.title = new_title;
+        }
+        $("#rank").find("tr").each(function () {
+            $(this).find("td").eq(2).css({
+                position: "sticky",
+                left: $(this).find("td").eq(2).prev().outerWidth() + $(this).find("td").eq(1).prev().outerWidth(),
+                borderRight: "1px solid rgba(34,36,38,.1)"
+            });
+            $(this).find("td").eq(1).css({
+                position: "sticky",
+                left: $(this).find("td").eq(1).prev().outerWidth()
+            });
+        });
+    },
+    mounted: function () {
+        window.datas = [];
+        submission_collection = [];
+        document.title = `Contest Rank ${this.cid} -- ${document.title}`;
+        const that = this;
+        bindDragEvent();
+        (() => {
+            let cid = this.$route.params.contest_id;
+            let cidArr = [];
+            if (cid.indexOf(",") !== -1) {
+                cidArr = cid.split(",");
+            } else {
+                cidArr = [cid];
+            }
+            let cnt = 0;
+            let data = [];
+            let users = new Set();
+            let finished = false;
+
+            function work () {
+                cid = cidArr.shift();
+                $.get("/api/scoreboard/" + cid, () => {
+                    $.get("/api/scoreboard/" + cid, function (d) {
+                        if (d.status !== "OK") {
+                            that.state = false;
+                            that.submitter = {};
+                            let str;
+                            if (d.contest_mode === true) {
+                                str = "根据设置，内容非公开";
+                            } else {
+                                str = "Contest " + cid + ":\n" + d.statement;
+                            }
+                            str = str.replace(/\n/g, "<br>");
+                            that.errormsg = str;
+                            return;
+                        }
+                        _.forEach(d.data, function (val) {
+                            val.num += cnt;
+                            val.start_time = dayjs(d.start_time);
+                        });
+                        _.forEach(d.data, function (val) {
+                            data.push(val);
+                        });
+                        _.forEach(d.users, function (val) {
+                            users.add(val);
+                        });
+
+                        cnt += d.total;
+
+                        if (cidArr.length > 0) {
+                            convert_flag = true;
+                            work();
+                        } else {
+                            finished = true;
+                            that.total = cnt;
+                            that.users = Array.from(users);
+                            that.scoreboard = data;
+                        }
+                    });
+                });
+            }
+
+            if (cidArr.length > 1) {
+                that.title = cidArr.join(",");
+                work();
+            } else {
+                cid = cidArr.shift();
+                $.get("/api/scoreboard/" + cid, () => {
+                    $.get("/api/scoreboard/" + cid, function (d) {
+                        if (d.status !== "OK" && !d.statement) {
+                            that.state = false;
+                            that.submitter = {};
+                            let str = "根据设置，内容非公开";
+                            str = str.replace(/\n/g, "<br>");
+                            that.errormsg = str;
+                            return;
+                        }
+                        finished = true;
+                        that.total = d.total;
+                        that.users = d.users;
+                        that.start_time = window.start_time = dayjs(d.start_time);
+                        _.forEach(d.data, function (val) {
+                            val.start_time = dayjs(d.start_time);
+                        });
+
+                        that.scoreboard = d.data;
+                        submission_collection = d.data;
+                        data = d.data;
+                        if (typeof d.title === "string" && d.title.length === 0) {
+                            d.title = "未设置标题";
+                        }
+                        that.title = d.title;
+                    });
+                });
+            }
+        })();
+    },
+    sockets: {
+        submit: function (data) {
+            this.handleNewSubmit(data);
+        },
+        result: function (data) {
+            this.handleNewSubmit(data);
+        }
     }
-  }
-}
+};
 </script>
 
 <style scoped>

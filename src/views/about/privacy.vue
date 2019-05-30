@@ -42,14 +42,14 @@
 </template>
 
 <script>
-import mixins from "../../mixin/init"
+import mixins from "../../mixin/init";
 export default {
-  name: "privacy",
-  mixins: [mixins],
-  mounted () {
-    document.title = `Privacy -- ${document.title}`
-  }
-}
+    name: "privacy",
+    mixins: [mixins],
+    mounted () {
+        document.title = `Privacy -- ${document.title}`;
+    }
+};
 </script>
 
 <style scoped>

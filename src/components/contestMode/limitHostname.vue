@@ -8,14 +8,14 @@
 
 <script>
 export default {
-  name: "limitHostname",
-  props: {
-    address: {
-      type: String,
-      default: location.href
+    name: "limitHostname",
+    props: {
+        address: {
+            type: String,
+            default: location.href
+        }
     }
-  }
-}
+};
 </script>
 
 <style scoped>

@@ -16,45 +16,45 @@
 </template>
 
 <script>
-import mixins from "../../mixin/init"
-import markdownIt from "../../lib/markdownIt/markdownIt"
+import mixins from "../../mixin/init";
+import markdownIt from "../../lib/markdownIt/markdownIt";
 
-const $ = require("jquery")
+const $ = require("jquery");
 export default {
-  name: "broadcast",
-  mixins: [mixins],
-  data () {
-    return {
-      contents: ""
-    }
-  },
-  computed: {
-    renderContents () {
-      return markdownIt.render(this.contents)
-    }
-  },
-  mounted () {
-    document.title = `User broadcase -- ${document.title}`
-  },
-  methods: {
-    submit () {
-      this.$socket.emit("msg", {
-        user_id: this.$store.getters.user_id,
-        nick: this.$store.getters.nick,
-        content: this.renderContents
-      })
+    name: "broadcast",
+    mixins: [mixins],
+    data () {
+        return {
+            contents: ""
+        };
     },
-    test () {
-      const data = {
-        user_id: this.$store.getters.user_id,
-        nick: this.$store.getters.nick,
-        content: this.renderContents
-      }
-      $(".item.online_num").attr("data-html", "<div class='header'>From:" + data["user_id"] + "<br>" + data["nick"] + "</div><div class='content'>" + data["content"] + "</div>")
-        .popup("show").popup("set position", "bottom center")
+    computed: {
+        renderContents () {
+            return markdownIt.render(this.contents);
+        }
+    },
+    mounted () {
+        document.title = `User broadcase -- ${document.title}`;
+    },
+    methods: {
+        submit () {
+            this.$socket.emit("msg", {
+                user_id: this.$store.getters.user_id,
+                nick: this.$store.getters.nick,
+                content: this.renderContents
+            });
+        },
+        test () {
+            const data = {
+                user_id: this.$store.getters.user_id,
+                nick: this.$store.getters.nick,
+                content: this.renderContents
+            };
+            $(".item.online_num").attr("data-html", "<div class='header'>From:" + data["user_id"] + "<br>" + data["nick"] + "</div><div class='content'>" + data["content"] + "</div>")
+                .popup("show").popup("set position", "bottom center");
+        }
     }
-  }
-}
+};
 </script>
 
 <style scoped>

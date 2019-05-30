@@ -16,128 +16,128 @@
 </template>
 
 <script>
-import leftPanel from "./sidePage/leftPanel"
-import rightPanel from "./sidePage/rightPanel"
+import leftPanel from "./sidePage/leftPanel";
+import rightPanel from "./sidePage/rightPanel";
 
 export default {
-  name: "sideProblemView.vue",
-  components: {
-    leftPanel,
-    rightPanel
-  },
-  props: {
-    title: {
-      type: String,
-      default: ""
+    name: "sideProblemView.vue",
+    components: {
+        leftPanel,
+        rightPanel
     },
-    source_code: {
-      type: String,
-      default: ""
-    },
-    time: {
-      type: String,
-      default: ""
-    },
-    memory: {
-      type: String,
-      default: ""
-    },
-    spj: {
-      type: Boolean,
-      default: false
-    },
-    submit: {
-      type: String,
-      default: "0"
-    },
-    accepted: {
-      type: String,
-      default: "0"
-    },
-    original_id: {
-      type: Number,
-      default: 0
-    },
-    iseditor: {
-      type: Boolean,
-      default: false
-    },
-    isadmin: {
-      type: Boolean,
-      default: false
-    },
-    description: {
-      type: String,
-      default: ""
-    },
-    input: {
-      type: String,
-      default: ""
-    },
-    output: {
-      type: String,
-      default: ""
-    },
-    sampleinput: {
-      type: String,
-      default: ""
-    },
-    sampleoutput: {
-      type: String,
-      default: ""
-    },
-    hint: {
-      type: String,
-      default: ""
-    },
-    uploader: {
-      type: String,
-      default: "Administrator"
-    },
-    switch_screen: {
-      type: Function,
-      default: () => () => undefined
-    },
-    normal_problem: {
-      type: Boolean,
-      default: true
-    },
-    source: {
-      type: String,
-      default: ""
-    },
-    problem_id: {
-      type: Number,
-      default: 0
-    },
-    lang_list: {
-      type: Array,
-      default: () => []
-    },
-    do_submit: {
-      type: Function,
-      default: () => {
-      }
-    },
-    pre_test_run: {
-      type: Function,
-      default: () => {
-      }
-    },
-    prepend: {
-      type: Object,
-      default: () => {
-        return {}
-      }
-    },
-    append: {
-      type: Object,
-      default: () => {
-        return {}
-      }
+    props: {
+        title: {
+            type: String,
+            default: ""
+        },
+        source_code: {
+            type: String,
+            default: ""
+        },
+        time: {
+            type: String,
+            default: ""
+        },
+        memory: {
+            type: String,
+            default: ""
+        },
+        spj: {
+            type: Boolean,
+            default: false
+        },
+        submit: {
+            type: String,
+            default: "0"
+        },
+        accepted: {
+            type: String,
+            default: "0"
+        },
+        original_id: {
+            type: Number,
+            default: 0
+        },
+        iseditor: {
+            type: Boolean,
+            default: false
+        },
+        isadmin: {
+            type: Boolean,
+            default: false
+        },
+        description: {
+            type: String,
+            default: ""
+        },
+        input: {
+            type: String,
+            default: ""
+        },
+        output: {
+            type: String,
+            default: ""
+        },
+        sampleinput: {
+            type: String,
+            default: ""
+        },
+        sampleoutput: {
+            type: String,
+            default: ""
+        },
+        hint: {
+            type: String,
+            default: ""
+        },
+        uploader: {
+            type: String,
+            default: "Administrator"
+        },
+        switch_screen: {
+            type: Function,
+            default: () => () => undefined
+        },
+        normal_problem: {
+            type: Boolean,
+            default: true
+        },
+        source: {
+            type: String,
+            default: ""
+        },
+        problem_id: {
+            type: Number,
+            default: 0
+        },
+        lang_list: {
+            type: Array,
+            default: () => []
+        },
+        do_submit: {
+            type: Function,
+            default: () => {
+            }
+        },
+        pre_test_run: {
+            type: Function,
+            default: () => {
+            }
+        },
+        prepend: {
+            type: Object,
+            default: () => {
+                return {};
+            }
+        },
+        append: {
+            type: Object,
+            default: () => {
+                return {};
+            }
+        }
     }
-  }
-}
+};
 </script>
 
 <style scoped>

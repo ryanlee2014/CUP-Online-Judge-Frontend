@@ -7,14 +7,14 @@
 
 <script>
 export default {
-  name: "LimitHostname",
-  props: {
-    content: {
-      type: String,
-      default: ""
+    name: "LimitHostname",
+    props: {
+        content: {
+            type: String,
+            default: ""
+        }
     }
-  }
-}
+};
 </script>
 
 <style scoped>

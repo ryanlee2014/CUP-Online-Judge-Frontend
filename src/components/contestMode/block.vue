@@ -8,8 +8,8 @@
 
 <script>
 export default {
-  name: "block"
-}
+    name: "block"
+};
 </script>
 
 <style scoped>

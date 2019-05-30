@@ -46,39 +46,39 @@
 </template>
 
 <script>
-import mixins from "../../../../mixin/init"
+import mixins from "../../../../mixin/init";
 export default {
-  name: "aceThemeSelector",
-  mixins: [mixins],
-  props: {
-    value: {
-      type: String,
-      default: "ace/theme/monokai"
-    }
-  },
-  data () {
-    return {
-      theme: "ace/theme/monokai"
-    }
-  },
-  watch: {
-    value (val) {
-      if (this.theme !== val) {
-        if (val.includes("ace")) {
-          this.theme = val
+    name: "aceThemeSelector",
+    mixins: [mixins],
+    props: {
+        value: {
+            type: String,
+            default: "ace/theme/monokai"
         }
-      }
     },
-    theme (val) {
-      this.$emit("input", val)
+    data () {
+        return {
+            theme: "ace/theme/monokai"
+        };
+    },
+    watch: {
+        value (val) {
+            if (this.theme !== val) {
+                if (val.includes("ace")) {
+                    this.theme = val;
+                }
+            }
+        },
+        theme (val) {
+            this.$emit("input", val);
+        }
+    },
+    mounted () {
+        if (this.value.includes("ace")) {
+            this.theme = this.value;
+        }
     }
-  },
-  mounted () {
-    if (this.value.includes("ace")) {
-      this.theme = this.value
-    }
-  }
-}
+};
 </script>
 
 <style scoped>

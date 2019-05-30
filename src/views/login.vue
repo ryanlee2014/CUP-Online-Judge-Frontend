@@ -55,57 +55,57 @@
 </template>
 
 <script>
-import mixins from "../mixin/init"
+import mixins from "../mixin/init";
 
-const $ = require("jquery")
-window.$ = window.jQuery = $
+const $ = require("jquery");
+window.$ = window.jQuery = $;
 export default {
-  name: "login",
-  mixins: [mixins],
-  mounted () {
-    document.title = `Login -- ${document.title}`
-  },
-  data: function () {
-    return {
-      user_id: "",
-      password: "",
-      captcha: "",
-      url_prefix: window.url_prefix
+    name: "login",
+    mixins: [mixins],
+    mounted () {
+        document.title = `Login -- ${document.title}`;
+    },
+    data: function () {
+        return {
+            user_id: "",
+            password: "",
+            captcha: "",
+            url_prefix: window.url_prefix
+        };
+    },
+    methods: {
+        login: function () {
+            const that = this;
+            $(".ui.error.message").hide();
+            $(".ui.fluid.large.teal.button").addClass("loading");
+            this.axios.defaults.withCredentials = true;
+            this.axios.post("/api/login/newlogin", this.$data)
+                .then(response => {
+                    $(".ui.fluid.large.teal.button").removeClass("loading");
+                    if (response.data.status === "OK") {
+                        this.$root.$store.commit("loginMutate", { login: true });
+                        sessionStorage.isLogined = "true";
+                        this.$socket.disconnect();
+                        setTimeout(() => this.$socket.connect(), 700);
+                        this.$store.dispatch("NavStatus");
+                        if (that.$route.query.redirect) {
+                            this.$router.push({ path: this.$route.query.redirect });
+                        } else {
+                            this.$router.push({ path: "/" });
+                        }
+                    } else {
+                        $("#vcode_graph").attr("src", `/api/captcha?from=login&ramdom=${Math.random()}`);
+                        $(".ui.middle.aligned.center.aligned.grid .column").transition("shake");
+                        if (response.data.statement.match("captcha doesn't match")) {
+                            $(".ui.error.message").html("验证码错误").show();
+                        } else {
+                            $(".ui.error.message").html("账号或密码错误").show();
+                        }
+                    }
+                });
+        }
     }
-  },
-  methods: {
-    login: function () {
-      const that = this
-      $(".ui.error.message").hide()
-      $(".ui.fluid.large.teal.button").addClass("loading")
-      this.axios.defaults.withCredentials = true
-      this.axios.post("/api/login/newlogin", this.$data)
-        .then(response => {
-          $(".ui.fluid.large.teal.button").removeClass("loading")
-          if (response.data.status === "OK") {
-            this.$root.$store.commit("loginMutate", { login: true })
-            sessionStorage.isLogined = "true"
-            this.$socket.disconnect()
-            setTimeout(() => this.$socket.connect(), 700)
-            this.$store.dispatch("NavStatus")
-            if (that.$route.query.redirect) {
-              this.$router.push({ path: this.$route.query.redirect })
-            } else {
-              this.$router.push({ path: "/" })
-            }
-          } else {
-            $("#vcode_graph").attr("src", `/api/captcha?from=login&ramdom=${Math.random()}`)
-            $(".ui.middle.aligned.center.aligned.grid .column").transition("shake")
-            if (response.data.statement.match("captcha doesn't match")) {
-              $(".ui.error.message").html("验证码错误").show()
-            } else {
-              $(".ui.error.message").html("账号或密码错误").show()
-            }
-          }
-        })
-    }
-  }
-}
+};
 </script>
 
 <style scoped>

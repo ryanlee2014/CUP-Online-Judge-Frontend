@@ -22,19 +22,19 @@
 
 <script>
 export default {
-  name: "errorView",
-  props: {
-    errormsg: {
-      type: String,
-      default: ""
+    name: "errorView",
+    props: {
+        errormsg: {
+            type: String,
+            default: ""
+        }
+    },
+    data () {
+        return {
+            location
+        };
     }
-  },
-  data () {
-    return {
-      location
-    }
-  }
-}
+};
 </script>
 
 <style scoped>

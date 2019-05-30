@@ -73,26 +73,26 @@
 
 <script>
 export default {
-  name: "Statistics",
-  props: {
-    statistics: {
-      type: Object,
-      default: () => { return {} }
-    },
-    cid: {
-      type: Number,
-      default: 0
-    },
-    finish: {
-      type: Boolean,
-      default: false
-    },
-    language_name: {
-      type: Object,
-      default: () => { return {} }
+    name: "Statistics",
+    props: {
+        statistics: {
+            type: Object,
+            default: () => { return {}; }
+        },
+        cid: {
+            type: Number,
+            default: 0
+        },
+        finish: {
+            type: Boolean,
+            default: false
+        },
+        language_name: {
+            type: Object,
+            default: () => { return {}; }
+        }
     }
-  }
-}
+};
 </script>
 
 <style scoped>

@@ -25,35 +25,35 @@
 </template>
 
 <script>
-import SocketMenu from "../../components/SocketMenu"
+import SocketMenu from "../../components/SocketMenu";
 export default {
-  name: "Small",
-  components: {
-    SocketMenu
-  },
-  props: {
-    nick: {
-      type: String,
-      default: ""
+    name: "Small",
+    components: {
+        SocketMenu
     },
-    logined: {
-      type: Boolean,
-      default: false
-    },
-    user: {
-      type: Number,
-      default: 0
-    },
-    judger: {
-      type: Number,
-      default: 0
-    },
-    connected: {
-      type: Boolean,
-      default: false
+    props: {
+        nick: {
+            type: String,
+            default: ""
+        },
+        logined: {
+            type: Boolean,
+            default: false
+        },
+        user: {
+            type: Number,
+            default: 0
+        },
+        judger: {
+            type: Number,
+            default: 0
+        },
+        connected: {
+            type: Boolean,
+            default: false
+        }
     }
-  }
-}
+};
 </script>
 
 <style scoped>

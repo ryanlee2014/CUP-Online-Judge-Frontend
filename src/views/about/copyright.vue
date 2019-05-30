@@ -15,14 +15,14 @@
 </template>
 
 <script>
-import mixins from "../../mixin/init"
+import mixins from "../../mixin/init";
 export default {
-  name: "copyright",
-  mixins: [mixins],
-  data () {
-    document.title = `Copyright -- ${document.title}`
-  }
-}
+    name: "copyright",
+    mixins: [mixins],
+    data () {
+        document.title = `Copyright -- ${document.title}`;
+    }
+};
 </script>
 
 <style scoped>

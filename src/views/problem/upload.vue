@@ -30,28 +30,28 @@
 </template>
 
 <script>
-import mixins from "../../mixin/init"
+import mixins from "../../mixin/init";
 
 export default {
-  name: "upload",
-  mixins: [mixins],
-  data: function () {
-    return {
-      fileStatus: "选择文件"
-    }
-  },
-  mounted () {
-    document.title = `Upload problem -- ${document.title}`
-  },
-  methods: {
-    selectFile: function () {
-      $("#file").click()
+    name: "upload",
+    mixins: [mixins],
+    data: function () {
+        return {
+            fileStatus: "选择文件"
+        };
     },
-    fileChange: function ($event) {
-      this.fileStatus = $event.target.files[0].name
+    mounted () {
+        document.title = `Upload problem -- ${document.title}`;
+    },
+    methods: {
+        selectFile: function () {
+            $("#file").click();
+        },
+        fileChange: function ($event) {
+            this.fileStatus = $event.target.files[0].name;
+        }
     }
-  }
-}
+};
 </script>
 
 <style scoped>

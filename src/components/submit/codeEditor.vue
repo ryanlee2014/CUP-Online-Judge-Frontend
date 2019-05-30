@@ -133,130 +133,130 @@
 
 <script>
 const defaultConfig = {
-  lang: "c_cpp",
-  theme: "monokai",
-  options: {
-    useSoftTabs: true,
-    tabSize: 4
-  }
-}
-const ace = require("brace")
+    lang: "c_cpp",
+    theme: "monokai",
+    options: {
+        useSoftTabs: true,
+        tabSize: 4
+    }
+};
+const ace = require("brace");
 export default {
-  name: "codeEditor",
-  data () {
-    return {
-      temp_value: (() => this.value)(),
-      fontSize: 18,
-      editor: null,
-      auto_detect: false,
-      submitDisabled: false,
-      hide_warning: true
-    }
-  },
-  props: {
-    prepend: {
-      type: Boolean,
-      default: false
+    name: "codeEditor",
+    data () {
+        return {
+            temp_value: (() => this.value)(),
+            fontSize: 18,
+            editor: null,
+            auto_detect: false,
+            submitDisabled: false,
+            hide_warning: true
+        };
     },
-    append: {
-      type: Boolean,
-      default: false
+    props: {
+        prepend: {
+            type: Boolean,
+            default: false
+        },
+        append: {
+            type: Boolean,
+            default: false
+        },
+        value: {
+            type: String,
+            default: ""
+        },
+        iscontest: {
+            type: Boolean,
+            default: false
+        },
+        config: {
+            type: Object,
+            default: function () {
+                return defaultConfig;
+            }
+        },
+        selected_language: {
+            type: Number,
+            default: 0
+        },
+        lang_list: {
+            type: Array,
+            default: () => []
+        },
+        current_prepend: {
+            type: String,
+            default: ""
+        },
+        current_append: {
+            type: String,
+            default: ""
+        }
     },
-    value: {
-      type: String,
-      default: ""
+    watch: {
+        value: function (val, oldVal) {
+            this.temp_value = val;
+        },
+        temp_value: function (val, oldVal) {
+            this.$emit("input", val);
+        },
+        selected_language: function (val, oldVal) {
+            this.$emit("valueChange", { key: "selected_language", value: val });
+        }
     },
-    iscontest: {
-      type: Boolean,
-      default: false
+    methods: {
+        resize: function ($event) {
+            const size = $event.target.value;
+            localStorage.setItem("font-size", size);
+            this.fontSize = size;
+        },
+        do_submit: function () {
+            // TODO: complete do_submit
+        },
+        pre_test_run: function () {
+            // TODO: complete pre_test_run
+        }
     },
-    config: {
-      type: Object,
-      default: function () {
-        return defaultConfig
-      }
+    computed: {
+        editorConfig () {
+            return Object.assign({}, defaultConfig, this.config);
+        }
     },
-    selected_language: {
-      type: Number,
-      default: 0
+    beforeDestroy () {
+        this.editor.destory();
+        this.editor.container.remove();
     },
-    lang_list: {
-      type: Array,
-      default: () => []
-    },
-    current_prepend: {
-      type: String,
-      default: ""
-    },
-    current_append: {
-      type: String,
-      default: ""
-    }
-  },
-  watch: {
-    value: function (val, oldVal) {
-      this.temp_value = val
-    },
-    temp_value: function (val, oldVal) {
-      this.$emit("input", val)
-    },
-    selected_language: function (val, oldVal) {
-      this.$emit("valueChange", { key: "selected_language", value: val })
-    }
-  },
-  methods: {
-    resize: function ($event) {
-      const size = $event.target.value
-      localStorage.setItem("font-size", size)
-      this.fontSize = size
-    },
-    do_submit: function () {
-      // TODO: complete do_submit
-    },
-    pre_test_run: function () {
-      // TODO: complete pre_test_run
-    }
-  },
-  computed: {
-    editorConfig () {
-      return Object.assign({}, defaultConfig, this.config)
-    }
-  },
-  beforeDestroy () {
-    this.editor.destory()
-    this.editor.container.remove()
-  },
-  mounted () {
-    let vm = this
-    let {
-      lang,
-      theme
-    } = this.editorConfig
-    let editor
+    mounted () {
+        let vm = this;
+        let {
+            lang,
+            theme
+        } = this.editorConfig;
+        let editor;
 
-    lang === "html" && require("brace/ext/emmet")
-    require("brace/ext/language_tools")
-    require("brace/mode/" + lang)
-    require("brace/theme/" + theme)
-    require("brace/snippets/" + lang)
+        lang === "html" && require("brace/ext/emmet");
+        require("brace/ext/language_tools");
+        require("brace/mode/" + lang);
+        require("brace/theme/" + theme);
+        require("brace/snippets/" + lang);
 
-    this.editor = editor = ace.edit(this.$el)
+        this.editor = editor = ace.edit(this.$el);
 
-    editor.setTheme("ace/theme/" + theme)
-    editor.setOption("enableEmmet", true)
-    editor.getSession().setMode("ace/mode/" + lang)
-    editor.$blockScrolling = Infinity
-    editor.setFontSize(this.fontSize)
-    editor.setValue(this.value)
-    this.editorConfig.options && editor.setOptions(this.editorConfig.options)
+        editor.setTheme("ace/theme/" + theme);
+        editor.setOption("enableEmmet", true);
+        editor.getSession().setMode("ace/mode/" + lang);
+        editor.$blockScrolling = Infinity;
+        editor.setFontSize(this.fontSize);
+        editor.setValue(this.value);
+        this.editorConfig.options && editor.setOptions(this.editorConfig.options);
 
-    this.$emit("init", editor)
+        this.$emit("init", editor);
 
-    editor.on("change", () => {
-      vm.$emit("input", editor.getValue())
-    })
-  }
-}
+        editor.on("change", () => {
+            vm.$emit("input", editor.getValue());
+        });
+    }
+};
 </script>
 
 <style scoped>

@@ -26,41 +26,41 @@
 </template>
 
 <script>
-import SocketMenu from "../../components/SocketMenu"
+import SocketMenu from "../../components/SocketMenu";
 export default {
-  name: "large",
-  components: {
-    SocketMenu
-  },
-  props: {
-    nick: {
-      type: String,
-      default: ""
+    name: "large",
+    components: {
+        SocketMenu
     },
-    logined: {
-      type: Boolean,
-      default: false
+    props: {
+        nick: {
+            type: String,
+            default: ""
+        },
+        logined: {
+            type: Boolean,
+            default: false
+        },
+        user: {
+            type: Number,
+            default: 0
+        },
+        judger: {
+            type: Number,
+            default: 0
+        },
+        connected: {
+            type: Boolean,
+            default: false
+        }
     },
-    user: {
-      type: Number,
-      default: 0
-    },
-    judger: {
-      type: Number,
-      default: 0
-    },
-    connected: {
-      type: Boolean,
-      default: false
+    methods: {
+        item_active ($event) {
+            console.log($event);
+            return false;
+        }
     }
-  },
-  methods: {
-    item_active ($event) {
-      console.log($event)
-      return false
-    }
-  }
-}
+};
 </script>
 
 <style scoped>

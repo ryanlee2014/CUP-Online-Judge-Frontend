@@ -43,22 +43,22 @@
 </template>
 
 <script>
-const $ = require("jquery")
+const $ = require("jquery");
 export default {
-  name: "other_contest_schedure",
-  data () {
-    return {
-      json: {}
+    name: "other_contest_schedure",
+    data () {
+        return {
+            json: {}
+        };
+    },
+    mounted () {
+        this.axios.get("/recent_contest.json")
+            .then(({ data }) => {
+                this.json = data;
+            });
+        $.get("fresh_contest.php");
     }
-  },
-  mounted () {
-    this.axios.get("/recent_contest.json")
-      .then(({ data }) => {
-        this.json = data
-      })
-    $.get("fresh_contest.php")
-  }
-}
+};
 </script>
 
 <style scoped>

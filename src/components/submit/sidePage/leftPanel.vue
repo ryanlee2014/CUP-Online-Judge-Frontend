@@ -71,97 +71,97 @@
 </template>
 
 <script>
-import markdownIt from "../../../lib/markdownIt/markdownIt"
+import markdownIt from "../../../lib/markdownIt/markdownIt";
 export default {
-  name: "leftPanel",
-  props: {
-    title: {
-      type: String,
-      default: ""
+    name: "leftPanel",
+    props: {
+        title: {
+            type: String,
+            default: ""
+        },
+        time: {
+            type: String,
+            default: ""
+        },
+        memory: {
+            type: String,
+            default: ""
+        },
+        spj: {
+            type: Boolean,
+            default: false
+        },
+        submit: {
+            type: String,
+            default: "0"
+        },
+        accepted: {
+            type: String,
+            default: "0"
+        },
+        original_id: {
+            type: Number,
+            default: 0
+        },
+        iseditor: {
+            type: Boolean,
+            default: false
+        },
+        isadmin: {
+            type: Boolean,
+            default: false
+        },
+        description: {
+            type: String,
+            default: ""
+        },
+        input: {
+            type: String,
+            default: ""
+        },
+        output: {
+            type: String,
+            default: ""
+        },
+        sampleinput: {
+            type: String,
+            default: ""
+        },
+        sampleoutput: {
+            type: String,
+            default: ""
+        },
+        hint: {
+            type: String,
+            default: ""
+        },
+        uploader: {
+            type: String,
+            default: "Administrator"
+        },
+        switch_screen: {
+            type: Function,
+            default: () => () => undefined
+        },
+        normal_problem: {
+            type: Boolean,
+            default: true
+        },
+        source: {
+            type: String,
+            default: ""
+        },
+        problem_id: {
+            type: Number,
+            default: 0
+        }
     },
-    time: {
-      type: String,
-      default: ""
-    },
-    memory: {
-      type: String,
-      default: ""
-    },
-    spj: {
-      type: Boolean,
-      default: false
-    },
-    submit: {
-      type: String,
-      default: "0"
-    },
-    accepted: {
-      type: String,
-      default: "0"
-    },
-    original_id: {
-      type: Number,
-      default: 0
-    },
-    iseditor: {
-      type: Boolean,
-      default: false
-    },
-    isadmin: {
-      type: Boolean,
-      default: false
-    },
-    description: {
-      type: String,
-      default: ""
-    },
-    input: {
-      type: String,
-      default: ""
-    },
-    output: {
-      type: String,
-      default: ""
-    },
-    sampleinput: {
-      type: String,
-      default: ""
-    },
-    sampleoutput: {
-      type: String,
-      default: ""
-    },
-    hint: {
-      type: String,
-      default: ""
-    },
-    uploader: {
-      type: String,
-      default: "Administrator"
-    },
-    switch_screen: {
-      type: Function,
-      default: () => () => undefined
-    },
-    normal_problem: {
-      type: Boolean,
-      default: true
-    },
-    source: {
-      type: String,
-      default: ""
-    },
-    problem_id: {
-      type: Number,
-      default: 0
+    computed: {
+        temp_title: function () {
+            return this.problem_id + ": " + markdownIt.renderRaw(this.title);
+        }
     }
-  },
-  computed: {
-    temp_title: function () {
-      return this.problem_id + ": " + markdownIt.renderRaw(this.title)
-    }
-  }
-}
+};
 </script>
 
 <style scoped>

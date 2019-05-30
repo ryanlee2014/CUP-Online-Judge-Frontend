@@ -108,112 +108,112 @@
 </template>
 
 <script>
-import markdownIt from "../../lib/markdownIt/markdownIt"
-import tableCard from "./components/tableCard"
-const $ = require("jquery")
-window.$ = window.jQuery = $
-require("../../static/js/semantic.min")
+import markdownIt from "../../lib/markdownIt/markdownIt";
+import tableCard from "./components/tableCard";
+const $ = require("jquery");
+window.$ = window.jQuery = $;
+require("../../static/js/semantic.min");
 export default {
-  name: "MainContent",
-  props: {
-    rank: Object
-  },
-  components: {
-    tableCard
-  },
-  data: function () {
-    return {
-      registed_user: 0,
-      acm_user: 0,
-      mode: this.$route.query.acm ? 2 : 1,
-      page: parseInt(this.$route.query.page) || 0,
-      search: this.$route.query.search || "",
-      time_stamp: "",
-      acmmember: { ranklist: [] },
-      retiremember: { ranklist: [] },
-      recent_register: [],
-      markdownIt,
-      ranklistData: {}
+    name: "MainContent",
+    props: {
+        rank: Object
+    },
+    components: {
+        tableCard
+    },
+    data: function () {
+        return {
+            registed_user: 0,
+            acm_user: 0,
+            mode: this.$route.query.acm ? 2 : 1,
+            page: parseInt(this.$route.query.page) || 0,
+            search: this.$route.query.search || "",
+            time_stamp: "",
+            acmmember: { ranklist: [] },
+            retiremember: { ranklist: [] },
+            recent_register: [],
+            markdownIt,
+            ranklistData: {}
+        };
+    },
+    watch: {
+        rank: function (val, oldVal) {
+            this.ranklistData = val;
+        }
+    },
+    computed: {
+        _name: function () {
+            if (this.ranklistData._name) {
+                return this.ranklistData._name;
+            }
+            return {};
+        },
+        ranklist: function () {
+            return this.ranklistData.ranklist;
+        },
+        acmmem: {
+            get: function () {
+                return this.acmmember.ranklist;
+            },
+            set: function (val) {
+                this.acmmember = val;
+            }
+        },
+        retiremem: {
+            get: function () {
+                return this.retiremember.ranklist;
+            },
+            set: function (val) {
+                this.retiremember = val;
+            }
+        }
+    },
+    methods: {
+        convertHTML: function (str) {
+            var doc = document.createElement("div");
+            doc.innerHTML = str;
+            return doc.innerText;
+        },
+        search_user: function ($event) {
+            var that = this;
+            this.search = $event.target.value;
+            $.get("/api/ranklist?page=" + this.page + "&search=" + this.search + "&time_stamp=" + this.time_stamp, function (data) {
+                that.ranklistData = data;
+            });
+        },
+        timestamp: function (time, $event) {
+            var that = this;
+            this.time_stamp = time;
+            $.get("/api/ranklist?page=" + this.page + "&search=" + this.search + "&time_stamp=" + this.time_stamp, function (data) {
+                that.ranklistData = data;
+            });
+        },
+        _page: function (diff, $event) {
+            this.page += diff;
+            var that = this;
+            $.get("/api/ranklist?page=" + this.page + "&search=" + this.search + "&time_stamp=" + this.time_stamp, function (data) {
+                that.ranklistData = data;
+            });
+        }
+    },
+    mounted: function () {
+        var that = this;
+        $.get("/api/ranklist/user", function (data) {
+            that.registed_user = data[0].tot_user;
+            that.acm_user = data[0].acm_user;
+        });
+        $.get("/api/ranklist/acmmember", function (data) {
+            that.acmmem = data;
+        });
+        $.get("/api/ranklist/oldmember", function (data) {
+            that.retiremem = data;
+        });
+        this.axios.get("/api/user/recent_register")
+            .then(({ data }) => {
+                this.recent_register = data.data;
+            });
     }
-  },
-  watch: {
-    rank: function (val, oldVal) {
-      this.ranklistData = val
-    }
-  },
-  computed: {
-    _name: function () {
-      if (this.ranklistData._name) {
-        return this.ranklistData._name
-      }
-      return {}
-    },
-    ranklist: function () {
-      return this.ranklistData.ranklist
-    },
-    acmmem: {
-      get: function () {
-        return this.acmmember.ranklist
-      },
-      set: function (val) {
-        this.acmmember = val
-      }
-    },
-    retiremem: {
-      get: function () {
-        return this.retiremember.ranklist
-      },
-      set: function (val) {
-        this.retiremember = val
-      }
-    }
-  },
-  methods: {
-    convertHTML: function (str) {
-      var doc = document.createElement("div")
-      doc.innerHTML = str
-      return doc.innerText
-    },
-    search_user: function ($event) {
-      var that = this
-      this.search = $event.target.value
-      $.get("/api/ranklist?page=" + this.page + "&search=" + this.search + "&time_stamp=" + this.time_stamp, function (data) {
-        that.ranklistData = data
-      })
-    },
-    timestamp: function (time, $event) {
-      var that = this
-      this.time_stamp = time
-      $.get("/api/ranklist?page=" + this.page + "&search=" + this.search + "&time_stamp=" + this.time_stamp, function (data) {
-        that.ranklistData = data
-      })
-    },
-    _page: function (diff, $event) {
-      this.page += diff
-      var that = this
-      $.get("/api/ranklist?page=" + this.page + "&search=" + this.search + "&time_stamp=" + this.time_stamp, function (data) {
-        that.ranklistData = data
-      })
-    }
-  },
-  mounted: function () {
-    var that = this
-    $.get("/api/ranklist/user", function (data) {
-      that.registed_user = data[0].tot_user
-      that.acm_user = data[0].acm_user
-    })
-    $.get("/api/ranklist/acmmember", function (data) {
-      that.acmmem = data
-    })
-    $.get("/api/ranklist/oldmember", function (data) {
-      that.retiremem = data
-    })
-    this.axios.get("/api/user/recent_register")
-      .then(({ data }) => {
-        this.recent_register = data.data
-      })
-  }
-}
+};
 </script>
 
 <style scoped>

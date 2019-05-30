@@ -11,8 +11,8 @@
 
 <script>
 export default {
-  name: "ContestNotStart"
-}
+    name: "ContestNotStart"
+};
 </script>
 
 <style scoped>

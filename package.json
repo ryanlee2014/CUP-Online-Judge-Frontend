@@ -43,6 +43,7 @@
     "platform": "^1.3.5",
     "postcss-import": "^12.0.1",
     "socket.io-client": "^2.2.0",
+    "uslug": "^1.0.4",
     "vue": "^2.6.10",
     "vue-axios": "^2.1.4",
     "vue-lazyload": "^1.2.6",
@@ -94,13 +95,21 @@
       "no-useless-escape": "off",
       "no-undef": "off",
       "no-cond-assign": "off",
-      "quotes": [1, "double"],
+      "quotes": [
+        1,
+        "double"
+      ],
       "camelcase": "warn",
       "eqeqeq": "warn",
       "no-new": "warn",
       "no-return-assign": "warn",
       "no-mixed-operators": "warn",
-      "no-extend-native": "warn"
+      "no-extend-native": "warn",
+      "semi": ["error", "always"],
+      "indent": [
+        "error",
+        4
+      ]
     }
   },
   "postcss": {

@@ -76,94 +76,94 @@
 
 <script>
 // eslint-disable-next-line no-unused-vars
-import markdownIt from "../../lib/markdownIt/markdownIt"
-const lodash = require("lodash")
+import markdownIt from "../../lib/markdownIt/markdownIt";
+const lodash = require("lodash");
 export default {
-  name: "mainContent",
-  directives: {
-    tableUpdated: {
-      componentUpdated: function () {
-        console.log("directives")
-        $(".ui.sticky.element")
-          .sticky({
-            context: "#problemset",
-            offset: 40,
-            observeChanges: false,
-            refreshOnLoad: true,
-            refreshOnResize: true
-          })
-      }
-    }
-  },
-  props: {
-    data: Object,
-    dim: {
-      type: Boolean,
-      default: function () {
-        return false
-      }
-    },
-    show_tag: Boolean,
-    order: Number,
-    order_target: String,
-    hide_currect: Boolean
-  },
-  data: function () {
-    return {
-      markdownIt,
-      lodash
-    }
-  },
-  computed: {
-    result: function () {
-      const data = this.data
-      const _color = data.color
-      const color = {}
-      let i
-      for (i in _color) {
-        color[i] = _color[i]
-      }
-      color["标签待整理"] = "black"
-      for (i in data.problem) {
-        var label = data.problem[i].label
-        var labels = []
-        for (var j of label ? label.split(" ") : ["标签待整理"]) {
-          labels.push(j)
+    name: "mainContent",
+    directives: {
+        tableUpdated: {
+            componentUpdated: function () {
+                console.log("directives");
+                $(".ui.sticky.element")
+                    .sticky({
+                        context: "#problemset",
+                        offset: 40,
+                        observeChanges: false,
+                        refreshOnLoad: true,
+                        refreshOnResize: true
+                    });
+            }
         }
-        labels.sort(function (a, b) {
-          if (a == "简单" || a == "普通" || a == "困难") {
-            return 1
-          } else if (b == "简单" || b == "普通" || b == "困难") {
-            return -1
-          } else {
-            if (a < b) return -1
-            else if (a == b) return 0
-            else return 1
-          }
-        })
-        data.problem[i].label = labels
-      }
-      const problemArray = typeof data.problem === "undefined" ? [] : data.problem
-      return {
-        color: color,
-        problem: problemArray
-      }
     },
-    filterTableRow: function () {
-      const dim = this.dim
-      const hide_currect = this.hide_currect
-      return this.result.problem.filter(row => !dim && (row.ac == 0 || row.ac == -1 || (row.ac == 1 && !hide_currect)))
-    }
-  },
-  methods: {
-    sort: function (target, event, default_order = 0) {
-      this.$parent.sort(target, event, default_order)
+    props: {
+        data: Object,
+        dim: {
+            type: Boolean,
+            default: function () {
+                return false;
+            }
+        },
+        show_tag: Boolean,
+        order: Number,
+        order_target: String,
+        hide_currect: Boolean
     },
-    tag: function (label, event) {
-      this.$parent.tag(label, event)
+    data: function () {
+        return {
+            markdownIt,
+            lodash
+        };
+    },
+    computed: {
+        result: function () {
+            const data = this.data;
+            const _color = data.color;
+            const color = {};
+            let i;
+            for (i in _color) {
+                color[i] = _color[i];
+            }
+            color["标签待整理"] = "black";
+            for (i in data.problem) {
+                var label = data.problem[i].label;
+                var labels = [];
+                for (var j of label ? label.split(" ") : ["标签待整理"]) {
+                    labels.push(j);
+                }
+                labels.sort(function (a, b) {
+                    if (a == "简单" || a == "普通" || a == "困难") {
+                        return 1;
+                    } else if (b == "简单" || b == "普通" || b == "困难") {
+                        return -1;
+                    } else {
+                        if (a < b) return -1;
+                        else if (a == b) return 0;
+                        else return 1;
+                    }
+                });
+                data.problem[i].label = labels;
+            }
+            const problemArray = typeof data.problem === "undefined" ? [] : data.problem;
+            return {
+                color: color,
+                problem: problemArray
+            };
+        },
+        filterTableRow: function () {
+            const dim = this.dim;
+            const hide_currect = this.hide_currect;
+            return this.result.problem.filter(row => !dim && (row.ac == 0 || row.ac == -1 || (row.ac == 1 && !hide_currect)));
+        }
+    },
+    methods: {
+        sort: function (target, event, default_order = 0) {
+            this.$parent.sort(target, event, default_order);
+        },
+        tag: function (label, event) {
+            this.$parent.tag(label, event);
+        }
     }
-  }
-}
+};
 </script>
 
 <style scoped>

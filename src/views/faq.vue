@@ -6,21 +6,21 @@
 </template>
 
 <script>
-import markdownIt from "../lib/markdownIt/markdownIt"
-import mixins from "../mixin/init"
-import help_content from "../static/help/faq.md"
+import markdownIt from "../lib/markdownIt/markdownIt";
+import mixins from "../mixin/init";
+import help_content from "../static/help/faq.md";
 export default {
-  name: "faq",
-  mixins: [mixins],
-  data: function () {
-    return {
-      html_content: markdownIt.render(help_content)
+    name: "faq",
+    mixins: [mixins],
+    data: function () {
+        return {
+            html_content: markdownIt.render(help_content)
+        };
+    },
+    mounted () {
+        document.title = `FAQ -- ${document.title}`;
     }
-  },
-  mounted () {
-    document.title = `FAQ -- ${document.title}`
-  }
-}
+};
 </script>
 
 <style scoped>

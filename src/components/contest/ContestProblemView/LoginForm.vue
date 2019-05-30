@@ -14,28 +14,28 @@
 </template>
 
 <script>
-const $ = require("jquery")
+const $ = require("jquery");
 export default {
-  name: "LoginForm",
-  data: function () {
-    return {}
-  },
-  mounted: function () {
-    var that = this
-    $("#contest_form").submit(() => {
-      $.post("/api/contest/password/" + this.$route.params.contest_id, {
-        password: $("#contest_pass").val()
-      }, function (data) {
-        if (data.status == "OK") {
-          that.$parent.mode = 0
-        } else {
-          alert(data.statement)
-        }
-      })
-      return false
-    })
-  }
-}
+    name: "LoginForm",
+    data: function () {
+        return {};
+    },
+    mounted: function () {
+        var that = this;
+        $("#contest_form").submit(() => {
+            $.post("/api/contest/password/" + this.$route.params.contest_id, {
+                password: $("#contest_pass").val()
+            }, function (data) {
+                if (data.status == "OK") {
+                    that.$parent.mode = 0;
+                } else {
+                    alert(data.statement);
+                }
+            });
+            return false;
+        });
+    }
+};
 </script>
 
 <style scoped>

@@ -6,7 +6,11 @@
                     <div class="column">
                         <div class="ui card" style="">
                             <div class="image">
-                                <img id="head" :src="img_src" onclick="document.getElementById('myinput').click()"><input type="file" name="pic[]" multiple id="myinput" style="display:none">
+                                <img :src="img_src()" id="head"
+                                     onclick="document.getElementById('myinput').click()"><input id="myinput"
+                                                                                                 multiple name="pic[]"
+                                                                                                 style="display:none"
+                                                                                                 type="file">
                             </div>
                             <div class="content">
                                 <a class="header" href="javascript:buttonclick();"><i class="upload icon"></i>上传头像</a>
@@ -15,7 +19,7 @@
                     </div>
                 </div>
                 <div class="eleven wide column">
-                    <form action="modify.php" method="post">
+                    <form method="post">
                         <div class="ui top attached block header">Update Information</div>
                         <div class="ui bottom attached segment">
                             <table>
@@ -24,7 +28,7 @@
                                         <div class="field">
                                             <label>User ID</label>
                                             <div class="ui disabled input">
-                                                <input size=50 type=text :value="user_id">
+                                                <input :value="user_id" size=50 type=text>
                                             </div>
                                         </div>
                                         <div class="field">
@@ -35,7 +39,8 @@
                                     <div class="three fields">
                                         <div class="field">
                                             <label>Old Password</label>
-                                            <input name="opassword" size=20 type=password placeholder="请输入密码后更改其他信息" v-model="password">
+                                            <input name="opassword" placeholder="请输入密码后更改其他信息" size=20 type=password
+                                                   v-model="password">
                                         </div>
                                         <div class="field">
                                             <label>New Password</label>
@@ -84,17 +89,20 @@
                                     <div class="fields">
                                         <div class="field">
                                             <label></label>
-                                            <input class="ui primary button" value="Submit" name="submit" type="submit" @click="updateInformation">
+                                            <input @click.prevent="updateInformation" class="ui primary button" name="submit" type="submit"
+                                                   value="Submit">
                                         </div>
                                         <div class="field">
                                             <label></label>
-                                            <input class="ui secondary button" value="Reset" name="reset" type="reset" @click="reset">
+                                            <input @click.prevent="reset" class="ui secondary button" name="reset" type="reset"
+                                                   value="Reset">
                                         </div>
                                         <div class="field">
                                             <label>
                                             </label>
                                             <div class="ui button">
-                                                <a href=export_ac_code.php>Download All AC Source</a></div>
+                                                <a href=export_ac_code.php>Download All AC Source</a>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -111,62 +119,65 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex"
+import { mapGetters } from "vuex";
+
 export default {
-  name: "modify",
-  data () {
-    return {
-      blog: "",
-      github: "",
-      biography: "",
-      confirmquestion: "",
-      confirmanswer: "",
-      password: "",
-      newpassword: "",
-      repeatpassword: "",
-      email: "",
-      school: "",
-      nick: this.$store.getters.nick,
-      avatar: this.$store.getters.avatar
-    }
-  },
-  mounted () {
-    this.axios.get(`/api/user/${this.$store.getters.user_id}`)
-      .then(({ data }) => {
-        Object.assign(this, data.data.information)
-      })
-    this.axios.get("/api/reset/password")
-      .then(({ data }) => {
-        Object.assign(this, data.data)
-      })
-  },
-  methods: {
-    updateInformation () {
-      this.axios.post("/api/user/update/profile", this.$data)
-        .then(({ data }) => {
-          if (data.status === "OK") {
-            alert("更改成功")
-            location.reload()
-          } else {
-            alert("服务器遇到错误: \n" + data.statement)
-          }
-        })
+    name: "modify",
+    data () {
+        return {
+            blog: "",
+            github: "",
+            biography: "",
+            confirmquestion: "",
+            confirmanswer: "",
+            password: "",
+            newpassword: "",
+            repeatpassword: "",
+            email: "",
+            school: "",
+            nick: this.$store.getters.nick,
+            avatar: this.$store.getters.avatar
+        };
     },
-    reset () {
-      location.reload()
+    mounted () {
+        this.axios.get(`/api/user/${this.user_id}`)
+            .then(({ data }) => {
+                Object.assign(this, data.data.information);
+            });
+        this.axios.get("/api/reset/password")
+            .then(({ data }) => {
+                if (data.status === "OK") {
+                    this.confirmquestion = data.data;
+                }
+            });
     },
-    img_src () {
-      if (this.avatar) {
-        return `/avatar/${this.user_id}.jpg`
-      } else {
-        return "https://semantic-ui.com/images/wireframe/square-image.png"
-      }
+    methods: {
+        updateInformation () {
+            this.axios.post("/api/user/update/profile", this.$data)
+                .then(({ data }) => {
+                    if (data.status === "OK") {
+                        alert("更改成功");
+                        // location.reload();
+                    } else {
+                        alert("服务器遇到错误: \n" + data.statement);
+                    }
+                });
+        },
+        reset () {
+            location.reload();
+        },
+        img_src () {
+            if (this.avatar) {
+                return `/avatar/${this.user_id}.jpg`;
+            } else {
+                return "https://semantic-ui.com/images/wireframe/square-image.png";
+            }
+        }
+    },
+    computed: {
+        ...mapGetters(["user_id"])
     }
-  },
-  computed: {
-    ...mapGetters(["user_id"])
-  }
-}
+};
 </script>
 
 <style scoped>

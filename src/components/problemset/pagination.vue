@@ -23,34 +23,34 @@
 </template>
 
 <script>
-const $ = require("jquery")
+const $ = require("jquery");
 export default {
-  name: "pagination",
-  props: {
-    total: Number,
-    page_cnt: Number,
-    current_page: Number
-  },
-  data: function () {
-    var width = document.body.clientWidth
-    var container = $(".ui.container").width()
-    if (width > 1127) {
-      width = container
+    name: "pagination",
+    props: {
+        total: Number,
+        page_cnt: Number,
+        current_page: Number
+    },
+    data: function () {
+        var width = document.body.clientWidth;
+        var container = $(".ui.container").width();
+        if (width > 1127) {
+            width = container;
+        }
+        return {
+            total_menu: Math.max(0, parseInt(container * 0.7 / 42) - 4)
+        };
+    },
+    methods: {
+        page: function (event, arrow) {
+            if (arrow) {
+                this.$parent.page(null, arrow);
+            } else {
+                this.$parent.page(parseInt(event.target.innerText) - 1);
+            }
+        }
     }
-    return {
-      total_menu: Math.max(0, parseInt(container * 0.7 / 42) - 4)
-    }
-  },
-  methods: {
-    page: function (event, arrow) {
-      if (arrow) {
-        this.$parent.page(null, arrow)
-      } else {
-        this.$parent.page(parseInt(event.target.innerText) - 1)
-      }
-    }
-  }
-}
+};
 </script>
 
 <style scoped>

@@ -1,5 +1,5 @@
 export default {
-  code: "",
-  language: 0,
-  share: false
-}
+    code: "",
+    language: 0,
+    share: false
+};

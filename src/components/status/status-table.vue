@@ -88,85 +88,85 @@
 </template>
 
 <script>
-import util from "../../lib/util"
+import util from "../../lib/util";
 
-const _ = require("lodash")
-const dayjs = require("dayjs")
+const _ = require("lodash");
+const dayjs = require("dayjs");
 export default {
-  name: "status-table",
-  props: {
-    problem_list: Array,
-    answer_icon: Array,
-    answer_class: Array,
-    target: Object,
-    language_name: Array,
-    result: Array,
-    self: String,
-    isadmin: {
-      type: Boolean,
-      default: false
-    }
-  },
-  data: function () {
-    return {
-      user: {},
-      dayjs
-    }
-  },
-  methods: {
-    memory_parse: function (_memory) {
-      var unit = ["KB", "MB", "GB"]
-      var cnt = 0
-      var memory = parseInt(_memory)
-      while (memory > 1024) {
-        memory /= 1024
-        ++cnt
-      }
-      return memory.toString().substring(0, 5) + unit[cnt]
+    name: "status-table",
+    props: {
+        problem_list: Array,
+        answer_icon: Array,
+        answer_class: Array,
+        target: Object,
+        language_name: Array,
+        result: Array,
+        self: String,
+        isadmin: {
+            type: Boolean,
+            default: false
+        }
     },
-    time_parse: function (_time) {
-      var unit = ["ms", "s"]
-      var cnt = 0
-      var time = parseInt(_time)
-      while (time > 1000) {
-        ++cnt
-        time /= 1000
-      }
-      return time.toString().substring(0, 5) + unit[cnt]
+    data: function () {
+        return {
+            user: {},
+            dayjs
+        };
     },
-    detect_place: function (ip) {
-      if (!ip) {
-        return "未知"
-      }
-      var tmp = {
-        intranet_ip: ip,
-        place: ""
-      }
-      util.detectIP(tmp)
-      return tmp.place
+    methods: {
+        memory_parse: function (_memory) {
+            var unit = ["KB", "MB", "GB"];
+            var cnt = 0;
+            var memory = parseInt(_memory);
+            while (memory > 1024) {
+                memory /= 1024;
+                ++cnt;
+            }
+            return memory.toString().substring(0, 5) + unit[cnt];
+        },
+        time_parse: function (_time) {
+            var unit = ["ms", "s"];
+            var cnt = 0;
+            var time = parseInt(_time);
+            while (time > 1000) {
+                ++cnt;
+                time /= 1000;
+            }
+            return time.toString().substring(0, 5) + unit[cnt];
+        },
+        detect_place: function (ip) {
+            if (!ip) {
+                return "未知";
+            }
+            var tmp = {
+                intranet_ip: ip,
+                place: ""
+            };
+            util.detectIP(tmp);
+            return tmp.place;
+        },
+        infoRoute: function (result) {
+            if (parseInt(result) === 11) {
+                return "compile";
+            }
+            return "runtime";
+        }
     },
-    infoRoute: function (result) {
-      if (parseInt(result) === 11) {
-        return "compile"
-      }
-      return "runtime"
+    computed: {
+        problem_lists: function () {
+            var that = this;
+            _.forEach(this.problem_list, function (i) {
+                that.user[i.user_id] = that.user[i.user_id] || i;
+            });
+            var doc = document.createElement("div");
+            _.forEach(this.problem_list, function (val, i) {
+                doc.innerHTML = that.problem_list[i].nick;
+                that.problem_list[i].nick = doc.innerText;
+            });
+            return this.problem_list;
+        }
     }
-  },
-  computed: {
-    problem_lists: function () {
-      var that = this
-      _.forEach(this.problem_list, function (i) {
-        that.user[i.user_id] = that.user[i.user_id] || i
-      })
-      var doc = document.createElement("div")
-      _.forEach(this.problem_list, function (val, i) {
-        doc.innerHTML = that.problem_list[i].nick
-        that.problem_list[i].nick = doc.innerText
-      })
-      return this.problem_list
-    }
-  }
-}
+};
 </script>
 
 <style scoped>

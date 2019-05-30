@@ -38,38 +38,38 @@
 </template>
 
 <script>
-import markdownIt from "../../../lib/markdownIt/markdownIt"
+import markdownIt from "../../../lib/markdownIt/markdownIt";
 export default {
-  name: "tableCard",
-  props: {
-    _name: {
-      type: Object,
-      default: () => {
-        return {}
-      }
+    name: "tableCard",
+    props: {
+        _name: {
+            type: Object,
+            default: () => {
+                return {};
+            }
+        },
+        content: {
+            type: Array,
+            default: () => []
+        },
+        page: {
+            type: Number,
+            default: 0
+        }
     },
-    content: {
-      type: Array,
-      default: () => []
+    data () {
+        return {
+            markdownIt
+        };
     },
-    page: {
-      type: Number,
-      default: 0
+    methods: {
+        convertHTML: function (str) {
+            const doc = document.createElement("div");
+            doc.innerHTML = str;
+            return doc.innerText;
+        }
     }
-  },
-  data () {
-    return {
-      markdownIt
-    }
-  },
-  methods: {
-    convertHTML: function (str) {
-      const doc = document.createElement("div")
-      doc.innerHTML = str
-      return doc.innerText
-    }
-  }
-}
+};
 </script>
 
 <style scoped>

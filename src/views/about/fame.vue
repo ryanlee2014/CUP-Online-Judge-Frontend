@@ -256,56 +256,56 @@
 </template>
 
 <script>
-import mixins from "../../mixin/init"
+import mixins from "../../mixin/init";
 
-const $ = require("jquery")
-window.$ = window.jQuery = $
-const _ = require("lodash")
+const $ = require("jquery");
+window.$ = window.jQuery = $;
+const _ = require("lodash");
 export default {
-  name: "fame",
-  mixins: [mixins],
-  mounted () {
-    document.title = `Hall of fame -- ${document.title}`
-    this.$Lazyload.$on("loaded", (el) => {
-      const $parent = $(el.el).parent()
-      $parent.find(".sticky").sticky({
-        context: `#${$parent.attr("id")}`,
-        offset: 50
-      })
-    })
-    var $headers = $(".ui.header.contents")
-    var len = $headers.length
-    var list = $("#linkedlist")
-    for (var i = 0; i < len; ++i) {
-      var id = $headers.eq(i).parent().attr("id")
-      var name = $headers.eq(i).text()
-      var ahtml = "<a name='" + id + "' ></a>"
-      $headers.eq(i).append(ahtml)
-      ahtml = "<a class='quick item' href='#" + id + "' >" + name + "</a>"
-      list.append(ahtml)
+    name: "fame",
+    mixins: [mixins],
+    mounted () {
+        document.title = `Hall of fame -- ${document.title}`;
+        this.$Lazyload.$on("loaded", (el) => {
+            const $parent = $(el.el).parent();
+            $parent.find(".sticky").sticky({
+                context: `#${$parent.attr("id")}`,
+                offset: 50
+            });
+        });
+        var $headers = $(".ui.header.contents");
+        var len = $headers.length;
+        var list = $("#linkedlist");
+        for (var i = 0; i < len; ++i) {
+            var id = $headers.eq(i).parent().attr("id");
+            var name = $headers.eq(i).text();
+            var ahtml = "<a name='" + id + "' ></a>";
+            $headers.eq(i).append(ahtml);
+            ahtml = "<a class='quick item' href='#" + id + "' >" + name + "</a>";
+            list.append(ahtml);
+        }
+        this.$nextTick(() => {
+            $(".ui.sticky.left")
+                .sticky({
+                    context: "#mainContent",
+                    offset: 50
+                });
+            $(".quick.item").on("click", function (d) {
+                $([document.documentElement, document.body]).animate({
+                    scrollTop: $(this.getAttribute("href")).offset().top - 50
+                }, 600);
+                return false;
+            });
+        });
+    },
+    updated () {
+        $(".ui.sticky.left")
+            .sticky({
+                context: "#mainContent",
+                offset: 50
+            });
     }
-    this.$nextTick(() => {
-      $(".ui.sticky.left")
-        .sticky({
-          context: "#mainContent",
-          offset: 50
-        })
-      $(".quick.item").on("click", function (d) {
-        $([document.documentElement, document.body]).animate({
-          scrollTop: $(this.getAttribute("href")).offset().top - 50
-        }, 600)
-        return false
-      })
-    })
-  },
-  updated () {
-    $(".ui.sticky.left")
-      .sticky({
-        context: "#mainContent",
-        offset: 50
-      })
-  }
-}
+};
 </script>
 
 <style scoped>

@@ -30,18 +30,18 @@
 </template>
 
 <script>
-import mixins from "../mixin/init"
+import mixins from "../mixin/init";
 
-const dayjs = require("dayjs")
+const dayjs = require("dayjs");
 export default {
-  name: "about",
-  mixins: [mixins],
-  data () {
-    return {
-      dayjs
+    name: "about",
+    mixins: [mixins],
+    data () {
+        return {
+            dayjs
+        };
     }
-  }
-}
+};
 </script>
 
 <style scoped>
