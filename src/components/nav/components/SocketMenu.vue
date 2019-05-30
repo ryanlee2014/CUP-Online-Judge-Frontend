@@ -18,44 +18,43 @@
 </template>
 
 <script>
-    export default {
-        name: "SocketMenu",
-        props: {
-            nick: {
-                type: String,
-                default: ""
-            },
-            logined: {
-                type: Boolean,
-                default: false
-            },
-            user: {
-                type: Number,
-                default: 0
-            },
-            judger: {
-                type: Number,
-                default: 0
-            },
-            connected: {
-                type: Boolean,
-                default: false
-            }
-        },
-        data: function () {
-            return {}
-        },
-        computed: {
-            serverInfo: function () {
-                if(this.connected) {
-                    return "<i class='users icon'></i>" + this.user + "人" + "&nbsp;<i class='microchip icon'></i>" + this.judger;
-                }
-                else {
-                    return "与服务器连接丢失";
-                }
-            }
-        }
+export default {
+  name: "SocketMenu",
+  props: {
+    nick: {
+      type: String,
+      default: ""
+    },
+    logined: {
+      type: Boolean,
+      default: false
+    },
+    user: {
+      type: Number,
+      default: 0
+    },
+    judger: {
+      type: Number,
+      default: 0
+    },
+    connected: {
+      type: Boolean,
+      default: false
     }
+  },
+  data: function () {
+    return {}
+  },
+  computed: {
+    serverInfo: function () {
+      if (this.connected) {
+        return "<i class='users icon'></i>" + this.user + "人" + "&nbsp;<i class='microchip icon'></i>" + this.judger
+      } else {
+        return "与服务器连接丢失"
+      }
+    }
+  }
+}
 </script>
 
 <style scoped>

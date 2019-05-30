@@ -7,15 +7,15 @@
 </template>
 
 <script>
-    export default {
-        name: "limitHostname",
-        props: {
-            address: {
-                type: String,
-                default: location.href
-            }
-        }
+export default {
+  name: "limitHostname",
+  props: {
+    address: {
+      type: String,
+      default: location.href
     }
+  }
+}
 </script>
 
 <style scoped>

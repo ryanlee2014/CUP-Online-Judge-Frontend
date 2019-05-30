@@ -28,7 +28,6 @@
                 <div class="item">
                 </div>
 
-
                 <ace-theme-selector v-model="theme" v-if="!editorPackage"></ace-theme-selector>
                 <monaco-theme-selector v-model="theme" v-else></monaco-theme-selector>
 
@@ -105,322 +104,318 @@
 </template>
 
 <script>
-    import aceEditor from '../../../components/submit/codeEditor/aceEditor'
-    import aceThemeSelector from '../../../components/submit/codeEditor/aceComponent/aceThemeSelector'
-    import monacoEditor from '../../../components/submit/codeEditor/monacoEditor'
-    import monacoThemeSelector from '../../../components/submit/codeEditor/monacoComponent/monacoThemeSelector'
-    const ace = require("brace");
-    const Clipboard = require("clipboard");
-    const detectLang = require("../../../lib/langDetector");
-    const _ = require("lodash");
-    const $ = require("jquery");
-    window.ace = ace;
-    require('../../../lib/brace/braceMode');
-    require('../../../lib/brace/braceTheme');
-    require("brace/ext/static_highlight");
+import aceEditor from "../../../components/submit/codeEditor/aceEditor"
+import aceThemeSelector from "../../../components/submit/codeEditor/aceComponent/aceThemeSelector"
+import monacoEditor from "../../../components/submit/codeEditor/monacoEditor"
+import monacoThemeSelector from "../../../components/submit/codeEditor/monacoComponent/monacoThemeSelector"
+const ace = require("brace")
+const Clipboard = require("clipboard")
+const detectLang = require("../../../lib/langDetector")
+const _ = require("lodash")
+const $ = require("jquery")
+window.ace = ace
+require("../../../lib/brace/braceMode")
+require("../../../lib/brace/braceTheme")
+require("brace/ext/static_highlight")
 
-    const language = ["c_cpp", "c_cpp", "pascal", "java", "ruby", "bash", "python", "php", "perl", "csharp", "objectivec", "text", "scheme", "c_cpp", "c_cpp", "lua", "javascript", "go", "python", "c_cpp", "c_cpp", "c_cpp", "text", "java", "java", "python", "python", "java", "c_cpp", "c_cpp"];
-    const language_ext = ["c", "cc", "pas", "java", "rb", "sh", "py", "php", "pl", "cs", "m", "bas", "scm", "c", "cc", "lua", "js", "go", "py", "cpp", "cpp", "c", "kt", "java", "java", "python", "python", "java", "c", "cc"];
-    export default {
-        name: "rightPanel",
-        components: {
-            aceEditor,
-            aceThemeSelector,
-            monacoEditor,
-            monacoThemeSelector
-        },
-        data() {
-            let _baseData = {
-                selected_language: 0,
-                auto_detect: false,
-                share: false,
-                fontSize: "16",
-                theme: "ace/theme/monokai",
-                prependView: null,
-                config: {},
-                appendView: null,
-                editorPackage: false,
-                code: "",
-                language,
-                current_prepend: "",
-                current_append: "",
-                highlight: new Promise((resolve) => {
-                    ace.acequire(["ace/ext/static_highlight"], function (fn) {
-                        resolve(fn);
-                    })
-                })
-            };
-            const config = this.initConfig();
-            Object.assign(_baseData, config);
-            Object.assign(_baseData.config, config);
-            return _baseData;
-        },
-        props: {
-            prepend: {
-                type: Object,
-                default: () => {
-                    return {}
-                }
-            },
-            append: {
-                type: Object,
-                default: () => {
-                    return {}
-                }
-            },
-            iscontest: {
-                type: Boolean,
-                default: false
-            },
-            lang_list: {
-                type: Array,
-                default: () => []
-            },
-            language_template: {
-                type: Array,
-                default: () => []
-            },
-            do_submit: {
-                type: Function,
-                default: () => {
-                }
-            },
-            pre_test_run: {
-                type: Function,
-                default: () => {
-                }
-            },
-            submitDisabled: {
-                type: Boolean,
-                default: false
-            },
-            hide_warning: {
-                type: Boolean,
-                default: false
-            },
-            source_code: {
-                type: String,
-                default: ""
-            }
-        },
-        watch: {
-            selected_language: function (val) {
-                this.$store.commit("setCodeInfo", {
-                    language: val
-                });
-                require(`brace/mode/${language[val]}`);
-                $("#language").dropdown("set selected", val.toString());
-                let prepend = this.prepend;
-                let append = this.append;
-                if (prepend && prepend[val] !== this.current_prepend) {
-                    this.current_prepend = prepend[val];
-                    if (this.prependView) {
-                        this.prependView.getSession().setValue(this.current_prepend);
-                    }
-                }
-                if (append && append[val] !== this.current_append) {
-                    this.current_append = append[val];
-                    if (this.appendView) {
-                        this.appendView.getSession().setValue(this.current_append);
-                    }
-                }
-            },
-            editorPackage(val, oldVal) {
-                this.config.editorPackage = val;
-                localStorage.submitConfig = JSON.stringify(this.config);
-                if (val) {
-                    this.theme = "vs-dark";
-
-                }
-                else {
-                    this.theme = "ace/theme/monokai";
-                }
-            },
-            theme: function (val) {
-                if (val === "") {
-                    return;
-                }
-                this.config.theme = val;
-                localStorage.submitConfig = JSON.stringify(this.config);
-                if(this.editorPackage) {
-                    return;
-                }
-                const prependView = this.prependView;
-                if (prependView) {
-                    this.prependView.setTheme(val);
-                }
-                const appendView = this.appendView;
-                if (appendView) {
-                    this.appendView.setTheme(val);
-                }
-                if (this.current_prepend || this.current_append) {
-                    this.current_prepend = this.current_append = "";
-                    this.$forceUpdate();
-                    this.$nextTick(() => {
-                        this.$nextTick(() => {
-                            this.current_prepend = this.prepend[this.selected_language] || "";
-                            this.current_append = this.append[this.selected_language] || "";
-                            this.$forceUpdate();
-                        });
-                    });
-                }
-            },
-            auto_detect: function (val) {
-                if (val) {
-                    this.detectLanguageDebouncer();
-                }
-            },
-            prepend: function (val) {
-                if (!val) {
-                    return;
-                }
-                if (!val[this.selected_language] && val.length && val.length > 0) {
-                    this.selected_language = parseInt(Object.keys(val)[0]);
-                }
-                this.current_prepend = val[this.selected_language];
-            },
-            append: function (val) {
-                if (!val) {
-                    return;
-                }
-                if (!val[this.selected_language] && val.length && val.length > 0) {
-                    this.selected_language = parseInt(Object.keys(val)[0]);
-                }
-                this.current_append = val[this.selected_language];
-            },
-            current_append: function (val) {
-                if (!val) {
-                    return;
-                }
-                const h = this.highlight;
-                h.then((highlight) => {
-                    this.$nextTick(() => {
-                        _.forEach(document.querySelectorAll("#appendCodeHighlight"), function (val, index) {
-                            highlight(val, {
-                                mode: val.getAttribute("ace-mode"),
-                                theme: val.getAttribute("ace-theme"),
-                                startLineNumber: 1,
-                                showGutter: val.getAttribute("ace-gutter"),
-                                trim: true
-                            }, function (highlighted) {
-                            });
-                        });
-                    })
-                })
-            },
-            current_prepend: function (val) {
-                if (!val) {
-                    return;
-                }
-                const h = this.highlight;
-                h.then((highlight) => {
-                    this.$nextTick(() => {
-                        _.forEach(document.querySelectorAll("#prependCodeHighlight"), function (val, index) {
-                            highlight(val, {
-                                mode: val.getAttribute("ace-mode"),
-                                theme: val.getAttribute("ace-theme"),
-                                startLineNumber: 1,
-                                showGutter: val.getAttribute("ace-gutter"),
-                                trim: true
-                            }, function (highlighted) {
-                            });
-                        });
-                    })
-                });
-            },
-            share: function (val) {
-                this.$store.commit("setCodeInfo", {
-                    share: !!val
-                });
-            },
-            source_code: function (val) {
-                this.code = val;
-            },
-            code: function (val) {
-                if (val && this.auto_detect) {
-                    this.detectLanguageDebouncer();
-                }
-            },
-            fontSize(val) {
-                this.config.fontSize = val;
-                localStorage.submitConfig = JSON.stringify(this.config);
-            }
-        },
-        mounted() {
-            this.initConfig();
-            this.initClipboard();
-            this.initSolutionCode();
-        },
-        methods: {
-            initConfig() {
-                const defaultConfig = {
-                    editorPackage: false,
-                    theme: "ace/theme/monokai",
-                    fontSize: "16"
-                };
-                let config;
-                if (!localStorage.submitConfig) {
-                    localStorage.submitConfig = JSON.stringify(config = defaultConfig);
-                }
-                else {
-                    try {
-                        config = JSON.parse(localStorage.submitConfig);
-                    }
-                    catch (e) {
-                        config = defaultConfig;
-                    }
-                }
-                return config;
-            },
-            initClipboard() {
-                let obj = document.getElementById('clipbtn');
-                const that = this;
-                if (obj) {
-                    const clipboard = new Clipboard(obj, {
-                        text: function () {
-                            let mergetext = that.prepend[that.selected_language] || "";
-                            mergetext += "\n/*请在下方编写你的代码,仅需提交填写的部分*/\n";
-                            if (that.$store.getters.code.length !== 0) {
-                                mergetext += that.$store.getters.code;
-                            } else {
-                                mergetext += "\n\n\n\n";
-                            }
-                            mergetext += "\n/*请在上方填写你的代码,仅需提交填写的部分*/\n";
-                            mergetext += that.append[that.selected_language] || "";
-                            return mergetext;
-                        }
-                    });
-                    clipboard.on('success', function (e) {
-                        alert("复制到剪贴板成功!");
-                        console.log(e);
-                    });
-                    clipboard.on('error', function (e) {
-                        console.error(e);
-                        console.log("复制失败！请手动复制代码");
-                    });
-                }
-            },
-            initSolutionCode() {
-                if (this.$route.params.solution_id) {
-                    this.axios.get("/api/status/solution", {params: {sid: this.$route.params.solution_id}})
-                        .then(({data}) => {
-                            this.selected_language = parseInt(data.data.language);
-                        });
-                }
-            },
-            detectLanguageDebouncer() {
-                const that = this;
-                (_.debounce(() => {
-                    const detected_lang = detectLang(that.code, that.lang_list.map(function (e) {
-                        return e.num
-                    }));
-                    if (that.selected_language != detected_lang) {
-                        that.selected_language = detected_lang;
-                    }
-                }, 100))();
-            }
-        }
+const language = ["c_cpp", "c_cpp", "pascal", "java", "ruby", "bash", "python", "php", "perl", "csharp", "objectivec", "text", "scheme", "c_cpp", "c_cpp", "lua", "javascript", "go", "python", "c_cpp", "c_cpp", "c_cpp", "text", "java", "java", "python", "python", "java", "c_cpp", "c_cpp"]
+const language_ext = ["c", "cc", "pas", "java", "rb", "sh", "py", "php", "pl", "cs", "m", "bas", "scm", "c", "cc", "lua", "js", "go", "py", "cpp", "cpp", "c", "kt", "java", "java", "python", "python", "java", "c", "cc"]
+export default {
+  name: "rightPanel",
+  components: {
+    aceEditor,
+    aceThemeSelector,
+    monacoEditor,
+    monacoThemeSelector
+  },
+  data () {
+    let _baseData = {
+      selected_language: 0,
+      auto_detect: false,
+      share: false,
+      fontSize: "16",
+      theme: "ace/theme/monokai",
+      prependView: null,
+      config: {},
+      appendView: null,
+      editorPackage: false,
+      code: "",
+      language,
+      current_prepend: "",
+      current_append: "",
+      highlight: new Promise((resolve) => {
+        ace.acequire(["ace/ext/static_highlight"], function (fn) {
+          resolve(fn)
+        })
+      })
     }
+    const config = this.initConfig()
+    Object.assign(_baseData, config)
+    Object.assign(_baseData.config, config)
+    return _baseData
+  },
+  props: {
+    prepend: {
+      type: Object,
+      default: () => {
+        return {}
+      }
+    },
+    append: {
+      type: Object,
+      default: () => {
+        return {}
+      }
+    },
+    iscontest: {
+      type: Boolean,
+      default: false
+    },
+    lang_list: {
+      type: Array,
+      default: () => []
+    },
+    language_template: {
+      type: Array,
+      default: () => []
+    },
+    do_submit: {
+      type: Function,
+      default: () => {
+      }
+    },
+    pre_test_run: {
+      type: Function,
+      default: () => {
+      }
+    },
+    submitDisabled: {
+      type: Boolean,
+      default: false
+    },
+    hide_warning: {
+      type: Boolean,
+      default: false
+    },
+    source_code: {
+      type: String,
+      default: ""
+    }
+  },
+  watch: {
+    selected_language: function (val) {
+      this.$store.commit("setCodeInfo", {
+        language: val
+      })
+      require(`brace/mode/${language[val]}`)
+      $("#language").dropdown("set selected", val.toString())
+      let prepend = this.prepend
+      let append = this.append
+      if (prepend && prepend[val] !== this.current_prepend) {
+        this.current_prepend = prepend[val]
+        if (this.prependView) {
+          this.prependView.getSession().setValue(this.current_prepend)
+        }
+      }
+      if (append && append[val] !== this.current_append) {
+        this.current_append = append[val]
+        if (this.appendView) {
+          this.appendView.getSession().setValue(this.current_append)
+        }
+      }
+    },
+    editorPackage (val, oldVal) {
+      this.config.editorPackage = val
+      localStorage.submitConfig = JSON.stringify(this.config)
+      if (val) {
+        this.theme = "vs-dark"
+      } else {
+        this.theme = "ace/theme/monokai"
+      }
+    },
+    theme: function (val) {
+      if (val === "") {
+        return
+      }
+      this.config.theme = val
+      localStorage.submitConfig = JSON.stringify(this.config)
+      if (this.editorPackage) {
+        return
+      }
+      const prependView = this.prependView
+      if (prependView) {
+        this.prependView.setTheme(val)
+      }
+      const appendView = this.appendView
+      if (appendView) {
+        this.appendView.setTheme(val)
+      }
+      if (this.current_prepend || this.current_append) {
+        this.current_prepend = this.current_append = ""
+        this.$forceUpdate()
+        this.$nextTick(() => {
+          this.$nextTick(() => {
+            this.current_prepend = this.prepend[this.selected_language] || ""
+            this.current_append = this.append[this.selected_language] || ""
+            this.$forceUpdate()
+          })
+        })
+      }
+    },
+    auto_detect: function (val) {
+      if (val) {
+        this.detectLanguageDebouncer()
+      }
+    },
+    prepend: function (val) {
+      if (!val) {
+        return
+      }
+      if (!val[this.selected_language] && val.length && val.length > 0) {
+        this.selected_language = parseInt(Object.keys(val)[0])
+      }
+      this.current_prepend = val[this.selected_language]
+    },
+    append: function (val) {
+      if (!val) {
+        return
+      }
+      if (!val[this.selected_language] && val.length && val.length > 0) {
+        this.selected_language = parseInt(Object.keys(val)[0])
+      }
+      this.current_append = val[this.selected_language]
+    },
+    current_append: function (val) {
+      if (!val) {
+        return
+      }
+      const h = this.highlight
+      h.then((highlight) => {
+        this.$nextTick(() => {
+          _.forEach(document.querySelectorAll("#appendCodeHighlight"), function (val, index) {
+            highlight(val, {
+              mode: val.getAttribute("ace-mode"),
+              theme: val.getAttribute("ace-theme"),
+              startLineNumber: 1,
+              showGutter: val.getAttribute("ace-gutter"),
+              trim: true
+            }, function (highlighted) {
+            })
+          })
+        })
+      })
+    },
+    current_prepend: function (val) {
+      if (!val) {
+        return
+      }
+      const h = this.highlight
+      h.then((highlight) => {
+        this.$nextTick(() => {
+          _.forEach(document.querySelectorAll("#prependCodeHighlight"), function (val, index) {
+            highlight(val, {
+              mode: val.getAttribute("ace-mode"),
+              theme: val.getAttribute("ace-theme"),
+              startLineNumber: 1,
+              showGutter: val.getAttribute("ace-gutter"),
+              trim: true
+            }, function (highlighted) {
+            })
+          })
+        })
+      })
+    },
+    share: function (val) {
+      this.$store.commit("setCodeInfo", {
+        share: !!val
+      })
+    },
+    source_code: function (val) {
+      this.code = val
+    },
+    code: function (val) {
+      if (val && this.auto_detect) {
+        this.detectLanguageDebouncer()
+      }
+    },
+    fontSize (val) {
+      this.config.fontSize = val
+      localStorage.submitConfig = JSON.stringify(this.config)
+    }
+  },
+  mounted () {
+    this.initConfig()
+    this.initClipboard()
+    this.initSolutionCode()
+  },
+  methods: {
+    initConfig () {
+      const defaultConfig = {
+        editorPackage: false,
+        theme: "ace/theme/monokai",
+        fontSize: "16"
+      }
+      let config
+      if (!localStorage.submitConfig) {
+        localStorage.submitConfig = JSON.stringify(config = defaultConfig)
+      } else {
+        try {
+          config = JSON.parse(localStorage.submitConfig)
+        } catch (e) {
+          config = defaultConfig
+        }
+      }
+      return config
+    },
+    initClipboard () {
+      let obj = document.getElementById("clipbtn")
+      const that = this
+      if (obj) {
+        const clipboard = new Clipboard(obj, {
+          text: function () {
+            let mergetext = that.prepend[that.selected_language] || ""
+            mergetext += "\n/*请在下方编写你的代码,仅需提交填写的部分*/\n"
+            if (that.$store.getters.code.length !== 0) {
+              mergetext += that.$store.getters.code
+            } else {
+              mergetext += "\n\n\n\n"
+            }
+            mergetext += "\n/*请在上方填写你的代码,仅需提交填写的部分*/\n"
+            mergetext += that.append[that.selected_language] || ""
+            return mergetext
+          }
+        })
+        clipboard.on("success", function (e) {
+          alert("复制到剪贴板成功!")
+          console.log(e)
+        })
+        clipboard.on("error", function (e) {
+          console.error(e)
+          console.log("复制失败！请手动复制代码")
+        })
+      }
+    },
+    initSolutionCode () {
+      if (this.$route.params.solution_id) {
+        this.axios.get("/api/status/solution", { params: { sid: this.$route.params.solution_id } })
+          .then(({ data }) => {
+            this.selected_language = parseInt(data.data.language)
+          })
+      }
+    },
+    detectLanguageDebouncer () {
+      const that = this;
+      (_.debounce(() => {
+        const detected_lang = detectLang(that.code, that.lang_list.map(function (e) {
+          return e.num
+        }))
+        if (that.selected_language != detected_lang) {
+          that.selected_language = detected_lang
+        }
+      }, 100))()
+    }
+  }
+}
 </script>
 
 <style scoped>

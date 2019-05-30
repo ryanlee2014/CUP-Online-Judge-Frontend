@@ -55,160 +55,158 @@
 </template>
 
 <script>
-    import MainContent from '../../components/discuss/MainContent'
-    import mixins from '../../mixin/init'
-    import markdownIt from '../../lib/markdownIt/markdownIt'
-    import mermaid from 'mermaid'
-    const $ = require("jquery");
-    const _ = require("lodash");
-    const Clipboard = require('clipboard');
-    export default {
-        name: "thread",
-        components: {
-            MainContent
-        },
-        mixins: [mixins],
-        data: function () {
-            return {
-                page: 0,
-                table_val: {},
-                total: 0,
-                id: this.$route.params.id || 0,
-                replyText: "",
-                captcha: "",
-                owner: "",
-                content: false,
-                isadmin: false
-            }
-        },
-        computed: {
-            table: {
-                get: function () {
-                    return this.table_val;
-                },
-                set: function (val) {
-                    _.forEach(val, function (v) {
-                        if (v && v.length) {
-                            _.forEach(v, function (v) {
-                                if (v.content) {
-                                    v.content = markdownIt.render(v.content);
-                                }
-                            })
-                        }
-
-                    })
-
-                    this.table_val = val;
-                    this.owner = val.owner;
-                    this.isadmin = val.admin;
-                }
-            },
-            thread_head: function () {
-                var context = {
-                    title: ""
-                };
-                _.assign(context, this.table_val.discuss_header_content);
-                if (context.content)
-                    context.content = markdownIt.render(context.content);
-                return context;
-            },
-            reply: function () {
-                return this.table_val.discuss;
-            }
-        },
-        created: function () {
-            $(document).on("click", function () {
-                $(".mermaid").each(function (el, v) {
-                    if ($(v).is(":visible")) {
-                        mermaid.init(undefined, v)
-                    }
-                })
-            });
-        },
-        beforeUpdate: function () {
-            //console.time("update use time");
-        },
-        updated: function () {
-            const table_of_contents = $(".table-of-contents");
-            let $content = table_of_contents.html();
-            let $container = $("#contentContainer");
-            if (!$content) $content = "";
-            table_of_contents.html("");
-            if ($content) {
-                $container.html("" + $content + "");
-            }
-            $("#sticky_content").sticky({
-                context: "#main_context",
-                offset: 50
-            });
-            $container.find("a").on("click", function() {
-                $([document.documentElement, document.body]).animate({
-                    scrollTop: $(document.getElementById(this.getAttribute("href").substring(1))).offset().top - 50
-                }, 600);
-                return false;
-            });
-            this.content = $content && $content.trim && $content.trim().length > 0 || ($container && $container.html() && $container.html().trim().length > 0);
-        },
-        mounted: function () {
-            document.title = `Thread ${this.id} -- ${document.title}`;
-            var page = this.page * 20;
-            var that = this;
-            $.get("/api/discuss/" + this.id + "?page=" + page, function (data) {
-                that.table = data;
-                $.get("/api/discuss/" + that.id + "?page=" + page, function (data) {
-                    that.table = data;
-                });
-            });
-
-            this.$nextTick(function () {
-                var copy_content = new Clipboard(".copy.context", {
-                    text: function (trigger) {
-                        return $(trigger).parent().next().text();
-                    }
-                });
-                copy_content.on("success", function (e) {
-                    $(e.trigger)
-                        .popup({
-                            title: 'Finished',
-                            content: 'Context is in your clipboard',
-                            on: 'click'
-                        })
-                        .popup("show");
-                })
-            })
-        },
-        methods: {
-            replyComment: function () {
-                var send = {
-                    comment: this.replyText,
-                    captcha: this.captcha
-                };
-                var that = this;
-                $.post("/api/discuss/reply/" + this.id, send, function (data) {
-                    if (data.status == "OK") {
-                        alert("回复成功");
-                        location.reload();
-                    } else {
-                        alert("回复失败！服务器发生未知错误");
-                    }
-                })
-            },
-            block_reply: function (comment_id) {
-                $.get("/api/discuss/update/reply/block/" + this.id + "/" + comment_id, function (data) {
-                    if (data.status == "OK") {
-                        alert("操作成功");
-                    } else {
-                        alert("操作失败");
-                    }
-                })
-            },
-            readTime: function (content) {
-                var doc = document.createElement("div");
-                doc.innerHTML = content;
-                return parseInt(Math.ceil(doc.innerText.length / 300) ** 1.41428579532);
-            }
-        }
+import MainContent from "../../components/discuss/MainContent"
+import mixins from "../../mixin/init"
+import markdownIt from "../../lib/markdownIt/markdownIt"
+import mermaid from "mermaid"
+const $ = require("jquery")
+const _ = require("lodash")
+const Clipboard = require("clipboard")
+export default {
+  name: "thread",
+  components: {
+    MainContent
+  },
+  mixins: [mixins],
+  data: function () {
+    return {
+      page: 0,
+      table_val: {},
+      total: 0,
+      id: this.$route.params.id || 0,
+      replyText: "",
+      captcha: "",
+      owner: "",
+      content: false,
+      isadmin: false
     }
+  },
+  computed: {
+    table: {
+      get: function () {
+        return this.table_val
+      },
+      set: function (val) {
+        _.forEach(val, function (v) {
+          if (v && v.length) {
+            _.forEach(v, function (v) {
+              if (v.content) {
+                v.content = markdownIt.render(v.content)
+              }
+            })
+          }
+        })
+
+        this.table_val = val
+        this.owner = val.owner
+        this.isadmin = val.admin
+      }
+    },
+    thread_head: function () {
+      var context = {
+        title: ""
+      }
+      _.assign(context, this.table_val.discuss_header_content)
+      if (context.content) { context.content = markdownIt.render(context.content) }
+      return context
+    },
+    reply: function () {
+      return this.table_val.discuss
+    }
+  },
+  created: function () {
+    $(document).on("click", function () {
+      $(".mermaid").each(function (el, v) {
+        if ($(v).is(":visible")) {
+          mermaid.init(undefined, v)
+        }
+      })
+    })
+  },
+  beforeUpdate: function () {
+    // console.time("update use time");
+  },
+  updated: function () {
+    const table_of_contents = $(".table-of-contents")
+    let $content = table_of_contents.html()
+    let $container = $("#contentContainer")
+    if (!$content) $content = ""
+    table_of_contents.html("")
+    if ($content) {
+      $container.html("" + $content + "")
+    }
+    $("#sticky_content").sticky({
+      context: "#main_context",
+      offset: 50
+    })
+    $container.find("a").on("click", function () {
+      $([document.documentElement, document.body]).animate({
+        scrollTop: $(document.getElementById(this.getAttribute("href").substring(1))).offset().top - 50
+      }, 600)
+      return false
+    })
+    this.content = $content && $content.trim && $content.trim().length > 0 || ($container && $container.html() && $container.html().trim().length > 0)
+  },
+  mounted: function () {
+    document.title = `Thread ${this.id} -- ${document.title}`
+    var page = this.page * 20
+    var that = this
+    $.get("/api/discuss/" + this.id + "?page=" + page, function (data) {
+      that.table = data
+      $.get("/api/discuss/" + that.id + "?page=" + page, function (data) {
+        that.table = data
+      })
+    })
+
+    this.$nextTick(function () {
+      var copy_content = new Clipboard(".copy.context", {
+        text: function (trigger) {
+          return $(trigger).parent().next().text()
+        }
+      })
+      copy_content.on("success", function (e) {
+        $(e.trigger)
+          .popup({
+            title: "Finished",
+            content: "Context is in your clipboard",
+            on: "click"
+          })
+          .popup("show")
+      })
+    })
+  },
+  methods: {
+    replyComment: function () {
+      var send = {
+        comment: this.replyText,
+        captcha: this.captcha
+      }
+      var that = this
+      $.post("/api/discuss/reply/" + this.id, send, function (data) {
+        if (data.status == "OK") {
+          alert("回复成功")
+          location.reload()
+        } else {
+          alert("回复失败！服务器发生未知错误")
+        }
+      })
+    },
+    block_reply: function (comment_id) {
+      $.get("/api/discuss/update/reply/block/" + this.id + "/" + comment_id, function (data) {
+        if (data.status == "OK") {
+          alert("操作成功")
+        } else {
+          alert("操作失败")
+        }
+      })
+    },
+    readTime: function (content) {
+      var doc = document.createElement("div")
+      doc.innerHTML = content
+      return parseInt(Math.ceil(doc.innerText.length / 300) ** 1.41428579532)
+    }
+  }
+}
 </script>
 
 <style scoped>

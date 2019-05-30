@@ -38,50 +38,50 @@
 </template>
 
 <script>
-    import mixins from '../../mixin/init'
-    const $ = require("jquery");
-    export default {
-        name: "edit",
-        mixins: [mixins],
-        data: function () {
-            return {
-                content: '',
-                solution_id: 0,
-                captcha: "",
-                tutorial_id: this.$route.params.tutorial_id
-            }
-        },
-        mounted() {
-            document.title = `Edit Tutorial -- ${document.title}`;
-            this.axios.get(`/api/tutorial/${this.tutorial_id}`)
-                .then(({data}) => {
-                    const d = data;
-                    Object.assign(this, {
-                        content: d.data.content,
-                        solution_id: d.data.solution_id
-                    });
-                })
-        },
-        methods: {
-            create_post: function () {
-                this.axios.post(`/api/tutorial/edit/${this.tutorial_id}`, {
-                    solution_id: this.solution_id,
-                    content: this.content,
-                    captcha: this.captcha
-                })
-                    .then(({data}) => {
-                        if (data.status === "OK") {
-                            alert("修改成功!");
-                            this.$router.push({
-                                path: `/tutorial/${this.$route.query.problem_id}`
-                            })
-                        } else {
-                            alert("服务器遇到错误\n" + data.statement);
-                        }
-                    });
-            }
-        }
+import mixins from "../../mixin/init"
+const $ = require("jquery")
+export default {
+  name: "edit",
+  mixins: [mixins],
+  data: function () {
+    return {
+      content: "",
+      solution_id: 0,
+      captcha: "",
+      tutorial_id: this.$route.params.tutorial_id
     }
+  },
+  mounted () {
+    document.title = `Edit Tutorial -- ${document.title}`
+    this.axios.get(`/api/tutorial/${this.tutorial_id}`)
+      .then(({ data }) => {
+        const d = data
+        Object.assign(this, {
+          content: d.data.content,
+          solution_id: d.data.solution_id
+        })
+      })
+  },
+  methods: {
+    create_post: function () {
+      this.axios.post(`/api/tutorial/edit/${this.tutorial_id}`, {
+        solution_id: this.solution_id,
+        content: this.content,
+        captcha: this.captcha
+      })
+        .then(({ data }) => {
+          if (data.status === "OK") {
+            alert("修改成功!")
+            this.$router.push({
+              path: `/tutorial/${this.$route.query.problem_id}`
+            })
+          } else {
+            alert("服务器遇到错误\n" + data.statement)
+          }
+        })
+    }
+  }
+}
 </script>
 
 <style scoped>

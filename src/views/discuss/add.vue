@@ -40,43 +40,43 @@
 </template>
 
 <script>
-    import mixins from '../../mixin/init'
+import mixins from "../../mixin/init"
 
-    const $ = require("jquery");
-    export default {
-        name: "add",
-        mixins: [mixins],
-        data: function () {
-            return {
-                content: "",
-                title: "",
-                captcha: ""
-            }
-        },
-        methods: {
-            create_post: function () {
-                const that = this;
-                const send = {
-                    title: this.title,
-                    content: this.content,
-                    captcha: this.captcha
-                };
-                $.post("/api/discuss/newpost", send, function (data) {
-                    if (data.status == "OK") {
-                        alert("添加成功!");
-                        that.$router.push({
-                            path: '/discuss'
-                        });
-                    } else {
-                        alert("服务器遇到错误\n" + data.statement);
-                    }
-                })
-            }
-        },
-        mounted() {
-            document.title = `Add Thread -- ${document.title}`;
-        }
+const $ = require("jquery")
+export default {
+  name: "add",
+  mixins: [mixins],
+  data: function () {
+    return {
+      content: "",
+      title: "",
+      captcha: ""
     }
+  },
+  methods: {
+    create_post: function () {
+      const that = this
+      const send = {
+        title: this.title,
+        content: this.content,
+        captcha: this.captcha
+      }
+      $.post("/api/discuss/newpost", send, function (data) {
+        if (data.status == "OK") {
+          alert("添加成功!")
+          that.$router.push({
+            path: "/discuss"
+          })
+        } else {
+          alert("服务器遇到错误\n" + data.statement)
+        }
+      })
+    }
+  },
+  mounted () {
+    document.title = `Add Thread -- ${document.title}`
+  }
+}
 </script>
 
 <style scoped>

@@ -88,91 +88,91 @@
 </template>
 
 <script>
-    import mixins from '../../mixin/init'
-    import ContestMode from '../../components/contestMode/block'
-    const Clipboard = require('clipboard');
-    const clipboard = new Clipboard("#copy");
-    const $ = require("jquery");
-    export default {
-        name: "usercode",
-        mixins: [mixins],
-        components: {
-            ContestMode
-        },
-        mounted() {
-            const solution_id = this.$route.params.solution_id;
-            document.title = `Solution ${solution_id} -- ${document.title}`;
-            this.bindClipboardDOM();
-            this.initData();
-        },
-        data: function () {
-            return {
-                code: "",
-                time: 0,
-                memory: 0,
-                problem_id: 0,
-                result: 0,
-                language: 0,
-                user_id: this.$store.getters.user_id,
-                judge_color: [],
-                icon: [],
-                from: "",
-                statement: false,
-                contest_mode: false,
-                privilege: false,
-                error: false
-            }
-        },
-        methods: {
-            initData: function () {
-                this.axios.get(`/api/source/${this.$route.params.from}/${this.$route.params.solution_id}`)
-                    .then(response => {
-                        const data = response.data;
-                        if (data.status === "OK") {
-                            Object.assign(this, data.data);
-                            this.privilege = data.privilege && this.$route.params.from === "local";
-                            this.problem_id = Math.abs(this.problem);
-                            if (typeof this.from !== "string") {
-                                this.from = "";
-                            }
-                        } else {
-                            if(data.contest_mode) {
-                                this.contest_mode = true;
-                                return;
-                            }
-                            this.code = false;
-                            this.statement = data.statement;
-                            this.error = true;
-                        }
-                    })
-            },
-            bindClipboardDOM: function () {
-                clipboard.on("success", function (e) {
-                    $('#copy')
-                        .popup({
-                            title: 'Finished',
-                            content: 'Your code is in your clipboard',
-                            on: 'click'
-                        })
-                        .popup("show");
-                })
-            },
-            ban: function () {
-                this.axios.post("/api/status/ban_submission", {solution_id: this.$route.params.solution_id})
-                    .then(response => {
-                        alert("Server receive your request");
-                        console.log(response.data);
-                    });
-            },
-            rejudge: function () {
-                this.axios.post("/api/status/rejudge", {solution_id: this.$route.params.solution_id})
-                    .then(response => {
-                        alert("Server receive youre request");
-                        console.log(response.data);
-                    });
-            }
-        }
+import mixins from "../../mixin/init"
+import ContestMode from "../../components/contestMode/block"
+const Clipboard = require("clipboard")
+const clipboard = new Clipboard("#copy")
+const $ = require("jquery")
+export default {
+  name: "usercode",
+  mixins: [mixins],
+  components: {
+    ContestMode
+  },
+  mounted () {
+    const solution_id = this.$route.params.solution_id
+    document.title = `Solution ${solution_id} -- ${document.title}`
+    this.bindClipboardDOM()
+    this.initData()
+  },
+  data: function () {
+    return {
+      code: "",
+      time: 0,
+      memory: 0,
+      problem_id: 0,
+      result: 0,
+      language: 0,
+      user_id: this.$store.getters.user_id,
+      judge_color: [],
+      icon: [],
+      from: "",
+      statement: false,
+      contest_mode: false,
+      privilege: false,
+      error: false
     }
+  },
+  methods: {
+    initData: function () {
+      this.axios.get(`/api/source/${this.$route.params.from}/${this.$route.params.solution_id}`)
+        .then(response => {
+          const data = response.data
+          if (data.status === "OK") {
+            Object.assign(this, data.data)
+            this.privilege = data.privilege && this.$route.params.from === "local"
+            this.problem_id = Math.abs(this.problem)
+            if (typeof this.from !== "string") {
+              this.from = ""
+            }
+          } else {
+            if (data.contest_mode) {
+              this.contest_mode = true
+              return
+            }
+            this.code = false
+            this.statement = data.statement
+            this.error = true
+          }
+        })
+    },
+    bindClipboardDOM: function () {
+      clipboard.on("success", function (e) {
+        $("#copy")
+          .popup({
+            title: "Finished",
+            content: "Your code is in your clipboard",
+            on: "click"
+          })
+          .popup("show")
+      })
+    },
+    ban: function () {
+      this.axios.post("/api/status/ban_submission", { solution_id: this.$route.params.solution_id })
+        .then(response => {
+          alert("Server receive your request")
+          console.log(response.data)
+        })
+    },
+    rejudge: function () {
+      this.axios.post("/api/status/rejudge", { solution_id: this.$route.params.solution_id })
+        .then(response => {
+          alert("Server receive youre request")
+          console.log(response.data)
+        })
+    }
+  }
+}
 </script>
 
 <style scoped>

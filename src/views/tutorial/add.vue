@@ -40,58 +40,56 @@
 </template>
 
 <script>
-    import mixins from '../../mixin/init'
-    const $ = require("jquery");
-    export default {
-        name: "add",
-        mixins: [mixins],
-        data:function(){
-            return {
-                content:"",
-                solution_id:0,
-                captcha:"",
-                from: "local",
-                id: this.$route.params.problem_id
-            }
-        },
-        methods:{
-            fetch_solution:function() {
-                const that = this;
-                $.get("/api/status/" + this.id + "/my/null/4/0", function(data){
-                    if(data.result.length == 0) {
-                        alert("未找到相关提交！");
-                    }
-                    else {
-                        that.solution_id = data.result[0].solution_id;
-                    }
-                });
-            },
-            create_post:function() {
-                const send = {
-                    solution_id:this.solution_id,
-                    content:this.content,
-                    captcha:this.captcha,
-                    source: "local",
-                    id:this.id
-                };
-                const that = this;
-                $.post("/api/tutorial/new/"+this.from + "/" + this.id,send,function(data){
-                    if(data.status === "OK") {
-                        alert("添加成功!");
-                        that.$router.push({
-                            path: `/tutorial/${that.id}`
-                        });
-                    }
-                    else {
-                        alert("服务器遇到错误\n"+data.statement);
-                    }
-                })
-            }
-        },
-        mounted() {
-            document.title = `Add Tutorial -- ${document.title}`;
-        }
+import mixins from "../../mixin/init"
+const $ = require("jquery")
+export default {
+  name: "add",
+  mixins: [mixins],
+  data: function () {
+    return {
+      content: "",
+      solution_id: 0,
+      captcha: "",
+      from: "local",
+      id: this.$route.params.problem_id
     }
+  },
+  methods: {
+    fetch_solution: function () {
+      const that = this
+      $.get("/api/status/" + this.id + "/my/null/4/0", function (data) {
+        if (data.result.length == 0) {
+          alert("未找到相关提交！")
+        } else {
+          that.solution_id = data.result[0].solution_id
+        }
+      })
+    },
+    create_post: function () {
+      const send = {
+        solution_id: this.solution_id,
+        content: this.content,
+        captcha: this.captcha,
+        source: "local",
+        id: this.id
+      }
+      const that = this
+      $.post("/api/tutorial/new/" + this.from + "/" + this.id, send, function (data) {
+        if (data.status === "OK") {
+          alert("添加成功!")
+          that.$router.push({
+            path: `/tutorial/${that.id}`
+          })
+        } else {
+          alert("服务器遇到错误\n" + data.statement)
+        }
+      })
+    }
+  },
+  mounted () {
+    document.title = `Add Tutorial -- ${document.title}`
+  }
+}
 </script>
 
 <style scoped>

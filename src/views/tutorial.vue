@@ -101,87 +101,87 @@
 </template>
 
 <script>
-    import mixins from '../mixin/init'
-    import mermaid from 'mermaid'
-    import markdownIt from '../lib/markdownIt/markdownIt'
-    const $ = window.$ = window.jQuery = require("jquery");
-    const Clipboard = require("clipboard");
-    require("../static/js/semantic.min");
-    export default {
-        name: "tutorial",
-        mixins: [mixins],
-        data: function () {
-            return {
-                content: "",
-                id: this.$route.params.problem_id,
-                source: this.$route.query.from || "local",
-                judge_color:[],
-                language_name: [],
-                icon_list:[],
-                result_name: [],
-                owner: "",
-                language_markdown: [],
-                markdownIt
-            }
-        },
-        created: function () {
-            $(document).on("click", function () {
-                $(".mermaid").each(function (el, v) {
-                    if ($(v).is(":visible")) {
-                        mermaid.init(undefined, v)
-                    }
-                })
-            });
-        },
-        updated() {
-            this.$nextTick(function () {
-                $('.ui.accordion')
-                    .accordion({
-                        'exclusive': false
-                    });
-                var copy_content = new Clipboard(".copy.context", {
-                    text: function (trigger) {
-                        return $(trigger).parent().next().text();
-                    }
-                });
-                copy_content.on("success", function (e) {
-                    $(e.trigger)
-                        .popup({
-                            title: 'Finished',
-                            content: 'Context is in your clipboard',
-                            on: 'click'
-                        })
-                        .popup("show");
-                })
-            })
-        },
-        mounted: function () {
-            document.title = `Tutorial -- ${document.title}`;
-            this.axios.get(`/api/tutorial/${this.source}/${this.id}`)
-                .then(({data}) => {
-                    const d = data;
-                    Object.assign(this, {
-                        content: d.data,
-                        id: this.$route.params.problem_id,
-                        source: this.$route.query.from || "local",
-                        judge_color: d.const_variable.judge_color,
-                        language_name: d.const_variable.language_name,
-                        icon_list: d.const_variable.icon_list,
-                        result_name: d.const_variable.result,
-                        owner: d.self,
-                        language_markdown: d.const_variable.language_common_name
-                    });
-                });
-            this.axios.get(`/api/tutorial/${this.source}/${this.id}`)
-                .then(({data}) => {
-                    const d = data;
-                    this.content = d.data;
-                    this.owner = d.self;
-                });
-            const $title = $("title").html();
-            $("title").html("Tutorial " + this.id + " -- " + $title);
-        }
+import mixins from "../mixin/init"
+import mermaid from "mermaid"
+import markdownIt from "../lib/markdownIt/markdownIt"
+const $ = window.$ = window.jQuery = require("jquery")
+const Clipboard = require("clipboard")
+require("../static/js/semantic.min")
+export default {
+  name: "tutorial",
+  mixins: [mixins],
+  data: function () {
+    return {
+      content: "",
+      id: this.$route.params.problem_id,
+      source: this.$route.query.from || "local",
+      judge_color: [],
+      language_name: [],
+      icon_list: [],
+      result_name: [],
+      owner: "",
+      language_markdown: [],
+      markdownIt
     }
+  },
+  created: function () {
+    $(document).on("click", function () {
+      $(".mermaid").each(function (el, v) {
+        if ($(v).is(":visible")) {
+          mermaid.init(undefined, v)
+        }
+      })
+    })
+  },
+  updated () {
+    this.$nextTick(function () {
+      $(".ui.accordion")
+        .accordion({
+          "exclusive": false
+        })
+      var copy_content = new Clipboard(".copy.context", {
+        text: function (trigger) {
+          return $(trigger).parent().next().text()
+        }
+      })
+      copy_content.on("success", function (e) {
+        $(e.trigger)
+          .popup({
+            title: "Finished",
+            content: "Context is in your clipboard",
+            on: "click"
+          })
+          .popup("show")
+      })
+    })
+  },
+  mounted: function () {
+    document.title = `Tutorial -- ${document.title}`
+    this.axios.get(`/api/tutorial/${this.source}/${this.id}`)
+      .then(({ data }) => {
+        const d = data
+        Object.assign(this, {
+          content: d.data,
+          id: this.$route.params.problem_id,
+          source: this.$route.query.from || "local",
+          judge_color: d.const_variable.judge_color,
+          language_name: d.const_variable.language_name,
+          icon_list: d.const_variable.icon_list,
+          result_name: d.const_variable.result,
+          owner: d.self,
+          language_markdown: d.const_variable.language_common_name
+        })
+      })
+    this.axios.get(`/api/tutorial/${this.source}/${this.id}`)
+      .then(({ data }) => {
+        const d = data
+        this.content = d.data
+        this.owner = d.self
+      })
+    const $title = $("title").html()
+    $("title").html("Tutorial " + this.id + " -- " + $title)
+  }
+}
 </script>
 
 <style scoped>

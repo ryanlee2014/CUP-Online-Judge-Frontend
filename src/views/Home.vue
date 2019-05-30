@@ -146,136 +146,136 @@
 </template>
 
 <script>
-    // @ is an alias to /src
-    import anime from 'animejs';
-    import util from '../lib/util';
-    import mixins from '../mixin/init';
-    const dayjs = require("dayjs");
-    const $ = require("jquery");
-    export default {
-        name: 'home',
-        mixins: [mixins],
-        mounted() {
-            document.title = `Home -- ${document.title}`;
-            setTimeout(() => {
-                util.init(true, true);
-            }, 500);
-            $(document).ready(function () {
-                $('.image').visibility({
-                    type: 'image',
-                    transition: 'vertical flip in',
-                    duration: 500
-                });
-            });
-            $('.club').attr("data-title", "点击访问GitHub")
-                .popup({
-                    position: 'top center',
-                    on: 'hover'
-                })
-            ;
-            $('.maintainer').attr("data-html", "<div class='header'>Ryan Lee</div><div class='content'>Maintainer & Developer</div>")
-                .popup({
-                    position: 'top center',
-                    on: 'hover'
-                });
-            $.get("/api/update_log/latest", function (d) {
-                var data = d.data[0];
-                var version = data.version;
-                var vj_version = data.vj_version;
-                var content = data.msg;
-                var time = dayjs(data.mtime).format("YYYY-MM-DD");
-                $('.maintain').html("Version:" + time).attr("data-html", "<div class='ui header'>" + "升级维护内容" + "<div class='sub header'>引擎版本:" + version + "</div><div class='sub header'>VJ版本:" + vj_version + "</div></div><div class='content'>" + content + "</div>")
-                    .popup({
-                        position: 'top center',
-                        on: 'hover'
-                    })
-            });
-            $('.support')
-                .popup({
-                    position: 'bottom center',
-                    inline: true,
-                    on: 'hover',
-                    hoverable: true
-                });
-            $('.chrome').popup({
-                title: "点击下载",
-                position: 'top center',
-                on: 'hover'
-            });
-            $(".generator").on("click", function () {
-                $(".packer").transition("fade down");
-                $(".vultr").transition("fade up");
-            });
-            $('.ml14 .letters').each(function () {
-                // eslint-disable-next-line no-control-regex
-                $(this).html($(this).attr("data-content").replace(/([^\x00-\x80]|\w)/g, "<span class='letter'>$&</span>"));
-            });
+// @ is an alias to /src
+import anime from "animejs"
+import util from "../lib/util"
+import mixins from "../mixin/init"
+const dayjs = require("dayjs")
+const $ = require("jquery")
+export default {
+  name: "home",
+  mixins: [mixins],
+  mounted () {
+    document.title = `Home -- ${document.title}`
+    setTimeout(() => {
+      util.init(true, true)
+    }, 500)
+    $(document).ready(function () {
+      $(".image").visibility({
+        type: "image",
+        transition: "vertical flip in",
+        duration: 500
+      })
+    })
+    $(".club").attr("data-title", "点击访问GitHub")
+      .popup({
+        position: "top center",
+        on: "hover"
+      })
 
-//document.getElementById('myVideo').addEventListener('ended',false);
+    $(".maintainer").attr("data-html", "<div class='header'>Ryan Lee</div><div class='content'>Maintainer & Developer</div>")
+      .popup({
+        position: "top center",
+        on: "hover"
+      })
+    $.get("/api/update_log/latest", function (d) {
+      var data = d.data[0]
+      var version = data.version
+      var vj_version = data.vj_version
+      var content = data.msg
+      var time = dayjs(data.mtime).format("YYYY-MM-DD")
+      $(".maintain").html("Version:" + time).attr("data-html", "<div class='ui header'>" + "升级维护内容" + "<div class='sub header'>引擎版本:" + version + "</div><div class='sub header'>VJ版本:" + vj_version + "</div></div><div class='content'>" + content + "</div>")
+        .popup({
+          position: "top center",
+          on: "hover"
+        })
+    })
+    $(".support")
+      .popup({
+        position: "bottom center",
+        inline: true,
+        on: "hover",
+        hoverable: true
+      })
+    $(".chrome").popup({
+      title: "点击下载",
+      position: "top center",
+      on: "hover"
+    })
+    $(".generator").on("click", function () {
+      $(".packer").transition("fade down")
+      $(".vultr").transition("fade up")
+    })
+    $(".ml14 .letters").each(function () {
+      // eslint-disable-next-line no-control-regex
+      $(this).html($(this).attr("data-content").replace(/([^\x00-\x80]|\w)/g, "<span class='letter'>$&</span>"))
+    });
 
-            (function () {
-                window.picid = 5;
-                $(".ui.borderless.network.secondary.menu").addClass("inverted");
-                $.get("/api/login/", function (data) {
-                    var logined = data.logined;
-                    setTimeout(function () {
-                        $("#main_container").removeClass("unvisible");
-                        var main_timeline = anime.timeline({loop: false})
-                            .add({
-                                targets: '.ml14 .line',
-                                scaleX: [0, 1],
-                                opacity: [0.5, 1],
-                                easing: "easeInOutExpo",
-                                duration: 900
-                            }).add({
-                                targets: '.ml14 .letter',
-                                opacity: [0, 1],
-                                translateX: [40, 0],
-                                translateZ: 0,
-                                scaleX: [0.3, 1],
-                                textShadow: "3px 3px 3px #555555",
-                                easing: "easeOutExpo",
-                                duration: 800,
-                                offset: '-=600',
-                                delay: function (el, i) {
-                                    return 0 + 25 * i;
-                                }
-                            });
-                        // eslint-disable-next-line no-constant-condition
-                        if (logined && false) {
-                            main_timeline.add({
-                                targets: '#main_masthead',
-                                translateX: ["25%", 0],
-                                easing: 'easeInOutQuart',
-                                duration: 1000,
-                                offset: '-=300',
-                                complete: function () {
-                                }
-                            }).add({
-                                targets: "#right",
-                                opacity: [0, 1],
-                                easing: 'easeInOutQuart',
-                                duration: 1000,
-                                offset: '-=300'
-                            }).add({
-                                targets: "#divider",
-                                opacity: [0, 1],
-                                easing: 'easeInOutQuart',
-                                duration: 500,
-                                offset: '-=300',
-                                complete: function () {
-                                    var $style = $("style");
-                                    var $html = $style.eq($style.length - 1).html();
-                                    $html += "\n.gr5::after{\nopacity:0.5;\n}\n";
-                                    $style.eq($style.length - 1).html($html);
-                                }
-                            });
-                        }
-                    }, 300);
-                });
-            })();
-        }
-    }
+    // document.getElementById('myVideo').addEventListener('ended',false);
+
+    (function () {
+      window.picid = 5
+      $(".ui.borderless.network.secondary.menu").addClass("inverted")
+      $.get("/api/login/", function (data) {
+        var logined = data.logined
+        setTimeout(function () {
+          $("#main_container").removeClass("unvisible")
+          var main_timeline = anime.timeline({ loop: false })
+            .add({
+              targets: ".ml14 .line",
+              scaleX: [0, 1],
+              opacity: [0.5, 1],
+              easing: "easeInOutExpo",
+              duration: 900
+            }).add({
+              targets: ".ml14 .letter",
+              opacity: [0, 1],
+              translateX: [40, 0],
+              translateZ: 0,
+              scaleX: [0.3, 1],
+              textShadow: "3px 3px 3px #555555",
+              easing: "easeOutExpo",
+              duration: 800,
+              offset: "-=600",
+              delay: function (el, i) {
+                return 0 + 25 * i
+              }
+            })
+          // eslint-disable-next-line no-constant-condition
+          if (logined && false) {
+            main_timeline.add({
+              targets: "#main_masthead",
+              translateX: ["25%", 0],
+              easing: "easeInOutQuart",
+              duration: 1000,
+              offset: "-=300",
+              complete: function () {
+              }
+            }).add({
+              targets: "#right",
+              opacity: [0, 1],
+              easing: "easeInOutQuart",
+              duration: 1000,
+              offset: "-=300"
+            }).add({
+              targets: "#divider",
+              opacity: [0, 1],
+              easing: "easeInOutQuart",
+              duration: 500,
+              offset: "-=300",
+              complete: function () {
+                var $style = $("style")
+                var $html = $style.eq($style.length - 1).html()
+                $html += "\n.gr5::after{\nopacity:0.5;\n}\n"
+                $style.eq($style.length - 1).html($html)
+              }
+            })
+          }
+        }, 300)
+      })
+    })()
+  }
+}
 </script>
 <style scoped>
     a {

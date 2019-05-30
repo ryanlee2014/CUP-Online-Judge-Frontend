@@ -7,9 +7,9 @@
 </template>
 
 <script>
-    export default {
-        name: "block"
-    }
+export default {
+  name: "block"
+}
 </script>
 
 <style scoped>

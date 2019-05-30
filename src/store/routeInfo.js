@@ -1,9 +1,9 @@
-import state from './routeInfo/state'
-import mutations from './routeInfo/mutations'
-import actions from './routeInfo/actions'
+import state from "./routeInfo/state"
+import mutations from "./routeInfo/mutations"
+import actions from "./routeInfo/actions"
 
 export default {
-    state,
-    mutations,
-    actions
+  state,
+  mutations,
+  actions
 }

@@ -37,59 +37,58 @@
 </template>
 
 <script>
-    import store from '../../../store'
-    import mixins from '../../../mixin/init'
-    import util from '../../../lib/util'
-    export default {
-        name: "ProfileCard",
-        mixins: [mixins],
-        props: {
-            user_id: {
-                type: String,
-                default: ""
-            },
-            nick: {
-                type: String,
-                default: ""
-            },
-            avatar: {
-                type: Boolean,
-                default: false
-            },
-            admin: {
-                type: Boolean,
-                default: false
-            }
-        },
-        data: function() {
-            return {}
-        },
-        computed: {
-            img_url: function() {
-                if(this.avatar && this.user_id.length > 0) {
-                    return "/avatar/" + this.user_id + ".jpg";
-                }
-                else {
-                    return "/assets/images/wireframe/white-image.png";
-                }
-            }
-        },
-        methods: {
-            logout: function() {
-                this.axios.get("/api/logout")
-                    .then(response => {
-                        if(response.data.status === "OK") {
-                            sessionStorage.isLogined = false;
-                            store.commit("loginMutate", {login: false});
-                            location.reload();
-                        }
-                    })
-            }
-        },
-        updated() {
-            util.init();
-        }
+import store from "../../../store"
+import mixins from "../../../mixin/init"
+import util from "../../../lib/util"
+export default {
+  name: "ProfileCard",
+  mixins: [mixins],
+  props: {
+    user_id: {
+      type: String,
+      default: ""
+    },
+    nick: {
+      type: String,
+      default: ""
+    },
+    avatar: {
+      type: Boolean,
+      default: false
+    },
+    admin: {
+      type: Boolean,
+      default: false
     }
+  },
+  data: function () {
+    return {}
+  },
+  computed: {
+    img_url: function () {
+      if (this.avatar && this.user_id.length > 0) {
+        return "/avatar/" + this.user_id + ".jpg"
+      } else {
+        return "/assets/images/wireframe/white-image.png"
+      }
+    }
+  },
+  methods: {
+    logout: function () {
+      this.axios.get("/api/logout")
+        .then(response => {
+          if (response.data.status === "OK") {
+            sessionStorage.isLogined = false
+            store.commit("loginMutate", { login: false })
+            location.reload()
+          }
+        })
+    }
+  },
+  updated () {
+    util.init()
+  }
+}
 </script>
 
 <style scoped>

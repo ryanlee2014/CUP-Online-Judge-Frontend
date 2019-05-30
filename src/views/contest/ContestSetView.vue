@@ -103,119 +103,119 @@
 </template>
 
 <script>
-    import mixins from '../../mixin/init'
+import mixins from "../../mixin/init"
 
-    const $ = require("jquery");
-    const dayjs = require("dayjs");
-    export default {
-        name: "ContestSetView",
-        mixins: [mixins],
-        data() {
-            return {
-                admin: this.$store.getters.admin,
-                contest_list: [],
-                select1: "",
-                select2: "",
-                current_column: "contest",
-                current_time: dayjs()
-            }
-        },
-        mounted() {
-            document.title = `Contest Set -- ${document.title}`;
-            this.axios.get("/api/contest/list", {
-                params: (params => {
-                    for(let key in params) {
-                        if (params[key] === null || params[key] === undefined) {
-                            params[key] = "1"
-                        }
-                    }
-                    return params;
-                })(this.$route.query)
-            })
-                .then(({data}) => {
-                    this.contest_list = data.data;
-                    this.intervalID = setInterval(() => {
-                        this.current_time = dayjs();
-                    }, 1000);
-                });
-            this.init();
-        },
-        methods: {
-            init: function () {
-                const diff = new Date().getTime() - new Date().getTime();
-                function clock() {
-                    let x, h, m, s, n, y, mon, d;
-                    x = new Date(new Date().getTime() + diff);
-                    y = x.getYear() + 1900;
-                    if (y > 3000) y -= 1900;
-                    mon = x.getMonth() + 1;
-                    d = x.getDate();
-                    h = x.getHours();
-                    m = x.getMinutes();
-                    s = x.getSeconds();
-                    n = y + "-" + mon + "-" + d + " " + (h >= 10 ? h : "0" + h) + ":" + (m >= 10 ? m : "0" + m) + ":" + (s >= 10 ? s : "0" + s);
-                    $(".server_time").text(n)
-                }
-                clock();
-                setInterval(clock, 1000);
-            },
-            bindPopup: function () {
-                if (this.admin) {
-                    $(".ui.padded.table").popup({
-                        title: "管理员视图",
-                        content: "白色背景竞赛属于普通用户可见竞赛，灰色背景竞赛为不可见竞赛,绿色背景竞赛为正在进行中的竞赛",
-                        position: "top center",
-                        boundary: 'body'
-                    });
-                }
-                $(".visible.tag").popup({
-                    content: "点击可切换显示隐藏"
-                });
-                $(".private.tag").popup({
-                    content: "点击可切换私有公有属性，公有属性不限制用户访问，私有属性需输入密码或列入列表才允许访问"
-                });
-                $('.multiple.search')
-                    .dropdown({
-                        fullTextSearch: true
-                    })
-            },
-            contestIsRunning: function (row) {
-                const start_time = dayjs(row.start_time), end_time = dayjs(row.end_time), current_time = this.current_time;
-                return current_time.isBefore(end_time) && current_time.isAfter(start_time) ? "positive" : "";
-            },
-            formatDate: function (second) {
-                let fill_zero = function (str) {
-                    if (str.length < 2) {
-                        return "0" + str;
-                    } else {
-                        return str;
-                    }
-                };
-                second = Math.abs(second);
-                let day = parseInt(second / 3600 / 24);
-                let hour = parseInt((second - day * 3600 * 24) / 3600);
-                let minute = parseInt((second - day * 3600 * 24 - hour * 3600) / 60);
-                let sec = second % 60;
-                hour = fill_zero(hour + "");
-                minute = fill_zero(minute + "");
-                sec = fill_zero(sec + "");
-                return `${day}天${hour}小时${minute}分${sec}秒`;
-            },
-            contestTimeFormat: function (row) {
-                const start_time = dayjs(row.start_time), end_time = dayjs(row.end_time), current_time = this.current_time;
-                if (current_time.isAfter(end_time)) {
-                    return `已于${end_time.format("YYYY-MM-DD HH:mm:ss")}结束`;
-                } else if (current_time.isBefore(start_time)) {
-                    return `将于${start_time.format("YYYY-MM-DD HH:mm:ss")}开始`;
-                } else {
-                    return `于${start_time.format("YYYY-MM-DD HH:mm:ss")}开始<br>还有${this.formatDate(end_time.diff(current_time, 'second'))}结束`;
-                }
-            },
-            run: function () {
-
-            }
-        }
+const $ = require("jquery")
+const dayjs = require("dayjs")
+export default {
+  name: "ContestSetView",
+  mixins: [mixins],
+  data () {
+    return {
+      admin: this.$store.getters.admin,
+      contest_list: [],
+      select1: "",
+      select2: "",
+      current_column: "contest",
+      current_time: dayjs()
     }
+  },
+  mounted () {
+    document.title = `Contest Set -- ${document.title}`
+    this.axios.get("/api/contest/list", {
+      params: (params => {
+        for (let key in params) {
+          if (params[key] === null || params[key] === undefined) {
+            params[key] = "1"
+          }
+        }
+        return params
+      })(this.$route.query)
+    })
+      .then(({ data }) => {
+        this.contest_list = data.data
+        this.intervalID = setInterval(() => {
+          this.current_time = dayjs()
+        }, 1000)
+      })
+    this.init()
+  },
+  methods: {
+    init: function () {
+      const diff = new Date().getTime() - new Date().getTime()
+      function clock () {
+        let x, h, m, s, n, y, mon, d
+        x = new Date(new Date().getTime() + diff)
+        y = x.getYear() + 1900
+        if (y > 3000) y -= 1900
+        mon = x.getMonth() + 1
+        d = x.getDate()
+        h = x.getHours()
+        m = x.getMinutes()
+        s = x.getSeconds()
+        n = y + "-" + mon + "-" + d + " " + (h >= 10 ? h : "0" + h) + ":" + (m >= 10 ? m : "0" + m) + ":" + (s >= 10 ? s : "0" + s)
+        $(".server_time").text(n)
+      }
+      clock()
+      setInterval(clock, 1000)
+    },
+    bindPopup: function () {
+      if (this.admin) {
+        $(".ui.padded.table").popup({
+          title: "管理员视图",
+          content: "白色背景竞赛属于普通用户可见竞赛，灰色背景竞赛为不可见竞赛,绿色背景竞赛为正在进行中的竞赛",
+          position: "top center",
+          boundary: "body"
+        })
+      }
+      $(".visible.tag").popup({
+        content: "点击可切换显示隐藏"
+      })
+      $(".private.tag").popup({
+        content: "点击可切换私有公有属性，公有属性不限制用户访问，私有属性需输入密码或列入列表才允许访问"
+      })
+      $(".multiple.search")
+        .dropdown({
+          fullTextSearch: true
+        })
+    },
+    contestIsRunning: function (row) {
+      const start_time = dayjs(row.start_time); const end_time = dayjs(row.end_time); const current_time = this.current_time
+      return current_time.isBefore(end_time) && current_time.isAfter(start_time) ? "positive" : ""
+    },
+    formatDate: function (second) {
+      let fill_zero = function (str) {
+        if (str.length < 2) {
+          return "0" + str
+        } else {
+          return str
+        }
+      }
+      second = Math.abs(second)
+      let day = parseInt(second / 3600 / 24)
+      let hour = parseInt((second - day * 3600 * 24) / 3600)
+      let minute = parseInt((second - day * 3600 * 24 - hour * 3600) / 60)
+      let sec = second % 60
+      hour = fill_zero(hour + "")
+      minute = fill_zero(minute + "")
+      sec = fill_zero(sec + "")
+      return `${day}天${hour}小时${minute}分${sec}秒`
+    },
+    contestTimeFormat: function (row) {
+      const start_time = dayjs(row.start_time); const end_time = dayjs(row.end_time); const current_time = this.current_time
+      if (current_time.isAfter(end_time)) {
+        return `已于${end_time.format("YYYY-MM-DD HH:mm:ss")}结束`
+      } else if (current_time.isBefore(start_time)) {
+        return `将于${start_time.format("YYYY-MM-DD HH:mm:ss")}开始`
+      } else {
+        return `${start_time.format("YYYY-MM-DD HH:mm:ss")}开始<br>还有${this.formatDate(end_time.diff(current_time, "second"))}结束<br>${end_time.format("YYYY-MM-DD HH:mm:ss")}结束`
+      }
+    },
+    run: function () {
+
+    }
+  }
+}
 </script>
 
 <style scoped>

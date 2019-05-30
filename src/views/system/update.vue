@@ -11,25 +11,25 @@
 </template>
 
 <script>
-    import mixins from '../../mixin/init'
-    const dayjs = require("dayjs");
-    export default {
-        name: "update",
-        mixins: [mixins],
-        data() {
-            return {
-                log: [],
-                dayjs
-            }
-        },
-        mounted() {
-            document.title = `Update log -- ${document.title}`;
-            this.axios.get(`/api/update_log`)
-                .then(({data}) => {
-                    this.log = data.data;
-                });
-        }
+import mixins from "../../mixin/init"
+const dayjs = require("dayjs")
+export default {
+  name: "update",
+  mixins: [mixins],
+  data () {
+    return {
+      log: [],
+      dayjs
     }
+  },
+  mounted () {
+    document.title = `Update log -- ${document.title}`
+    this.axios.get("/api/update_log")
+      .then(({ data }) => {
+        this.log = data.data
+      })
+  }
+}
 </script>
 
 <style scoped>

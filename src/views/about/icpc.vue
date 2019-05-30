@@ -58,14 +58,14 @@
 </template>
 
 <script>
-    import mixins from '../../mixin/init'
-    export default {
-        name: "icpc",
-        mixins: [mixins],
-        mounted() {
-            document.title = `ICPC -- ${document.title}`;
-        }
-    }
+import mixins from "../../mixin/init"
+export default {
+  name: "icpc",
+  mixins: [mixins],
+  mounted () {
+    document.title = `ICPC -- ${document.title}`
+  }
+}
 </script>
 
 <style scoped>

@@ -6,15 +6,15 @@
 </template>
 
 <script>
-    export default {
-        name: "LimitHostname",
-        props:{
-            content:{
-                type: String,
-                default: ""
-            }
-        }
+export default {
+  name: "LimitHostname",
+  props: {
+    content: {
+      type: String,
+      default: ""
     }
+  }
+}
 </script>
 
 <style scoped>

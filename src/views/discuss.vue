@@ -56,90 +56,89 @@
 </template>
 
 <script>
-    import ContestMode from '../components/contestMode/block'
-    const $ = require("jquery");
-    window.$ = window.jQuery = $;
-    const dayjs = require("dayjs");
-    require("../static/js/semantic.min");
-    import mixins from '../mixin/init'
-    export default {
-        name: "discuss",
-        mixins: [mixins],
-        components: {
-            ContestMode
-        },
-        data:function(){
-            return {
-                page:parseInt(this.$route.hash.page)||0,
-                table_val:[],
-                total:0,
-                search:"",
-                contest_mode:false,
-                dayjs
-            }
-        },
-        watch:{
-            search:function(newVal,oldVal) {
-                var that = this;
-                var page = this.page * 20;
-                var url = "/api/discuss/";
-                if(newVal && newVal.length > 0) {
-                    url += "search/" + newVal;
-                }
-                url += "?page=" + page;
-                $.get(url,function(data){
-                    if(data.contest_mode) {
-                        that.contest_mode = true;
-                        return;
-                    }
-                    if(data.discuss) {
-                        that.table = data;
-                    }
-                    else {
-                        that.table = {
-                            discuss:data.data
-                        }
-                    }
-                })
-            }
-        },
-        created:function(){
-
-        },
-        mounted:function(){
-            document.title = `Discuss -- ${document.title}`;
-            var page = this.page * 20;
-            var that = this;
-            $.get("/api/discuss?page="+page,function(data){
-                if(data.contest_mode) {
-                    that.contest_mode = true;
-                    return;
-                }
-                that.table = data;
-            });
-            $.get("/api/discuss?page="+page,function(data){
-                if(data.contest_mode) {
-                    that.contest_mode = true;
-                    return;
-                }
-                that.table = data;
-            });
-        },
-        methods:{
-
-        },
-        computed:{
-            table:{
-                get:function(){
-                    return this.table_val;
-                },
-                set:function(data){
-                    this.total = parseInt(data.total);
-                    this.table_val = data.discuss;
-                }
-            }
-        }
+import ContestMode from "../components/contestMode/block"
+import mixins from "../mixin/init"
+const $ = require("jquery")
+window.$ = window.jQuery = $
+const dayjs = require("dayjs")
+require("../static/js/semantic.min")
+export default {
+  name: "discuss",
+  mixins: [mixins],
+  components: {
+    ContestMode
+  },
+  data: function () {
+    return {
+      page: parseInt(this.$route.hash.page) || 0,
+      table_val: [],
+      total: 0,
+      search: "",
+      contest_mode: false,
+      dayjs
     }
+  },
+  watch: {
+    search: function (newVal, oldVal) {
+      var that = this
+      var page = this.page * 20
+      var url = "/api/discuss/"
+      if (newVal && newVal.length > 0) {
+        url += "search/" + newVal
+      }
+      url += "?page=" + page
+      $.get(url, function (data) {
+        if (data.contest_mode) {
+          that.contest_mode = true
+          return
+        }
+        if (data.discuss) {
+          that.table = data
+        } else {
+          that.table = {
+            discuss: data.data
+          }
+        }
+      })
+    }
+  },
+  created: function () {
+
+  },
+  mounted: function () {
+    document.title = `Discuss -- ${document.title}`
+    var page = this.page * 20
+    var that = this
+    $.get("/api/discuss?page=" + page, function (data) {
+      if (data.contest_mode) {
+        that.contest_mode = true
+        return
+      }
+      that.table = data
+    })
+    $.get("/api/discuss?page=" + page, function (data) {
+      if (data.contest_mode) {
+        that.contest_mode = true
+        return
+      }
+      that.table = data
+    })
+  },
+  methods: {
+
+  },
+  computed: {
+    table: {
+      get: function () {
+        return this.table_val
+      },
+      set: function (data) {
+        this.total = parseInt(data.total)
+        this.table_val = data.discuss
+      }
+    }
+  }
+}
 </script>
 
 <style scoped>

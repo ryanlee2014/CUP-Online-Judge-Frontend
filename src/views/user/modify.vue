@@ -111,64 +111,62 @@
 </template>
 
 <script>
-    import { mapGetters } from 'vuex'
-    export default {
-        name: "modify",
-        data() {
-            return {
-                blog: "",
-                github: "",
-                biography: "",
-                confirmquestion: "",
-                confirmanswer: "",
-                password: "",
-                newpassword: "",
-                repeatpassword: "",
-                email: "",
-                school: "",
-                nick: this.$store.getters.nick,
-                avatar: this.$store.getters.avatar
-            }
-        },
-        mounted() {
-            this.axios.get(`/api/user/${this.$store.getters.user_id}`)
-                .then(({data}) => {
-                    Object.assign(this, data.data.information);
-                });
-            this.axios.get(`/api/reset/password`)
-                .then(({data}) => {
-                    Object.assign(this, data.data);
-                });
-        },
-        methods: {
-            updateInformation() {
-                this.axios.post(`/api/user/update/profile`, this.$data)
-                    .then(({data}) => {
-                        if (data.status === "OK") {
-                            alert("更改成功");
-                            location.reload();
-                        }
-                        else {
-                            alert("服务器遇到错误: \n" + data.statement);
-                        }
-                    });
-            },
-            reset() {
-                location.reload();
-            },
-            img_src() {
-                if (this.avatar) {
-                    return `/avatar/${this.user_id}.jpg`;
-                }
-                else {
-                    return `https://semantic-ui.com/images/wireframe/square-image.png`;
-                }
-            }
-        },
-        computed: {
-            ...mapGetters(["user_id"])
-        }
+import { mapGetters } from "vuex"
+export default {
+  name: "modify",
+  data () {
+    return {
+      blog: "",
+      github: "",
+      biography: "",
+      confirmquestion: "",
+      confirmanswer: "",
+      password: "",
+      newpassword: "",
+      repeatpassword: "",
+      email: "",
+      school: "",
+      nick: this.$store.getters.nick,
+      avatar: this.$store.getters.avatar
     }
+  },
+  mounted () {
+    this.axios.get(`/api/user/${this.$store.getters.user_id}`)
+      .then(({ data }) => {
+        Object.assign(this, data.data.information)
+      })
+    this.axios.get("/api/reset/password")
+      .then(({ data }) => {
+        Object.assign(this, data.data)
+      })
+  },
+  methods: {
+    updateInformation () {
+      this.axios.post("/api/user/update/profile", this.$data)
+        .then(({ data }) => {
+          if (data.status === "OK") {
+            alert("更改成功")
+            location.reload()
+          } else {
+            alert("服务器遇到错误: \n" + data.statement)
+          }
+        })
+    },
+    reset () {
+      location.reload()
+    },
+    img_src () {
+      if (this.avatar) {
+        return `/avatar/${this.user_id}.jpg`
+      } else {
+        return "https://semantic-ui.com/images/wireframe/square-image.png"
+      }
+    }
+  },
+  computed: {
+    ...mapGetters(["user_id"])
+  }
+}
 </script>
 
 <style scoped>

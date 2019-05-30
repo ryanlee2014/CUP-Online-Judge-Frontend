@@ -1,11 +1,11 @@
-import state from './userInfo/state'
-import mutations from './userInfo/mutations'
-import actions from './userInfo/actions'
+import state from "./userInfo/state"
+import mutations from "./userInfo/mutations"
+import actions from "./userInfo/actions"
 
 const userInfo = {
-    state,
-    mutations,
-    actions
-};
+  state,
+  mutations,
+  actions
+}
 
-export default userInfo;
+export default userInfo

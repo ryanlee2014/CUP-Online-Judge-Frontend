@@ -183,154 +183,152 @@
 </template>
 
 <script>
-    import mixins from '../../mixin/init'
-    import markdownIt from '../../lib/markdownIt/markdownIt'
-    const $ = require("jquery");
-    const _ = require("lodash");
-    window.$ = window.jQuery = $;
-    export default {
-        name: "edit",
-        mixins: [mixins],
-        data:function(){
-            const d = {};
-            return {
-                title:"",
-                description:"",
-                time:"",
-                memory:'',
-                input:'',
-                output:'',
-                spj:false,
-                sampleinput:d.sample_input,
-                sampleoutput:d.sample_output,
-                descriptionInstance:markdownIt.newInstance(),
-                inputInstance:markdownIt.newInstance(),
-                outputInstance:markdownIt.newInstance(),
-                hintInstance:markdownIt.newInstance(),
-                hint:d.hint,
-                source:'',
-                from: "local",
-                label:d.label?d.label.split(" "):[],
-                all_label:[],
-                files:[],
-                id: this.$route.params.problem_id,
-                select: $
-            }
-        },
-        methods:{
-            submit:function(){
-                let from = "local";
-                const id = this.id;
-                var send_obj={imageData:{}};
-                for(var i of this.$children)
-                {
-                    var target = i.$vnode.data.model;
-                    send_obj[target.expression] = target.value;
-                    send_obj.imageData[target.expression] = i.markdownIt.__image || {};
-                }
-
-                send_obj["time"] = this.time;
-                send_obj["memory"] = this.memory;
-                send_obj["title"] = this.title;
-                send_obj["sampleinput"] = this.sampleinput;
-                send_obj["sampleoutput"] = this.sampleoutput;
-                send_obj["spj"] = Number(this.spj);
-                var labels = this.label;
-                function unique(array) {
-                    var res = array.filter(function(item, index, array){
-                        return array.indexOf(item) === index;
-                    })
-                    return res;
-                }
-
-                send_obj["label"] = unique(labels).join(" ");
-                $.post("/api/problem/"+this.source+"/"+id,{json:send_obj},function(data){
-                    if(data.status == "OK"){
-                        $.get("/api/problem/"+from+"?id="+id);
-                        alert("提交成功");
-                    }
-                });
-            },
-            imageHandler: function(key, data) {
-                var mx = 0;
-                var that = this;
-                that.$children[key].markdownIt.__image = {};
-                _.forEach(data.data, function(val, idx){
-                    that.$children[key].markdownIt.__image[val.name] = val.data;
-                    mx = Math.max(mx, parseInt(val.name));
-                });
-                that.$children[key].$children[0].num = mx + 1;
-                that.$children[key].iRender();
-            },
-            initData: function() {
-                const that = this;
-                const id = this.id;
-                this.axios.get(`/api/problem/local`, {params: {id: this.id, raw: ""}})
-                    .then(({data}) => {
-                        const d = data.problem;
-                        const _data = {
-                            title:d.title,
-                            description:d.description,
-                            time:d.time_limit,
-                            memory:d.memory_limit,
-                            input:d.input,
-                            output:d.output,
-                            spj:!!parseInt(d.spj),
-                            sampleinput:d.sample_input,
-                            sampleoutput:d.sample_output,
-                            hint:d.hint,
-                            source:"local",
-                            label:d.label?d.label.split(" "):[],
-                            all_label:[],
-                            files:[]
-                        };
-                        Object.assign(this, _data);
-                        $.get("/api/problem/"+this.source+"/?label=true",function(data){
-                            that.all_label = data.data;
-                            let has_label = that.label;
-                            $('.label.selection.ui.dropdown')
-                                .dropdown({
-                                    allowAdditions: true
-                                })
-                                .on("click",function(){
-                                    that.label = $('.label.selection.ui.dropdown').dropdown('get value');
-                                });
-                            for(let i = 0;i<has_label.length;++i) {
-                                $('.label.selection.ui.dropdown').dropdown('set selected',has_label[i]);
-                            }
-
-                        });
-                        $.get("/api/photo/description/" + id, function(data){
-                            if(data.status == "OK") {
-                                that.imageHandler(0, data);
-                            }
-                        });
-                        $.get("/api/photo/input/" + id, function(data){
-                            if(data.status == "OK") {
-                                that.imageHandler(1, data);
-                            }
-                        });
-                        $.get("/api/photo/output/" + id, function(data){
-                            if(data.status == "OK") {
-                                that.imageHandler(2, data);
-                            }
-                        });
-                        $.get("/api/photo/hint/" + id, function(data){
-                            if(data.status == "OK") {
-                                that.imageHandler(3, data);
-                            }
-                        });
-                        $.get("/api/file/" + id,function(data){
-                            that.files = data.data;
-                        });
-                    });
-            }
-        },
-        mounted:function(){
-            document.title = `Problem ${this.id} Edit -- ${document.title}`;
-            this.initData();
-        }
+import mixins from "../../mixin/init"
+import markdownIt from "../../lib/markdownIt/markdownIt"
+const $ = require("jquery")
+const _ = require("lodash")
+window.$ = window.jQuery = $
+export default {
+  name: "edit",
+  mixins: [mixins],
+  data: function () {
+    const d = {}
+    return {
+      title: "",
+      description: "",
+      time: "",
+      memory: "",
+      input: "",
+      output: "",
+      spj: false,
+      sampleinput: d.sample_input,
+      sampleoutput: d.sample_output,
+      descriptionInstance: markdownIt.newInstance(),
+      inputInstance: markdownIt.newInstance(),
+      outputInstance: markdownIt.newInstance(),
+      hintInstance: markdownIt.newInstance(),
+      hint: d.hint,
+      source: "",
+      from: "local",
+      label: d.label ? d.label.split(" ") : [],
+      all_label: [],
+      files: [],
+      id: this.$route.params.problem_id,
+      select: $
     }
+  },
+  methods: {
+    submit: function () {
+      let from = "local"
+      const id = this.id
+      var send_obj = { imageData: {} }
+      for (var i of this.$children) {
+        var target = i.$vnode.data.model
+        send_obj[target.expression] = target.value
+        send_obj.imageData[target.expression] = i.markdownIt.__image || {}
+      }
+
+      send_obj["time"] = this.time
+      send_obj["memory"] = this.memory
+      send_obj["title"] = this.title
+      send_obj["sampleinput"] = this.sampleinput
+      send_obj["sampleoutput"] = this.sampleoutput
+      send_obj["spj"] = Number(this.spj)
+      var labels = this.label
+      function unique (array) {
+        var res = array.filter(function (item, index, array) {
+          return array.indexOf(item) === index
+        })
+        return res
+      }
+
+      send_obj["label"] = unique(labels).join(" ")
+      $.post("/api/problem/" + this.source + "/" + id, { json: send_obj }, function (data) {
+        if (data.status == "OK") {
+          $.get("/api/problem/" + from + "?id=" + id)
+          alert("提交成功")
+        }
+      })
+    },
+    imageHandler: function (key, data) {
+      var mx = 0
+      var that = this
+      that.$children[key].markdownIt.__image = {}
+      _.forEach(data.data, function (val, idx) {
+        that.$children[key].markdownIt.__image[val.name] = val.data
+        mx = Math.max(mx, parseInt(val.name))
+      })
+      that.$children[key].$children[0].num = mx + 1
+      that.$children[key].iRender()
+    },
+    initData: function () {
+      const that = this
+      const id = this.id
+      this.axios.get("/api/problem/local", { params: { id: this.id, raw: "" } })
+        .then(({ data }) => {
+          const d = data.problem
+          const _data = {
+            title: d.title,
+            description: d.description,
+            time: d.time_limit,
+            memory: d.memory_limit,
+            input: d.input,
+            output: d.output,
+            spj: !!parseInt(d.spj),
+            sampleinput: d.sample_input,
+            sampleoutput: d.sample_output,
+            hint: d.hint,
+            source: "local",
+            label: d.label ? d.label.split(" ") : [],
+            all_label: [],
+            files: []
+          }
+          Object.assign(this, _data)
+          $.get("/api/problem/" + this.source + "/?label=true", function (data) {
+            that.all_label = data.data
+            let has_label = that.label
+            $(".label.selection.ui.dropdown")
+              .dropdown({
+                allowAdditions: true
+              })
+              .on("click", function () {
+                that.label = $(".label.selection.ui.dropdown").dropdown("get value")
+              })
+            for (let i = 0; i < has_label.length; ++i) {
+              $(".label.selection.ui.dropdown").dropdown("set selected", has_label[i])
+            }
+          })
+          $.get("/api/photo/description/" + id, function (data) {
+            if (data.status == "OK") {
+              that.imageHandler(0, data)
+            }
+          })
+          $.get("/api/photo/input/" + id, function (data) {
+            if (data.status == "OK") {
+              that.imageHandler(1, data)
+            }
+          })
+          $.get("/api/photo/output/" + id, function (data) {
+            if (data.status == "OK") {
+              that.imageHandler(2, data)
+            }
+          })
+          $.get("/api/photo/hint/" + id, function (data) {
+            if (data.status == "OK") {
+              that.imageHandler(3, data)
+            }
+          })
+          $.get("/api/file/" + id, function (data) {
+            that.files = data.data
+          })
+        })
+    }
+  },
+  mounted: function () {
+    document.title = `Problem ${this.id} Edit -- ${document.title}`
+    this.initData()
+  }
+}
 </script>
 
 <style scoped>

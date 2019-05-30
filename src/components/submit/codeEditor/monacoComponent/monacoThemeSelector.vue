@@ -10,39 +10,39 @@
 </template>
 
 <script>
-    import mixins from '../../../../mixin/init'
-    export default {
-        name: "monacoThemeSelector",
-        mixins: [mixins],
-        props: {
-            value: {
-                type: String,
-                default: "vs-dark"
-            }
-        },
-        data() {
-            return {
-                theme: "vs-dark"
-            }
-        },
-        watch: {
-            value(val) {
-                if(this.theme !== val) {
-                    if (val.includes("vs") || val.includes("hc-black")) {
-                        this.theme = val;
-                    }
-                }
-            },
-            theme(val) {
-                this.$emit("input", val);
-            }
-        },
-        mounted() {
-            if (this.value.includes("vs") || this.value.includes("hc-black")) {
-                this.theme = this.value;
-            }
-        }
+import mixins from "../../../../mixin/init"
+export default {
+  name: "monacoThemeSelector",
+  mixins: [mixins],
+  props: {
+    value: {
+      type: String,
+      default: "vs-dark"
     }
+  },
+  data () {
+    return {
+      theme: "vs-dark"
+    }
+  },
+  watch: {
+    value (val) {
+      if (this.theme !== val) {
+        if (val.includes("vs") || val.includes("hc-black")) {
+          this.theme = val
+        }
+      }
+    },
+    theme (val) {
+      this.$emit("input", val)
+    }
+  },
+  mounted () {
+    if (this.value.includes("vs") || this.value.includes("hc-black")) {
+      this.theme = this.value
+    }
+  }
+}
 </script>
 
 <style scoped>

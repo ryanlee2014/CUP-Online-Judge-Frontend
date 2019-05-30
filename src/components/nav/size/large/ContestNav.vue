@@ -48,41 +48,41 @@
 </template>
 
 <script>
-    import SocketMenu from '../../components/SocketMenu'
+import SocketMenu from "../../components/SocketMenu"
 
-    export default {
-        name: "ContestNav",
-        components: {
-            SocketMenu
-        },
-        props: {
-            nick: {
-                type: String,
-                default: ""
-            },
-            logined: {
-                type: Boolean,
-                default: false
-            },
-            user: {
-                type: Number,
-                default: 0
-            },
-            judger: {
-                type: Number,
-                default: 0
-            },
-            connected: {
-                type: Boolean,
-                default: false
-            }
-        },
-        data() {
-            return {
-                contest_id: this.$route.params.contest_id
-            }
-        }
+export default {
+  name: "ContestNav",
+  components: {
+    SocketMenu
+  },
+  props: {
+    nick: {
+      type: String,
+      default: ""
+    },
+    logined: {
+      type: Boolean,
+      default: false
+    },
+    user: {
+      type: Number,
+      default: 0
+    },
+    judger: {
+      type: Number,
+      default: 0
+    },
+    connected: {
+      type: Boolean,
+      default: false
     }
+  },
+  data () {
+    return {
+      contest_id: this.$route.params.contest_id
+    }
+  }
+}
 </script>
 
 <style scoped>

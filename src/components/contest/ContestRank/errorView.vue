@@ -21,20 +21,20 @@
 </template>
 
 <script>
-    export default {
-        name: "errorView",
-        props:{
-            errormsg:{
-                type: String,
-                default: ""
-            }
-        },
-        data() {
-            return {
-                location
-            }
-        }
+export default {
+  name: "errorView",
+  props: {
+    errormsg: {
+      type: String,
+      default: ""
     }
+  },
+  data () {
+    return {
+      location
+    }
+  }
+}
 </script>
 
 <style scoped>

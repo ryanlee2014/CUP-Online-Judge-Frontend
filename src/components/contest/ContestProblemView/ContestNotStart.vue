@@ -10,9 +10,9 @@
 </template>
 
 <script>
-    export default {
-        name: "ContestNotStart"
-    }
+export default {
+  name: "ContestNotStart"
+}
 </script>
 
 <style scoped>

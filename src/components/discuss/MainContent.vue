@@ -54,43 +54,43 @@ Solved {{thread_head.solved}}
 </template>
 
 <script>
-    import markdownIt from '../../lib/markdownIt/markdownIt'
+import markdownIt from "../../lib/markdownIt/markdownIt"
 
-    export default {
-        name: "MainContent",
-        props: {
-            thread_head: {
-                type: Object,
-                default: () => {
-                    return {};
-                }
-            },
-            content: {
-                type: Boolean,
-                default: false
-            },
-            owner: {
-                type: String,
-                default: ""
-            },
-            id: {
-                type: String,
-                default: ""
-            }
-        },
-        data() {
-            return {
-                markdownIt
-            }
-        },
-        methods: {
-            readTime: function (content) {
-                const doc = document.createElement("div");
-                doc.innerHTML = content;
-                return parseInt(Math.ceil(doc.innerText.length / 300) ** 1.41428579532);
-            }
-        }
+export default {
+  name: "MainContent",
+  props: {
+    thread_head: {
+      type: Object,
+      default: () => {
+        return {}
+      }
+    },
+    content: {
+      type: Boolean,
+      default: false
+    },
+    owner: {
+      type: String,
+      default: ""
+    },
+    id: {
+      type: String,
+      default: ""
     }
+  },
+  data () {
+    return {
+      markdownIt
+    }
+  },
+  methods: {
+    readTime: function (content) {
+      const doc = document.createElement("div")
+      doc.innerHTML = content
+      return parseInt(Math.ceil(doc.innerText.length / 300) ** 1.41428579532)
+    }
+  }
+}
 </script>
 
 <style scoped>

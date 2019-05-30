@@ -62,48 +62,48 @@
 </template>
 
 <script>
-    export default {
-        name: "testrunView",
-        props: {
-            value: {
-                type: String,
-                default: ""
-            },
-            sampleinput: {
-                type: String,
-                default: ""
-            },
-            hide_warning: {
-                type: Boolean,
-                default: true
-            },
-            test_run: {
-                type: Function,
-                default: () => {}
-            },
-            submitDisabled: {
-                type: Boolean,
-                default: false
-            },
-            sampleoutput: {
-                type: String,
-                default: ""
-            }
-        },
-        data() {
-            return {
-                test_run_sampleinput: ""
-            }
-        },
-        watch: {
-            test_run_sampleinput: function(val) {
-                this.$emit("input", val);
-            },
-            value: function (val) {
-                this.test_run_sampleinput = val;
-            }
-        }
+export default {
+  name: "testrunView",
+  props: {
+    value: {
+      type: String,
+      default: ""
+    },
+    sampleinput: {
+      type: String,
+      default: ""
+    },
+    hide_warning: {
+      type: Boolean,
+      default: true
+    },
+    test_run: {
+      type: Function,
+      default: () => {}
+    },
+    submitDisabled: {
+      type: Boolean,
+      default: false
+    },
+    sampleoutput: {
+      type: String,
+      default: ""
     }
+  },
+  data () {
+    return {
+      test_run_sampleinput: ""
+    }
+  },
+  watch: {
+    test_run_sampleinput: function (val) {
+      this.$emit("input", val)
+    },
+    value: function (val) {
+      this.test_run_sampleinput = val
+    }
+  }
+}
 </script>
 
 <style scoped>

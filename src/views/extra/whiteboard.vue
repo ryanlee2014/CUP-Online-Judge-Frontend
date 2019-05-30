@@ -48,90 +48,90 @@
 </template>
 
 <script>
-    const langMap = {
-        "c11": 0,
-        "cpp17": 1,
-        "pascal": 2,
-        "java10": 3,
-        "ruby": 4,
-        "bash": 5,
-        "python2": 6,
-        "php": 7,
-        "perl": 8,
-        "csharp": 9,
-        "obj-c": 10,
-        "freebasic": 11,
-        "schema": 12,
-        "clang": 13,
-        "clangpp": 14,
-        "lua": 15,
-        "javascript": 16,
-        "go": 17,
-        "python3": 18,
-        "cpp11": 19,
-        "cpp98": 20,
-        "c99": 21,
-        "kotlin": 22,
-        "java8": 23,
-        "java7": 24,
-        "pypy": 25,
-        "pypy3": 26,
-        "java6": 27,
-        "clang11": 28,
-        "clangpp17": 29
-    };
-    import aceEditor from '../../components/submit/codeEditor/aceEditor'
-    import aceThemeSelector from '../../components/submit/codeEditor/aceComponent/aceThemeSelector'
-    import monacoEditor from '../../components/submit/codeEditor/monacoEditor'
-    import monacoThemeSelector from '../../components/submit/codeEditor/monacoComponent/monacoThemeSelector'
+import aceEditor from "../../components/submit/codeEditor/aceEditor"
+import aceThemeSelector from "../../components/submit/codeEditor/aceComponent/aceThemeSelector"
+import monacoEditor from "../../components/submit/codeEditor/monacoEditor"
+import monacoThemeSelector from "../../components/submit/codeEditor/monacoComponent/monacoThemeSelector"
+const langMap = {
+  "c11": 0,
+  "cpp17": 1,
+  "pascal": 2,
+  "java10": 3,
+  "ruby": 4,
+  "bash": 5,
+  "python2": 6,
+  "php": 7,
+  "perl": 8,
+  "csharp": 9,
+  "obj-c": 10,
+  "freebasic": 11,
+  "schema": 12,
+  "clang": 13,
+  "clangpp": 14,
+  "lua": 15,
+  "javascript": 16,
+  "go": 17,
+  "python3": 18,
+  "cpp11": 19,
+  "cpp98": 20,
+  "c99": 21,
+  "kotlin": 22,
+  "java8": 23,
+  "java7": 24,
+  "pypy": 25,
+  "pypy3": 26,
+  "java6": 27,
+  "clang11": 28,
+  "clangpp17": 29
+}
 
-    const detectLang = require("../../lib/langDetector");
-    export default {
-        name: "whiteboard",
-        components: {
-            aceEditor,
-            aceThemeSelector,
-            monacoEditor,
-            monacoThemeSelector
-        },
-        data() {
-            return {
-                theme: "ace/theme/monokai",
-                code: "",
-                editorPackage: true,
-                fontSize: "16",
-                selected_language: 0
-            }
-        },
-        watch: {
-            editorPackage(val) {
-                if (val) {
-                    this.theme = "vs-dark";
-                } else {
-                    this.theme = "ace/theme/monokai"
-                }
-            },
-            code(val) {
-                if (val) {
-                    this.detectLanguageDebouncer();
-                }
-            }
-        },
-        mounted() {
-            document.title = `Whiteboard -- ${document.title}`;
-        },
-        methods: {
-            detectLanguageDebouncer() {
-                const that = this;
-                (_.debounce(() => {
-                    const detected_lang = detectLang(that.code, Object.values(langMap));
-                    if (that.selected_language != detected_lang) {
-                        that.selected_language = detected_lang;
-                    }
-                }, 100))();
-            }
-        }
+const detectLang = require("../../lib/langDetector")
+export default {
+  name: "whiteboard",
+  components: {
+    aceEditor,
+    aceThemeSelector,
+    monacoEditor,
+    monacoThemeSelector
+  },
+  data () {
+    return {
+      theme: "ace/theme/monokai",
+      code: "",
+      editorPackage: true,
+      fontSize: "16",
+      selected_language: 0
     }
+  },
+  watch: {
+    editorPackage (val) {
+      if (val) {
+        this.theme = "vs-dark"
+      } else {
+        this.theme = "ace/theme/monokai"
+      }
+    },
+    code (val) {
+      if (val) {
+        this.detectLanguageDebouncer()
+      }
+    }
+  },
+  mounted () {
+    document.title = `Whiteboard -- ${document.title}`
+  },
+  methods: {
+    detectLanguageDebouncer () {
+      const that = this;
+      (_.debounce(() => {
+        const detected_lang = detectLang(that.code, Object.values(langMap))
+        if (that.selected_language != detected_lang) {
+          that.selected_language = detected_lang
+        }
+      }, 100))()
+    }
+  }
+}
 </script>
 
 <style scoped>

@@ -1,4 +1,4 @@
 export default {
-    fullPath: "/",
-    path: "/"
+  fullPath: "/",
+  path: "/"
 }
