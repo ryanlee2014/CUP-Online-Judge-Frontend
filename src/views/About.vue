@@ -1,8 +1,8 @@
 <template>
     <div class="ui container">
-        <h2 class="ui dividing header">关于</h2>
+        <h2 class="ui dividing header">{{$t("about")}}</h2>
         <div class="ui basic segment">
-            <h3 class="ui dividing header">版权声明</h3>
+            <h3 class="ui dividing header">{{$t("copyright-notice")}}</h3>
             <div class="ui segment">
                 <h4>Software:</h4>
                 <p>
@@ -21,9 +21,9 @@
                     <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.zh">CC BY-NC-ND 4.0</a>
                 </p>
             </div>
-            <h3 class="ui dividing header">开放源代码声明</h3>
+            <h3 class="ui dividing header">{{$t("opensource-notice")}}</h3>
             <div class="ui segment">
-                <router-link to="/opensource">开放源代码声明</router-link>
+                <router-link to="/opensource">{{$t("opensource-notice")}}</router-link>
             </div>
         </div>
     </div>

@@ -90,15 +90,18 @@ export default {
                         this.$store.dispatch("NavStatus");
                         if (that.$route.query.redirect) {
                             this.$router.push({ path: this.$route.query.redirect });
-                        } else {
+                        }
+                        else {
                             this.$router.push({ path: "/" });
                         }
-                    } else {
+                    }
+                    else {
                         $("#vcode_graph").attr("src", `/api/captcha?from=login&ramdom=${Math.random()}`);
                         $(".ui.middle.aligned.center.aligned.grid .column").transition("shake");
                         if (response.data.statement.match("captcha doesn't match")) {
                             $(".ui.error.message").html("验证码错误").show();
-                        } else {
+                        }
+                        else {
                             $(".ui.error.message").html("账号或密码错误").show();
                         }
                     }

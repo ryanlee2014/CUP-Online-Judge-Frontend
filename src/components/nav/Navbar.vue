@@ -75,7 +75,8 @@ export default {
                     if (!this.$socket.connected) {
                         this.$socket.connect();
                         this.$socket.emit("getUser");
-                    } else {
+                    }
+                    else {
                         break;
                     }
                 }
@@ -94,7 +95,8 @@ export default {
                         that.intervalId = setInterval(() => {
                             that.connectTry(1);
                         }, 1000);
-                    } else {
+                    }
+                    else {
                         if (that.intervalId !== -1) {
                             clearInterval(that.intervalId);
                         }

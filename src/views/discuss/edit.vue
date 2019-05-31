@@ -64,7 +64,8 @@ export default {
                 that.content = data.data.content;
                 that.title = data.data.title;
             });
-        } else {
+        }
+        else {
             $.get("/api/discuss/update/reply/" + this.article_id + "/" + this.comment_id, function (data) {
                 that.content = data.data.content;
             });
@@ -86,18 +87,21 @@ export default {
                         that.$router.push({
                             path: `/discuss/thread/${that.article_id}`
                         });
-                    } else {
+                    }
+                    else {
                         alert("Error!\n" + data.statement);
                     }
                 });
-            } else {
+            }
+            else {
                 $.post("/api/discuss/update/reply/" + this.article_id + "/" + this.comment_id, send, function (data) {
                     if (data.status === "OK") {
                         alert("更改成功");
                         that.$router.push({
                             path: `/discuss/thread/${that.article_id}`
                         });
-                    } else {
+                    }
+                    else {
                         alert("Error!\n" + data.statement);
                     }
                 });

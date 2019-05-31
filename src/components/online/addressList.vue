@@ -85,7 +85,8 @@ export default {
             set: function (newval) {
                 if (!this.userlist) {
                     this.userlist = newval;
-                } else {
+                }
+                else {
                     this.tmp_userlist = newval;
                 }
             }

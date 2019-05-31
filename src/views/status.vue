@@ -5,13 +5,13 @@
         </h2>
         <div class="ui top attached tabular menu">
             <a v-cloak :class="(current_tag == 'status'?'active':'')+' item'" @click="tag('status',$event)"
-               id="submitstatus">提交状态</a>
-            <a v-cloak :class="(current_tag == 'graph'?'active':'')+' item'" @click="tag('graph',$event)" id="graph">提交图表</a>
+               id="submitstatus">{{$t("submit status")}}</a>
+            <a v-cloak :class="(current_tag == 'graph'?'active':'')+' item'" @click="tag('graph',$event)" id="graph">{{$t("submit graph")}}</a>
             <a :class="(current_tag == 'result'?'active':'') + ' item'" @click="tag('result',$event)">
-                结果统计
+                {{$t("result statistic")}}
             </a>
             <a :class="(current_tag == 'user'?'active':'') + ' item'" @click="tag('user',$event)">
-                用户统计
+                {{$t("user statistic")}}
             </a>
         </div>
         <div class="ui bottom attached segment" v-show="current_tag == 'status'">
@@ -19,16 +19,16 @@
                 <form id=simform class="ui form segment" method="get">
                     <div class="four fields">
                         <div class="field">
-                            <label>{{target.problem_id}}</label>
+                            <label>{{$t("problem_id")}}</label>
                             <input v-model="problem_id" class="form-control" type=text size=4 name=problem_id>
                         </div>
                         <div class="field">
-                            <label>{{target.user_id}}</label>
+                            <label>{{$t("user_id")}}</label>
                             <input v-model="user_id" class="form-control" type=text size=4 name=user_id
                                    value=''>
                         </div>
                         <div class="field">
-                            <label>{{target.language}}</label>
+                            <label>{{$t("language")}}</label>
                             <div class="ui fluid search dropdown selection" size="1">
                                 <input v-model="language" @change="language=$event.target.value"
                                        type="hidden" name="language">
@@ -46,7 +46,7 @@
                             </div>
                         </div>
                         <div class="field">
-                            <label>{{target.result}}</label>
+                            <label>{{$t("result")}}</label>
                             <div class="ui fluid search dropdown selection" size="1">
                                 <input v-model="problem_result" @change="problem_result=$event.target.value"
                                        type="hidden" name="jresult">
@@ -70,30 +70,30 @@
                         <div class="field" style="margin:auto">
                             <div class="ui toggle checkbox">
                                 <input type="checkbox" @click="auto_refresh=!auto_refresh" checked="true">
-                                <label>自动刷新</label>
+                                <label>{{$t("auto refresh")}}</label>
                             </div>
                         </div>
                         <div class="field" style="margin:auto">
                             <div class="ui toggle checkbox">
                                 <input type="checkbox" @click="sim_checkbox=!sim_checkbox">
-                                <label>仅显示判重提交</label>
+                                <label>{{$t("show cheat only")}}</label>
                             </div>
                         </div>
                         <div v-if="isadmin" class="field" style="margin:auto">
                             <div class="ui toggle checkbox">
                                 <input type="checkbox" @click="privilege=!privilege">
-                                <label>不显示测试运行</label>
+                                <label>{{$t("test run invisible")}}</label>
                             </div>
                         </div>
-                        <div class="field">
-                            <div class="ui toggle checkbox" style="margin:auto">
+                        <div class="field" style="margin:auto">
+                            <div class="ui toggle checkbox">
                                 <input type="checkbox" @click="list_self_only">
-                                <label>仅显示本人提交</label>
+                                <label>{{$t("show user only")}}</label>
                             </div>
                         </div>
                         <div class="field">
                             <button class="ui labeled icon mini button" @click.prevent="search($event)">
-                                <i class="search icon"></i>搜索</button>
+                                <i class="search icon"></i>{{$t("search")}}</button>
                         </div>
 
                     </div>
@@ -167,7 +167,40 @@
         </div>
     </div>
 </template>
-
+<i18n>
+    {
+        "zh-cn": {
+            "auto refresh": "自动刷新",
+            "show cheat only": "仅显示判重提交",
+            "test run invisible": "不显示测试运行",
+            "show user only": "仅显示本人提交",
+            "submit status": "提交状态",
+            "submit graph": "提交图表",
+            "result statistic": "结果统计",
+            "user statistic": "用户统计"
+        },
+        "en": {
+            "auto refresh": "Auto Refresh",
+            "show cheat only": "Show Cheating Only",
+            "test run invisible": "Exclude TestRun Submission",
+            "submit status": "Submit Status",
+            "show user only": "Show Yourself Only",
+            "submit graph": "Submission Graph",
+            "result statistic": "Result Statistics",
+            "user statistic": "User statistics"
+        },
+        "ja": {
+            "auto refresh": "自動リフレッシュ",
+            "show cheat only": "チート提出のみを表示",
+            "test run invisible": "テスト提出を表示しない",
+            "submit status": "提出リスト",
+            "show user only": "自分だけを表示",
+            "submit graph": "提出グラフ",
+            "result statistics": "結果統計",
+            "user statistic": "ユーザー統計"
+        }
+    }
+</i18n>
 <script>
 import statusTable from "../components/status/status-table";
 import * as am4core from "@amcharts/amcharts4/core";
@@ -403,9 +436,11 @@ function drawDynamicInteractiveLineChart (dataSets, prefix, target) {
     }
     if (window.temp_data_object && window.temp_data_object[target]) {
         adapter_object = window.temp_data_object[target];
-    } else if (dataSets === undefined) {
+    }
+    else if (dataSets === undefined) {
         return;
-    } else {
+    }
+    else {
         hasRendered[target] = true;
         _.forEach(dataSets, function (d) {
             if (!adapter_object[d[full_name]]) {
@@ -416,7 +451,8 @@ function drawDynamicInteractiveLineChart (dataSets, prefix, target) {
             }
             if (!adapter_object[d[full_name]].version[d[full_version]]) {
                 adapter_object[d[full_name]].version[d[full_version]] = 1;
-            } else {
+            }
+            else {
                 ++adapter_object[d[full_name]].version[d[full_version]];
             }
         });
@@ -684,7 +720,8 @@ export default {
                         }
                     });
                 });
-            } else if (newVal === "graph") {
+            }
+            else if (newVal === "graph") {
                 $.get("/api/user/register_timeline", function (data) {
                     if (data.status == "OK") {
                         _.delay(drawRegisterTimeline, 0, data.data);
@@ -765,7 +802,8 @@ export default {
             var self_user_id = this.$store.getters.user_id;
             if (this.user_id == null || this.user_id != self_user_id) {
                 this.user_id = self_user_id;
-            } else {
+            }
+            else {
                 this.user_id = null;
             }
             this.search();

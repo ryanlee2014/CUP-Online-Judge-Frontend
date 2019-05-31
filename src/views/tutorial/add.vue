@@ -60,7 +60,8 @@ export default {
             $.get("/api/status/" + this.id + "/my/null/4/0", function (data) {
                 if (data.result.length == 0) {
                     alert("未找到相关提交！");
-                } else {
+                }
+                else {
                     that.solution_id = data.result[0].solution_id;
                 }
             });
@@ -80,7 +81,8 @@ export default {
                     that.$router.push({
                         path: `/tutorial/${that.id}`
                     });
-                } else {
+                }
+                else {
                     alert("服务器遇到错误\n" + data.statement);
                 }
             });

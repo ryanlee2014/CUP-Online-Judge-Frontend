@@ -71,7 +71,8 @@ export default {
                 if (!this.userlist) {
                     this.userlist = newval;
                     this.need_popup = true;
-                } else {
+                }
+                else {
                     this.tmp_userlist = newval;
                     var oldUser = []; var newUser = [];
                     _.forEach(this.userlist, function (v) {

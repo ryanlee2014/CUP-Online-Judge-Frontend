@@ -93,9 +93,9 @@
             </div>
             <div class="label progess_text"></div>
         </div>
-        <div :class="'ui warning message '+(hide_warning?'hidden':'')" class="ui warning message hidden">
+        <div :class="'ui warning message '+(hide_warning?'hidden':'')" class="ui warning message hidden ">
             <i class="close icon"></i>
-            <div class="header compile">
+            <div class="header compile same_width">
             </div>
         </div>
         <br>
@@ -229,7 +229,8 @@ export default {
             localStorage.submitConfig = JSON.stringify(this.config);
             if (val) {
                 this.theme = "vs-dark";
-            } else {
+            }
+            else {
                 this.theme = "ace/theme/monokai";
             }
         },
@@ -358,10 +359,12 @@ export default {
             let config;
             if (!localStorage.submitConfig) {
                 localStorage.submitConfig = JSON.stringify(config = defaultConfig);
-            } else {
+            }
+            else {
                 try {
                     config = JSON.parse(localStorage.submitConfig);
-                } catch (e) {
+                }
+                catch (e) {
                     config = defaultConfig;
                 }
             }
@@ -377,7 +380,8 @@ export default {
                         mergetext += "\n/*请在下方编写你的代码,仅需提交填写的部分*/\n";
                         if (that.$store.getters.code.length !== 0) {
                             mergetext += that.$store.getters.code;
-                        } else {
+                        }
+                        else {
                             mergetext += "\n\n\n\n";
                         }
                         mergetext += "\n/*请在上方填写你的代码,仅需提交填写的部分*/\n";
@@ -469,5 +473,9 @@ export default {
         display: block;
         margin-left: auto;
         margin-right: auto;
+    }
+
+    .same_width {
+        font-family: Consolas,"Courier New",Courier,FreeMono,monospace!important;
     }
 </style>

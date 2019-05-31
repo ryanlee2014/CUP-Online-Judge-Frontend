@@ -135,7 +135,8 @@ export default {
                         if (typeof this.from !== "string") {
                             this.from = "";
                         }
-                    } else {
+                    }
+                    else {
                         if (data.contest_mode) {
                             this.contest_mode = true;
                             return;

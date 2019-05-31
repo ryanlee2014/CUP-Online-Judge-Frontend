@@ -164,7 +164,8 @@ function drawLineChart (data, target = "default") {
         _.forEach(data, function (val) {
             data_array.push({ date: new Date(val.in_date), value: val.code_length });
         });
-    } else {
+    }
+    else {
         return;
     }
     am4core.useTheme(am4themes_animated);
@@ -344,7 +345,8 @@ export default {
         },
         setQuery: function () {
             var queryObject = {};
-            if (this.current_page !== 0) { queryObject["page"] = this.current_page + 1; } else {
+            if (this.current_page !== 0) { queryObject["page"] = this.current_page + 1; }
+            else {
                 delete queryObject["page"];
             }
             this.$router.push({ path: this.$route.path, query: queryObject });
@@ -364,7 +366,8 @@ export default {
         $.get("/api/problemstatus/" + this.pid + "?page=" + this.current_page, function (data) {
             if (data.status == "OK") {
                 that.submitStatus = data;
-            } else {
+            }
+            else {
                 return;
             }
             var colors = _.values(window.chartColors);
@@ -411,11 +414,13 @@ export default {
                     const s = parseFloat(a.substring(1, a.length));
                     const t = parseFloat(b.split("-")[0]);
                     return s - t;
-                } else if (b.indexOf(">") !== -1) {
+                }
+                else if (b.indexOf(">") !== -1) {
                     const s = parseFloat(a.split("-")[0]);
                     const t = parseFloat(b.substring(1, b.length));
                     return s - t;
-                } else {
+                }
+                else {
                     const s = parseFloat(a.split("-")[0]);
                     const t = parseFloat(b.split("-")[0]);
                     return s - t;
@@ -466,7 +471,8 @@ export default {
                     let str = arr[0] + "MB";
                     if (arr.length > 1) { str += " - " + arr[1] + "MB"; }
                     return str;
-                } else {
+                }
+                else {
                     let str = index.substring(1, index.length);
                     str = (parseFloat(str) / 1024).toFixed(2);
                     return ">" + str + "MB";
@@ -477,11 +483,13 @@ export default {
                     const s = parseFloat(a.substring(1, a.length));
                     const t = parseFloat(b.split("-")[0]);
                     return s - t;
-                } else if (b.charAt(0) === ">") {
+                }
+                else if (b.charAt(0) === ">") {
                     let s = parseFloat(a.split("-")[0]);
                     let t = parseFloat(b.substring(1, b.length));
                     return s - t;
-                } else {
+                }
+                else {
                     let s = parseFloat(a.split("-")[0]);
                     let t = parseFloat(b.split("-")[0]);
                     return s - t;
@@ -501,7 +509,8 @@ export default {
                     var diffstr = arr[0] + "MB";
                     if (arr.length > 1) { diffstr += " - " + arr[1] + "MB"; }
                     mlang[val.language][diffstr] = val.total;
-                } else {
+                }
+                else {
                     var str = val.diff.substring(1, val.diff.length);
                     str = (parseFloat(str) / 1024).toFixed(2);
                     mlang[val.language][">" + str + "MB"] = val.total;

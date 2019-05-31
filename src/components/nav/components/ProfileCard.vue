@@ -70,7 +70,8 @@ export default {
         img_url: function () {
             if (this.avatar && this.user_id.length > 0) {
                 return "/avatar/" + this.user_id + ".jpg";
-            } else {
+            }
+            else {
                 return "/assets/images/wireframe/white-image.png";
             }
         }

@@ -138,8 +138,8 @@ const XLSX = require("xlsx");
 const $ = window.$ = window.jQuery = require("jquery");
 const { reset: bindDragEvent } = require("dragscroll");
 require("../../static/js/semantic.min");
-let submission_collection = [];
-let convert_flag = false;
+let submissionCollection = [];
+let convertFlag = false;
 
 export default {
     name: "ContestRank",
@@ -181,7 +181,7 @@ export default {
                     if (!Array.isArray(val)) {
                         val = [val];
                     }
-                    val = submission_collection = submission_collection.concat(val);
+                    val = submissionCollection = submissionCollection.concat(val);
                     if (this.firstRender) {
                         this.firstRender = false;
                         this.firstBloodList = firstBloodListFactory(that.total);
@@ -192,17 +192,19 @@ export default {
                         this.submitter = submitter = Object.values(submitter);
                         submitter.forEach(this.updateSubmitter);
                         this.calculateRank();
-                    } else {
+                    }
+                    else {
                         let submitter = this.userStructure;
                         let lazyUpdateSet = new Set();
                         this.fillSubmitterList(submitter, val);
-                        val.forEach(el => lazyUpdateSet.add(submitter[el.user_id.toLowerCase()]));
+                        val.forEach(el => typeof submitter[el.user_id.toLowerCase()] !== "undefined" ? lazyUpdateSet.add(submitter[el.user_id.toLowerCase()]) : "");
                         lazyUpdateSet.forEach(this.updateSubmitter);
                         this.calculateRank();
                     }
-                    window.temp_data = submission_collection;
+                    window.temp_data = submissionCollection;
                     window.datas = this.submitter;
-                } catch (e) {
+                }
+                catch (e) {
                     that.state = false;
                     that.submitter = {};
                     console.log(e);
@@ -222,10 +224,10 @@ export default {
         fillSubmitterList (submitter, val) {
             const len = val.length;
             for (let i = 0; i < len; ++i) {
-                const private_contest = this.users.length > 0;
+                const privateContest = this.users.length > 0;
                 if (!submitter[val[i].user_id.toLowerCase()]) {
-                    if (private_contest) {
-                        return;
+                    if (privateContest) {
+                        continue;
                     }
                     submitter[val[i].user_id.toLowerCase()] = SubmitterFactory(val[i].nick, this.total, val[i].user_id);
                 }
@@ -243,44 +245,49 @@ export default {
             this.submitter.sort(SubmitterComparator("greater"));
             let rnk = 1;
             window.submitter = this.submitter;
-            _.forEach(this.submitter, val => val.ac > 0 ? val.rank = rnk++ : val.rank = rnk);
+            _.forEach(this.submitter, val => (val.rank = (val.ac > 0 ? rnk++ : rnk)));
         },
         rankClass (rank, total) {
             if (parseInt(rank) === 1) {
                 return "ui yellow";
-            } else if (rank <= total * 0.1 + 1) {
+            }
+            else if (rank <= total * 0.1 + 1) {
                 return "ui yellow";
-            } else if (rank <= total * 0.3 + 1) {
+            }
+            else if (rank <= total * 0.3 + 1) {
                 return "ui grey";
-            } else if (rank <= total * 0.6 + 1) {
+            }
+            else if (rank <= total * 0.6 + 1) {
                 return "ui orange";
-            } else {
+            }
+            else {
                 return "ui white";
             }
         },
         playRanklist () {
             this.auto_update = false;
             this.playing = true;
-            const backup_temp_data = this.backup_data = submission_collection;
-            backup_temp_data.sort((a, b) => {
+            const backupTempData = this.backup_data = submissionCollection;
+            backupTempData.sort((a, b) => {
                 const atime = dayjs(a.in_date);
                 const btime = dayjs(b.in_date);
                 return atime.isAfter(btime) ? 1 : -1;
             });
-            submission_collection = [];
+            submissionCollection = [];
             this.submitter = {};
             this.firstRender = true;
             this.playInterval = setInterval(() => {
-                if (backup_temp_data.length > 0) {
-                    let data = backup_temp_data.shift();
-                    while (backup_temp_data.length > 0 && data.result < 4 && data.result >= 11) {
-                        data = backup_temp_data.shift();
+                if (backupTempData.length > 0) {
+                    let data = backupTempData.shift();
+                    while (backupTempData.length > 0 && data.result < 4 && data.result >= 11) {
+                        data = backupTempData.shift();
                     }
                     this.scoreboard = data;
-                    if (backup_temp_data.length === 0) {
+                    if (backupTempData.length === 0) {
                         this.endInterval();
                     }
-                } else {
+                }
+                else {
                     this.endInterval();
                 }
             }, 30);
@@ -293,7 +300,7 @@ export default {
         stopPlayRanklist () {
             this.playing = false;
             clearInterval(this.playInterval);
-            this.scoreboard = this.backup_data;
+            this.scoreboard = this.backup_data.filter(el => typeof el !== "undefined");
             this.backup_data = [];
             this.auto_update = true;
         },
@@ -301,7 +308,8 @@ export default {
             const fill_zero = function (str) {
                 if (str.length < 2) {
                     return "0" + str;
-                } else {
+                }
+                else {
                     return str;
                 }
             };
@@ -314,13 +322,15 @@ export default {
             sec = fill_zero(sec);
             if (mode) {
                 return hour + "：" + minute + "：" + sec;
-            } else { return hour + ":" + minute + ":" + sec; }
+            }
+            else { return hour + ":" + minute + ":" + sec; }
         },
         format_color: function (num) {
             let str = num.toString(16);
             if (num < 16) {
                 return "0" + str + "0" + str;
-            } else {
+            }
+            else {
                 return "" + str + "" + str;
             }
         },
@@ -346,15 +356,15 @@ export default {
         },
         exportXLS: function () {
             let doc = document.getElementById("save");
-            let plain_text = "<html xmlns:o=\"urn:schemas-microsoft-com:office:office\" xmlns:x=\"urn:schemas-microsoft-com:office:excel\" xmlns=\"http://www.w3.org/TR/REC-html40\">" + "<head><meta http-equiv='Content-Type' content='application/vnd.ms-excel; charset=utf-8' /></head>";
-            plain_text += "<center><h3>Contest " + this.cid + " " + this.title + "</h3></center>";
-            plain_text += "<table border=1>" + doc.innerHTML.replace("<tbody>", "").replace("</tbody>", "");
-            plain_text += "<tr><td colspan='8'>环境指纹指根据用户的硬件环境及IP地址不同而产生的不同的指纹</td></tr>";
-            plain_text += "<tr><td colspan='8'>硬件指纹指的是不受IP影响的指纹</td></tr>";
-            plain_text += "<tr><td colspan='8'>若环境指纹与硬件指纹均唯一，代表用户使用相同设备在相同地点完成提交</td></tr>";
-            plain_text += "<tr><td colspan='8'>若硬件指纹唯一而环境指纹不唯一，代表同型号机器在不同IP地址提交</td></tr>";
-            plain_text += "<tr><td colspan='8'>若硬件指纹不唯一，代表使用了多台设备进行提交</td></tr>";
-            plain_text += "</table></html>";
+            let XLSContentHTML = "<html xmlns:o=\"urn:schemas-microsoft-com:office:office\" xmlns:x=\"urn:schemas-microsoft-com:office:excel\" xmlns=\"http://www.w3.org/TR/REC-html40\">" + "<head><meta http-equiv='Content-Type' content='application/vnd.ms-excel; charset=utf-8' /></head>";
+            XLSContentHTML += "<center><h3>Contest " + this.cid + " " + this.title + "</h3></center>";
+            XLSContentHTML += "<table border=1>" + doc.innerHTML.replace("<tbody>", "").replace("</tbody>", "");
+            XLSContentHTML += "<tr><td colspan='8'>环境指纹指根据用户的硬件环境及IP地址不同而产生的不同的指纹</td></tr>";
+            XLSContentHTML += "<tr><td colspan='8'>硬件指纹指的是不受IP影响的指纹</td></tr>";
+            XLSContentHTML += "<tr><td colspan='8'>若环境指纹与硬件指纹均唯一，代表用户使用相同设备在相同地点完成提交</td></tr>";
+            XLSContentHTML += "<tr><td colspan='8'>若硬件指纹唯一而环境指纹不唯一，代表同型号机器在不同IP地址提交</td></tr>";
+            XLSContentHTML += "<tr><td colspan='8'>若硬件指纹不唯一，代表使用了多台设备进行提交</td></tr>";
+            XLSContentHTML += "</table></html>";
             const wopts = { bookType: "xlsx", bookSST: false, type: "binary" };// 这里的数据是用来定义导出的格式类型
             // const wopts = { bookType: 'csv', bookSST: false, type: 'binary' };//ods格式
             // const wopts = { bookType: 'ods', bookSST: false, type: 'binary' };//ods格式
@@ -374,7 +384,8 @@ export default {
                     let view = new Uint8Array(buf);
                     for (let i = 0; i !== s.length; ++i) view[i] = s.charCodeAt(i) & 0xFF;
                     return buf;
-                } else {
+                }
+                else {
                     let buf = new Array(s.length);
                     for (let i = 0; i !== s.length; ++i) buf[i] = s.charCodeAt(i) & 0xFF;
                     return buf;
@@ -383,10 +394,11 @@ export default {
 
             // downloadExl(doc);
             let blob;
-            blob = new Blob([plain_text], { type: "application/vnd.ms-excel;charset=UTF-8;" });
-            if (convert_flag) {
+            blob = new Blob([XLSContentHTML], { type: "application/vnd.ms-excel;charset=UTF-8;" });
+            if (convertFlag) {
                 saveAs(blob, "Contest " + this.cid + " 多个contest.xls");
-            } else { saveAs(blob, "Contest " + this.cid + " " + this.title + ".xls"); }
+            }
+            else { saveAs(blob, "Contest " + this.cid + " " + this.title + ".xls"); }
             // var table = TableExport(document.getElementById("save"));
             // var d = table.getExportData().save.xlsx;
             // var filename = "Contest " + this.cid;
@@ -407,7 +419,8 @@ export default {
                     };
                     if (!this.auto_update) {
                         this.waiting_queue.push(ndata);
-                    } else {
+                    }
+                    else {
                         this.scoreboard = ndata;
                     }
                 }
@@ -447,9 +460,9 @@ export default {
         }
     },
     updated: function () {
-        const new_title = "ContestRank: " + this.title;
-        if (document.title !== new_title) {
-            document.title = new_title;
+        const newTitle = "ContestRank: " + this.title;
+        if (document.title !== newTitle) {
+            document.title = newTitle;
         }
         $("#rank").find("tr").each(function () {
             $(this).find("td").eq(2).css({
@@ -465,7 +478,7 @@ export default {
     },
     mounted: function () {
         window.datas = [];
-        submission_collection = [];
+        submissionCollection = [];
         document.title = `Contest Rank ${this.cid} -- ${document.title}`;
         const that = this;
         bindDragEvent();
@@ -474,7 +487,8 @@ export default {
             let cidArr = [];
             if (cid.indexOf(",") !== -1) {
                 cidArr = cid.split(",");
-            } else {
+            }
+            else {
                 cidArr = [cid];
             }
             let cnt = 0;
@@ -492,7 +506,8 @@ export default {
                             let str;
                             if (d.contest_mode === true) {
                                 str = "根据设置，内容非公开";
-                            } else {
+                            }
+                            else {
                                 str = "Contest " + cid + ":\n" + d.statement;
                             }
                             str = str.replace(/\n/g, "<br>");
@@ -513,9 +528,10 @@ export default {
                         cnt += d.total;
 
                         if (cidArr.length > 0) {
-                            convert_flag = true;
+                            convertFlag = true;
                             work();
-                        } else {
+                        }
+                        else {
                             finished = true;
                             that.total = cnt;
                             that.users = Array.from(users);
@@ -528,7 +544,8 @@ export default {
             if (cidArr.length > 1) {
                 that.title = cidArr.join(",");
                 work();
-            } else {
+            }
+            else {
                 cid = cidArr.shift();
                 $.get("/api/scoreboard/" + cid, () => {
                     $.get("/api/scoreboard/" + cid, function (d) {
@@ -549,7 +566,7 @@ export default {
                         });
 
                         that.scoreboard = d.data;
-                        submission_collection = d.data;
+                        submissionCollection = d.data;
                         data = d.data;
                         if (typeof d.title === "string" && d.title.length === 0) {
                             d.title = "未设置标题";

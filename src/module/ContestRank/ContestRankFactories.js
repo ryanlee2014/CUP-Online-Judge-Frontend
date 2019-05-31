@@ -15,9 +15,11 @@ String.prototype.hashCode = function () {
 function earlyFirstComparator (a, b) {
     if (a.isBefore(b)) {
         return 1;
-    } else if (a.isAfter(b)) {
+    }
+    else if (a.isAfter(b)) {
         return -1;
-    } else {
+    }
+    else {
         return 0;
     }
 }
@@ -51,7 +53,8 @@ function ProblemFactory () {
                 this["_" + index].add(data.toString().hashCode());
                 this[index].push(data);
             }
-        } else if (typeof this[index] === "number") {
+        }
+        else if (typeof this[index] === "number") {
             this[index] = data;
         }
         return this;
@@ -81,12 +84,14 @@ function ProblemFactory () {
                 if (submission.isBefore(this.accept[0])) {
                     ++this.try_time;
                     difftime += 1200;
-                } else {
+                }
+                else {
                     break;
                 }
             }
             return difftime;
-        } else {
+        }
+        else {
             return 0;
         }
     };
@@ -107,7 +112,8 @@ function ProblemListFactory (total) {
     problem.get = function (i) {
         if (typeof problem[i] !== "undefined") {
             return problem[i];
-        } else {
+        }
+        else {
             total = Math.max(i, total);
             return problem[i] = ProblemFactory();
         }
@@ -236,7 +242,8 @@ function firstBloodListFactory (total) {
     first_blood.get = function (i) {
         if (typeof this[i] !== "undefined") {
             return this[i];
-        } else {
+        }
+        else {
             return this[i] = firstBloodFactory();
         }
     };

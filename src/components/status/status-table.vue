@@ -2,19 +2,19 @@
     <table align="center" class="ui padded selectable unstackable table" v-cloak width="90%">
         <thead>
         <tr class='toprow'>
-            <th width="8%">{{target.solution_id}}</th>
+            <th width="8%">{{$t("solution_id")}}</th>
             <th>
                 <div class="ui grid">
                     <div class="four wide column"></div>
-                    <div class="twelve wide column">{{target.user}}</div>
+                    <div class="twelve wide column">{{$t("user_id")}}</div>
                 </div>
             </th>
-            <th>{{target.problem_id}}</th>
-            <th width="14%">{{target.result}}</th>
-            <th v-if="isadmin">{{target.contest_id}}</th>
-            <th>{{target.memory}}/{{target.time}}</th>
-            <th>{{target.language}}/{{target.length}}</th>
-            <th>{{target.submit_time}}/{{target.judger}}</th>
+            <th>{{$t("problem_id")}}</th>
+            <th width="14%">{{$t("result")}}</th>
+            <th v-if="isadmin">{{$t("contest_id")}}</th>
+            <th>{{$t("memory")}}/{{$t("time")}}</th>
+            <th>{{$t("language")}}/{{$t("length")}}</th>
+            <th>{{$t("submit_time")}}/{{$t("judger")}}</th>
         </tr>
         </thead>
         <tbody>
@@ -69,13 +69,13 @@
             <td>
                 <router-link :to="`/usercode/local/${row.solution_id}`" class="boldstatus"
                              v-if="self === row.user_id || isadmin || row.share == 1">
-                    查看
+                    {{$t("view")}}
                 </router-link>
                 <span class="boldstatus" v-else>{{language_name[row.language]}}</span>
                 <span v-if="(self === row.user_id || isadmin || row.share == 1) && row.problem_id"> / </span>
                 <router-link :to="`/problem/submit/${Math.abs(row.problem_id)}/${Math.abs(row.solution_id)}`"
                              class="boldstatus"
-                             v-if="(self === row.user_id || isadmin || row.share == 1) && row.problem_id">编辑
+                             v-if="(self === row.user_id || isadmin || row.share == 1) && row.problem_id">{{$t("edit")}}
                 </router-link>
                 <br>
                 <span class="boldstatus" v-if="(self === row.user_id || isadmin || row.share == 1)">{{language_name[row.language]}} / </span>

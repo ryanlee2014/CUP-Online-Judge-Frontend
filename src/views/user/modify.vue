@@ -158,7 +158,8 @@ export default {
                     if (data.status === "OK") {
                         alert("更改成功");
                         // location.reload();
-                    } else {
+                    }
+                    else {
                         alert("服务器遇到错误: \n" + data.statement);
                     }
                 });
@@ -169,7 +170,8 @@ export default {
         img_src () {
             if (this.avatar) {
                 return `/avatar/${this.user_id}.jpg`;
-            } else {
+            }
+            else {
                 return "https://semantic-ui.com/images/wireframe/square-image.png";
             }
         }

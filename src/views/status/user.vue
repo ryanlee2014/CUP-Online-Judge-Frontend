@@ -126,15 +126,18 @@ function drawgraph (_data, div = 10) {
     _.forEach(_data, function (val) {
         if (val >= gap) {
             ++target[cnt].count;
-        } else {
+        }
+        else {
             try {
                 if (target.length - 1 > cnt) {
                     ++target[++cnt].count;
                     gap -= diff;
-                } else {
+                }
+                else {
                     ++target[cnt].count;
                 }
-            } catch (e) {
+            }
+            catch (e) {
                 console.log("cnt", cnt);
                 console.log("val", val);
             }
@@ -263,7 +266,8 @@ export default {
                     $.get("/api/scoreboard/" + val + "/line", function (data) {
                         if (data.status == "OK") {
                             resolve(data.data);
-                        } else {
+                        }
+                        else {
                             reject(val);
                         }
                     });
@@ -320,7 +324,8 @@ export default {
             let current_type = this.type;
             if (current_type != type) {
                 this.order = 1;
-            } else {
+            }
+            else {
                 this.order = -this.order;
             }
             this.type = type;
@@ -340,7 +345,8 @@ export default {
                     return;
                 }
                 this.ranged = true;
-            } else {
+            }
+            else {
                 this.ranged = false;
             }
             if (this.ranged) { this.generate(this.raw_data); }

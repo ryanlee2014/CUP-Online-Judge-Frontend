@@ -9,7 +9,8 @@ function getInfo (commit, tryTime) {
             if (data.status === "OK") {
                 commit("setUserData", data.data);
                 commit("loginMutate", { login: true });
-            } else {
+            }
+            else {
                 getInfo(commit, tryTime - 1);
             }
         });

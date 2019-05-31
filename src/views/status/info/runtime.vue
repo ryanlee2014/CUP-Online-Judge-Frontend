@@ -55,7 +55,8 @@ export default {
                 if (data.status === "OK") {
                     let text = data.data.info;
                     this.initContext(text);
-                } else {
+                }
+                else {
                     this.info = "您无权访问";
                 }
             });
@@ -119,7 +120,8 @@ export default {
                         modified: modifiedModel
                     });
                 });
-            } else {
+            }
+            else {
                 this.info = text.split("\n").join("<br>").split(" ").join("&nbsp;");
             }
         }

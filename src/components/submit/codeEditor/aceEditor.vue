@@ -56,7 +56,8 @@ export default {
         theme (val) {
             if (val.includes("ace")) {
                 this.editor.setTheme(val);
-            } else {
+            }
+            else {
                 this.editor.setTheme("ace/theme/monokai");
             }
         }
@@ -79,7 +80,8 @@ export default {
             let theme;
             try {
                 theme = JSON.parse(localStorage.submitConfig).theme;
-            } catch (e) {
+            }
+            catch (e) {
                 theme = defaultTheme;
             }
             return theme;

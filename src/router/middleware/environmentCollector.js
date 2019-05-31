@@ -21,7 +21,8 @@ export default function () {
     let storePlatformInfo = {};
     try {
         storePlatformInfo = JSON.parse(localStorage.platformInfo);
-    } catch (e) {
+    }
+    catch (e) {
         storePlatformInfo = {};
     }
 
@@ -30,7 +31,8 @@ export default function () {
             .then(({ data }) => {
                 if (data.status !== "OK") {
                     console.error("Error occur while post system config");
-                } else {
+                }
+                else {
                     localStorage.platformInfo = JSON.stringify(PlatformInfo);
                 }
             });

@@ -24,7 +24,8 @@ export default {
             .then(({ data }) => {
                 if (data.status === "OK") {
                     this.info = this.convertHTML(data.data.info).split(" ").join("&nbsp;");
-                } else {
+                }
+                else {
                     this.info = "您无权访问";
                 }
             });

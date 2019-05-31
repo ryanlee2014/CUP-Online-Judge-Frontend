@@ -89,7 +89,8 @@ export default {
             if (this.editor) {
                 if (val.includes("vs") || val.includes("hc-black")) {
                     monaco.editor.setTheme(val);
-                } else {
+                }
+                else {
                     monaco.editor.setTheme("vs-dark");
                 }
             }
@@ -130,7 +131,8 @@ export default {
             let data;
             try {
                 data = JSON.parse(localStorage.submitConfig)[key];
-            } catch (e) {
+            }
+            catch (e) {
                 data = defaultValue;
             }
             return data;

@@ -1,5 +1,6 @@
 <template>
     <div class="right menu" v-if="logined">
+        <Locale></Locale>
         <router-link to="/online" exact-active-class="active" class="item online_num" v-html="serverInfo"></router-link>
         <div class="ui dropdown item detail" tabindex="0">
             <div class="text"><span class="profile_group">{{nick}}</span></div>
@@ -8,6 +9,7 @@
         </div>
     </div>
     <div class="right menu" v-else>
+        <Locale></Locale>
         <div class="item">
             <router-link class="ui button" to="/login">登录</router-link>
         </div>
@@ -18,8 +20,12 @@
 </template>
 
 <script>
+import Locale from "../components/locale";
 export default {
     name: "SocketMenu",
+    components: {
+        Locale
+    },
     props: {
         nick: {
             type: String,
@@ -49,7 +55,8 @@ export default {
         serverInfo: function () {
             if (this.connected) {
                 return "<i class='users icon'></i>" + this.user + "人" + "&nbsp;<i class='microchip icon'></i>" + this.judger;
-            } else {
+            }
+            else {
                 return "与服务器连接丢失";
             }
         }

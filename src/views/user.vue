@@ -557,12 +557,15 @@ export default {
                         res.sort(function (a, b) {
                             if (!isNaN(a.problem_id) && !isNaN(b.problem_id)) {
                                 return parseInt(a.problem_id) - parseInt(b.problem_id);
-                            } else {
+                            }
+                            else {
                                 if (a.problem_id < b.problem_id) {
                                     return 1;
-                                } else if (a.problem_id === b.problem_id) {
+                                }
+                                else if (a.problem_id === b.problem_id) {
                                     return 0;
-                                } else {
+                                }
+                                else {
                                     return -1;
                                 }
                             }
@@ -578,25 +581,31 @@ export default {
                         }
                         if (val.oj_name === "LOCAL") {
                             local.push(val);
-                        } else if (val.oj_name === "HDU") {
+                        }
+                        else if (val.oj_name === "HDU") {
                             hdu.push(val);
-                        } else if (val.oj_name === "POJ") {
+                        }
+                        else if (val.oj_name === "POJ") {
                             poj.push(val);
-                        } else if (val.oj_name === "UVA") {
+                        }
+                        else if (val.oj_name === "UVA") {
                             uva.push(val);
-                        } else {
+                        }
+                        else {
                             other.push(val);
                         }
                         if (other_site_submission[val.oj_name] && other_site_submission[val.oj_name].length > 0) {
                             other_site_submission[val.oj_name].push(val);
-                        } else {
+                        }
+                        else {
                             other_site_submission[val.oj_name] = [val];
                         }
                     });
                     analsubmission.sort(function (a, b) {
                         if (a.time.isBefore(b.time)) {
                             return -1;
-                        } else {
+                        }
+                        else {
                             return 1;
                         }
                     });
@@ -610,7 +619,8 @@ export default {
                             if (parseInt(val.result) === 4) {
                                 acobj[daystr] = 1;
                             }
-                        } else {
+                        }
+                        else {
                             ++timeobj[daystr];
                             if (parseInt(val.result) === 4) {
                                 ++acobj[daystr];
@@ -635,10 +645,12 @@ export default {
                             if (privilege[i].rightstr === "administrator") {
                                 privilege = "管理员";
                                 break;
-                            } else if (privilege[i].rightstr === "source_browser") {
+                            }
+                            else if (privilege[i].rightstr === "source_browser") {
                                 privilege = "代码检查员";
                                 break;
-                            } else if (privilege[i].rightstr === "editor") {
+                            }
+                            else if (privilege[i].rightstr === "editor") {
                                 privilege = "问题编辑";
                                 break;
                             }
@@ -730,7 +742,8 @@ export default {
                             let date = row.year + "-" + row.month + "-" + row.day;
                             if (!countForDate[date]) {
                                 countForDate[date] = row.cnt;
-                            } else {
+                            }
+                            else {
                                 countForDate[date] += row.cnt;
                             }
                         });
@@ -762,49 +775,56 @@ export default {
                                                 _.reduce(that.submission.local, function (result, val) {
                                                     if (val.result == 6) {
                                                         return result + 1;
-                                                    } else {
+                                                    }
+                                                    else {
                                                         return result;
                                                     }
                                                 }, 0),
                                                 _.reduce(that.submission.local, function (result, val) {
                                                     if (val.result == 10) {
                                                         return result + 1;
-                                                    } else {
+                                                    }
+                                                    else {
                                                         return result;
                                                     }
                                                 }, 0),
                                                 _.reduce(that.submission.local, function (result, val) {
                                                     if (val.result == 7) {
                                                         return result + 1;
-                                                    } else {
+                                                    }
+                                                    else {
                                                         return result;
                                                     }
                                                 }, 0),
                                                 _.reduce(that.submission.local, function (result, val) {
                                                     if (val.result == 8) {
                                                         return result + 1;
-                                                    } else {
+                                                    }
+                                                    else {
                                                         return result;
                                                     }
                                                 }, 0),
                                                 _.reduce(that.submission.local, function (result, val) {
                                                     if (val.result == 9) {
                                                         return result + 1;
-                                                    } else {
+                                                    }
+                                                    else {
                                                         return result;
                                                     }
                                                 }, 0),
                                                 _.reduce(that.submission.local, function (result, val) {
                                                     if (val.result == 11) {
                                                         return result + 1;
-                                                    } else {
+                                                    }
+                                                    else {
                                                         return result;
                                                     }
                                                 }, 0),
                                                 _.reduce(that.submission.local, function (result, val) {
                                                     if (val.result == 5) {
                                                         return result + 1;
-                                                    } else {
+                                                    }
+                                                    else {
                                                         return result;
                                                     }
                                                 }, 0)
@@ -871,49 +891,56 @@ export default {
                                                 _.reduce(that.submission.local, function (sum, val) {
                                                     if (val.language === "0" || val.language === "21") {
                                                         return sum + 1;
-                                                    } else {
+                                                    }
+                                                    else {
                                                         return sum;
                                                     }
                                                 }, 0),
                                                 _.reduce(that.submission.local, function (sum, val) {
                                                     if (val.language === "1" || val.language === "19" || val.language === "20") {
                                                         return sum + 1;
-                                                    } else {
+                                                    }
+                                                    else {
                                                         return sum;
                                                     }
                                                 }, 0),
                                                 _.reduce(that.submission.local, function (sum, val) {
                                                     if (val.language === "3" || val.language === "23" || val.language === "24") {
                                                         return sum + 1;
-                                                    } else {
+                                                    }
+                                                    else {
                                                         return sum;
                                                     }
                                                 }, 0),
                                                 _.reduce(that.submission.local, function (sum, val) {
                                                     if (val.language === "6") {
                                                         return sum + 1;
-                                                    } else {
+                                                    }
+                                                    else {
                                                         return sum;
                                                     }
                                                 }, 0),
                                                 _.reduce(that.submission.local, function (sum, val) {
                                                     if (val.language === "13") {
                                                         return sum + 1;
-                                                    } else {
+                                                    }
+                                                    else {
                                                         return sum;
                                                     }
                                                 }, 0),
                                                 _.reduce(that.submission.local, function (sum, val) {
                                                     if (val.language === "14") {
                                                         return sum + 1;
-                                                    } else {
+                                                    }
+                                                    else {
                                                         return sum;
                                                     }
                                                 }, 0),
                                                 _.reduce(that.submission.local, function (sum, val) {
                                                     if (val.language === "2") {
                                                         return sum + 1;
-                                                    } else {
+                                                    }
+                                                    else {
                                                         return sum;
                                                     }
                                                 }, 0)

@@ -8,7 +8,8 @@ export default function () {
     this.setNext = function (fn) {
         if (typeof fn === "function") {
             _next = fn;
-        } else {
+        }
+        else {
             throw nextFunctionError;
         }
     };
@@ -20,7 +21,8 @@ export default function () {
                 throw new Error("next function has not set");
             }
             _next(config);
-        } else {
+        }
+        else {
             for (let i = 0; i < length; ++i) {
                 if (typeof _middlewares[i] !== "function") {
                     throw argumentNotFunctionError;

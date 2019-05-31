@@ -5,8 +5,8 @@
             <h2 class="ui dividing header">
                 Problem Set
                 <div class="sub header" v-cloak>
-                    共开放{{total||0}}题
-                    {{recent_one_month !== -1 && (!label) && (!search_tag) ? "最近一个月添加" + recent_one_month + "题" : "" }}
+                    {{$tc("totalProblem", (total || 0), {n: total || 0})}}
+                    {{recent_one_month !== -1 && (!label) && (!search_tag) ? $tc("addProblem", recent_one_month, {n: recent_one_month}) : "" }}
                 </div>
             </h2>
             <div class="ui grid">
@@ -16,52 +16,52 @@
                             <div class="five wide column">
                                 <div class="ui search">
                                     <div class="ui icon input">
-                                        <input class="prompt" type="text" name="search" id="psearch"
-                                               placeholder="Problem,ID or Keyword" @keypress.enter="enter($event)">
+                                        <input @keypress.enter="enter($event)" class="prompt" id="psearch" name="search"
+                                               placeholder="Problem,ID or Keyword" type="text">
                                         <i class="search icon"></i>
                                     </div>
                                     <div class="results"></div>
                                 </div>
                             </div>
                             <div class="ten wide right aligned aligned column">
-                                <selected-tag v-if="search_tag || label" :color="table.color" :data="search_tag"
-                                              :label="label"></selected-tag>
+                                <selected-tag :color="table.color" :data="search_tag" :label="label"
+                                              v-if="search_tag || label"></selected-tag>
                                 <router-link class="ui mini labeled icon button" to="/problem/upload">
-                                    <i class="plus icon"></i>添加题目
+                                    <i class="plus icon"></i>{{$t("addproblem")}}
                                 </router-link>
                             </div>
                         </div>
                         <div class="ui grid">
                             <div class="sixteen wide column half_padding">
                                 <pagination
-                                        :total="total"
-                                        :page_cnt="page_cnt"
-                                        :current_page="current_page"></pagination>
+                                    :current_page="current_page"
+                                    :page_cnt="page_cnt"
+                                    :total="total"></pagination>
                             </div>
                         </div>
                     </div>
                     <div class="three wide column">
                         <div class="row half_padding">
                             <div class="sixteen wide column">
-                                <div class="ui toggle checkbox" id="show_tag" @click="check">
+                                <div @click="check" class="ui toggle checkbox" id="show_tag">
                                     <input type="checkbox">
-                                    <label>显示标签</label>
+                                    <label>{{$t("labelvisible")}}</label>
                                 </div>
                             </div>
                         </div>
                         <div class="row half_padding">
                             <div class="sixteen wide column">
-                                <div class="ui toggle checkbox" id="hide_currect" @click="hide">
+                                <div @click="hide" class="ui toggle checkbox" id="hide_currect">
                                     <input type="checkbox">
-                                    <label>隐藏通过题目</label>
+                                    <label>{{$t("hidepassedproblem")}}</label>
                                 </div>
                             </div>
                         </div>
                         <div class="row half_padding">
                             <div class="sixteen wide column">
-                                <div class="ui toggle checkbox" id="show_cloud" @click="cloud">
+                                <div @click="cloud" class="ui toggle checkbox" id="show_cloud">
                                     <input type="checkbox">
-                                    <label>显示标签云</label>
+                                    <label>{{$t("showlabelcloud")}}</label>
                                 </div>
                             </div>
                         </div>
@@ -75,12 +75,12 @@
                     <div class="row">
 
                         <main-content
-                                :data="table"
-                                :dim="dim"
-                                :show_tag="show_tag"
-                                :order="order"
-                                :order_target="order_target"
-                                :hide_currect="hide_currect"
+                            :data="table"
+                            :dim="dim"
+                            :hide_currect="hide_currect"
+                            :order="order"
+                            :order_target="order_target"
+                            :show_tag="show_tag"
                         >
                         </main-content>
                     </div>
@@ -90,7 +90,7 @@
 
                         <div class="ui fluid card">
                             <div class="content">
-                                <div class="header">Label Cloud</div>
+                                <div class="header">{{$t("labelcloud")}}</div>
                             </div>
                             <div class="content">
                                 <div id="word-cloud">
@@ -103,9 +103,9 @@
                     <div class="ui grid">
                         <div class="sixteen wide column half_padding">
                             <pagination
-                                    :total="total"
-                                    :page_cnt="page_cnt"
-                                    :current_page="current_page"></pagination>
+                                :current_page="current_page"
+                                :page_cnt="page_cnt"
+                                :total="total"></pagination>
                         </div>
                     </div>
                 </div>
@@ -124,7 +124,8 @@ import mixins from "../mixin/init";
 import G2 from "@antv/g2";
 import DataSet from "@antv/data-set";
 // eslint-disable-next-line no-unused-vars
-const $ = require("jquery"); const jQuery = $;
+const $ = require("jquery");
+const jQuery = $;
 window.jQuery = $;
 const _ = require("lodash");
 require("../static/js/semantic.min");
@@ -136,8 +137,9 @@ $("#show_tag")
         onUnchecked: function () {
         }
     });
-var HEIGHT = 320;
-var MAX_SIZE = 25; var MIN_SIZE = 20;
+let HEIGHT = 320;
+let MAX_SIZE = 25;
+let MIN_SIZE = 20;
 
 function getTextAttrs (cfg) {
     return _.assign({}, cfg.style, {
@@ -152,7 +154,7 @@ function getTextAttrs (cfg) {
     });
 }
 
-var _parameterCache = {};
+let _parameterCache = {};
 
 function getParameterByName (name, url) {
     if (!url) url = window.location.href;
@@ -161,15 +163,15 @@ function getParameterByName (name, url) {
     }
     // eslint-disable-next-line no-useless-escape
     name = name.replace(/[\[\]]/g, "\\$&");
-    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)");
-    var results = regex.exec(url);
+    let regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)");
+    let results = regex.exec(url);
     if (!results) return null;
     if (!results[2]) return "";
     return (_parameterCache[name + url] = decodeURIComponent(results[2].replace(/\+/g, " ")));
 }
 
 function parseQueryString (query) {
-    var parsed = {};
+    let parsed = {};
     query.replace(
         new RegExp("([^?=&]+)(=([^&]*))?", "g"),
         function ($0, $1, $2, $3) {
@@ -179,7 +181,7 @@ function parseQueryString (query) {
     return parsed;
 }
 
-var query_string = parseQueryString(window.location.hash.substring(1));
+let query_string = parseQueryString(window.location.hash.substring(1));
 export default {
     name: "problemset",
     mixins: [mixins],
@@ -224,20 +226,26 @@ export default {
     },
     methods: {
         setQuery: function () {
-            var queryObject = {};
-            if (this.page !== 0) { queryObject["page"] = this.current_page + 1; }
-            if (this.search_tag && this.search_tag !== "" && this.search_tag.length > 0) { queryObject["tag"] = this.search_tag; }
-            if (this.label && this.label !== "" && this.label.length > 0) { queryObject["label"] = this.label; }
+            let queryObject = {};
+            if (this.page !== 0) {
+                queryObject["page"] = this.current_page + 1;
+            }
+            if (this.search_tag && this.search_tag !== "" && this.search_tag.length > 0) {
+                queryObject["tag"] = this.search_tag;
+            }
+            if (this.label && this.label !== "" && this.label.length > 0) {
+                queryObject["label"] = this.label;
+            }
             this.$router.push({ path: this.$route.path, query: queryObject });
         },
         page: function (num, arrow) {
             this.dim = true;
-            var page = this.current_page = arrow ? this.current_page + arrow : num;
-            var search_tag = this.search_tag || "none";
-            var order = this.order;
-            var order_target = this.order_target;
+            let page = this.current_page = arrow ? this.current_page + arrow : num;
+            let search_tag = this.search_tag || "none";
+            let order = this.order;
+            let order_target = this.order_target;
             // handler.activate.call(obj.target);
-            var that = this;
+            let that = this;
             this.setQuery();
             $.get("/api/problemset/" + page + "/" + search_tag + "/" + order_target + "/" + order + "/?label=" + this.label, function (data) {
                 that.dim = false;
@@ -246,12 +254,12 @@ export default {
         },
         sort: function (target, event, default_order = 0) {
             this.dim = true;
-            var prev_target_equal_to_current = this.order_target == target;
+            let prev_target_equal_to_current = this.order_target == target;
             this.order_target = target;
-            var page = this.current_page = 0;
-            var search_tag = this.search_tag || "none";
-            var order = this.order = prev_target_equal_to_current ? (-this.order + 1) : default_order;
-            var that = this;
+            let page = this.current_page = 0;
+            let search_tag = this.search_tag || "none";
+            let order = this.order = prev_target_equal_to_current ? (-this.order + 1) : default_order;
+            let that = this;
             $.get("/api/problemset/" + page + "/" + search_tag + "/" + target + "/" + order + "/?label=" + this.label, function (data) {
                 that.dim = false;
                 that.tables = data;
@@ -262,12 +270,12 @@ export default {
                 return;
             }
             this.label = label;
-            var search_tag = this.search_tag || "none";
+            let search_tag = this.search_tag || "none";
             this.dim = true;
-            var order_target = this.order_target;
-            var page = this.current_page = 0;
-            var order = this.order;
-            var that = this;
+            let order_target = this.order_target;
+            let page = this.current_page = 0;
+            let order = this.order;
+            let that = this;
             this.setQuery();
             $.get("/api/problemset/" + page + "/" + search_tag + "/" + order_target + "/" + order + "/?label=" + this.label, function (data) {
                 that.dim = false;
@@ -280,10 +288,10 @@ export default {
             }
             this.search_tag = label == "none" ? "" : label;
             this.dim = true;
-            var order_target = this.order_target;
-            var page = this.current_page = 0;
-            var order = this.order;
-            var that = this;
+            let order_target = this.order_target;
+            let page = this.current_page = 0;
+            let order = this.order;
+            let that = this;
             this.setQuery();
             $.get("/api/problemset/" + page + "/" + label + "/" + order_target + "/" + order + "/?label=" + this.label, function (data) {
                 that.dim = false;
@@ -291,12 +299,17 @@ export default {
             });
         },
         remove: function (type) {
-            if (type == "search") { this.search_tag = ""; } else { this.label = ""; }
+            if (type == "search") {
+                this.search_tag = "";
+            }
+            else {
+                this.label = "";
+            }
             this.dim = true;
-            var order_target = this.order_target;
-            var page = this.current_page;
-            var order = this.order;
-            var that = this;
+            let order_target = this.order_target;
+            let page = this.current_page;
+            let order = this.order;
+            let that = this;
             this.setQuery();
             $.get("/api/problemset/" + page + "/" + (this.search_tag || "none") + "/" + order_target + "/" + order + "/?label=" + this.label, function (data) {
                 that.dim = false;
@@ -319,17 +332,17 @@ export default {
             localStorage.setItem("show_label_cloud", Boolean(this.show_label_cloud));
         },
         enter: function (obj) {
-            var val = obj.target.value || "none";
+            let val = obj.target.value || "none";
             this.searching(val);
         },
         drawLabelCloud: function () {
             this.has_draw = true;
-            var that = this;
+            let that = this;
             new Promise(function () {
                 $.get("/api/problem/local/?label=true", function (d) {
                     G2.Shape.registerShape("point", "cloud", {
                         drawShape: function drawShape (cfg, container) {
-                            var attrs = getTextAttrs(cfg);
+                            let attrs = getTextAttrs(cfg);
                             return container.addShape("text", {
                                 attrs: _.assign(attrs, {
                                     x: cfg.x,
@@ -338,17 +351,17 @@ export default {
                             });
                         }
                     });
-                    var data = [];
-                    for (var i = 0; i < d.data.length; ++i) {
+                    let data = [];
+                    for (let i = 0; i < d.data.length; ++i) {
                         data.push({
                             tag: d.data[i],
                             count: Math.random() * i
                         });
                     }
-                    var dv = new DataSet.View().source(data);
-                    var range = dv.range("count");
-                    var min = range[0];
-                    var max = range[1];
+                    let dv = new DataSet.View().source(data);
+                    let range = dv.range("count");
+                    let min = range[0];
+                    let max = range[1];
                     dv.transform({
                         type: "tag-cloud",
                         fields: ["tag", "count"],
@@ -364,7 +377,7 @@ export default {
                             return ((d.count - min) / (max - min)) * (MAX_SIZE - MIN_SIZE) + MIN_SIZE;
                         }
                     });
-                    var chart = that.chart = new G2.Chart({
+                    let chart = that.chart = new G2.Chart({
                         container: "word-cloud",
                         forceFit: true,
                         height: HEIGHT,
@@ -396,8 +409,8 @@ export default {
         }
     },
     created: function () {
-        var that = this;
-        var page = parseInt(getParameterByName("page") || query_string.page || "1") - 1;
+        let that = this;
+        let page = parseInt(getParameterByName("page") || query_string.page || "1") - 1;
         $(document).ready(function () {
             $("#show_tag").checkbox((that.show_tag ? "" : "un") + "check");
             $("#hide_currect").checkbox((that.hide_currect ? "" : "un") + "check");
@@ -411,7 +424,8 @@ export default {
         $.get("/api/problemset/" + page + "/" + (this.search_tag || "none") + "/" + this.order_target + "/" + this.order + "/?label=" + this.label, function (data) {
             if (data.total) {
                 that.tables = data;
-            } else {
+            }
+            else {
                 that.contest_mode = data.contest_mode;
             }
         });
@@ -447,3 +461,19 @@ export default {
 <style scoped>
 
 </style>
+<i18n>
+    {
+        "zh-cn": {
+            "totalProblem": "共开放{n}题",
+            "addProblem": "最近一个月新增{n}题"
+        },
+        "en": {
+            "totalProblem": "Total {n} problem | Total {n} problems",
+            "addProblem": "{n} new problem in this month | {n} new problems in this month"
+        },
+        "ja": {
+            "totalProblem": "{n}の質問があります",
+            "addProblem": "{n}つの新しい質問を追加}"
+        }
+    }
+</i18n>

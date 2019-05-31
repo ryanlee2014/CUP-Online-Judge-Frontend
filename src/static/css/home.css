@@ -1125,7 +1125,7 @@ pre.console {
         height: 50px;
     }
     .stripe {
-        padding: 2em 0em !important;
+        padding: 2em 0 !important;
     }
 }
 

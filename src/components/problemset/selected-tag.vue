@@ -46,7 +46,8 @@ export default {
             var datas = this.datas;
             if (datas && datas.color && datas.color[label]) {
                 return datas.color[label];
-            } else {
+            }
+            else {
                 return "";
             }
         }

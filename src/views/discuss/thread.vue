@@ -194,7 +194,8 @@ export default {
                 if (data.status == "OK") {
                     alert("回复成功");
                     location.reload();
-                } else {
+                }
+                else {
                     alert("回复失败！服务器发生未知错误");
                 }
             });
@@ -203,7 +204,8 @@ export default {
             $.get("/api/discuss/update/reply/block/" + this.id + "/" + comment_id, function (data) {
                 if (data.status == "OK") {
                     alert("操作成功");
-                } else {
+                }
+                else {
                     alert("操作失败");
                 }
             });

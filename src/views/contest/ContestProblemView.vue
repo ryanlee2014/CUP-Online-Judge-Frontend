@@ -4,7 +4,7 @@
         <LoginForm v-if="mode === 1"></LoginForm>
         <contest-mode v-if="mode === 3"></contest-mode>
         <LimitHostname :content="limit_content" v-if="mode === 4"></LimitHostname>
-        <div class="padding ui container" v-if="mode === 0">
+        <div class="padding" v-if="mode === 0">
             <h2 class="ui dividing header">
                 Contest Problem Set
             </h2>
@@ -18,24 +18,24 @@
                                         style="cursor:pointer">
                                     <i :class="'sort numeric icon ' + (order > 0?'up':'down')" v-if="type === 0"></i>
                                     <i class="checkmark icon" style="opacity: 0" v-else></i>
-                                    编号
+                                    {{$t("id")}}
                                 </a></th>
                                 <th @click="orderBy(1)" width='44%'><a style="cursor:pointer">
                                     <i :class="'sort numeric icon ' + (order > 0?'up':'down')" v-if="type === 1"></i>
                                     <i class="checkmark icon" style="opacity: 0" v-else></i>
-                                    标题</a></th>
+                                    {{$t("title")}}</a></th>
                                 <th v-if="now.isAfter(end_time)" width="10%">
                                 </th>
                                 <th style="text-align: center;" width='16%'>
                                     <a style="cursor:pointer"><span @click="orderBy(2)">
                             <i :class="'sort numeric icon ' + (order > 0?'up':'down')" v-if="type === 2"></i>
-                            正确</span></a>/<a style="cursor:pointer"><span @click="orderBy(3)">
+                            {{$t("accept")}}</span></a>/<a style="cursor:pointer"><span @click="orderBy(3)">
                                 <i :class="'sort numeric icon ' + (order > 0?'up':'down')"
-                                   v-if="type === 3"></i>提交</span></a></th>
+                                   v-if="type === 3"></i>{{$t("submit")}}</span></a></th>
                                 <th @click="orderBy(4)" style="text-align: center;" width='12%'>
                                     <a style="cursor:pointer"><i :class="'sort numeric icon ' + (order > 0?'up':'down')"
                                                                  v-if="type === 4"></i>
-                                        通过率</a></th>
+                                        {{$t("accept percentage")}}</a></th>
                             </tr>
                             </thead>
                             <tbody>
@@ -53,7 +53,7 @@
                                     </router-link>
                                 </td>
                                 <td v-if="now.isAfter(end_time)">
-                                    <router-link :to="`/tutorial/${row.pid}`">题解</router-link>
+                                    <router-link :to="`/tutorial/${row.pid}`">{{$t("solution")}}</router-link>
                                 </td>
                                 <td style="text-align:center">{{row.accepted}}/{{row.submit}}</td>
                                 <td style="text-align: center;">{{(row.accepted * 100 /
@@ -130,7 +130,7 @@ export default {
                 return this.current_mode;
             },
             set: function (val) {
-                var diff = val !== this.current_mode;
+                let diff = val !== this.current_mode;
                 this.current_mode = val;
                 if (diff) {
                     this.run(this.run);
@@ -139,8 +139,8 @@ export default {
         }
     },
     mounted: function () {
-        const contest_id = this.$route.params.contest_id;
-        document.title = `Contest ${contest_id} -- ${document.title}`;
+        const contestID = this.$route.params.contest_id;
+        document.title = `Contest ${contestID} -- ${document.title}`;
         this.run(this.run);
     },
     updated: function () {
@@ -148,18 +148,20 @@ export default {
     },
     methods: {
         run: function (resolve) {
-            const contest_id = this.$route.params.contest_id;
+            const contestID = this.$route.params.contest_id;
             const that = this;
-            this.cid = parseInt(contest_id);
-            $.get("/api/contest/problem/" + contest_id, function (_d) {
+            this.cid = parseInt(contestID);
+            $.get("/api/contest/problem/" + contestID, function (_d) {
                 if (_d.status !== "OK") {
                     if (_d.statement === "Permission denied") {
                         that.mode = 1;
                         return;
-                    } else if (_d.error_code === 101) {
+                    }
+                    else if (_d.error_code === 101) {
                         that.mode = 2;
                         return;
-                    } else if (_d.contest_mode) {
+                    }
+                    else if (_d.contest_mode) {
                         that.mode = 3;
                         return;
                     }
@@ -168,24 +170,24 @@ export default {
                     if (!val.accepted) val.accepted = 0;
                     if (!val.submit) val.submit = 0;
                 });
-                var addr = _d.limit;
-                var contest_mode = _d.contest_mode;
+                let addr = _d.limit;
+                let contestMode = _d.contest_mode;
                 if (_d.admin) {
                     addr = null;
-                    contest_mode = false;
+                    contestMode = false;
                 }
-                if (addr && location.href.indexOf(addr) == -1) {
+                if (addr && location.href.indexOf(addr) === -1) {
                     that.mode = 4;
                     that.limit_content = "根据管理员设置的策略，本次contest请使用" + addr + "访问";
                     return;
                 }
                 that.problem_table = _d.data;
 
-                var info = _d.info;
+                let info = _d.info;
                 that.start_time = dayjs(info.start_time);
                 that.end_time = dayjs(info.end_time);
                 that.title = info.title;
-                that.contest_mode = contest_mode;
+                that.contest_mode = contestMode;
                 that.description = info.description;
                 that.admin = _d.admin;
                 // that.contest_mode = info.contest_mode;
@@ -196,42 +198,44 @@ export default {
             });
         },
         detect_source: function (row) {
-            if (!row.oj_name || row.oj_name.toLowerCase() == "local") {
+            if (!row.oj_name || row.oj_name.toLowerCase() === "local") {
                 return "new";
-            } else {
+            }
+            else {
                 return row.oj_name.toLowerCase();
             }
         },
         contest: function (html, num) {
             if (this.contest_mode) {
                 return "Problem " + String.fromCharCode("A".charCodeAt(0) + parseInt(num));
-            } else {
+            }
+            else {
                 return html;
             }
         },
         orderBy: function (type) {
-            var that = this;
+            let that = this;
             if (that.type === type) {
                 that.order = -that.order;
             }
-            var problemIdComparator = function (a, b) {
+            let problemIdComparator = function (a, b) {
                 return that.order * (a.pnum - b.pnum);
             };
-            var titleComparator = function (a, b) {
+            let titleComparator = function (a, b) {
                 return that.order * (a.title > b.title ? 1 : (a.title < b.title ? -1 : 0));
             };
-            var submitComparator = function (a, b) {
+            let submitComparator = function (a, b) {
                 return that.order * (a.submit - b.submit);
             };
-            var acceptedComparator = function (a, b) {
+            let acceptedComparator = function (a, b) {
                 return that.order * (a.accepted - b.accepted);
             };
-            var correctPercentageComparator = function (a, b) {
-                var currentA = a.accepted / Math.max(a.submit, 1);
-                var currentB = b.accepted / Math.max(b.submit, 1);
+            let correctPercentageComparator = function (a, b) {
+                let currentA = a.accepted / Math.max(a.submit, 1);
+                let currentB = b.accepted / Math.max(b.submit, 1);
                 return that.order * (currentA - currentB);
             };
-            var comparatorSet = [problemIdComparator, titleComparator, acceptedComparator, submitComparator, correctPercentageComparator];
+            let comparatorSet = [problemIdComparator, titleComparator, acceptedComparator, submitComparator, correctPercentageComparator];
             that.problem_table.sort(comparatorSet[type]);
             that.type = type;
         }

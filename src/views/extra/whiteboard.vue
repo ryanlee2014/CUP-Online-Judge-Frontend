@@ -107,7 +107,8 @@ export default {
         editorPackage (val) {
             if (val) {
                 this.theme = "vs-dark";
-            } else {
+            }
+            else {
                 this.theme = "ace/theme/monokai";
             }
         },

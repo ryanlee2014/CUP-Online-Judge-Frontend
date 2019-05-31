@@ -67,7 +67,8 @@ export default {
                     that.$router.push({
                         path: "/discuss"
                     });
-                } else {
+                }
+                else {
                     alert("服务器遇到错误\n" + data.statement);
                 }
             });

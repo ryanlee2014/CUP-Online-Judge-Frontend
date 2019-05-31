@@ -75,7 +75,8 @@ export default {
                         this.$router.push({
                             path: `/tutorial/${this.$route.query.problem_id}`
                         });
-                    } else {
+                    }
+                    else {
                         alert("服务器遇到错误\n" + data.statement);
                     }
                 });

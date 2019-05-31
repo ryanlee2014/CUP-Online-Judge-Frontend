@@ -28,7 +28,8 @@ export default {
             }, function (data) {
                 if (data.status == "OK") {
                     that.$parent.mode = 0;
-                } else {
+                }
+                else {
                     alert(data.statement);
                 }
             });

@@ -41,7 +41,8 @@ export default {
                 if (this.homepage) {
                     $("#app").animate({ marginTop: 0 });
                     $(".ui.borderless.network.secondary.menu").addClass("inverted");
-                } else {
+                }
+                else {
                     $("#app").animate({ marginTop: "60px" });
                     $(".ui.borderless.network.secondary.menu").removeClass("inverted");
                 }
@@ -62,4 +63,9 @@ export default {
     @import "./static/css/github.min.css";
     @import "./static/css/katex.min.css";
     @import "../node_modules/@ryanlee2014/mavon-editor/dist/css/index.css";
+    @media only screen and (min-width: 1200px) {
+        .ui.container {
+            width: 70%
+        }
+    }
 </style>

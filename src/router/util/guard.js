@@ -11,19 +11,22 @@ function checkAdmin (to, admin, next) {
     if (meta.admin) {
         if (admin) {
             next();
-        } else {
+        }
+        else {
             getSelfInfo().then(({ data }) => {
                 if (data.data && data.data.user_id) {
                     store.commit("setUserData", data.data);
                     store.commit("loginMutate", { login: true });
                     if (data.data.admin) {
                         next();
-                    } else {
+                    }
+                    else {
                         next({
                             path: "/"
                         });
                     }
-                } else {
+                }
+                else {
                     next({
                         path: "/login",
                         query: {
@@ -33,7 +36,8 @@ function checkAdmin (to, admin, next) {
                 }
             });
         }
-    } else if (!meta.admin) {
+    }
+    else if (!meta.admin) {
         next();
     }
 }
@@ -44,7 +48,8 @@ function getLoginInfo (to, next) {
             store.commit("loginMutate", { login: true });
             sessionStorage.isLogined = true;
             checkAdmin(to, store.getters.admin, next);
-        } else {
+        }
+        else {
             next({
                 path: "/login",
                 query: {
@@ -66,13 +71,16 @@ const Guard = function (to, from, next) {
     if (to.meta.auth) {
         if (store.getters.logined) {
             checkAdmin(to, store.getters.admin, next);
-        } else if (sessionStorage.isLogined === "true") {
+        }
+        else if (sessionStorage.isLogined === "true") {
             store.commit("loginMutate", { login: true });
             checkAdmin(to, store.getters.admin, next);
-        } else {
+        }
+        else {
             getLoginInfo(to, next);
         }
-    } else {
+    }
+    else {
         next();
     }
 };

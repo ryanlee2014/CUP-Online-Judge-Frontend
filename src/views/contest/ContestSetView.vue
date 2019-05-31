@@ -5,8 +5,8 @@
         </h2>
         <div class="ui top attached tabular menu">
             <a :class="(current_column === 'contest' ? 'active':'') + ' item'"
-               @click="current_column = 'contest'">测验</a>
-            <a :class="(current_column === 'rank' ? 'active':'') + ' item'" @click="current_column = 'rank'">排名统计</a>
+               @click="current_column = 'contest'">{{$t("test")}}</a>
+            <a :class="(current_column === 'rank' ? 'active':'') + ' item'" @click="current_column = 'rank'">{{$t("ranklist statistic")}}</a>
         </div>
 
         <div class="ui bottom attached segment" v-show="current_column === 'contest'">
@@ -14,7 +14,7 @@
                 <i class="notched circle loading icon"></i>
                 <div class="content">
                     <div class="header">
-                        当前服务器时间
+                        {{$t("current server time")}}
                     </div>
                     <p class="server_time"></p>
                 </div>
@@ -22,33 +22,28 @@
             <table class='ui padded celled unstackable selectable table' width=90%>
                 <thead>
                 <tr align=center class=toprow>
-                    <th width=10%>ID</th>
-                    <th width=45%>Name</th>
+                    <th width=55%>Name</th>
                     <th width=25%>Status</th>
-                    <th v-if="admin" width=10%>Available</th>
-                    <th width=10%>Private</th>
-                    <th>Creator</th>
+                    <th width=7%>Privilege</th>
+                    <th width="13%">Creator</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr :class="`${(key % 2 === 0 ? 'evenrow' : 'oddrow')} ${row.defunct === 'Y' ? 'active' : ''} ${contestIsRunning(row)}`"
+                <tr :class="`${(key % 2 === 0 ? 'evenrow' : 'oddrow')} ${row.defunct === 'Y' ? 'active' : ''}`"
                     :key="key"
                     v-for="(row,key) in contest_list">
                     <td>
-                        {{row.contest_id}}{{row.cmod_visible === 1 ? "(EXAM)" : ""}}
-                    </td>
-                    <td>
                         <router-link :to="`/contest/${row.contest_id}`">
-                            {{row.title}}
+                            {{`Contest ${row.contest_id}: ${row.title}`}}
                         </router-link>
                     </td>
-                    <td v-html="contestTimeFormat(row)">
-                    </td>
-                    <td v-if="admin">
-                        {{row.defunct === 'Y' ? "隐藏" : "显示"}}
+                    <td>
+                        <p style="margin-bottom: 0.25em" v-html="contestTimeFormat(row)"></p>
+                        <progress-bar :active="contestIsRunning(row)" :color="progressBarColor(row)" :percentage="percentageRunning(row)"
+                                      :size="'tiny'"></progress-bar>
                     </td>
                     <td>
-                        {{row.private ? "私有" : "公开"}}
+                        {{row.private ? $t("private") : $t("public")}}
                     </td>
                     <td>
                         <router-link :to="`/user/${row.user_id}`">
@@ -60,7 +55,7 @@
             </table>
         </div>
         <div class="ui bottom attached segment" v-show="current_column === 'rank'">
-            <h3 class="ui dividing header">排名统计</h3>
+            <h3 class="ui dividing header">{{$t("ranklist statistic")}}</h3>
             <div class="ui grid">
                 <div class="fourteen wide column">
                     <div class="ui fluid multiple search selection dropdown">
@@ -76,10 +71,10 @@
                     </div>
                 </div>
                 <div class="two wide column">
-                    <router-link class="primary button ui" :to="`/contest/rank/${select1}`">Go</router-link>
+                    <router-link :to="`/contest/rank/${select1}`" class="primary button ui">Go</router-link>
                 </div>
             </div>
-            <h3 class="ui dividing header">用户提交信息统计</h3>
+            <h3 class="ui dividing header">{{$t("user submit statistics")}}</h3>
             <div class="ui grid">
 
                 <div class="fourteen wide column">
@@ -95,21 +90,50 @@
                     </div>
                 </div>
                 <div class="two wide column">
-                    <router-link class="primary button ui" :to="`/status/user/contest/${select2}`">Go</router-link>
+                    <router-link :to="`/status/user/contest/${select2}`" class="primary button ui">Go</router-link>
                 </div>
             </div>
         </div>
     </div> <!-- /container -->
 </template>
+<i18n>
+    {
+        "zh-cn": {
+            "user submit statistics": "用户提交信息统计",
+            "current server time": "当前服务器时间",
+            "ranklist statistic": "排名统计",
+            "start": "开始",
+            "end": "结束"
+        },
+        "en": {
+            "user submit statistics": "User Submit Statistics",
+            "current server time": "Server Time",
+            "ranklist statistic": "Ranklist Statistics",
+            "start": "Start",
+            "end": "End"
+        },
+        "ja": {
+            "user submit statistics": "ユーザー提出統計",
+            "current server time": "サーバー時間",
+            "ranklist statistic": "ランキング統計",
+            "start": "始め",
+            "end": "終わり"
+        }
+    }
+</i18n>
 
 <script>
 import mixins from "../../mixin/init";
+import progressBar from "../../components/progress/progressBar";
 
 const $ = require("jquery");
 const dayjs = require("dayjs");
 export default {
     name: "ContestSetView",
     mixins: [mixins],
+    components: {
+        progressBar
+    },
     data () {
         return {
             admin: this.$store.getters.admin,
@@ -143,6 +167,7 @@ export default {
     methods: {
         init: function () {
             const diff = new Date().getTime() - new Date().getTime();
+
             function clock () {
                 let x, h, m, s, n, y, mon, d;
                 x = new Date(new Date().getTime() + diff);
@@ -156,6 +181,7 @@ export default {
                 n = y + "-" + mon + "-" + d + " " + (h >= 10 ? h : "0" + h) + ":" + (m >= 10 ? m : "0" + m) + ":" + (s >= 10 ? s : "0" + s);
                 $(".server_time").text(n);
             }
+
             clock();
             setInterval(clock, 1000);
         },
@@ -179,15 +205,21 @@ export default {
                     fullTextSearch: true
                 });
         },
+        progressBarColor (row) {
+            return this.contestIsRunning(row) ? "green" : "grey";
+        },
         contestIsRunning: function (row) {
-            const start_time = dayjs(row.start_time); const end_time = dayjs(row.end_time); const current_time = this.current_time;
-            return current_time.isBefore(end_time) && current_time.isAfter(start_time) ? "positive" : "";
+            const startTime = dayjs(row.start_time);
+            const endTime = dayjs(row.end_time);
+            const currentTime = this.current_time;
+            return currentTime.isBefore(endTime) && currentTime.isAfter(startTime);
         },
         formatDate: function (second) {
             let fill_zero = function (str) {
                 if (str.length < 2) {
                     return "0" + str;
-                } else {
+                }
+                else {
                     return str;
                 }
             };
@@ -202,13 +234,33 @@ export default {
             return `${day}天${hour}小时${minute}分${sec}秒`;
         },
         contestTimeFormat: function (row) {
-            const start_time = dayjs(row.start_time); const end_time = dayjs(row.end_time); const current_time = this.current_time;
-            if (current_time.isAfter(end_time)) {
-                return `已于${end_time.format("YYYY-MM-DD HH:mm:ss")}结束`;
-            } else if (current_time.isBefore(start_time)) {
-                return `将于${start_time.format("YYYY-MM-DD HH:mm:ss")}开始`;
-            } else {
-                return `${start_time.format("YYYY-MM-DD HH:mm:ss")}开始<br>还有${this.formatDate(end_time.diff(current_time, "second"))}结束<br>${end_time.format("YYYY-MM-DD HH:mm:ss")}结束`;
+            const startTime = dayjs(row.start_time);
+            const endTime = dayjs(row.end_time);
+            const currentTime = this.current_time;
+            if (currentTime.isAfter(endTime)) {
+                return `${endTime.format("YYYY-MM-DD HH:mm")}${this.$t("end")}`;
+            }
+            else if (currentTime.isBefore(startTime)) {
+                return `${startTime.format("YYYY-MM-DD HH:mm")}${this.$t("start")}`;
+            }
+            else {
+                return `${startTime.format("YYYY-MM-DD HH:mm")} ${this.$t("start")}<br>${endTime.format("YYYY-MM-DD HH:mm")} ${this.$t("end")}`;
+            }
+        },
+        percentageRunning: function (row) {
+            const startTime = dayjs(row.start_time);
+            const endTime = dayjs(row.end_time);
+            const currentTime = this.current_time;
+            if (currentTime.isBefore(startTime)) {
+                return 0;
+            }
+            else if (currentTime.isAfter(endTime)) {
+                return 100;
+            }
+            else {
+                let diffTime = currentTime.diff(startTime, "second");
+                let totalDiff = endTime.diff(startTime, "second");
+                return parseInt(Math.floor(diffTime * 100 / totalDiff));
             }
         },
         run: function () {

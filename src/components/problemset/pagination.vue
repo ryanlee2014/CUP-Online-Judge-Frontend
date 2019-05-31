@@ -45,7 +45,8 @@ export default {
         page: function (event, arrow) {
             if (arrow) {
                 this.$parent.page(null, arrow);
-            } else {
+            }
+            else {
                 this.$parent.page(parseInt(event.target.innerText) - 1);
             }
         }

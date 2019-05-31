@@ -94,7 +94,8 @@ export default {
                 }
                 if (data.discuss) {
                     that.table = data;
-                } else {
+                }
+                else {
                     that.table = {
                         discuss: data.data
                     };

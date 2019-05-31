@@ -13,14 +13,14 @@
                 <form class="ui form segment" method="get">
                     <div class="four fields">
                         <div class="field">
-                            <label>编号</label>
+                            <label>{{$t("problem_id")}}</label>
                             <div class="ui fluid search dropdown selection" size="1" id="cur_problem">
                                 <input v-model="problem_id" @change="problem_id=$event.target.value"
                                        type="hidden" name="problem_id">
                                 <i class="dropdown icon"></i>
                                 <div class="default text">All</div>
                                 <div class="menu">
-                                    <div class='item' data-value=''>未选择</div>
+                                    <div class='item' data-value=''>{{$t("not selected")}}</div>
                                     <div :key="i" v-for="i in Array.from(Array(total).keys())" class="item" :data-value="i">
                                         {{1001 + i}}
                                     </div>
@@ -28,12 +28,12 @@
                             </div>
                         </div>
                         <div class="field">
-                            <label>用户</label>
+                            <label>{{$t("user_id")}}</label>
                             <input v-model="user_id" class="form-control" type=text size=4 name=user_id
                                    value=''>
                         </div>
                         <div class="field">
-                            <label>语言</label>
+                            <label>{{$t("language")}}</label>
                             <div class="ui fluid search dropdown selection" size="1">
                                 <input v-model="language" @change="language=$event.target.value"
                                        type="hidden" name="language">
@@ -50,7 +50,7 @@
                             </div>
                         </div>
                         <div class="field">
-                            <label>结果</label>
+                            <label>{{$t("result")}}</label>
                             <div class="ui fluid search dropdown selection" size="1">
                                 <input v-model="problem_result" @change="problem_result=$event.target.value"
                                        type="hidden" name="jresult">
@@ -73,30 +73,30 @@
                         <div class="field">
                             <div class="ui toggle checkbox">
                                 <input type="checkbox" @click="auto_refresh=!auto_refresh" checked="true">
-                                <label>自动刷新</label>
+                                <label>{{$t("auto refresh")}}</label>
                             </div>
                         </div>
                         <div class="field" style="margin:auto">
                             <div class="ui toggle checkbox">
                                 <input type="checkbox" @click="sim_checkbox=!sim_checkbox">
-                                <label>仅显示判重提交</label>
+                                <label>{{$t("show cheat only")}}</label>
                             </div>
                         </div>
                         <div v-if="isadmin" class="field" style="margin:auto">
                             <div class="ui toggle checkbox">
                                 <input type="checkbox" @click="privilege=!privilege">
-                                <label>不显示测试运行</label>
+                                <label>{{$t("test run invisible")}}</label>
                             </div>
                         </div>
-                        <div class="field">
-                            <div class="ui toggle checkbox" style="margin:auto">
+                        <div class="field" style="margin:auto">
+                            <div class="ui toggle checkbox">
                                 <input type="checkbox" @click="list_self_only">
-                                <label>仅显示本人提交</label>
+                                <label>{{$t("show user only")}}</label>
                             </div>
                         </div>
                         <div class="field">
                             <button class="ui labeled icon mini button" @click.prevent="search($event)"><i
-                                    class="search icon"></i>搜索</button>
+                                    class="search icon"></i>{{$t("search")}}</button>
                         </div>
 
                     </div>
@@ -145,7 +145,43 @@
         </div>
     </div>
 </template>
-
+<i18n>
+    {
+        "zh-cn": {
+            "auto refresh": "自动刷新",
+            "show cheat only": "仅显示判重提交",
+            "test run invisible": "不显示测试运行",
+            "show user only": "仅显示本人提交",
+            "submit status": "提交状态",
+            "submit graph": "提交图表",
+            "result statistic": "结果统计",
+            "user statistic": "用户统计",
+            "not selected": "未选择"
+        },
+    "en": {
+            "auto refresh": "Auto Refresh",
+            "show cheat only": "Show Cheating Only",
+            "test run invisible": "Exclude TestRun Submission",
+            "submit status": "Submit Status",
+            "show user only": "Show Yourself Only",
+            "submit graph": "Submission Graph",
+            "result statistic": "Result Statistics",
+            "user statistic": "User statistics",
+            "not selected": "Not Selected"
+    },
+    "ja": {
+            "auto refresh": "自動リフレッシュ",
+            "show cheat only": "チート提出のみを表示",
+            "test run invisible": "テスト提出を表示しない",
+            "submit status": "提出リスト",
+            "show user only": "自分だけを表示",
+            "submit graph": "提出グラフ",
+            "result statistics": "結果統計",
+            "user statistic": "ユーザー統計",
+            "not selected": "選択されていません"
+        }
+    }
+</i18n>
 <script>
 import mixins from "../../mixin/init";
 import * as am4core from "@amcharts/amcharts4/core";
@@ -268,7 +304,8 @@ function drawLineChart (data, target = "default") {
         _.forEach(data, function (val) {
             data_array.push({ date: new Date(val.in_date), value: val.code_length });
         });
-    } else {
+    }
+    else {
         return;
     }
     am4core.useTheme(am4themes_animated);
@@ -437,7 +474,8 @@ export default {
                     _.forEach(val, function (v, idx) {
                         if (!langsum[idx]) {
                             langsum[idx] = v;
-                        } else {
+                        }
+                        else {
                             langsum[idx] += v;
                         }
                     });
@@ -447,7 +485,8 @@ export default {
                     _.forEach(val, function (v, idx) {
                         if (!statsum[idx]) {
                             statsum[idx] = v;
-                        } else {
+                        }
+                        else {
                             statsum[idx] += v;
                         }
                     });
@@ -539,7 +578,8 @@ export default {
             var self_user_id = Cookies.get("user_id");
             if (this.user_id == null || this.user_id != self_user_id) {
                 this.user_id = self_user_id;
-            } else {
+            }
+            else {
                 this.user_id = null;
             }
             this.search();

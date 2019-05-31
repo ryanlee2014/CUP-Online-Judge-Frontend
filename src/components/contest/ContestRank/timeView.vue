@@ -40,7 +40,8 @@ export default {
             var fill_zero = function (str) {
                 if (str.length < 2) {
                     return "0" + str;
-                } else {
+                }
+                else {
                     return str;
                 }
             };
@@ -54,7 +55,8 @@ export default {
             sec = fill_zero(sec);
             if (mode) {
                 return hour + " : " + minute + " : " + sec;
-            } else { return hour + ":" + minute + ":" + sec; }
+            }
+            else { return hour + ":" + minute + ":" + sec; }
         }
     }
 };

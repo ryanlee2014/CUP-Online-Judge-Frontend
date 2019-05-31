@@ -2,15 +2,15 @@
     <table class="ui padded selectable unstackable table" align="center" width="90%" v-if="finish">
         <thead v-cloak>
         <tr class='toprow'>
-            <th width="7%">{{target.solution_id}}</th>
+            <th width="7%">{{$t("solution_id")}}</th>
             <th width="18%"><div class="ui grid">
-            <div class="four wide column"></div><div class="twelve wide column">{{target.user}}</div></div></th>
-            <th width="10%">{{target.problem_id}}</th>
-            <th width="15%">{{target.result}}</th>
-            <th width="10%">{{target.memory+"/"+target.time}}</th>
-            <th width="13%">{{target.language+"/"+target.length}}</th>
-            <th width="18%">{{target.submit_time}}</th>
-            <th width="9%">{{target.judger}}</th>
+            <div class="four wide column"></div><div class="twelve wide column">{{$t("user")}}</div></div></th>
+            <th width="10%">{{$t("problem_id")}}</th>
+            <th width="15%">{{$t("result")}}</th>
+            <th width="10%">{{$t("memory")+"/"+$t("time")}}</th>
+            <th width="13%">{{$t("language")+"/"+$t("length")}}</th>
+            <th width="18%">{{$t("submit_time")}}</th>
+            <th width="9%">{{$t("judger")}}</th>
         </tr>
         </thead>
         <tbody>

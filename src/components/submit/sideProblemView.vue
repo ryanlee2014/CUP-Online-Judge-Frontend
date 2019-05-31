@@ -1,16 +1,18 @@
 <template>
     <div
-            id="total_control"
-            style="max-width:1300px;position:relative;margin:auto;height: 540px;border-radius: 10px">
-        <leftPanel :accepted="accepted" :description="description" :hint="hint" :input="input" :isadmin="isadmin" :iseditor="iseditor"
+        id="total_control"
+        style="max-width:1300px;position:relative;margin:auto;height: 540px;border-radius: 10px">
+        <leftPanel :accepted="accepted" :description="description" :hint="hint" :input="input" :isadmin="isadmin"
+                   :iseditor="iseditor"
                    :memory="memory"
-                   :normal_problem="normal_problem" :original_id="original_id" :output="output" :problem_id="problem_id" :sampleinput="sampleinput"
+                   :normal_problem="normal_problem" :original_id="original_id" :output="output" :problem_id="problem_id"
+                   :sampleinput="sampleinput"
                    :sampleoutput="sampleoutput"
                    :source="source" :spj="spj" :submit="submit" :switch_screen="switch_screen"
                    :time="time"
                    :title="title" :uploader="uploader"></leftPanel>
-        <rightPanel :append="append" :do_submit="do_submit" :lang_list="lang_list"
-                    :pre_test_run="pre_test_run" :prepend="prepend" :source_code="source_code"></rightPanel>
+        <rightPanel :append="append" :do_submit="do_submit" :lang_list="lang_list" :pre_test_run="pre_test_run"
+                    :prepend="prepend" :source_code="source_code" :submitDisabled="submitDisabled"></rightPanel>
 
     </div>
 </template>
@@ -29,6 +31,10 @@ export default {
         title: {
             type: String,
             default: ""
+        },
+        submitDisabled: {
+            type: Boolean,
+            default: false
         },
         source_code: {
             type: String,

@@ -9,17 +9,17 @@
                       v-show="order_target == 'problem_id'"></i>
                     <i :class="'sort numeric icon '+(order?'down':'up')"
                        style="opacity: 0" v-show="order_target != 'problem_id'"></i>
-                    编号
+                    {{$t("id")}}
                 </a></th>
-            <th class="left aligned" width='56%'>标题</th>
+            <th class="left aligned" width='56%'>{{$t("title")}}</th>
             <th width='15%'>
                 <a @click="sort('accepted',$event,1)"><i :class="'sort numeric icon '+(order?'down':'up')"
-                                                         v-show="order_target == 'accepted'"></i>正确
+                                                         v-show="order_target == 'accepted'"></i>{{$t("accept")}}
                 </a> / <a @click="sort('submit',$event,1)"><i :class="'sort numeric icon '+(order?'down':'up')"
-                                                              v-show="order_target == 'submit'"></i>提交
+                                                              v-show="order_target == 'submit'"></i>{{$t("submit")}}
             </a></th>
             <th style="cursor:hand" width='10%'><a @click="sort('present',$event,1)"><i
-                    :class="'sort numeric icon '+(order?'down':'up')" v-show="order_target == 'present'"></i>正确率</a>
+                    :class="'sort numeric icon '+(order?'down':'up')" v-show="order_target == 'present'"></i>{{$t("accept percentage")}}</a>
             </th>
         </tr>
         </thead>
@@ -83,7 +83,6 @@ export default {
     directives: {
         tableUpdated: {
             componentUpdated: function () {
-                console.log("directives");
                 $(".ui.sticky.element")
                     .sticky({
                         context: "#problemset",
@@ -133,9 +132,11 @@ export default {
                 labels.sort(function (a, b) {
                     if (a == "简单" || a == "普通" || a == "困难") {
                         return 1;
-                    } else if (b == "简单" || b == "普通" || b == "困难") {
+                    }
+                    else if (b == "简单" || b == "普通" || b == "困难") {
                         return -1;
-                    } else {
+                    }
+                    else {
                         if (a < b) return -1;
                         else if (a == b) return 0;
                         else return 1;
