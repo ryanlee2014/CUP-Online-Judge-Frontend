@@ -73,7 +73,11 @@ const router = new Router({
             path: "/online",
             name: "online",
             component: () => import("./views/online.vue"),
-            beforeEnter: adminAuth.adminAuth
+            beforeEnter: adminAuth.adminAuth,
+            meta: {
+                auth: true,
+                admin: true
+            }
         },
         {
             path: "/usercode/:from/:solution_id",

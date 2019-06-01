@@ -19,6 +19,7 @@ Vue.use(VueLazyload, {
 });
 
 Vue.config.productionTip = false;
+Vue.config.performance = true;
 Vue.use(new VueSocketIO({
     debug: process.env.NODE_ENV === "development",
     connection: location.origin,

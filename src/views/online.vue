@@ -5,11 +5,11 @@
                 <div class="ui column">
                     <div class='ui toggle checkbox refresh'>
                         <input type='checkbox' v-model="refresh">
-                        <label>停止自动刷新</label>
+                        <label>{{$t("stop auto refresh")}}</label>
                     </div>
                     <div class='ui toggle checkbox sort'>
                         <input type='checkbox'>
-                        <label>自动排序</label>
+                        <label>{{$t("auto sort")}}</label>
                     </div>
                 </div>
             </div>
@@ -22,7 +22,7 @@
         </div>
     </div>
 </template>
-
+<i18n src="../locales/views/online.json"></i18n>
 <script>
 import mixins from "../mixin/init";
 import addressList from "../components/online/addressList";

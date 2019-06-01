@@ -1,10 +1,10 @@
 <template>
     <div>
         <div class="ui top attached tabular menu">
-            <a @click="mode=1" :class="(mode === 1?'active':'')+' item'">所有用户</a>
-            <a @click="mode=2" :class="(mode === 2?'active':'')+' item'">现役队员</a>
-            <a @click="mode=3" :class="(mode === 3?'active':'')+' item'">退役队员</a>
-            <a @click="mode=4" :class="(mode === 4?'active':'')+' item'">新用户</a>
+            <a @click="mode=1" :class="(mode === 1?'active':'')+' item'">{{$t("all user")}}</a>
+            <a @click="mode=2" :class="(mode === 2?'active':'')+' item'">{{$t("current member")}}</a>
+            <a @click="mode=3" :class="(mode === 3?'active':'')+' item'">{{$t("retired member")}}</a>
+            <a @click="mode=4" :class="(mode === 4?'active':'')+' item'">{{$t("new user")}}</a>
         </div>
         <div class="ui bottom attached segment" v-show="mode === 1">
             <div class="ui stack segment">
@@ -58,7 +58,7 @@
                     <th width="10%" class="center head"><b>{{_name.user}}</b></th>
                     <th width="3%"></th>
                     <th width="15%"><b>{{_name.nick}}</b></th>
-                    <th width="55%" class="center head">个人介绍</th>
+                    <th width="55%" class="center head">{{$t("biography")}}</th>
                     <th width="10%" class="center head" style="text-align: center"><b>{{_name.accept}}</b></th>
                 </tr>
                 </thead>
@@ -95,8 +95,8 @@
                 <i class="left arrow icon"></i>
                 Prev
             </a>
-            <a @click="page*50<registed_user&&_page(1,$event)" class="ui right labeled icon button"
-               :class="'ui right labeled icon button '+((page+1)*50>=registed_user?'disabled':'')">
+            <a :class="'ui right labeled icon button '+((page+1)*50 >= registed_user?'disabled':'')" @click="page*50<registed_user&&_page(1,$event)"
+               class="ui right labeled icon button">
                 <i class="right arrow icon"></i>
                 Next
             </a>
@@ -106,6 +106,32 @@
         <table-card :content="recent_register" :page="page" :_name="_name" v-show="mode === 4" @click="mode = 4"></table-card>
     </div>
 </template>
+
+<i18n>
+    {
+        "zh-cn": {
+            "all user": "所有用户",
+            "current member": "现役队员",
+            "retired member": "退役队员",
+            "new user": "新用户",
+            "biography": "个人介绍"
+        },
+        "en": {
+            "all user": "All Users",
+            "current member": "ACM Member",
+            "retired member": "Retired Member",
+            "new user": "New Users",
+            "biography": "Motto"
+        },
+        "ja": {
+            "all user": "ユーザーリスト",
+            "current member": "チームメンバー",
+            "retired member": "リタイヤメンバー",
+            "new user": "新規ユーザー",
+            "biography": "モットー"
+        }
+    }
+</i18n>
 
 <script>
 import markdownIt from "../../lib/markdownIt/markdownIt";

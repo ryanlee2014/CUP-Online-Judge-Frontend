@@ -1,0 +1,14 @@
+{
+  "zh-cn": {
+    "stop auto refresh": "停止自动刷新",
+    "auto sort": "自动排序"
+  },
+  "en": {
+    "stop auto refresh": "Stop auto refresh",
+    "auto sort": "Auto sort"
+  },
+  "ja": {
+    "stop auto refresh": "自動リフレッシュしない",
+    "auto sort": "自動ソート"
+  }
+}

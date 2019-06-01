@@ -4,7 +4,7 @@
             <div class="ui grid">
                 <div class="five wide column">
                     <div class="column">
-                        <div class="ui card" style="">
+                        <div class="ui card" style="width: 100%">
                             <div class="image">
                                 <img :src="img_src()" id="head"
                                      onclick="document.getElementById('myinput').click()"><input id="myinput"
@@ -22,7 +22,7 @@
                     <form method="post">
                         <div class="ui top attached block header">Update Information</div>
                         <div class="ui bottom attached segment">
-                            <table>
+                            <table style="margin: auto; width: 100%;">
                                 <div class="ui form">
                                     <div class="two fields">
                                         <div class="field">
@@ -157,7 +157,6 @@ export default {
                 .then(({ data }) => {
                     if (data.status === "OK") {
                         alert("更改成功");
-                        // location.reload();
                     }
                     else {
                         alert("服务器遇到错误: \n" + data.statement);

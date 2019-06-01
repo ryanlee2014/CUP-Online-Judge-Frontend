@@ -16,7 +16,7 @@
                     <router-link :to="`/user/${value.user_id}`">{{value.nick}}</router-link>
                 </td>
                 <td style="
-    width: 450px;
+    width: 100%;
     float: left; /* add this */
     white-space: nowrap;
     overflow: hidden;
@@ -27,7 +27,6 @@
         </table>
     </div>
 </template>
-
 <script>
 import utils from "../../lib/util";
 import { mapGetters } from "vuex";
@@ -53,13 +52,13 @@ export default {
         }),
         user: {
             get: function () {
-                var newlist = [];
-                var doc = document.createElement("div");
+                let newlist = [];
+                let doc = document.createElement("div");
                 if (!this.userlist) return [];
-                for (var i = 0; i < this.userlist.length; ++i) {
-                    var tat = this.userlist[i];
-                    for (var j = 0; j < this.userlist[i].url.length; ++j) {
-                        var tmp = JSON.parse(JSON.stringify(tat));
+                for (let i = 0; i < this.userlist.length; ++i) {
+                    let tat = this.userlist[i];
+                    for (let j = 0; j < this.userlist[i].url.length; ++j) {
+                        let tmp = JSON.parse(JSON.stringify(tat));
                         tmp.url = tmp.url[j];
                         doc.innerHTML = tmp.nick;
                         tmp.nick = doc.innerText;
@@ -67,10 +66,10 @@ export default {
                         newlist.push(tmp);
                     }
                 }
-                if (localStorage.getItem("sort") == "true") {
+                if (localStorage.getItem("sort") === "true") {
                     newlist.sort(function (a, b) {
-                        var a1 = a["user_id"];
-                        var b1 = b["user_id"];
+                        let a1 = a["user_id"];
+                        let b1 = b["user_id"];
                         // if (!isNaN(parseInt(a1)) && !isNaN(parseInt(b1))) {
                         //   return parseInt(a1) - parseInt(b1);
                         // }
