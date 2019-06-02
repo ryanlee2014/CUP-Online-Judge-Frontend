@@ -12,28 +12,28 @@
                         <div :class="(!bodyOnTop ? 'five' :'sixteen' ) + ' wide center aligned column light element'">
                             <div class='ui mini buttons'>
                                 <router-link :to="`/status/problem/${original_id}`" class="ui button orange">
-                                    历史
+                                    {{$t("history")}}
                                 </router-link>
                                 <a @click.prevent="switch_screen($event)"
-                                   class='ui button blue'>切换双屏</a>
+                                   class='ui button blue'>{{$t("switch side screen")}}</a>
                                 <router-link :to="`/tutorial/${original_id}`" class="ui button teal"
                                              v-if="normal_problem || isadmin">
-                                    查看题解
+                                    {{$t("read solution")}}
                                 </router-link>
-                                <router-link v-if="iseditor||isadmin" :to="`/problem/edit/${original_id}`" class="ui button violet">编辑题目</router-link>
+                                <router-link v-if="iseditor||isadmin" :to="`/problem/edit/${original_id}`" class="ui button violet">{{$t("edit problem")}}</router-link>
                             </div>
                         </div>
                         <div :class="(!bodyOnTop ? 'six' :'eight' ) + ' wide center aligned column light element'">
                             <div class='ui labels'>
                                 <li class='ui label red'
-                                    v-text="time"></li>
+                                    v-text="$t('time limit') + ': ' + time + $t('second')"></li>
                                 <li class='ui label red'
-                                    v-text="memory"></li>
+                                    v-text="$t('memory limit') + ': ' + memory + 'MB'"></li>
                                 <li class='ui label orange' v-cloak v-show="spj">Special Judge</li>
                                 <li class='ui label grey'
-                                    v-text="submit"></li>
+                                    v-text="$t('submit') + ': ' + submit"></li>
                                 <li class='ui label green'
-                                    v-text="accepted"></li>
+                                    v-text="$t('accept') + ': ' + accepted"></li>
                             </div>
                         </div>
                     </div>
@@ -41,7 +41,7 @@
             </div>
         </div>
         <div :style="(bodyOnTop?'opacity:1;':'opacity:0;')" class="ui vertical segment single">
-            <div class="ui container">
+            <div>
                 <div class="ui vertical grid">
                     <div class="row no padding">
                         <div class="five wide column">
@@ -51,28 +51,28 @@
                         <div class="five wide center aligned column">
                             <div class='ui mini buttons'>
                                 <router-link :to="`/status/problem/${original_id}`" class="ui button orange">
-                                    历史
+                                    {{$t("history")}}
                                 </router-link>
                                 <a @click.prevent="switch_screen($event)"
-                                   class='ui button blue'>切换双屏</a>
+                                   class='ui button blue'>{{$t("switch side screen")}}</a>
                                 <router-link :to="`/tutorial/${original_id}`" class="ui button teal"
                                              v-if="normal_problem || isadmin">
-                                    查看题解
+                                    {{$t("read solution")}}
                                 </router-link>
-                                <router-link v-if="iseditor||isadmin" :to="`/problem/edit/${original_id}`" class="ui button violet">编辑题目</router-link>
+                                <router-link v-if="iseditor||isadmin" :to="`/problem/edit/${original_id}`" class="ui button violet">{{$t("edit problem")}}</router-link>
                             </div>
                         </div>
                         <div class="six wide center aligned column">
                             <div class='ui labels'>
                                 <li class='ui label red'
-                                    v-text="time"></li>
+                                    v-text="$t('time limit') + ': ' + time + $t('second')"></li>
                                 <li class='ui label red'
-                                    v-text="memory"></li>
+                                    v-text="$t('memory limit') + ': ' + memory + 'MB'"></li>
                                 <li class='ui label orange' v-cloak v-show="spj">Special Judge</li>
                                 <li class='ui label grey'
-                                    v-text="submit"></li>
+                                    v-text="$t('submit') + ': ' + submit"></li>
                                 <li class='ui label green'
-                                    v-text="accepted"></li>
+                                    v-text="$t('accept') + ': ' + accepted"></li>
                             </div>
                         </div>
                     </div>
@@ -80,31 +80,31 @@
             </div>
         </div>
 
-        <h2 class='ui header hidden'>题目描述</h2>
+        <h2 class='ui header hidden'>{{$t("problem description")}}</h2>
         <div class='ui hidden' v-html="description"></div>
-        <h2 class='ui header hidden'>输入</h2>
+        <h2 class='ui header hidden'>{{$t("input")}}</h2>
         <div class='ui hidden' v-html="input||''"></div>
-        <h2 class='ui header hidden'>输出</h2>
+        <h2 class='ui header hidden'>{{$t("output")}}</h2>
         <div class='ui hidden' v-html="output||''"></div>
-        <h2 class='ui header hidden'>样例输入</h2>
+        <h2 class='ui header hidden'>{{$t("sampleinput")}}</h2>
         <div class="ui bottom attached segment hidden sample_input">
             <div class="ui top attached label"><a class="copy context" data-clipboard-target=".sample_input">Copy
                 Sample Input</a></div>
             <pre v-text='sampleinput'></pre>
         </div>
-        <h2 class='ui header'>样例输出</h2>
+        <h2 class='ui header'>{{$t("sampleoutput")}}</h2>
         <div class="ui bottom attached segment">
             <div class="ui top attached label"><a class="copy context" data-clipboard-target=".sample_output">Copy
                 Sample Output</a></div>
             <pre class='sample_output' v-text='sampleoutput'></pre>
         </div>
-        <h2 class='ui header'>提示</h2>
+        <h2 class='ui header'>{{$t("hint")}}</h2>
         <div class='ui' v-html="hint"></div>
-        <h2 class='ui header'>来源</h2>
+        <h2 class='ui header'>{{$t("from")}}</h2>
         <div class='ui'><p>
             <router-link :to="`/problemset?tag=${encodeURI(source)}`" id="problem_source" v-text="source"></router-link>
         </p>
-            <p>上传者:
+            <p>{{$t("uploader")}}:
                 <router-link :to="`/user/${uploader}`" v-if="uploader!=='Administrator'">{{uploader}}</router-link>
                 <a v-else>Administrator</a>
             </p>
@@ -123,12 +123,12 @@ export default {
             default: true
         },
         time: {
-            type: String,
-            default: "时间限制: 0秒"
+            type: Number,
+            default: 0
         },
         memory: {
-            type: String,
-            default: "内存限制: 0MB"
+            type: Number,
+            default: 0
         },
         spj: {
             type: Boolean,
@@ -143,12 +143,12 @@ export default {
             default: 0
         },
         submit: {
-            type: String,
-            default: "提交: 0"
+            type: Number,
+            default: 0
         },
         accepted: {
-            type: String,
-            default: "正确: 0"
+            type: Number,
+            default: 0
         },
         original_id: {
             type: Number,

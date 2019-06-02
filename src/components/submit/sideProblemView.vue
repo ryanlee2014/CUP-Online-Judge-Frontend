@@ -41,24 +41,24 @@ export default {
             default: ""
         },
         time: {
-            type: String,
-            default: ""
+            type: Number,
+            default: 0
         },
         memory: {
-            type: String,
-            default: ""
+            type: Number,
+            default: 0
         },
         spj: {
             type: Boolean,
             default: false
         },
         submit: {
-            type: String,
-            default: "0"
+            type: Number,
+            default: 0
         },
         accepted: {
-            type: String,
-            default: "0"
+            type: Number,
+            default: 0
         },
         original_id: {
             type: Number,

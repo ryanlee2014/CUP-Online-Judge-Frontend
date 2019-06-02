@@ -1,0 +1,29 @@
+{
+  "zh-cn": {
+    "submit": "提交",
+    "test run": "测试运行",
+    "auto selected": "自动选择",
+    "copy code": "复制代码",
+    "public code": "公开代码",
+    "switch editor": "切换编辑器",
+    "font size": "字号"
+  },
+  "en": {
+    "submit": "Submit",
+    "test run": "Test Run",
+    "auto selected": "Auto Selected",
+    "copy code": "Copy Code",
+    "public code": "Code Public",
+    "switch editor": "Switch Editor",
+    "font size": "Size"
+  },
+  "ja": {
+    "submit": "提出",
+    "test run": "テスト",
+    "auto selected": "自動選択",
+    "copy code": "コードコピー",
+    "public code": "公開",
+    "switch editor": "スイッチエディタ",
+    "font size": "サイズ"
+  }
+}

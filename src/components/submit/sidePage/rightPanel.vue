@@ -1,7 +1,5 @@
 <template>
     <div id="right-side" style="width:65%;position:relative;float:left;">
-        <textarea class="sample_input" cols=40 id="ipt" name="input_text"
-                  rows=5 style="display:none">样例输入</textarea>
         <div class="ui menu borderless" id="modeBar" style="margin: 0;
         padding: 0;
         position: relative;
@@ -16,37 +14,37 @@
                 <div class="item">
                     <div class="ui toggle checkbox" v-cloak>
                         <input name="auto_detect" type="checkbox" v-model="auto_detect">
-                        <label>自动选择</label>
+                        <label>{{$t("auto selected")}}</label>
                     </div>
                 </div>
                 <a :class="'item'" class="not-compile" data-clipboard-action="copy" id="clipbtn"
                    style="float:left;"
-                   v-cloak v-if="prepend||append">复制代码</a>
+                   v-cloak v-if="prepend||append">{{$t("copy code")}}</a>
 
             </div>
             <div class="right menu">
                 <div class="item">
                 </div>
 
-                <ace-theme-selector v-model="theme" v-if="!editorPackage"></ace-theme-selector>
-                <monaco-theme-selector v-model="theme" v-else></monaco-theme-selector>
+                <ace-theme-selector v-if="!editorPackage" v-model="theme"></ace-theme-selector>
+                <monaco-theme-selector v-else v-model="theme"></monaco-theme-selector>
 
             </div>
         </div>
-        <div :ace-mode="'ace/mode/'+language[selected_language]" :ace-theme="theme"
-             class="prepend code"
+        <div :ace-mode="'ace/mode/'+language[selected_language]" :ace-theme="static_theme"
+             ace-gutter="true" class="prepend code"
              id="prependCodeHighlight"
              style="width: 100%;padding:0px;line-height:1.2;text-align:left;margin-bottom:0px;"
              v-if="prepend" v-text="current_prepend">
         </div>
-        <ace-editor v-if="!editorPackage" :fontSize="fontSize + ''" :selected_language="selected_language"
-                    :theme="theme" v-model="code"></ace-editor>
-        <monaco-editor v-else :fontSize="fontSize + ''" :selected_language="selected_language"
-                       :theme="theme" v-model="code">
+        <ace-editor :fontSize="fontSize + ''" :selected_language="selected_language" :theme="theme"
+                    v-if="!editorPackage" v-model="code"></ace-editor>
+        <monaco-editor :fontSize="fontSize + ''" :selected_language="selected_language" :theme="theme"
+                       v-else v-model="code">
 
         </monaco-editor>
-        <div :ace-mode="'ace/mode/'+language[selected_language]" :ace-theme="theme" class="append code"
-             id="appendCodeHighlight"
+        <div :ace-mode="'ace/mode/'+language[selected_language]" :ace-theme="static_theme" ace-gutter="true"
+             class="append code" id="appendCodeHighlight"
              style="width: 100%; padding:0px; line-height:1.2;text-align:left;margin-bottom:0px;"
              v-html="current_append" v-if="append">
         </div>
@@ -60,16 +58,16 @@
                 <div class="item">
                     <div class="ui toggle checkbox" v-cloak v-if="!iscontest">
                         <input name="share" type="checkbox" v-model="share">
-                        <label>公开代码</label>
+                        <label>{{$t("public code")}}</label>
                     </div>
                 </div>
                 <div class="item">
                     <div class="ui toggle checkbox">
-                        <input v-model="editorPackage" type="checkbox">
-                        <label>切换编辑器</label>
+                        <input type="checkbox" v-model="editorPackage">
+                        <label>{{$t("switch editor")}}</label>
                     </div>
                 </div>
-                <div class="item"><span class="item">字号:</span>
+                <div class="item"><span class="item">{{$t("font size")}}:</span>
                     <div class="ui input"><input id="fontsize" style="width:60px;text-align:center;height:30px"
                                                  type="text"
                                                  v-model="fontSize"></div>
@@ -79,10 +77,10 @@
                 <div class="ui buttons">
                     <input :disabled="submitDisabled" @click="do_submit" class="ui button green " id="Submit"
                            type=button
-                           value="提交">
+                           :value="$t('submit')">
                     <div class="or"></div>
                     <input :disabled="submitDisabled" @click="pre_test_run" class="ui button blue" id="TestRun"
-                           type=button value="测试运行"
+                           type=button :value="$t('test run')"
                     >&nbsp;<!--<span class="btn" id=result>状态</span>-->
                 </div>
             </div>
@@ -102,12 +100,13 @@
         <div id="clipcp" style="display:none"></div>
     </div>
 </template>
-
+<i18n src="../../../locales/components/submit/sidePage/rightPanel.json"></i18n>
 <script>
 import aceEditor from "../../../components/submit/codeEditor/aceEditor";
 import aceThemeSelector from "../../../components/submit/codeEditor/aceComponent/aceThemeSelector";
 import monacoEditor from "../../../components/submit/codeEditor/monacoEditor";
 import monacoThemeSelector from "../../../components/submit/codeEditor/monacoComponent/monacoThemeSelector";
+
 const ace = require("brace");
 const Clipboard = require("clipboard");
 const detectLang = require("../../../lib/langDetector");
@@ -116,8 +115,6 @@ const $ = require("jquery");
 window.ace = ace;
 require("../../../lib/brace/braceMode");
 require("../../../lib/brace/braceTheme");
-require("brace/ext/static_highlight");
-
 const language = ["c_cpp", "c_cpp", "pascal", "java", "ruby", "bash", "python", "php", "perl", "csharp", "objectivec", "text", "scheme", "c_cpp", "c_cpp", "lua", "javascript", "go", "python", "c_cpp", "c_cpp", "c_cpp", "text", "java", "java", "python", "python", "java", "c_cpp", "c_cpp"];
 const language_ext = ["c", "cc", "pas", "java", "rb", "sh", "py", "php", "pl", "cs", "m", "bas", "scm", "c", "cc", "lua", "js", "go", "py", "cpp", "cpp", "c", "kt", "java", "java", "python", "python", "java", "c", "cc"];
 export default {
@@ -135,6 +132,7 @@ export default {
             share: false,
             fontSize: "16",
             theme: "ace/theme/monokai",
+            static_theme: "ace/theme/monokai",
             prependView: null,
             config: {},
             appendView: null,
@@ -143,11 +141,8 @@ export default {
             language,
             current_prepend: "",
             current_append: "",
-            highlight: new Promise((resolve) => {
-                ace.acequire(["ace/ext/static_highlight"], function (fn) {
-                    resolve(fn);
-                });
-            })
+            highlight: null,
+            dirty: false
         };
         const config = this.initConfig();
         Object.assign(_baseData, config);
@@ -234,6 +229,13 @@ export default {
                 this.theme = "ace/theme/monokai";
             }
         },
+        static_theme (val) {
+            if (this.editorPackage) {
+                return;
+            }
+            this.config.static_theme = val;
+            localStorage.submitConfig = JSON.stringify(this.config);
+        },
         theme: function (val) {
             if (val === "") {
                 return;
@@ -243,6 +245,7 @@ export default {
             if (this.editorPackage) {
                 return;
             }
+            this.static_theme = val;
             const prependView = this.prependView;
             if (prependView) {
                 this.prependView.setTheme(val);
@@ -290,41 +293,13 @@ export default {
             if (!val) {
                 return;
             }
-            const h = this.highlight;
-            h.then((highlight) => {
-                this.$nextTick(() => {
-                    _.forEach(document.querySelectorAll("#appendCodeHighlight"), function (val, index) {
-                        highlight(val, {
-                            mode: val.getAttribute("ace-mode"),
-                            theme: val.getAttribute("ace-theme"),
-                            startLineNumber: 1,
-                            showGutter: val.getAttribute("ace-gutter"),
-                            trim: true
-                        }, function (highlighted) {
-                        });
-                    });
-                });
-            });
+            this.renderAppendHighlight();
         },
         current_prepend: function (val) {
             if (!val) {
                 return;
             }
-            const h = this.highlight;
-            h.then((highlight) => {
-                this.$nextTick(() => {
-                    _.forEach(document.querySelectorAll("#prependCodeHighlight"), function (val, index) {
-                        highlight(val, {
-                            mode: val.getAttribute("ace-mode"),
-                            theme: val.getAttribute("ace-theme"),
-                            startLineNumber: 1,
-                            showGutter: val.getAttribute("ace-gutter"),
-                            trim: true
-                        }, function (highlighted) {
-                        });
-                    });
-                });
-            });
+            this.renderPrependHighlight();
         },
         share: function (val) {
             this.$store.commit("setCodeInfo", {
@@ -348,12 +323,57 @@ export default {
         this.initConfig();
         this.initClipboard();
         this.initSolutionCode();
+        this.initHighlight();
     },
     methods: {
+        renderHighlight () {
+            this.renderPrependHighlight();
+            this.renderAppendHighlight();
+        },
+        renderHighlightBase (selector) {
+            const h = this.highlight;
+            if (h instanceof Promise) {
+                h.then((highlight) => {
+                    this.$nextTick(() => {
+                        _.forEach(document.querySelectorAll(selector), function (val, index) {
+                            highlight(val, {
+                                mode: val.getAttribute("ace-mode"),
+                                theme: val.getAttribute("ace-theme"),
+                                startLineNumber: 1,
+                                showGutter: val.getAttribute("ace-gutter"),
+                                trim: true
+                            }, function (highlighted) {
+                            });
+                        });
+                    });
+                });
+            }
+        },
+        renderPrependHighlight () {
+            this.renderHighlightBase("#prependCodeHighlight");
+        },
+        renderAppendHighlight () {
+            this.renderHighlightBase("#appendCodeHighlight");
+        },
+        initHighlight () {
+            this.highlight = new Promise((resolve) => {
+                require("brace/ext/static_highlight");
+                ace.acequire(["ace/ext/static_highlight"], function (fn) {
+                    resolve(fn);
+                });
+            });
+            this.highlight.then(() => {
+                if (this.dirty) {
+                    this.dirty = false;
+                    this.renderHighlight();
+                }
+            });
+        },
         initConfig () {
             const defaultConfig = {
                 editorPackage: false,
                 theme: "ace/theme/monokai",
+                static_theme: "ace/theme/monokai",
                 fontSize: "16"
             };
             let config;
@@ -413,7 +433,7 @@ export default {
                 const detected_lang = detectLang(that.code, that.lang_list.map(function (e) {
                     return e.num;
                 }));
-                if (that.selected_language != detected_lang) {
+                if (that.selected_language !== detected_lang) {
                     that.selected_language = detected_lang;
                 }
             }, 100))();
@@ -476,6 +496,6 @@ export default {
     }
 
     .same_width {
-        font-family: Consolas,"Courier New",Courier,FreeMono,monospace!important;
+        font-family: Consolas, "Courier New", Courier, FreeMono, monospace !important;
     }
 </style>

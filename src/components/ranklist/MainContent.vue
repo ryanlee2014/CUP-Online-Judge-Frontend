@@ -54,12 +54,12 @@
             <table style="width:100%" class="ui padded borderless selectable table">
                 <thead>
                 <tr>
-                    <th width="7%" class="center head">{{_name.rank}}</th>
-                    <th width="10%" class="center head"><b>{{_name.user}}</b></th>
+                    <th width="7%" class="center head">{{$t("rank")}}</th>
+                    <th width="10%" class="center head"><b>{{$t("user_id")}}</b></th>
                     <th width="3%"></th>
-                    <th width="15%"><b>{{_name.nick}}</b></th>
+                    <th width="15%"><b>{{$t("nick")}}</b></th>
                     <th width="55%" class="center head">{{$t("biography")}}</th>
-                    <th width="10%" class="center head" style="text-align: center"><b>{{_name.accept}}</b></th>
+                    <th width="10%" class="center head" style="text-align: center"><b>{{$t("accept")}}</b></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -85,7 +85,7 @@
                 </tr>
                 </tbody>
             </table>
-            <a v-cloak :class="'ui button '+(page == 0?'disabled':'')" @click="page != 0 && _page(-page,$event)"
+            <a v-cloak :class="'ui button '+(page === 0?'disabled':'')" @click="page !== 0 && _page(-page,$event)"
                class="ui button">
                 Top
             </a>
@@ -113,22 +113,19 @@
             "all user": "所有用户",
             "current member": "现役队员",
             "retired member": "退役队员",
-            "new user": "新用户",
-            "biography": "个人介绍"
+            "new user": "新用户"
         },
         "en": {
             "all user": "All Users",
             "current member": "ACM Member",
             "retired member": "Retired Member",
-            "new user": "New Users",
-            "biography": "Motto"
+            "new user": "New Users"
         },
         "ja": {
             "all user": "ユーザーリスト",
             "current member": "チームメンバー",
             "retired member": "リタイヤメンバー",
-            "new user": "新規ユーザー",
-            "biography": "モットー"
+            "new user": "新規ユーザー"
         }
     }
 </i18n>

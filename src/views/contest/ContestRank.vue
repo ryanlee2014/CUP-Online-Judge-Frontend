@@ -12,12 +12,15 @@
             <div class="row">
                 <div class="left aligned eleven wide column">
                     <TimeView
-                            :start_time="start_time"
+                        :start_time="start_time"
                     ></TimeView>
                 </div>
                 <div class="right aligned five wide column">
                     <button @click="playRanklist" class="ui primary button" v-if="!playing">播放排名变化</button>
-                    <button @click="stopPlayRanklist" class="ui primary button" v-else>停止</button>
+                    <div class="ui buttons" v-else>
+                        <button @click="pausePlayRanklist" class="ui primary button">{{playing ? "暂停" : "继续"}}</button>
+                        <button @click="stopPlayRanklist" class="ui primary button">停止</button>
+                    </div>
                     <div class="ui toggle checkbox"><input @click="auto_update = !auto_update" type="checkbox">
                         <label>暂停自动更新排名</label></div>
                     <div class="ui toggle checkbox"><input @click="add_name=!add_name" type="checkbox">
@@ -62,13 +65,13 @@
                                     style="text-align:center"
                                     v-for="(p,key) in row.problem.toArray()">
                                     <b :class="'text '+ (p.accept.length > 0 ? p.first_blood?'first accept':'accept':'red')">
-                                        {{ (p.accept.length > 0 || p.submit.length > 0)?'+':''}}
+                                        {{ (p.accept.length > 0 || p.submit.length > 0)?"+":""}}
                                         {{p.try_time > 0 ? p.try_time : p.accept.length == 0 && p.submit.length >
                                         0?p.submit.length : ""}}</b>
                                     <br v-if="p.accept.length > 0">
                                     <span :class="p.first_blood?'first accept text':''"
                                           v-if="p.accept.length > 0 && typeof p.accept[0].diff === 'function'">
-                {{format_date(p.accept[0].diff(p.start_time,'second'))}}
+                {{format_date(p.accept[0].diff(p.start_time,"second"))}}
             </span>
                                 </td>
                             </tr>
@@ -105,10 +108,10 @@
                             <td :bgcolor="'#FF' + (format_color(Math.max(Math.floor((1 << 8) - (256 * Math.max(p.sim - 69,0) / 31.0)) - 1, 0)))"
                                 :key="key"
                                 align="left" v-for="(p,key) in row.problem.toArray()">
-                                {{ (p.submit.length > 0)?'(-':''}}{{p.try_time > 0 ? p.try_time + ")" : p.submit.length
+                                {{ (p.submit.length > 0)?"(-":""}}{{p.try_time > 0 ? p.try_time + ")" : p.submit.length
                                 > 0?p.submit.length + ")" : ""}}{{p.accept.length > 0 ?
-                                format_date(p.accept[0].diff(p.start_time,'second')):""}}{{p.sim > 0?"("+p.sim +
-                                "%)":''}}
+                                format_date(p.accept[0].diff(p.start_time,"second")):""}}{{p.sim > 0?"("+p.sim +
+                                "%)":""}}
                             </td>
                         </tr>
                         </tbody>
@@ -276,6 +279,10 @@ export default {
             submissionCollection = [];
             this.submitter = {};
             this.firstRender = true;
+            this.startInterval();
+        },
+        startInterval () {
+            const backupTempData = this.backup_data;
             this.playInterval = setInterval(() => {
                 if (backupTempData.length > 0) {
                     let data = backupTempData.shift();
@@ -296,6 +303,15 @@ export default {
             clearInterval(this.playInterval);
             this.playing = false;
             this.auto_update = true;
+        },
+        pausePlayRanklist () {
+            if (this.playing) {
+                clearInterval(this.playInterval);
+            }
+            else {
+                this.playing = true;
+                this.startInterval();
+            }
         },
         stopPlayRanklist () {
             this.playing = false;
@@ -323,7 +339,9 @@ export default {
             if (mode) {
                 return hour + "：" + minute + "：" + sec;
             }
-            else { return hour + ":" + minute + ":" + sec; }
+            else {
+                return hour + ":" + minute + ":" + sec;
+            }
         },
         format_color: function (num) {
             let str = num.toString(16);
@@ -398,7 +416,9 @@ export default {
             if (convertFlag) {
                 saveAs(blob, "Contest " + this.cid + " 多个contest.xls");
             }
-            else { saveAs(blob, "Contest " + this.cid + " " + this.title + ".xls"); }
+            else {
+                saveAs(blob, "Contest " + this.cid + " " + this.title + ".xls");
+            }
             // var table = TableExport(document.getElementById("save"));
             // var d = table.getExportData().save.xlsx;
             // var filename = "Contest " + this.cid;

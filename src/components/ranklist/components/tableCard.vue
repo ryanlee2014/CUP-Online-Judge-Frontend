@@ -3,12 +3,12 @@
         <table style="width:100%" class="ui padded borderless selectable table">
             <thead>
             <tr>
-                <th width="7%" class="center head">{{_name.rank}}</th>
-                <th width="10%" class="center head"><b>{{_name.user}}</b></th>
+                <th width="7%" class="center head">{{$t("rank")}}</th>
+                <th width="10%" class="center head"><b>{{$t("user_id")}}</b></th>
                 <th width="3%"></th>
-                <th width="15%"><b>{{_name.nick}}</b></th>
-                <th width="55%" class="center head">个人介绍</th>
-                <th width="10%" class="center head" style="text-align: center"><b>{{_name.accept}}</b></th>
+                <th width="15%"><b>{{$t("nick")}}</b></th>
+                <th width="55%" class="center head">{{$t("biography")}}</th>
+                <th width="10%" class="center head" style="text-align: center"><b>{{$t("accept")}}</b></th>
             </tr>
             </thead>
             <tbody>

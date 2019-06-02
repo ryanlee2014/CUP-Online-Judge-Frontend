@@ -4,37 +4,36 @@
         <div class="ui vertical center aligned segment">
             <div class="ui header" id="probid" v-html="temp_title" style="font-size:1.71428571rem"></div>
             <div class='ui labels'>
-                <li class='ui label red' id="tlimit"
-                    v-text="time"></li>
-                <li class='ui label red' id="mlimit"
-                    v-text="memory"></li>
-                <li class='not-compile' :class="'ui label orange'" id="spj" v-cloak v-show="spj">Special Judge
-                </li>
-                <li class='ui label grey' id="totsub"
-                    v-text="submit"></li>
-                <li class='ui label green' id="totac"
-                    v-text="accepted"></li>
+                <li class='ui label red'
+                    v-text="$t('time limit') + ': ' + time + $t('second')"></li>
+                <li class='ui label red'
+                    v-text="$t('memory limit') + ': ' + memory + 'MB'"></li>
+                <li class='ui label orange' v-cloak v-show="spj">Special Judge</li>
+                <li class='ui label grey'
+                    v-text="$t('submit') + ': ' + submit"></li>
+                <li class='ui label green'
+                    v-text="$t('accept') + ': ' + accepted"></li>
             </div>
             <br>
             <div class='ui buttons'>
-                <router-link class="ui button orange" :to="`/status/problem/${original_id}`">历史</router-link>
+                <router-link class="ui button orange" :to="`/status/problem/${original_id}`">{{$t("history")}}</router-link>
                 <a @click.prevent="switch_screen"
-                   class='ui button blue'>切换单屏</a>
-                <router-link :to="`/tutorial/${original_id}`" class="ui button teal">查看题解</router-link>
-                <router-link v-if="iseditor||isadmin" :to="`/problem/edit/${original_id}`" class="ui button violet">编辑题目</router-link>
+                   class='ui button blue'>{{$t("switch single screen")}}</a>
+                <router-link :to="`/tutorial/${original_id}`" class="ui button teal">{{$t("read solution")}}</router-link>
+                <router-link v-if="iseditor||isadmin" :to="`/problem/edit/${original_id}`" class="ui button violet">{{$t("edit problem")}}</router-link>
             </div>
         </div>
         <br>
         <div class="ui styled accordion">
-            <div class='title'>题目描述<i class="dropdown icon"></i></div>
+            <div class='title'>{{$t("problem description")}}<i class="dropdown icon"></i></div>
             <div class='content' id='problem_description' v-html="description">
             </div>
-            <div class='title'>输入<i class="dropdown icon"></i></div>
+            <div class='title'>{{$t("input")}}<i class="dropdown icon"></i></div>
             <div class='content' id='problem_input' v-html="input||''">
             </div>
-            <div class='title'>输出<i class="dropdown icon"></i></div>
+            <div class='title'>{{$t("output")}}<i class="dropdown icon"></i></div>
             <div class='content' id='problem_output' v-html="output||''"></div>
-            <div class='title'>样例输入<i class="dropdown icon"></i>
+            <div class='title'>{{$t("sampleinput")}}<i class="dropdown icon"></i>
             </div>
             <div class='content'>
                 <div class="ui bottom attached segment">
@@ -44,7 +43,7 @@
                                v-text='sampleinput'></span></pre>
                 </div>
             </div>
-            <div class='title'>样例输出<i class="dropdown icon"></i></div>
+            <div class='title'>{{$t("sampleoutput")}}<i class="dropdown icon"></i></div>
             <div class='content'>
                 <div class="ui bottom attached segment">
                     <div class="ui top attached label"><a data-clipboard-target=".sample_output"
@@ -54,22 +53,21 @@
                                v-text='sampleoutput'></span></pre>
                 </div>
             </div>
-            <div class='title'>提示<i class="dropdown icon"></i></div>
+            <div class='title'>{{$t("hint")}}<i class="dropdown icon"></i></div>
             <div class='content' v-html="hint">
             </div>
 
-            <div class='title'>来源<i class="dropdown icon"></i></div>
+            <div class='title'>{{$t("from")}}<i class="dropdown icon"></i></div>
             <div class='content'><p>
                 <router-link :to="`/problemset?tag=${encodeURI(source)}`" id="problem_source" v-text="source"></router-link>
             </p>
-                <p>上传者:
+                <p>{{$t("uploader")}}:
                     <router-link :to="`/user/${uploader}`" v-if="uploader!=='Administrator'">{{uploader}}</router-link>
                     <a v-else>Administrator</a></p></div>
 
         </div>
     </div>
 </template>
-
 <script>
 import markdownIt from "../../../lib/markdownIt/markdownIt";
 export default {
@@ -80,24 +78,24 @@ export default {
             default: ""
         },
         time: {
-            type: String,
-            default: ""
+            type: Number,
+            default: 0
         },
         memory: {
-            type: String,
-            default: ""
+            type: Number,
+            default: 0
         },
         spj: {
             type: Boolean,
             default: false
         },
         submit: {
-            type: String,
-            default: "0"
+            type: Number,
+            default: 0
         },
         accepted: {
-            type: String,
-            default: "0"
+            type: Number,
+            default: 0
         },
         original_id: {
             type: Number,

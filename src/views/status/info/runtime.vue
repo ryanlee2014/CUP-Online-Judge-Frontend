@@ -3,7 +3,7 @@
         <h2 class="ui dividing header">Runtime Information</h2>
         <div class="ui segment same_width">
             <div></div>
-            <div class="ui container" v-show="!diffmode">
+            <div v-show="!diffmode">
                 <h3 class="ui dividing header">运行结果</h3>
                 <div class="row" v-html="info">
 
