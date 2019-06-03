@@ -30,7 +30,7 @@
                         </div>
                         <div class="five wide column">
                             <div class="ui search">
-                                <label>{{_name.user}}</label>
+                                <label>{{$t("user_id")}}: </label>
                                 <div class="ui input">
                                     <input name="user" @keyup="search_user($event)">
                                 </div>

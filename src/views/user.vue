@@ -2,7 +2,7 @@
     <div class="ui container pusher">
         <div class="padding">
             <h2 class="ui dividing header" v-show="!finished">
-                加载中,请稍后
+                {{$t("loading")}}
             </h2>
             <div class="ui grid" v-show="finished">
                 <div class="row">
@@ -33,34 +33,34 @@
                                     <a class="group">{{privilege}}</a>
                                     <i class="user circle outline icon" v-if="user_id === '2016011253'"></i><a
                                     class="group" v-if="user_id === '2016011253'">
-                                    系统开发/维护
+                                    {{$t("system development")}}
                                 </a>
                                     <br v-if="acm_user">
-                                    <a class='group' v-if="acm_user"><i class='user icon'></i>ACM{{acm_user.level?"正式":"后备"}}队员</a>
+                                    <a class='group' v-if="acm_user"><i class='user icon'></i>ACM {{acm_user.level? $t("formal member"):$t("reserve member")}}</a>
                                     <br>
-                                    注册时间: {{dayjs(reg_time).format("YYYY-MM-DD")}}
+                                    {{$t("reg time")}}: {{dayjs(reg_time).format("YYYY-MM-DD")}}
                                     <a :key="row.year + row.award" class="group" v-for="row in award"><br>
                                         <i class="trophy icon"></i>
                                         {{row.year + "年" + row.award}}</a>
                                 </div>
                             </div>
                             <div class="extra content" v-cloak>
-                                <a><i class="check icon"></i>本地&nbsp;通过 {{local_accepted}} 题
+                                <a><i class="check icon"></i>{{$t("local")}}&nbsp;{{$t("pass")}} {{local_accepted}} 题
                                 </a>
                                 <a style="float:right;"><i class="line chart icon"></i>Rank:&nbsp;{{rank}}</a>
                                 <br>
                                 <a>
-                                    <i class="check icon"></i>VJudge&nbsp;通过 {{vjudge_solved}}&nbsp;题&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <i class="check icon"></i>VJudge&nbsp;{{$t("pass")}} {{vjudge_solved}}&nbsp;题&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 </a>
                                 <a style="float:right"><i class="line chart icon"></i>Rank:&nbsp;{{vjudge_rank}}</a>
                                 <br>
                                 <a>
-                                    <i class="check icon"></i>其他平台&nbsp;通过 {{other_accepted - vjudge_solved}}&nbsp;题
+                                    <i class="check icon"></i>{{$t("other platform")}}&nbsp;{{$t("pass")}} {{other_accepted - vjudge_solved}}&nbsp;题
                                 </a>
                                 <br>
                                 <span :key="idx" v-for="(row,idx) in accepted_details">
                                     <a>
-                                        <i class="check icon"></i>{{idx}} 通过 {{row.length}} 题
+                                        <i class="check icon"></i>{{idx}} {{$t("pass")}} {{row.length}} 题
                                     </a>
                                     <br>
                                 </span>
@@ -69,7 +69,7 @@
                         <div class="ui card" style="width:100%;">
                             <div class="content">
                                 <div class="header">
-                                    状态
+                                    {{$t("status")}}
                                 </div>
                             </div>
 
@@ -79,12 +79,12 @@
                                     <div class="line"></div>
                                 </div>
                                 <div class="ui header" v-cloak v-if="online">
-                                    当前在线
+                                    {{$t("current online")}}
                                 </div>
                                 <div class="ui header" v-cloak v-if="!online">
-                                    离线
+                                    {{$t("offline")}}
                                     <div class="sub header">
-                                        上次登录:{{last_login?new Date(last_login).toLocaleString():""}}
+                                        {{$t("last login")}}:{{last_login?new Date(last_login).toLocaleString():""}}
                                     </div>
                                 </div>
                             </div>
@@ -92,7 +92,7 @@
                         <div class="ui card" style="width:100%">
                             <div class="content">
                                 <div class="header">
-                                    发表的帖子
+                                    {{$t("publish")}}
                                 </div>
                             </div>
                             <div class="content">
@@ -103,7 +103,7 @@
                                 <table class="ui very basic table" v-cloak>
                                     <thead>
                                     <th>ID</th>
-                                    <th>标题</th>
+                                    <th>{{$t("title")}}</th>
                                     </thead>
                                     <tbody>
                                     <tr :key="row.article_id" v-for="row in article_publish">
@@ -123,15 +123,15 @@
                         <div class="ui card" style="width:100%" v-cloak v-if="admin">
                             <div class="content">
                                 <div class="header">
-                                    使用的操作系统
+                                    {{$t("use os")}}
                                 </div>
                             </div>
                             <div class="content">
                                 <table class="ui very basic table">
                                     <thead>
-                                    <th>系统</th>
-                                    <th>版本</th>
-                                    <th>频率</th>
+                                    <th>{{$t("os")}}</th>
+                                    <th>{{$t("version")}}</th>
+                                    <th>{{$t("frequency")}}</th>
                                     </thead>
                                     <tbody>
                                     <tr :key="row.os_name + row.os_version" v-for="row in os">
@@ -152,15 +152,15 @@
                         <div class="ui card" style="width:100%" v-cloak v-if="admin">
                             <div class="content">
                                 <div class="header">
-                                    使用的浏览器
+                                    {{$t("use browser")}}
                                 </div>
                             </div>
                             <div class="content">
                                 <table class="ui very basic table">
                                     <thead>
-                                    <th>浏览器</th>
-                                    <th>版本</th>
-                                    <th>频率</th>
+                                    <th>{{$t("browser")}}</th>
+                                    <th>{{$t("version")}}</th>
+                                    <th>{{$t("frequency")}}</th>
                                     </thead>
                                     <tbody>
                                     <tr :key="row.browser_name + row.browser_version" v-for="row in browser">
@@ -190,7 +190,7 @@
                                                     <div class="row">
                                                         <div class="column">
                                                             <h4 class="ui top attached block header"><i
-                                                                class="id card icon"></i>用户名</h4>
+                                                                class="id card icon"></i>{{$t("user_id")}}</h4>
                                                             <div class="ui attached segment">
                                                                 <div v-cloak>
                                                                     {{user_id}}
@@ -201,7 +201,7 @@
                                                                 </div>
                                                             </div>
                                                             <h4 class="ui attached block header">
-                                                                <i class="id badge icon"></i>个人介绍
+                                                                <i class="id badge icon"></i>{{$t("biography")}}
                                                             </h4>
                                                             <div class="ui attached segment"
                                                                  v-html="markdownIt.renderRaw(biography||'')">
@@ -211,7 +211,7 @@
                                                                 </div>
                                                             </div>
                                                             <h4 class="ui attached block header"><i
-                                                                class="university icon"></i>学校
+                                                                class="university icon"></i>{{$t("school")}}
                                                             </h4>
                                                             <div class="ui attached segment">
                                                                 <div v-cloak>{{school}}</div>
@@ -221,7 +221,7 @@
                                                                 </div>
                                                             </div>
                                                             <h4 class="ui attached block header"><i
-                                                                class="mail square icon"></i>邮件</h4>
+                                                                class="mail square icon"></i>{{$t("email")}}</h4>
                                                             <div class="ui attached segment">
                                                                 <div v-cloak><a
                                                                     :href="'mailto:'+email">{{email}}</a></div>
@@ -262,7 +262,7 @@
                                                 </div>
                                             </div>
                                             <div class="eight wide column">
-                                                <h4 class="ui top attached block header"><i class="pie chart icon"></i>提交统计
+                                                <h4 class="ui top attached block header"><i class="pie chart icon"></i>{{$t("submit statistic")}}
                                                 </h4>
                                                 <div class="ui bottom attached segment">
                                                     <div id="pie_chart_legend">
@@ -291,7 +291,7 @@
                                         </div>
                                         <div class="row">
                                             <div class="sixteen wide column">
-                                                <h4 class="ui top attached block header">提交热力图</h4>
+                                                <h4 class="ui top attached block header">{{$t("submit heatmap")}}</h4>
                                                 <div class="ui bottom attached segment heatmap">
                                                     <div class="ui placeholder" v-cloak>
                                                         <div class="line"></div>
@@ -349,7 +349,7 @@
                                                                 <div class="line"></div>
                                                             </div>
                                                         </div>
-                                                        <h4 class="ui attached block header">其他</h4>
+                                                        <h4 class="ui attached block header">{{$t("other")}}</h4>
                                                         <div class="ui bottom attached segment">
                                                             <a :key="row.problem_id" href="javascript:void(0)"
                                                                v-cloak v-for="row in accept.other">
@@ -369,7 +369,7 @@
                                                 </div>
                                             </div>
                                             <div class="eight wide column">
-                                                <h4 class="ui top attached block header"><i class="pie chart icon"></i>编程语言
+                                                <h4 class="ui top attached block header"><i class="pie chart icon"></i>{{$t("programming language")}}
                                                 </h4>
                                                 <div class="ui bottom attached segment">
                                                     <div id="pie_chart_language_legend">
@@ -398,7 +398,7 @@
                                                                 width="455"></canvas>
                                                     </div>
                                                 </div>
-                                                <h4 class="ui top attached block header"><i class="pie chart icon"></i>提交频率
+                                                <h4 class="ui top attached block header"><i class="pie chart icon"></i>{{$t("submit frequency")}}
                                                 </h4>
                                                 <div class="ui bottom attached segment">
                                                     <div class="hidden" id="drawgraphitem">
@@ -408,7 +408,7 @@
                                                     </div>
                                                 </div>
                                                 <h4 class="ui top attached block header">
-                                                    判重信息
+                                                    {{$t("plagiarism information")}}
                                                 </h4>
                                                 <div class="ui bottom attached segment">
                                                     <div class="ui small statistics"
@@ -418,7 +418,7 @@
                                                                 {{same_problem_time}}
                                                             </div>
                                                             <div class="label">
-                                                                题目数
+                                                                {{$t("problem number")}}
                                                             </div>
                                                         </div>
                                                         <div class="statistic" style="margin: 0px 0.5em 1em;">
@@ -426,7 +426,7 @@
                                                                 {{same_aver_length}}
                                                             </div>
                                                             <div class="label">
-                                                                平均长度
+                                                                {{$t("average length")}}
                                                             </div>
                                                         </div>
                                                         <div class="statistic" style="margin: 0px 0.5em 1em;">
@@ -434,7 +434,7 @@
                                                                 {{same_percentage_aver}}%
                                                             </div>
                                                             <div class="label">
-                                                                平均判重度
+                                                                {{$t("average plagiarism percentage")}}
                                                             </div>
                                                         </div>
                                                         <div class="statistic" style="margin: 0px 0.5em 1em;">
@@ -442,7 +442,7 @@
                                                                 {{total_same}}
                                                             </div>
                                                             <div class="label">
-                                                                总次数
+                                                                {{$t("total number")}}
                                                             </div>
                                                         </div>
                                                     </div>
@@ -547,7 +547,7 @@ export default {
                     let other = [];
                     let other_accept;
                     const pick_ac = function (arr) {
-                        var res = [];
+                        let res = [];
                         _.forEach(arr, function (val) {
                             if (val.result === 4 && val.problem_id != 0) {
                                 res.push(val);
@@ -643,21 +643,21 @@ export default {
                     if (privilege && privilege.length > 0) {
                         for (let i = 0; i < privilege.length; ++i) {
                             if (privilege[i].rightstr === "administrator") {
-                                privilege = "管理员";
+                                privilege = this.$t("administrator");
                                 break;
                             }
                             else if (privilege[i].rightstr === "source_browser") {
-                                privilege = "代码检查员";
+                                privilege = this.$t("code editor");
                                 break;
                             }
                             else if (privilege[i].rightstr === "editor") {
-                                privilege = "问题编辑";
+                                privilege = this.$t("problem editor");
                                 break;
                             }
                         }
                     }
                     if (typeof privilege !== "string") {
-                        privilege = "普通用户";
+                        privilege = this.$t("general user");
                     }
                     let dsort = function (a, b) {
                         return b.cnt - a.cnt;
@@ -747,14 +747,14 @@ export default {
                                 countForDate[date] += row.cnt;
                             }
                         });
-                        var chartData = d3.timeDays(yearAgo, now).map(function (dateElement) {
+                        let chartData = d3.timeDays(yearAgo, now).map(function (dateElement) {
                             return {
                                 date: dateElement,
                                 count: countForDate[dayjs(dateElement).format("YYYY-MM-DD")] || 0
                             };
                         });
 
-                        var heatmap = calendarHeatmap()
+                        let heatmap = calendarHeatmap()
                             .data(chartData)
                             .selector(".heatmap")
                             .tooltipEnabled(true)
@@ -765,7 +765,7 @@ export default {
                             .legendEnabled(true);
                         heatmap();
                         that.$nextTick(function () {
-                            var pie = new Chart(document.getElementById("pie_chart").getContext("2d"), {
+                            let pie = new Chart(document.getElementById("pie_chart").getContext("2d"), {
                                 type: "pie",
                                 data: {
                                     datasets: [
@@ -858,15 +858,15 @@ export default {
                                         display: false
                                     },
                                     legendCallback: function (chart) {
-                                        var text = [];
+                                        let text = [];
                                         text.push("<ul style=\"list-style: none; padding-left: 20px; margin-top: 0; \" class=\"" + chart.id + "-legend\">");
 
-                                        var data = chart.data;
-                                        var datasets = data.datasets;
-                                        var labels = data.labels;
+                                        let data = chart.data;
+                                        let datasets = data.datasets;
+                                        let labels = data.labels;
 
                                         if (datasets.length) {
-                                            for (var i = 0; i < datasets[0].data.length; ++i) {
+                                            for (let i = 0; i < datasets[0].data.length; ++i) {
                                                 text.push("<li style=\"font-size: 12px; width: 50%; display: inline-block; color: #666; \"><span style=\"width: 10px; height: 10px; display: inline-block; border-radius: 50%; margin-right: 5px; background-color: " + datasets[0].backgroundColor[i] + "; \"></span>");
                                                 if (labels[i]) {
                                                     text.push(labels[i]);
@@ -882,7 +882,7 @@ export default {
                             });
 
                             document.getElementById("pie_chart_legend").innerHTML = pie.generateLegend();
-                            var lang = new Chart(document.getElementById("pie_chart_language").getContext("2d"), {
+                            let lang = new Chart(document.getElementById("pie_chart_language").getContext("2d"), {
                                 type: "pie",
                                 data: {
                                     datasets: [
@@ -972,15 +972,15 @@ export default {
                                         display: false
                                     },
                                     legendCallback: function (chart) {
-                                        var text = [];
+                                        let text = [];
                                         text.push("<ul style=\"list-style: none; padding-left: 20px; margin-top: 0; \" class=\"" + chart.id + "-legend\">");
 
-                                        var data = chart.data;
-                                        var datasets = data.datasets;
-                                        var labels = data.labels;
+                                        let data = chart.data;
+                                        let datasets = data.datasets;
+                                        let labels = data.labels;
 
                                         if (datasets.length) {
-                                            for (var i = 0; i < datasets[0].data.length; ++i) {
+                                            for (let i = 0; i < datasets[0].data.length; ++i) {
                                                 text.push("<li style=\"font-size: 12px; width: 50%; display: inline-block; color: #666; \"><span style=\"width: 10px; height: 10px; display: inline-block; border-radius: 50%; margin-right: 5px; background-color: " + datasets[0].backgroundColor[i] + "; \"></span>");
                                                 if (labels[i]) {
                                                     text.push(labels[i]);
@@ -996,18 +996,18 @@ export default {
                             });
 
                             document.getElementById("pie_chart_language_legend").innerHTML = lang.generateLegend();
-                            var config = {
+                            let config = {
                                 type: "line",
                                 data: {
                                     labels: _.keys(that.recent_submission.submission),
                                     datasets: [{
-                                        label: "总提交",
+                                        label: this.$t("total submission"),
                                         backgroundColor: window.chartColors.red,
                                         borderColor: window.chartColors.red,
                                         data: _.values(that.recent_submission.submission),
                                         fill: false
                                     }, {
-                                        label: "正确",
+                                        label: this.$t("accept"),
                                         fill: false,
                                         backgroundColor: window.chartColors.blue,
                                         borderColor: window.chartColors.blue,
@@ -1018,7 +1018,7 @@ export default {
                                     responsive: true,
                                     title: {
                                         display: false,
-                                        text: "统计信息"
+                                        text: this.$t("statistic information")
                                     },
                                     tooltips: {
                                         mode: "index",
@@ -1033,20 +1033,20 @@ export default {
                                             display: true,
                                             scaleLabel: {
                                                 display: false,
-                                                labelString: "月份"
+                                                labelString: this.$t("month")
                                             }
                                         }],
                                         yAxes: [{
                                             display: true,
                                             scaleLabel: {
                                                 display: false,
-                                                labelString: "提交"
+                                                labelString: this.$t("submit")
                                             }
                                         }]
                                     }
                                 }
                             };
-                            var ctx = document.getElementById("canvas").getContext("2d");
+                            let ctx = document.getElementById("canvas").getContext("2d");
                             window.myLine = new Chart(ctx, config);
                         });
                     });

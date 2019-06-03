@@ -5,7 +5,7 @@
                 <h2 class="ui teal image header">
                     <!--<img src="assets/images/logo.png" class="image">-->
                     <div class="content">
-                        Log-in to your account
+                        {{$t("login to your account")}}
                     </div>
                 </h2>
                 <div class="ui large form">

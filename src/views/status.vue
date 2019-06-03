@@ -158,12 +158,12 @@
             </div>
         </div>
         <div class="ui attached bottom segment" v-show="current_tag == 'user'">
-            <h2 class="ui dividing header">浏览器</h2>
-            <div id="browser_statistics" class="amcharts">加载中</div>
-            <h2 class="ui dividing header">操作系统</h2>
-            <div id="os_statistics" class="amcharts">加载中</div>
+            <h2 class="ui dividing header">{{$t("browser")}}</h2>
+            <div id="browser_statistics" class="amcharts">{{$t("loading")}}</div>
+            <h2 class="ui dividing header">{{$t("os")}}</h2>
+            <div id="os_statistics" class="amcharts">{{$t("loading")}}</div>
             <h2 class="ui dividing header">Chord graph</h2>
-            <div id="chord_graph" class="amcharts">加载中</div>
+            <div id="chord_graph" class="amcharts">{{$t("loading")}}</div>
         </div>
     </div>
 </template>
@@ -182,7 +182,7 @@
         "en": {
             "auto refresh": "Auto Refresh",
             "show cheat only": "Show Cheating Only",
-            "test run invisible": "Exclude TestRun Submission",
+            "test run invisible": "Exclude Test Run",
             "submit status": "Submit Status",
             "show user only": "Show Yourself Only",
             "submit graph": "Submission Graph",
@@ -192,7 +192,7 @@
         "ja": {
             "auto refresh": "自動リフレッシュ",
             "show cheat only": "チート提出のみを表示",
-            "test run invisible": "テスト提出を表示しない",
+            "test run invisible": "テスト提出非表示",
             "submit status": "提出リスト",
             "show user only": "自分だけを表示",
             "submit graph": "提出グラフ",

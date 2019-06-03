@@ -5,8 +5,8 @@
                 <h2 class="ui header">
                     <i class="settings icon"></i>
                     <div class="content">
-                        问题生成器
-                        <div class="sub header">下载生成题目的工具</div>
+                        {{$t("problem generator")}}
+                        <div class="sub header">{{$t("download generator")}}</div>
                     </div>
                 </h2>
             </div>
@@ -40,8 +40,8 @@
                 <h2 class="ui header">
                     <i class="settings icon"></i>
                     <div class="content">
-                        浏览器
-                        <div class="sub header">下载最适合使用的浏览器</div>
+                        {{$t("browser")}}
+                        <div class="sub header">{{$t("download browser")}}</div>
                     </div>
                 </h2>
             </div>
@@ -80,8 +80,8 @@
                 <h2 class="ui header">
                     <i class="plug icon"></i>
                     <div class="content">
-                        集成开发环境
-                        <div class="sub header">使用更加舒适的IDE</div>
+                        {{$t("ide")}}
+                        <div class="sub header">{{$t("use powerful ide")}}</div>
                     </div>
                 </h2>
             </div>
@@ -133,8 +133,8 @@
                 <h2 class="ui header">
                     <i class="terminal icon"></i>
                     <div class="content">
-                        编译环境
-                        <div class="sub header">使用更加符合运行环境的编译套件</div>
+                        {{$t("compile environment")}}
+                        <div class="sub header">{{$t("use suitable compiler")}}</div>
                     </div>
                 </h2>
             </div>
@@ -168,25 +168,24 @@ export default {
     mixins: [mixins],
     mounted () {
         document.title = `Software -- ${document.title}`;
-        var userAgent = window.navigator.userAgent;
-        var $chrome_val = $(".header.chrome").html();
-        var $clion_val = $(".header.clion").html();
-        var $clion_suffix = $(".clion").attr("href");
+        let userAgent = window.navigator.userAgent;
+        let $chrome = $(".header.chrome").html();
+        let $clion_suffix = $(".clion").attr("href");
         if (userAgent.indexOf("Windows NT") != -1) {
             $(".clion").attr("href", $clion_suffix + "exe");
             if (userAgent.indexOf("64") != -1) {
                 $(".chrome").attr("href", "software/63.0.3239.84_chrome_installer_x64.exe");
-                $(".header.chrome").html($chrome_val + " For Windows X64");
+                $(".header.chrome").html($chrome + " For Windows X64");
             }
             else {
                 $(".chrome").attr("href", "software/63.0.3239.84_chrome_installer.exe");
-                $(".header.chrome").html($chrome_val + " For Windows X86");
+                $(".header.chrome").html($chrome + " For Windows X86");
             }
         }
-        else if (userAgent.indexOf("Mac") != -1) {
+        else if (userAgent.indexOf("Mac") !== -1) {
             $(".chrome").attr("href", "software/googlechrome.dmg");
             $(".chrome_content").html("适用于macOS 10.9及以上的系统");
-            $(".header.chrome").html($chrome_val + " For macOS");
+            $(".header.chrome").html($chrome + " For macOS");
             $(".clion").attr("href", $clion_suffix + "dmg");
             $(".clion_content").html("适用于macOS 10.9.4及以上的系统");
         }

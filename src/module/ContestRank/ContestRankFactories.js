@@ -103,6 +103,9 @@ function ProblemFactory () {
     baseProblem.getAcceptTime = function () {
         return this.accept[0];
     };
+
+    baseProblem.newInstance = ProblemFactory;
+
     return baseProblem;
 }
 
@@ -122,18 +125,17 @@ function ProblemListFactory (total) {
     };
 
     problem.toArray = function () {
-        let tempArray = toArray(problem);
-        return tempArray;
+        return toArray(problem);
     };
 
     problem.calculatePenaltyTime = function () {
-        let penalty_time = 0;
+        let penaltyTime = 0;
         for (let index in problem) {
             if (problem.hasOwnProperty(index) && !isNaN(parseInt(index))) {
-                penalty_time += problem[index].calculatePenaltyTime();
+                penaltyTime += problem[index].calculatePenaltyTime();
             }
         }
-        return penalty_time;
+        return penaltyTime;
     };
 
     problem.calculateAC = function () {
@@ -147,6 +149,9 @@ function ProblemListFactory (total) {
         }
         return ac;
     };
+
+    problem.newInstance = ProblemListFactory;
+
     return problem;
 }
 
@@ -157,6 +162,7 @@ function NickFactory (nick) {
     if (typeof nick !== "string") {
         nick = "";
     }
+    nick.newInstance = NickFactory;
     return nick.length > 0 ? nick.trim() : "未注册";
 }
 
@@ -167,6 +173,7 @@ function UserIDFactory (user_id) {
     if (typeof user_id !== "string") {
         user_id = "";
     }
+    user_id.newInstance = UserIDFactory;
     return user_id.trim();
 }
 
@@ -178,6 +185,7 @@ function SetFactory () {
             _add.apply(set, arguments);
         }
     };
+    set.newInstance = SetFactory;
     return set;
 }
 
@@ -213,7 +221,8 @@ function SubmitterFactory (nick, total_problem, user_id) {
                     firstBloodList.get(index).setFirstBlood(difftime, this.problem.get(index));
                 }
             }
-        }
+        },
+        newInstance: SubmitterFactory
     };
 }
 
@@ -233,15 +242,16 @@ function firstBloodFactory () {
             }
         }
     };
+    firstBloodInfo.newInstance = firstBloodFactory;
     return firstBloodInfo;
 }
 
 function firstBloodListFactory (total) {
-    let first_blood = {};
+    let firstBlood = {};
     for (let i = 0; i < total; ++i) {
-        first_blood[i] = firstBloodFactory();
+        firstBlood[i] = firstBloodFactory();
     }
-    first_blood.get = function (i) {
+    firstBlood.get = function (i) {
         if (typeof this[i] !== "undefined") {
             return this[i];
         }
@@ -249,7 +259,8 @@ function firstBloodListFactory (total) {
             return this[i] = firstBloodFactory();
         }
     };
-    return first_blood;
+    firstBlood.newInstance = firstBloodListFactory;
+    return firstBlood;
 }
 
 function SubmitterComparator (policy) {
