@@ -142,6 +142,7 @@ const $ = window.$ = window.jQuery = require("jquery");
 const { reset: bindDragEvent } = require("dragscroll");
 require("../../static/js/semantic.min");
 let submissionCollection = [];
+window.submissionCollection = submissionCollection;
 let convertFlag = false;
 
 export default {

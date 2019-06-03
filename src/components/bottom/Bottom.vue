@@ -4,19 +4,19 @@
             <div class="ui stackable inverted equal height stackable grid">
                 <div class="three wide column">
                     <h3 class="ui inverted header">
-                        <router-link to="/about" class="white link">关于</router-link>
+                        <router-link to="/about" class="white link">{{$t("about")}}</router-link>
                     </h3>
                     <div class="ui inverted link list">
-                        <a href="mailto:gxlhybh@gmail.com" class="item">联系开发者</a>
-                        <router-link to="/opensource" class="item">开放源代码声明</router-link>
-                        <router-link to="/privacy" class="item">隐私政策</router-link>
-                        <router-link to="copyright" class="item">著作权声明</router-link>
+                        <a href="mailto:gxlhybh@gmail.com" class="item">{{$t("contact developer")}}</a>
+                        <router-link to="/opensource" class="item">{{$t("opensource-notice")}}</router-link>
+                        <router-link to="/privacy" class="item">{{$t("privacy policy")}}</router-link>
+                        <router-link to="copyright" class="item">{{$t("copyright-notice")}}</router-link>
                     </div>
                 </div>
                 <div class="four wide column">
-                    <h3 class="ui inverted header">知识共享许可协议
+                    <h3 class="ui inverted header">{{$t("creative common")}}
                         <div class="sub header">
-                            <a class="white link" href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.zh" target="_blank">署名-非商业性使用-禁止演绎 4.0
+                            <a class="white link" href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.zh" target="_blank">{{$t("cc-by-nc-nd")}}
                                 <div class="sub header">(CC BY-NC-ND 4.0)</div>
                             </a>
                         </div>

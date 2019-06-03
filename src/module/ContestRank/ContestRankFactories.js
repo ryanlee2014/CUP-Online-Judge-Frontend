@@ -1,6 +1,6 @@
 const dayjs = require("dayjs");
 const _ = require("lodash");
-
+const DEFAULT_TIME = dayjs();
 String.prototype.hashCode = function () {
     let hash = 0; let i; let chr;
     if (this.length === 0) return hash;
@@ -40,6 +40,7 @@ function ProblemFactory () {
         accept: [],
         sim: 0,
         try_time: 0,
+        start_time: DEFAULT_TIME,
         first_blood: false,
         _submit: new Set(),
         _accept: new Set()
@@ -74,7 +75,8 @@ function ProblemFactory () {
             break;
         }
     };
-    baseProblem.calculatePenaltyTime = function (start_time) {
+    baseProblem.calculatePenaltyTime = function () {
+        const start_time = this.start_time;
         if (this.accept.length > 0) {
             this.accept.sort(earlyFirstComparator);
             this.submit.sort(earlyFirstComparator);
@@ -124,11 +126,11 @@ function ProblemListFactory (total) {
         return tempArray;
     };
 
-    problem.calculatePenaltyTime = function (start_time) {
+    problem.calculatePenaltyTime = function () {
         let penalty_time = 0;
         for (let index in problem) {
             if (problem.hasOwnProperty(index) && !isNaN(parseInt(index))) {
-                penalty_time += problem[index].calculatePenaltyTime(start_time);
+                penalty_time += problem[index].calculatePenaltyTime();
             }
         }
         return penalty_time;
@@ -199,7 +201,7 @@ function SubmitterFactory (nick, total_problem, user_id) {
             this.problem.get(val.num).addSubmit(val);
         },
         calculatePenaltyTime () {
-            this.penalty_time = this.problem.calculatePenaltyTime(start_time);
+            this.penalty_time = this.problem.calculatePenaltyTime();
         },
         calculateAC () {
             this.ac = this.problem.calculateAC();
