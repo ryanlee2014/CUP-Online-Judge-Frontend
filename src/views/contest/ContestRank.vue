@@ -124,6 +124,7 @@
 </template>
 
 <script>
+// @flow weak
 import mixins from "../../mixin/init";
 import { saveAs } from "file-saver";
 import utils from "../../lib/util";
@@ -132,7 +133,9 @@ import ErrorView from "../../components/contest/ContestRank/errorView";
 import {
     SubmitterFactory,
     firstBloodListFactory,
-    SubmitterComparator
+    SubmitterComparator,
+    Submitter,
+    FirstBloodList
 } from "../../module/ContestRank/ContestRankFactories";
 
 const _ = require("lodash");
@@ -220,7 +223,7 @@ export default {
         }
     },
     methods: {
-        updateSubmitter (el) {
+        updateSubmitter (el: Submitter) {
             el.calculatePenaltyTime();
             el.calculateAC();
             el.calculateFirstBlood(this.firstBloodList);

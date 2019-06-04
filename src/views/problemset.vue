@@ -473,7 +473,7 @@ export default {
         },
         "ja": {
             "totalProblem": "{n}の質問があります",
-            "addProblem": "{n}つの新しい質問を追加}"
+            "addProblem": "{n}つの新しい質問を追加"
         }
     }
 </i18n>

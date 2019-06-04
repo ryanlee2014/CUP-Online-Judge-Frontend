@@ -53,12 +53,6 @@ export default {
             type: Boolean,
             default: false
         }
-    },
-    methods: {
-        item_active ($event) {
-            console.log($event);
-            return false;
-        }
     }
 };
 </script>

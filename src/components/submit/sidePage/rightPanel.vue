@@ -1,5 +1,5 @@
 <template>
-    <div id="right-side" style="width:65%;position:relative;float:left;">
+    <div id="right-side" style="width:65%;position:relative;" class="eleven wide column">
         <div class="ui menu borderless" id="modeBar" style="margin: 0;
         padding: 0;
         position: relative;

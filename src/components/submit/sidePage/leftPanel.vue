@@ -1,6 +1,6 @@
 <template>
-    <div class="padding ui container mainwindow"
-         style="height:100%;width: 35%;overflow-y: auto;float:left;border-radius: 10px;" id="left-side">
+    <div class="padding ui container mainwindow five wide column"
+         style="height:100%;width: 35%;overflow-y: auto;border-radius: 10px;" id="left-side">
         <div class="ui vertical center aligned segment">
             <div class="ui header" id="probid" v-html="temp_title" style="font-size:1.71428571rem"></div>
             <div class='ui labels'>

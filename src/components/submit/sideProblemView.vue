@@ -1,7 +1,8 @@
 <template>
     <div
+        class="ui grid"
         id="total_control"
-        style="max-width:1300px;position:relative;margin:auto;height: 540px;border-radius: 10px">
+        style="max-width:1300px;position:relative;margin:auto;border-radius: 10px">
         <leftPanel :accepted="accepted" :description="description" :hint="hint" :input="input" :isadmin="isadmin"
                    :iseditor="iseditor"
                    :memory="memory"
