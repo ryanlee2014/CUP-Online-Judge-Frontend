@@ -35,8 +35,8 @@
             <!--<td>
             </td>-->
             <td>
-                <i class="checkmark icon" v-if="row.ac === 1"></i>
-                <i class="remove icon" v-else-if="row.ac === 0"></i>
+                <i class="checkmark icon" v-if="row.ac === true"></i>
+                <i class="remove icon" v-else-if="row.ac === false"></i>
                 <i class="checkmark icon" style="opacity: 0" v-else></i>
                 {{row.problem_id}}
             </td>
@@ -152,8 +152,8 @@ export default {
         },
         filterTableRow: function () {
             const dim = this.dim;
-            const hide_currect = this.hide_currect;
-            return this.result.problem.filter(row => !dim && (row.ac == 0 || row.ac == -1 || (row.ac == 1 && !hide_currect)));
+            const hideCurrent = this.hide_currect;
+            return this.result.problem.filter(row => !dim && (row.ac === false || row.ac === -1 || (row.ac === true && !hideCurrent)));
         }
     },
     methods: {

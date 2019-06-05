@@ -2,7 +2,7 @@
     <div class="ui flowing popup hidden dropdown_menu_group">
         <div class='ui two column grid'>
             <div class='row'>
-                <div class='column'><img class='ui small image' :src="img_url">
+                <div class='column'><img :src="img_url" class='ui small image'>
                     <h4 class='ui header'>{{user_id}}
                         <div class='sub header'>{{nick}}</div>
                     </h4>
@@ -13,11 +13,11 @@
                             <i class='edit icon'></i>修改帐号
                         </router-link>
                         <br>
-                        <router-link class="item" :to="`/user/${user_id}`">
+                        <router-link :to="`/user/${user_id}`" class="item">
                             <i class='archive icon'></i>个人信息
                         </router-link>
                         <br>
-                        <router-link class="item" :to="`/status/?user_id=${user_id}`">
+                        <router-link :to="`/status/?user_id=${user_id}`" class="item">
                             <i class='send icon'></i>我的提交
                         </router-link>
                         <br>
@@ -25,12 +25,15 @@
                             <i class='book icon'></i>我的竞赛&作业
                         </router-link>
                         <br>
-                        <a class='logout item' @click.prevent="logout"><i
-                                class='remove user icon'></i>注销</a>&nbsp;<br>
-                        <a v-if="admin" class='item' href="/admin/">
-                            <i class='write icon'></i>管理</a>&nbsp;<br>
-                        <router-link to="/extra/broadcast" v-if="admin" class="item"><i
-                                class='send outline icon'></i>在线用户推送</router-link>
+                        <a @click.prevent="logout" class='logout item'><i
+                            class='remove user icon'></i>注销</a>&nbsp;<br>
+                        <router-link class="item" to="/admin">
+                            <i class='write icon'></i>管理
+                        </router-link>
+                        &nbsp;<br>
+                        <router-link class="item" to="/extra/broadcast" v-if="admin"><i
+                            class='send outline icon'></i>在线用户推送
+                        </router-link>
                     </div>
                 </div>
             </div>
@@ -42,6 +45,7 @@
 import store from "../../../store";
 import mixins from "../../../mixin/init";
 import util from "../../../lib/util";
+
 export default {
     name: "ProfileCard",
     mixins: [mixins],

@@ -332,6 +332,33 @@ const router = new Router({
             }
         },
         {
+            path: "/admin",
+            name: "Admin index view",
+            component: () => import("./views/admin/index.vue"),
+            meta: {
+                auth: true,
+                admin: true
+            }
+        },
+        {
+            path: "/admin/problem/list",
+            name: "Admin problem list",
+            component: () => import("./views/admin/problem/list.vue"),
+            meta: {
+                auth: true,
+                admin: true
+            }
+        },
+        {
+            path: "/admin/contest/list",
+            name: "Admin contest list",
+            component: () => import("./views/admin/contest/list.vue"),
+            meta: {
+                auth: true,
+                admin: true
+            }
+        },
+        {
             path: "*",
             redirect: "/"
         }

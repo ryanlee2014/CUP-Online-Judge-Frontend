@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="following bar topmenu" style="z-index: 900;">
-            <Large :connected="socketConnected" :judger="judger" :logined="logined" :nick="nick" :user="user" v-if="!contest"></Large>
+            <Menu :connected="socketConnected" :judger="judger" :logined="logined" :nick="nick" :user="user"></Menu>
         </div>
         <ProfileCard :admin="admin" :avatar="avatar" :nick="nick" :user_id="user_id"/>
     </div>
@@ -9,9 +9,15 @@
 
 <script>
 import ProfileCard from "./components/ProfileCard";
-
+import NavbarMixin from "../../mixin/NavbarMixin";
+import Menu from "./admin/Menu";
 export default {
-    name: "AdminNavbar"
+    name: "AdminNavbar",
+    mixins: [NavbarMixin],
+    components: {
+        ProfileCard,
+        Menu
+    }
 };
 </script>
 

@@ -32,8 +32,8 @@ export default {
         current_page: Number
     },
     data: function () {
-        var width = document.body.clientWidth;
-        var container = $(".ui.container").width();
+        let width = document.body.clientWidth;
+        let container = $(".ui.container").width();
         if (width > 1127) {
             width = container;
         }
