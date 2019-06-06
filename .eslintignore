@@ -1,2 +1,4 @@
 /src/static/*
 /src/lib/*
+/semantic/*
+/flow-typed/*

@@ -102,9 +102,16 @@ export default {
         });
         this.sockets.subscribe("msg", (data) => {
             setTimeout(() => {
-                $(".item.online_num").attr("data-html", "<div class='header'>From:" + data["user_id"] + "<br>" + data["nick"] + "</div><div class='content'>" + data["content"] + "</div>")
-                    .popup("show").popup("set position", "bottom center");
-            }, 500);
+                // $(".item.online_num").attr("data-html", "<div class='header'>From:" + data["user_id"] + "<br>" + data["nick"] + "</div><div class='content'>" + data["content"] + "</div>")
+                //    .popup("show").popup("set position", "bottom center");
+                $("body")
+                    .toast({
+                        class: "info",
+                        displayTime: 0,
+                        closeIcon: true,
+                        message: "<div class='header'>From:" + data["user_id"] + "<br>" + data["nick"] + "</div><div class='content'>" + data["content"] + "</div>"
+                    }, 500);
+            });
         });
         $("body").on("click", function () {
             $(".msg.header.item").popup("hide").removeAttr("data-html");

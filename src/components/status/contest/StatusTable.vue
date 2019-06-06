@@ -17,7 +17,7 @@
         <tr :key="row.solution_id" v-for="row in problem_lists" :class="row.sim?'warning need_popup':'need_popup'" :data-html="'<b>IP:'+row.ip+'</b><br><p>类型:'+detect_place(row.ip)+'</p><p>用户指纹:<br>'+row.fingerprint+'<br>硬件指纹:<br>'+row.fingerprintRaw+'</p>'">
             <td>{{row.solution_id}}</td>
             <td><div class="ui grid">
-            <div class="three wide column" style="margin:auto">
+            <div class="four wide column" style="margin:auto">
             <img class="ui avatar image" :src="'/avatar/'+row.user_id+'.jpg'" v-if="row.avatar||user[row.user_id].avatar" style="object-fit: cover;">
             <img class="ui avatar image" src="/image/default-user.png" v-else style="object-fit: cover;">
             </div>

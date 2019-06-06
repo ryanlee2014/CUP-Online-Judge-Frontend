@@ -754,7 +754,7 @@ export default {
                             };
                         });
 
-                        let heatmap = calendarHeatmap()
+                        let heatmap = calendarHeatmap({ width: $(".heatmap").width() })
                             .data(chartData)
                             .selector(".heatmap")
                             .tooltipEnabled(true)

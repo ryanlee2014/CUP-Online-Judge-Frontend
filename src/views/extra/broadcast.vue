@@ -50,13 +50,19 @@ export default {
                 nick: this.$store.getters.nick,
                 content: this.renderContents
             };
-            $(".item.online_num").attr("data-html", "<div class='header'>From:" + data["user_id"] + "<br>" + data["nick"] + "</div><div class='content'>" + data["content"] + "</div>")
-                .popup("show").popup("set position", "bottom center");
+            $("body")
+                .toast({
+                    class: "info",
+                    displayTime: 0,
+                    closeIcon: true,
+                    message: `From:${data.nick}<br>(${data.user_id}): <br>${data.content}`
+                });
+            /* $(".item.online_num").attr("data-html", "<div class='header'>From:" + data["user_id"] + "<br>" + data["nick"] + "</div><div class='content'>" + data["content"] + "</div>")
+                .popup("show").popup("set position", "bottom center"); */
         }
     }
 };
 </script>
 
 <style scoped>
-
 </style>

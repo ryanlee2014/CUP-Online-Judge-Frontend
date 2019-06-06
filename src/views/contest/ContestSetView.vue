@@ -209,8 +209,14 @@ export default {
             return this.contestIsRunning(row) ? "green" : "grey";
         },
         contestIsRunning: function (row) {
-            const startTime = dayjs(row.start_time);
-            const endTime = dayjs(row.end_time);
+            let startTime;
+            if (!dayjs.isDayjs(row.start_time)) {
+                startTime = dayjs(row.start_time);
+            }
+            let endTime;
+            if (!dayjs.isDayjs(row.end_time)) {
+                endTime = dayjs(row.end_time);
+            }
             const currentTime = this.current_time;
             return currentTime.isBefore(endTime) && currentTime.isAfter(startTime);
         },
@@ -234,8 +240,14 @@ export default {
             return `${day}天${hour}小时${minute}分${sec}秒`;
         },
         contestTimeFormat: function (row) {
-            const startTime = dayjs(row.start_time);
-            const endTime = dayjs(row.end_time);
+            let startTime;
+            if (!dayjs.isDayjs(row.start_time)) {
+                startTime = dayjs(row.start_time);
+            }
+            let endTime;
+            if (!dayjs.isDayjs(row.end_time)) {
+                endTime = dayjs(row.end_time);
+            }
             const currentTime = this.current_time;
             if (currentTime.isAfter(endTime)) {
                 return `${endTime.format("YYYY-MM-DD HH:mm")}${this.$t("end")}`;
@@ -248,8 +260,14 @@ export default {
             }
         },
         percentageRunning: function (row) {
-            const startTime = dayjs(row.start_time);
-            const endTime = dayjs(row.end_time);
+            let startTime;
+            if (!dayjs.isDayjs(row.start_time)) {
+                startTime = dayjs(row.start_time);
+            }
+            let endTime;
+            if (!dayjs.isDayjs(row.end_time)) {
+                endTime = dayjs(row.end_time);
+            }
             const currentTime = this.current_time;
             if (currentTime.isBefore(startTime)) {
                 return 0;

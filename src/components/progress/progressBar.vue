@@ -8,16 +8,26 @@
 const $ = require("jquery");
 require("../../static/js/semantic.min");
 function forceUpdate () {
-    this.$nextTick(this.$forceUpdate);
+    if (this.prevPercentage !== this.percentage) {
+        this.$nextTick(this.$forceUpdate);
+    }
 }
 function mountFunc () {
-    $(this.$refs.progressBarElement).progress({
-        percent: this.percentage,
-        autoSuccess: false
-    });
+    if (this.prevPercentage !== this.percentage) {
+        $(this.$refs.progressBarElement).progress({
+            percent: this.percentage,
+            autoSuccess: false
+        });
+        this.prevPercentage = this.percentage;
+    }
 }
 export default {
     name: "progressBar",
+    data () {
+        return {
+            prevPercentage: 0
+        };
+    },
     props: {
         size: {
             type: String,

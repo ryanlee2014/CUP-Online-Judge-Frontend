@@ -23,7 +23,7 @@
             <td>{{row.solution_id}}</td>
             <td>
                 <div class="ui grid">
-                    <div class="three wide column" style="margin:auto">
+                    <div class="four wide column" style="margin:auto">
                         <img :src="'/avatar/'+row.user_id+'.jpg'" class="ui avatar image"
                              style="object-fit: cover;" v-if="row.avatar||user[row.user_id].avatar">
                         <img class="ui avatar image" src="/image/default-user.png" style="object-fit: cover;" v-else>

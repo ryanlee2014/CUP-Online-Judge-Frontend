@@ -214,9 +214,9 @@ const Cookies = require("js-cookie");
 window.$ = window.jQuery = $;
 require("../static/js/semantic.min");
 function draw (_result) {
-    var result = _result.result;
-    var _label = _result.label;
-    var row = {};
+    let result = _result.result;
+    let _label = _result.label;
+    let row = {};
     _.forEach(result, function (i) {
         row[i[_label[0]]] = row[i[_label[0]]] || {};
         row[i[_label[0]]][i[_label[1]]] = {
@@ -225,10 +225,10 @@ function draw (_result) {
         };
     });
 
-    var _labels = [];
-    var _submits = [];
-    var _accepteds = [];
-    var _persent = [];
+    let _labels = [];
+    let _submits = [];
+    let _accepteds = [];
+    let _persent = [];
     _.forEach(row, function (val, i) {
         _.forEach(row[i], function (val2, j) {
             _labels.push(i.toString() + "-" + j.toString());
@@ -237,7 +237,7 @@ function draw (_result) {
             _persent.push((row[i][j].accepted / row[i][j].submit * 100).toString().substring(0, 5));
         });
     });
-    var config = {
+    let config = {
         type: "line",
         data: {
             labels: _labels,
@@ -310,15 +310,15 @@ function draw (_result) {
             }
         }
     };
-    var ctx = document.getElementById("canvas").getContext("2d");
+    let ctx = document.getElementById("canvas").getContext("2d");
     window.myLine = new Chart(ctx, config);
 }
 function drawResult (data, labelName) {
     data.sort(function (a, b) {
         return b.cnt - a.cnt;
     });
-    var color = window.chartColors;
-    var colorTocolor = {
+    let color = window.chartColors;
+    let colorTocolor = {
         0: color.blue,
         1: color.blue,
         2: color.blue,
@@ -336,8 +336,8 @@ function drawResult (data, labelName) {
         14: color.red,
         15: color.red
     };
-    var dataSet = [];
-    var labName = [];
+    let dataSet = [];
+    let labName = [];
     dataSet.push({
         label: "提交数",
         backgroundColor: [],
@@ -352,12 +352,12 @@ function drawResult (data, labelName) {
         dataSet[0].borderColor.push("white");
         dataSet[0].data.push(val.cnt);
     });
-    var barChartData = {
+    let barChartData = {
         labels: labName,
         datasets: dataSet
     };
     barChartData = JSON.parse(JSON.stringify(barChartData));
-    var ctx = document.getElementById("bar").getContext("2d");
+    let ctx = document.getElementById("bar").getContext("2d");
     window.myBar = new Chart(ctx, {
         type: "bar",
         data: barChartData,
@@ -375,10 +375,10 @@ function drawResult (data, labelName) {
     });
 }
 function drawBar (data) {
-    var login = data.login;
+    let login = data.login;
     data = data.submit;
-    var color = Chart.helpers.color;
-    var config = {
+    let color = Chart.helpers.color;
+    let config = {
         type: "radar",
         data: {
             labels: [],
@@ -409,7 +409,7 @@ function drawBar (data) {
         config.data.labels.push(val.hour + ":00");
         config.data.datasets[0].data.push(val.cnt);
     });
-    var copyconfig = JSON.parse(JSON.stringify(config));
+    let copyconfig = JSON.parse(JSON.stringify(config));
     copyconfig.data.datasets = [{
         label: "登录分布",
         backgroundColor: color(window.chartColors.blue).alpha(0.2).rgbString(),
@@ -426,11 +426,11 @@ function drawBar (data) {
     // console.log(data);
     // console.log(config);
 }
-var hasRendered = {};
+let hasRendered = {};
 function drawDynamicInteractiveLineChart (dataSets, prefix, target) {
-    var adapter_object = {};
-    var full_name = prefix + "_name";
-    var full_version = prefix + "_version";
+    let adapter_object = {};
+    let full_name = prefix + "_name";
+    let full_version = prefix + "_version";
     if (hasRendered[target]) {
         return;
     }
@@ -480,7 +480,7 @@ function drawDynamicInteractiveLineChart (dataSets, prefix, target) {
     // Themes end
 
     // create chart
-    var chart = am4core.create(target, am4charts.TreeMap);
+    let chart = am4core.create(target, am4charts.TreeMap);
     chart.hiddenState.properties.opacity = 0; // this makes initial fade in effect
     window.chart_graph = chart;
     chart.data = adapter_object;
@@ -493,11 +493,11 @@ function drawDynamicInteractiveLineChart (dataSets, prefix, target) {
     chart.dataFields.children = "children";
 
     chart.zoomable = true;
-    var bgColor = new am4core.InterfaceColorSet().getFor("background");
+    let bgColor = new am4core.InterfaceColorSet().getFor("background");
 
     // level 0 series template
-    var level0SeriesTemplate = chart.seriesTemplates.create("0");
-    var level0ColumnTemplate = level0SeriesTemplate.columns.template;
+    let level0SeriesTemplate = chart.seriesTemplates.create("0");
+    let level0ColumnTemplate = level0SeriesTemplate.columns.template;
 
     level0ColumnTemplate.column.cornerRadius(10, 10, 10, 10);
     level0ColumnTemplate.fillOpacity = 0;
@@ -505,8 +505,8 @@ function drawDynamicInteractiveLineChart (dataSets, prefix, target) {
     level0ColumnTemplate.strokeOpacity = 0;
 
     // level 1 series template
-    var level1SeriesTemplate = chart.seriesTemplates.create("1");
-    var level1ColumnTemplate = level1SeriesTemplate.columns.template;
+    let level1SeriesTemplate = chart.seriesTemplates.create("1");
+    let level1ColumnTemplate = level1SeriesTemplate.columns.template;
 
     level1SeriesTemplate.tooltip.animationDuration = 0;
     level1SeriesTemplate.strokeOpacity = 1;
@@ -516,7 +516,7 @@ function drawDynamicInteractiveLineChart (dataSets, prefix, target) {
     level1ColumnTemplate.strokeWidth = 4;
     level1ColumnTemplate.stroke = bgColor;
 
-    var bullet1 = level1SeriesTemplate.bullets.push(new am4charts.LabelBullet());
+    let bullet1 = level1SeriesTemplate.bullets.push(new am4charts.LabelBullet());
     bullet1.locationY = 0.5;
     bullet1.locationX = 0.5;
     bullet1.label.text = "{name}";
@@ -533,11 +533,11 @@ function drawChordGraph (data, prefix = "chord_graph") {
     am4core.useTheme(am4themes_animated);
     // Themes end
 
-    var chart = am4core.create("chord_graph", am4charts.ChordDiagram);
+    let chart = am4core.create("chord_graph", am4charts.ChordDiagram);
 
     _.forEach(data, function (el) {
         if (el.from > el.to) {
-            var tmp = el.from;
+            let tmp = el.from;
             el.from = el.to;
             el.to = tmp;
         }
@@ -558,29 +558,29 @@ function drawChordGraph (data, prefix = "chord_graph") {
     chart.dataFields.value = "value";
 
     // make nodes draggable
-    var nodeTemplate = chart.nodes.template;
+    let nodeTemplate = chart.nodes.template;
     nodeTemplate.readerTitle = "Click to show/hide or drag to rearrange";
     nodeTemplate.showSystemTooltip = true;
 
-    var nodeLink = chart.links.template;
-    var bullet = nodeLink.bullets.push(new am4charts.CircleBullet());
+    let nodeLink = chart.links.template;
+    let bullet = nodeLink.bullets.push(new am4charts.CircleBullet());
     bullet.fillOpacity = 1;
     bullet.circle.radius = 5;
     bullet.locationX = 0.5;
 
     // create animations
     chart.events.on("ready", function () {
-        for (var i = 0; i < chart.links.length; i++) {
-            var link = chart.links.getIndex(i);
-            var bullet = link.bullets.getIndex(0);
+        for (let i = 0; i < chart.links.length; i++) {
+            let link = chart.links.getIndex(i);
+            let bullet = link.bullets.getIndex(0);
 
             animateBullet(bullet);
         }
     });
 
     function animateBullet (bullet) {
-        var duration = 3000 * Math.random() + 2000;
-        var animation = bullet.animate([{ property: "locationX", from: 0, to: 1 }], duration);
+        let duration = 3000 * Math.random() + 2000;
+        let animation = bullet.animate([{ property: "locationX", from: 0, to: 1 }], duration);
         animation.events.on("animationended", function (event) {
             animateBullet(event.target.object);
         });
@@ -596,9 +596,9 @@ function drawRegisterTimeline (data) {
     // Themes end
 
     // Create chart instance
-    var chart = am4core.create("register_timeline", am4charts.XYChart);
+    let chart = am4core.create("register_timeline", am4charts.XYChart);
     chart.paddingRight = 20;
-    var title = chart.titles.create();
+    let title = chart.titles.create();
     title.text = "注册人数变化";
     title.fontSize = 15;
     title.marginBottom = 30;
@@ -606,11 +606,11 @@ function drawRegisterTimeline (data) {
     chart.data = data;
 
     // Create axes
-    var dateAxis = chart.xAxes.push(new am4charts.DateAxis());
-    var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+    let dateAxis = chart.xAxes.push(new am4charts.DateAxis());
+    let valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
 
     // Create series
-    var series = chart.series.push(new am4charts.LineSeries());
+    let series = chart.series.push(new am4charts.LineSeries());
     series.dataFields.valueY = "value";
     series.dataFields.dateX = "date";
     series.tooltipText = "{value}";
@@ -627,12 +627,12 @@ function drawRegisterTimeline (data) {
     series.tooltip.label.textValign = "middle";
 
     // Make bullets grow on hover
-    var bullet = series.bullets.push(new am4charts.CircleBullet());
+    let bullet = series.bullets.push(new am4charts.CircleBullet());
     bullet.circle.strokeWidth = 2;
     bullet.circle.radius = 4;
     bullet.circle.fill = am4core.color("#fff");
 
-    var bullethover = bullet.states.create("hover");
+    let bullethover = bullet.states.create("hover");
     bullethover.properties.scale = 1.3;
 
     // Make a panning cursor
@@ -684,19 +684,19 @@ export default {
     watch: {
     // eslint-disable-next-line no-unused-vars
         sim_checkbox: function (newVal, oldVal) {
-            var that = this;
+            let that = this;
             this.search().then(function () {
                 that.search();
             });
         },
         privilege: function (newVal, oldVal) {
-            var that = this;
+            let that = this;
             this.search().then(function () {
                 that.search();
             });
         },
         auto_refresh: function (newVal, oldVal) {
-            var that = this;
+            let that = this;
             if (newVal) {
                 this.search().then(function () {
                     that.search();
@@ -757,7 +757,7 @@ export default {
             return null;
         },
         setQuery: function () {
-            var queryobject = {};
+            let queryobject = {};
             if (this.user_id && this.user_id.length > 0) { queryobject["user_id"] = this.user_id; }
             if (this.problem_result && this.problem_result !== -1) { queryobject["jresult"] = this.problem_result; }
             if (this.problem_id && this.problem_id !== 0) { queryobject["problem_id"] = this.problem_id; }
@@ -765,7 +765,7 @@ export default {
             this.$router.push({ path: this.$route.path, query: queryobject });
         },
         search_func: function (data) {
-            var that = this;
+            let that = this;
             this.setQuery();
             that.problem_list = data.result;
             that.icon_list = data.const_list.icon_list;
@@ -779,16 +779,16 @@ export default {
             that.isadmin = data.isadmin || data.browse_code;
         },
         search: function ($event) {
-            var that = this;
+            let that = this;
             this.dim = true;
             this.page_cnt = 0;
-            var problem_id = this.problem_id || "null";
-            var user_id = this.user_id || "null";
-            var language = this.language == -1 ? "null" : this.language;
-            var result = this.problem_result == -1 ? "null" : this.problem_result;
-            var page_cnt = this.page_cnt * 20;
-            var sim = Number(this.sim_checkbox);
-            var pri = Number(this.privilege);
+            let problem_id = this.problem_id || "null";
+            let user_id = this.user_id || "null";
+            let language = this.language == -1 ? "null" : this.language;
+            let result = this.problem_result == -1 ? "null" : this.problem_result;
+            let page_cnt = this.page_cnt * 20;
+            let sim = Number(this.sim_checkbox);
+            let pri = Number(this.privilege);
             return new Promise(function (resolve, reject) {
                 $.get("/api/status/" + problem_id + "/" + user_id + "/" + language + "/" + result + "/" + page_cnt + "/" + sim + "/" + pri, function (data) {
                     that.dim = false;
@@ -798,8 +798,8 @@ export default {
             });
         },
         list_self_only: function () {
-            var that = this;
-            var self_user_id = this.$store.getters.user_id;
+            let that = this;
+            let self_user_id = this.$store.getters.user_id;
             if (this.user_id == null || this.user_id != self_user_id) {
                 this.user_id = self_user_id;
             }
@@ -811,14 +811,14 @@ export default {
         page: function (num, $event) {
             this.dim = true;
             this.page_cnt += num;
-            var problem_id = this.problem_id || "null";
-            var user_id = this.user_id || "null";
-            var language = this.language == -1 ? "null" : this.language;
-            var result = this.problem_result == -1 ? "null" : this.problem_result;
-            var page_cnt = this.page_cnt * 20;
-            var sim_checkbox = Number(this.sim_checkbox);
-            var pri = Number(this.privilege);
-            var that = this;
+            let problem_id = this.problem_id || "null";
+            let user_id = this.user_id || "null";
+            let language = this.language == -1 ? "null" : this.language;
+            let result = this.problem_result == -1 ? "null" : this.problem_result;
+            let page_cnt = this.page_cnt * 20;
+            let sim_checkbox = Number(this.sim_checkbox);
+            let pri = Number(this.privilege);
+            let that = this;
             $.get("/api/status/" + problem_id + "/" + user_id + "/" + language + "/" + result + "/" + page_cnt + "/" + sim_checkbox + "/" + pri, function (data) {
                 that.dim = false;
                 that.search_func(data);
@@ -839,7 +839,7 @@ export default {
                 return;
             }
             if ((!this.user_id || this.user_id === data.user_id) && (this.problem_result === -1) && (this.language === -1 || this.language === data.val.language) && !this.page_cnt && (!this.problem_id || parseInt(this.problem_id) === Math.abs(data.val.id))) {
-                var obj = {};
+                let obj = {};
                 obj.problem_id = Math.abs(data.val.id);
                 obj.solution_id = data.submission_id;
                 obj.nick = data.nick;
@@ -866,20 +866,20 @@ export default {
             if (!this.auto_refresh) {
                 return;
             }
-            var solution_id = data.solution_id;
-            var status = data.state;
-            var time = data.time;
-            var memory = data.memory;
-            var pass_rate = data.pass_rate;
-            var sim = data.sim;
-            var ip = data.ip;
-            var total_point = parseInt(data.total_point) || 0;
-            var fingerprint = data.fingerprint;
-            var fingerprintRaw = data.fingerprintRaw;
-            var pass_point = data.pass_point;
-            var that = this;
+            let solution_id = data.solution_id;
+            let status = data.state;
+            let time = data.time;
+            let memory = data.memory;
+            let pass_rate = data.pass_rate;
+            let sim = data.sim;
+            let ip = data.ip;
+            let total_point = parseInt(data.total_point) || 0;
+            let fingerprint = data.fingerprint;
+            let fingerprintRaw = data.fingerprintRaw;
+            let pass_point = data.pass_point;
+            let that = this;
             _.forEach(this.problem_list, function (val, key) {
-                var i = that.problem_list[key];
+                let i = that.problem_list[key];
                 if (i.solution_id == solution_id) {
                     i.result = status;
                     i.time = time;
@@ -901,11 +901,11 @@ export default {
         }
     },
     created: function () {
-        var that = this;
-        var problem_id = (this.problem_id = this.getProblemID() || null) || "null";
-        var user_id = (this.user_id = this.getUserId() || null) || "null";
-        var language = (this.language = this.getLanguage() || -1) == -1 ? "null" : this.getLanguage();
-        var result = (this.problem_result = this.getResult() || -1) == -1 ? "null" : this.problem_result;
+        let that = this;
+        let problem_id = (this.problem_id = this.getProblemID() || null) || "null";
+        let user_id = (this.user_id = this.getUserId() || null) || "null";
+        let language = (this.language = this.getLanguage() || -1) == -1 ? "null" : this.getLanguage();
+        let result = (this.problem_result = this.getResult() || -1) == -1 ? "null" : this.problem_result;
         $.get("/api/status/" + problem_id + "/" + user_id + "/" + language + "/" + result + "/0/", function (data) {
             that.dim = false;
             that.search_func(data);
@@ -913,7 +913,7 @@ export default {
                 drawResult(dat.data, data.const_list.result.cn);
             });
             $.get("/api/status/submit_hour", function (dat) {
-                var func = function (a, b) {
+                let func = function (a, b) {
                     return a.hour - b.hour;
                 };
                 dat.data.submit.sort(func);

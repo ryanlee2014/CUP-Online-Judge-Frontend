@@ -56,9 +56,9 @@
                 <tr>
                     <th width="7%" class="center head">{{$t("rank")}}</th>
                     <th width="10%" class="center head"><b>{{$t("user_id")}}</b></th>
-                    <th width="3%"></th>
+                    <th width="5%"></th>
                     <th width="15%"><b>{{$t("nick")}}</b></th>
-                    <th width="55%" class="center head">{{$t("biography")}}</th>
+                    <th width="53%" class="center head">{{$t("biography")}}</th>
                     <th width="10%" class="center head" style="text-align: center"><b>{{$t("accept")}}</b></th>
                 </tr>
                 </thead>

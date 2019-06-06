@@ -1,13 +1,13 @@
 import * as d3 from 'd3';
 
 const moment = require("moment");
-export default function calendarHeatmap() {
+export default function calendarHeatmap(opts = {}) {
     // defaults
-    var width = 700;
-    var height = 100;
+    var {width, height} = Object.assign({width: 700, height: 100}, opts);
     var legendWidth = 150;
     var selector = 'body';
-    var SQUARE_LENGTH = 10;
+    var SQUARE_LENGTH = parseInt(width / 61.7);
+    height = Math.max(SQUARE_LENGTH * 9, height);
     var SQUARE_PADDING = 2;
     var MONTH_LABEL_PADDING = 3;
     var now = moment().endOf('day').toDate();

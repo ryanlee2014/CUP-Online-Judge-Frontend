@@ -81,6 +81,7 @@ export default {
 };
 </script>
 <style>
+    @import "../semantic/semantic-ui/semantic.css";
     @import "./static/css/semantic.min.css";
     @import "./static/devicon/devicon.min.css";
     @import "./static/css/judge.css";

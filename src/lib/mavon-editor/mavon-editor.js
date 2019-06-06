@@ -29726,7 +29726,7 @@
                         r.hasOwnProperty(e) && r[e](this.p_external_link[t](), n)
                     } else 0 != this.p_external_link[t] && console.error("external_link." + t, "is not a function, if you want to disabled this error log, set external_link." + t, "to function or false")
                 }, initExternalFuc: function () {
-                    for (var t = ["markdown_css", "hljs_js", "hljs_css", "hljs_lang", "katex_js", "katex_css"], e = __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_typeof___default()(this.externalLink), n = "object" === e, r = "boolean" === e, i = 0; i < t.length; i++) r && !this.externalLink || n && !1 === this.externalLink[t[i]] ? this.p_external_link[t[i]] = !1 : n && "function" == typeof this.externalLink[t[i]] ? this.p_external_link[t[i]] = this.externalLink[t[i]] : this.p_external_link[t[i]] = this.s_external_link[t[i]]
+                    //for (var t = ["markdown_css", "hljs_js", "hljs_css", "hljs_lang", "katex_js", "katex_css"], e = __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_typeof___default()(this.externalLink), n = "object" === e, r = "boolean" === e, i = 0; i < t.length; i++) r && !this.externalLink || n && !1 === this.externalLink[t[i]] ? this.p_external_link[t[i]] = !1 : n && "function" == typeof this.externalLink[t[i]] ? this.p_external_link[t[i]] = this.externalLink[t[i]] : this.p_external_link[t[i]] = this.s_external_link[t[i]]
                 }, textAreaFocus: function () {
                     this.$refs.vNoteTextarea.$refs.vTextarea.focus()
                 }, $drag: function (t) {

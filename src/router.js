@@ -185,7 +185,9 @@ const router = new Router({
             name: "problem edit view",
             component: () => import("./views/problem/edit.vue"),
             meta: {
-                auth: true
+                auth: true,
+                admin: true,
+                contest_manager: true
             }
         },
         {
@@ -356,6 +358,16 @@ const router = new Router({
             meta: {
                 auth: true,
                 admin: true
+            }
+        },
+        {
+            path: "/contest/edit/:contest_id",
+            name: "Contest Edit",
+            component: () => import("./views/contest/manage/edit.vue"),
+            meta: {
+                auth: true,
+                admin: true,
+                contest_manager: true
             }
         },
         {

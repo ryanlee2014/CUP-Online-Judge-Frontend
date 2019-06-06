@@ -2,7 +2,7 @@ import util from "../lib/util";
 import config from "../../config/environment";
 const $ = require("jquery");
 window.$ = window.jQuery = $;
-require("../static/js/semantic.min");
+require("../../semantic/semantic-ui/semantic");
 export default {
     mounted () {
         util.init();

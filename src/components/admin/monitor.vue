@@ -176,7 +176,6 @@ export default {
             that.$socket.emit("esm_change");
         };
         this.sockets.subscribe("esm_start", function (data) {
-            console.log("start");
             // Remove last element of Array because it contains malformed responses data.
             // To keep consistency we also remove os data.
             data[defaultSpan].responses.pop();
@@ -270,8 +269,6 @@ export default {
             }
         });
         this.sockets.subscribe("esm_stats", function (data) {
-            console.log(data);
-            console.log(spans);
             if (data.retention === spans[defaultSpan].retention &&
                     data.interval === spans[defaultSpan].interval) {
                 let os = data.os;
