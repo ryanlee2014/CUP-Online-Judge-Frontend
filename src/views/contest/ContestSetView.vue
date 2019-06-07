@@ -22,10 +22,10 @@
             <table class='ui padded celled unstackable selectable table' width=90%>
                 <thead>
                 <tr align=center class=toprow>
-                    <th width=55%>Name</th>
-                    <th width=25%>Status</th>
-                    <th width=7%>Privilege</th>
-                    <th width="13%">Creator</th>
+                    <th width=55%>{{$t("title")}}</th>
+                    <th width=25%>{{$t("status")}}</th>
+                    <th width=7%>{{$t("privilege")}}</th>
+                    <th width="13%">{{$t("creator")}}</th>
                 </tr>
                 </thead>
                 <tbody>

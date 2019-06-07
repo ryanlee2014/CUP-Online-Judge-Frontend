@@ -9,6 +9,8 @@ import store from "./store";
 import VueSocketIO from "vue-socket.io";
 import mavonEditor from "./lib/mavon-editor/mavon-editor";
 import i18n from "./i18n";
+import Injection from "./injection/index";
+Injection();
 browserUpdate({ required: { e: -3, f: -3, o: -3, s: -3, c: -6 }, insecure: true, unsupported: true, api: 2019.05 });
 Vue.use(VueAxios, axios);
 Vue.use(VueLazyload, {

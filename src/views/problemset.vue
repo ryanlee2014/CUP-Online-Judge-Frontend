@@ -1,5 +1,5 @@
 <template>
-    <div class="ui left aligned container">
+    <div class="ui left aligned container" id="problemsetContainer">
         <ContestMode v-if="contest_mode"></ContestMode>
         <div class="padding" v-else>
             <h2 class="ui dividing header">
@@ -459,7 +459,9 @@ export default {
 </script>
 
 <style scoped>
-
+    #problemsetContainer {
+        min-height: 80%;
+    }
 </style>
 <i18n>
     {

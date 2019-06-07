@@ -3,7 +3,8 @@
         <div class="four wide column">
             <div class="ui link card">
                 <div class="image">
-                    <router-link :src="'/avatar/'+thread_head.user_id+'.jpg'" tag="img" :to="`/user/${thread_head.user_id}`" v-if="thread_head.avatar === 1">
+                    <router-link :src="'/avatar/'+thread_head.user_id+'.jpg'" :to="`/user/${thread_head.user_id}`"
+                                 tag="img" v-if="thread_head.avatar === 1">
                     </router-link>
                     <img src="/assets/images/wireframe/white-image.png" v-else>
                 </div>
@@ -38,12 +39,13 @@ Solved {{thread_head.solved}}
         </div>
         <div class="twelve wide column">
             <div class="ui existing full segment" id="main_context">
-                <router-link :to="`/discuss/edit/${id}`" class="ui blue right ribbon label" v-if="thread_head.user_id + '' === owner">
+                <router-link :to="`/discuss/edit/${id}`" class="ui blue right ribbon label"
+                             v-if="thread_head.user_id + '' === owner">
                     Edit
                 </router-link>
                 <div class="ui info message">
                     <div class="header">
-                        阅读本文需要大约{{readTime(thread_head.content)}}分钟
+                        {{$tc("read time cost", readTime(thread_head.content), {n: readTime(thread_head.content)})}}
                     </div>
                 </div>
                 <div v-html="thread_head.content"></div>
@@ -52,7 +54,19 @@ Solved {{thread_head.solved}}
     </div>
 
 </template>
-
+<i18n>
+    {
+    "zh-cn": {
+    "read time cost": "阅读本文需要大约{n}分钟"
+    },
+    "en": {
+    "read time cost": "It takes about {n} minute to read this article | It takes about {n} minutes to read this article"
+    },
+    "ja": {
+    "read time cost": "この記事を読むには約{n}分かかります"
+    }
+    }
+</i18n>
 <script>
 import markdownIt from "../../lib/markdownIt/markdownIt";
 
@@ -94,10 +108,11 @@ export default {
 </script>
 
 <style scoped>
-    .full.segment{
-        height:100%;
+    .full.segment {
+        height: 100%;
     }
-    .black{
+
+    .black {
         color: black;
     }
 </style>

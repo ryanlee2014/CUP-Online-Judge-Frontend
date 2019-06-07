@@ -7,7 +7,7 @@
                 <div class="thirteen wide column">
                     <div class="ui search">
                         <div class="ui icon input">
-                            <input class="prompt" type="text" placeholder="搜索标题" v-model="search">
+                            <input class="prompt" type="text" :placeholder="$t('search')" v-model="search">
                             <i class="search icon"></i>
                         </div>
                         <div class="results"></div>
@@ -28,12 +28,12 @@
         </div>
         <table class="ui very basic center aligned table" v-cloak>
             <thead>
-            <th width="5%">ID</th>
-            <th width="40%">Title</th>
-            <th>Author</th>
-            <th>Create Time</th>
-            <th>Modify Time</th>
-            <th>Latest Post</th>
+            <th width="5%">{{$t("id")}}</th>
+            <th width="40%">{{$t("title")}}</th>
+            <th>{{$t("author")}}</th>
+            <th>{{$t("create time")}}</th>
+            <th>{{$t("modify time")}}</th>
+            <th>{{$t("latest post")}}</th>
             </thead>
             <tbody>
             <tr :key="key" v-for="(row,key) in table">

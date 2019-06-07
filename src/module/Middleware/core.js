@@ -15,14 +15,12 @@ Middleware.prototype.use = function (fn) {
 Middleware.prototype.next = function (fn) {
     if (this.middlewares && this.middlewares.length > 0) {
         const ware = this.middlewares.shift();
-        console.log(ware);
         ware.call(this, this.options, this.next.bind(this));
     }
 };
 
 Middleware.prototype.commit = function (options) {
     this.middlewares = this.cache.map(el => el);
-    console.log("middlewares", this.middlewares);
     this.options = options;
     this.next();
 };

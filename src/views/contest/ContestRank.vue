@@ -665,6 +665,20 @@ export default {
         z-index: 2;
     }
 
+    .ui.yellow {
+        background: #FFD700;
+        color: #000 !important;
+    }
+
+    .ui.orange {
+        background-color: #FE9A76;
+        color: #000 !important;
+    }
+
+    .ui.grey {
+        color: #000 !important;
+    }
+
     .list-complete-item {
         transition: all 1s;
         display: table-row;

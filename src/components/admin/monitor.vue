@@ -175,9 +175,7 @@ export default {
 
             that.$socket.emit("esm_change");
         };
-        this.sockets.subscribe("esm_start", function (data) {
-            // Remove last element of Array because it contains malformed responses data.
-            // To keep consistency we also remove os data.
+        this.sockets.subscribe("esm_start", (data) => {
             data[defaultSpan].responses.pop();
             data[defaultSpan].os.pop();
 
@@ -267,68 +265,68 @@ export default {
                 });
                 document.getElementsByTagName("span")[0].classList.add("active");
             }
-        });
-        this.sockets.subscribe("esm_stats", function (data) {
-            if (data.retention === spans[defaultSpan].retention &&
+            this.sockets.subscribe("esm_stats", function (data) {
+                if (data.retention === spans[defaultSpan].retention &&
                     data.interval === spans[defaultSpan].interval) {
-                let os = data.os;
-                let responses = data.responses;
+                    let os = data.os;
+                    let responses = data.responses;
 
-                cpuStat.textContent = "0.0%";
-                if (os) {
-                    cpuStat.textContent = os.cpu.toFixed(1) + "%";
-                    cpuChart.data.datasets[0].data.push(os.cpu);
-                    cpuChart.data.labels.push(os.timestamp);
-                }
-
-                memStat.textContent = "0.0MB";
-                if (os) {
-                    memStat.textContent = os.memory.toFixed(1) + "MB";
-                    memChart.data.datasets[0].data.push(os.memory);
-                    memChart.data.labels.push(os.timestamp);
-                }
-
-                loadStat.textContent = "0";
-                if (os) {
-                    loadStat.textContent = os.load[0].toFixed(2);
-                    loadChart.data.datasets[0].data.push(os.load[0]);
-                    loadChart.data.labels.push(os.timestamp);
-                }
-
-                responseTimeStat.textContent = "0.00ms";
-                if (responses) {
-                    responseTimeStat.textContent = responses.mean.toFixed(2) + "ms";
-                    responseTimeChart.data.datasets[0].data.push(responses.mean);
-                    responseTimeChart.data.labels.push(responses.timestamp);
-                }
-
-                if (responses) {
-                    let deltaTime = responses.timestamp - rpsChart.data.labels[rpsChart.data.labels.length - 1];
-
-                    if (deltaTime < 1) deltaTime = 1000;
-                    rpsStat.textContent = ((responses.count / deltaTime) * 1000).toFixed(2);
-                    rpsChart.data.datasets[0].data.push((responses.count / deltaTime) * 1000);
-                    rpsChart.data.labels.push(responses.timestamp);
-                }
-
-                if (responses) {
-                    for (let i = 0; i < 4; i++) {
-                        statusCodesChart.data.datasets[i].data.push(data.responses[i + 2]);
+                    cpuStat.textContent = "0.0%";
+                    if (os) {
+                        cpuStat.textContent = os.cpu.toFixed(1) + "%";
+                        cpuChart.data.datasets[0].data.push(os.cpu);
+                        cpuChart.data.labels.push(os.timestamp);
                     }
-                    statusCodesChart.data.labels.push(data.responses.timestamp);
-                }
 
-                charts.forEach(function (chart) {
-                    if (spans[defaultSpan].retention < chart.data.labels.length) {
-                        chart.data.datasets.forEach(function (dataset) {
-                            dataset.data.shift();
-                        });
-
-                        chart.data.labels.shift();
+                    memStat.textContent = "0.0MB";
+                    if (os) {
+                        memStat.textContent = os.memory.toFixed(1) + "MB";
+                        memChart.data.datasets[0].data.push(os.memory);
+                        memChart.data.labels.push(os.timestamp);
                     }
-                    chart.update();
-                });
-            }
+
+                    loadStat.textContent = "0";
+                    if (os) {
+                        loadStat.textContent = os.load[0].toFixed(2);
+                        loadChart.data.datasets[0].data.push(os.load[0]);
+                        loadChart.data.labels.push(os.timestamp);
+                    }
+
+                    responseTimeStat.textContent = "0.00ms";
+                    if (responses) {
+                        responseTimeStat.textContent = responses.mean.toFixed(2) + "ms";
+                        responseTimeChart.data.datasets[0].data.push(responses.mean);
+                        responseTimeChart.data.labels.push(responses.timestamp);
+                    }
+
+                    if (responses) {
+                        let deltaTime = responses.timestamp - rpsChart.data.labels[rpsChart.data.labels.length - 1];
+
+                        if (deltaTime < 1) deltaTime = 1000;
+                        rpsStat.textContent = ((responses.count / deltaTime) * 1000).toFixed(2);
+                        rpsChart.data.datasets[0].data.push((responses.count / deltaTime) * 1000);
+                        rpsChart.data.labels.push(responses.timestamp);
+                    }
+
+                    if (responses) {
+                        for (let i = 0; i < 4; i++) {
+                            statusCodesChart.data.datasets[i].data.push(data.responses[i + 2]);
+                        }
+                        statusCodesChart.data.labels.push(data.responses.timestamp);
+                    }
+
+                    charts.forEach(function (chart) {
+                        if (spans[defaultSpan].retention < chart.data.labels.length) {
+                            chart.data.datasets.forEach(function (dataset) {
+                                dataset.data.shift();
+                            });
+
+                            chart.data.labels.shift();
+                        }
+                        chart.update();
+                    });
+                }
+            });
         });
     },
     methods: {
