@@ -29,6 +29,19 @@
                     </router-link>
                 </div>
             </div>
+            <div class="ui dropdown item">
+                <div class="text">
+                    <i class="database icon"></i>
+                    {{$t("user manage")}}
+                </div>
+                <i class="dropdown icon"></i>
+                <div class="menu">
+                    <router-link class="item" exact-active-class="active" to="/admin/user/privilege">
+                        <i class="list icon"></i>
+                        {{$t("privilege manage")}}
+                    </router-link>
+                </div>
+            </div>
             <SocketMenu :connected="connected" :judger="judger" :logined="logined" :nick="nick"
                         :user="user"></SocketMenu>
         </div>

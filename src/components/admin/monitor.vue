@@ -159,6 +159,12 @@ let statusCodesChart;
 let charts;
 export default {
     name: "monitor",
+    data () {
+        return {
+            getStartMessage: false,
+            intervalId: 0
+        };
+    },
     mounted () {
         const that = this;
         this.prepare();
@@ -175,7 +181,16 @@ export default {
 
             that.$socket.emit("esm_change");
         };
+        setInterval(() => {
+            if (this.getStartMessage) {
+                clearInterval(this.getStartMessage);
+            }
+            else {
+                this.$socket.emit("esm_change");
+            }
+        }, 1000);
         this.sockets.subscribe("esm_start", (data) => {
+            this.getStartMessage = true;
             data[defaultSpan].responses.pop();
             data[defaultSpan].os.pop();
 

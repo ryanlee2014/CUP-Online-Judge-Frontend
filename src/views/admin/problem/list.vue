@@ -52,7 +52,7 @@ import Pagination from "../../../components/problemset/pagination";
 
 const dayjs = require("dayjs");
 export default {
-    name: "list",
+    name: "privilege.vue",
     mixins: [mixins],
     components: {
         Pagination

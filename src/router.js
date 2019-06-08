@@ -371,6 +371,15 @@ const router = new Router({
             }
         },
         {
+            path: "/admin/user/privilege",
+            name: "User Privilege Manager",
+            component: () => import("./views/admin/account/privilege.vue"),
+            meta: {
+                auth: true,
+                admin: true
+            }
+        },
+        {
             path: "*",
             redirect: "/"
         }

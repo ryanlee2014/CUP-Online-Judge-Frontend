@@ -47,6 +47,7 @@ function getLoginInfo (to, next) {
     getSelfInfo().then(response => {
         if (response.data.data && response.data.data.user_id) {
             store.commit("loginMutate", { login: true });
+            store.commit("setUserData", response.data.data);
             sessionStorage.isLogined = true;
             checkAdmin(to, store.getters.admin, next);
         }

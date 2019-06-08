@@ -4,7 +4,11 @@ export default {
         user_id: "",
         nick: "",
         avatar: "",
-        admin: ""
+        admin: false,
+        contest_manager: false,
+        contest: {},
+        problem_maker: {},
+        contest_maker: {}
     },
     token: ""
 };
