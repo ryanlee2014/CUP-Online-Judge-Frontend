@@ -380,6 +380,15 @@ const router = new Router({
             }
         },
         {
+            path: "/admin/user/check",
+            name: "User account checker",
+            component: () => import("./views/admin/account/check.vue"),
+            meta: {
+                auth: true,
+                admin: true
+            }
+        },
+        {
             path: "*",
             redirect: "/"
         }

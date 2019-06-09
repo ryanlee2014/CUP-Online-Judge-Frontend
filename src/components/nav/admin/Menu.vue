@@ -1,7 +1,9 @@
 <template>
     <div class="ui borderless network secondary menu" id="navbar-large">
         <div class="ui container">
-            <router-link class="item" exact-active-class="active" to="/"><i class="home icon"></i>{{$t("return home")}}
+            <router-link class="item" exact-active-class="active" to="/">
+                <i class="home icon"></i>
+                {{$t("return home")}}
             </router-link>
             <div class="ui dropdown item" tabindex="0">
                 <div class="text">
@@ -39,6 +41,10 @@
                     <router-link class="item" exact-active-class="active" to="/admin/user/privilege">
                         <i class="list icon"></i>
                         {{$t("privilege manage")}}
+                    </router-link>
+                    <router-link class="item" exact-active-class="active" to="/admin/user/check">
+                        <i class="user check icon"></i>
+                        {{$t("account checker")}}
                     </router-link>
                 </div>
             </div>
