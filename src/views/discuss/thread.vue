@@ -13,8 +13,8 @@
         <div class="ui comments">
             <div :key="key" class="comment" v-for="(row,key) in reply">
                 <div class="avatar">
-                    <router-link :src="'/avatar/'+row.user_id+'.jpg'" :to="`/user/${row.user_id}`" class="avatar"
-                                 tag="img" v-if="row.avatar === 1"></router-link>
+                    <router-link :src="getAvatarURL(row)" :to="`/user/${row.user_id}`" class="avatar"
+                                 tag="img" v-if="hasAvatarURL(row)"></router-link>
                     <router-link :src="'/assets/images/wireframe/white-image.png'" :to="`/user/${row.user_id}`"
                                  tag="img" v-else></router-link>
                 </div>
@@ -60,6 +60,7 @@
 <script>
 import MainContent from "../../components/discuss/MainContent";
 import mixins from "../../mixin/init";
+import avatarMixin from "../../mixin/avatarMixin";
 import markdownIt from "../../lib/markdownIt/markdownIt";
 import mermaid from "mermaid";
 
@@ -72,7 +73,7 @@ export default {
     components: {
         MainContent
     },
-    mixins: [mixins],
+    mixins: [mixins, avatarMixin],
     data: function () {
         return {
             page: 0,

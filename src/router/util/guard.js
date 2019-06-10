@@ -15,7 +15,6 @@ function checkAdmin (to, admin, next) {
         else {
             getSelfInfo().then(({ data }) => {
                 if (data.data && data.data.user_id) {
-                    console.log(data);
                     store.commit("setUserData", data.data);
                     store.commit("loginMutate", { login: true });
                     if (data.data.admin) {
@@ -23,7 +22,7 @@ function checkAdmin (to, admin, next) {
                     }
                     else {
                         next({
-                            path: "/"
+                            path: "/forbidden/privilege"
                         });
                     }
                 }

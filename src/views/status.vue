@@ -91,7 +91,7 @@
                                 <label>{{$t("show user only")}}</label>
                             </div>
                         </div>
-                        <div class="field">
+                        <div class="field" style="margin:auto">
                             <button class="ui labeled icon mini button" @click.prevent="search($event)">
                                 <i class="search icon"></i>{{$t("search")}}</button>
                         </div>
@@ -952,5 +952,7 @@ export default {
 </script>
 
 <style scoped>
-
+    .ui.form .fields .field .ui.checkbox {
+        margin-top: inherit!important;
+    }
 </style>

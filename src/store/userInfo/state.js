@@ -3,7 +3,8 @@ export default {
     userInfo: {
         user_id: "",
         nick: "",
-        avatar: "",
+        avatar: false,
+        avatarUrl: "",
         admin: false,
         contest_manager: false,
         contest: {},

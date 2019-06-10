@@ -72,12 +72,7 @@ export default {
     },
     computed: {
         img_url: function () {
-            if (this.avatar && this.user_id.length > 0) {
-                return "/avatar/" + this.user_id + ".jpg";
-            }
-            else {
-                return "/assets/images/wireframe/white-image.png";
-            }
+            return util.getAvatarURL({ user_id: this.user_id, avatar: this.avatar, avatarUrl: this.$store.getters.avatarUrl });
         }
     },
     methods: {

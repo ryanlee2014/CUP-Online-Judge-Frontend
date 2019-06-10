@@ -58,8 +58,10 @@
 </template>
 
 <script>
+import mixins from "../../../mixin/init";
 export default {
     name: "privilege",
+    mixins: [mixins],
     data () {
         return {
             userList: [],

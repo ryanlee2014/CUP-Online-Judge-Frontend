@@ -465,7 +465,7 @@ import mixins from "../mixin/init";
 import * as d3 from "d3";
 import markdownIt from "../lib/markdownIt/markdownIt";
 import calendarHeatmap from "../lib/calendar-heapmap";
-
+import avatarMixin from "../mixin/avatarMixin";
 const dayjs = require("dayjs");
 const $ = require("jquery");
 const _ = require("lodash");
@@ -473,7 +473,7 @@ const Chart = require("chart.js");
 window.$ = window.jQuery = $;
 export default {
     name: "user",
-    mixins: [mixins],
+    mixins: [mixins, avatarMixin],
     data: function () {
         return {
             award: [],
@@ -693,7 +693,7 @@ export default {
                             submission: timeobj,
                             accept: acobj
                         },
-                        avatar: d.data.information.avatar ? "/avatar/" + user_id + ".jpg" : "/assets/images/wireframe/white-image.png",
+                        avatar: this.hasAvatarURL(d.data.information) ? this.getAvatarURL(d.data.information) : "/assets/images/wireframe/white-image.png",
                         user_id: user_id,
                         acm_user: d.data.acm_user,
                         privilege: privilege,

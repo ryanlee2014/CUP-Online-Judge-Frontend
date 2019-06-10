@@ -3,6 +3,21 @@ const getters = {
     user_id: state => state.userInfo.userInfo.user_id,
     nick: state => state.userInfo.userInfo.nick,
     avatar: state => !!state.userInfo.userInfo.avatar,
+    getAvatarURL: state => {
+        const hasAvatar = !!state.userInfo.userInfo.avatar;
+        const avatarUrl = state.userInfo.userInfo.avatarUrl;
+        const userId = state.userInfo.userInfo.user_id;
+        if (hasAvatar && avatarUrl.length === 0) {
+            return `/avatar/${userId}.jpg`;
+        }
+        else if (avatarUrl.length > 0) {
+            return avatarUrl;
+        }
+        else {
+            return "/image/default-user.png";
+        }
+    },
+    avatarUrl: state => state.userInfo.userInfo.avatarUrl,
     admin: state => !!state.userInfo.userInfo.admin,
     token: state => state.userInfo.token,
     onlineUser: state => state.socket.onlineUser,

@@ -18,8 +18,7 @@
             <td>{{row.solution_id}}</td>
             <td><div class="ui grid">
             <div class="four wide column" style="margin:auto">
-            <img class="ui avatar image" :src="'/avatar/'+row.user_id+'.jpg'" v-if="row.avatar||user[row.user_id].avatar" style="object-fit: cover;">
-            <img class="ui avatar image" src="/image/default-user.png" v-else style="object-fit: cover;">
+            <img class="ui avatar image" :src="getAvatarURL(row)" style="object-fit: cover;">
             </div>
             <div class="twelve wide column">
                 <router-link :to="`/user/${row.user_id}`">{{row.user_id}}<br>{{row.nick}}</router-link>
@@ -69,9 +68,11 @@
 
 <script>
 import utils from "../../../lib/util";
+import avatarMixin from "../../../mixin/avatarMixin";
 const _ = require("lodash");
 export default {
     name: "StatusTable",
+    mixins: [avatarMixin],
     props: {
         problem_list: Array,
         answer_icon: Array,

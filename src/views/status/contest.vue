@@ -719,5 +719,7 @@ export default {
 </script>
 
 <style scoped>
-
+    .ui.form .fields .field .ui.checkbox {
+        margin-top: inherit!important;
+    }
 </style>

@@ -20,9 +20,8 @@
                     </router-link>
                 </td>
                 <td>
-                    <img class="ui avatar image" :src="'/avatar/'+row.user_id+'.jpg'" v-if="row.avatar"
+                    <img class="ui avatar image" :src="getAvatarURL(row)"
                          style="object-fit: cover;">
-                    <img class="ui avatar image" src="/image/default-user.png" style="object-fit: cover;" v-else>
                 </td>
                 <td>
                     {{convertHTML(row.nick)}}
@@ -39,8 +38,10 @@
 
 <script>
 import markdownIt from "../../../lib/markdownIt/markdownIt";
+import avatarMixin from "../../../mixin/avatarMixin";
 export default {
     name: "tableCard",
+    mixins: [avatarMixin],
     props: {
         _name: {
             type: Object,

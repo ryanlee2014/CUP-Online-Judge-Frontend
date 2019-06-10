@@ -46,7 +46,7 @@
                         </thead>
                         <transition-group name="list-complete" tag="tbody">
                             <tr :key="key" class="list-complete-item" v-for="(row,key) in submitter">
-                                <td :class="rankClass(row.rank, submitter.length)"
+                                <td :class="rankClass(key)"
                                     style="text-align:center;font-weight:bold;position: sticky; left: 0">{{row.rank}}
                                 </td>
                                 <td class="ui white">
@@ -165,6 +165,7 @@ export default {
             users: [],
             add_name: false,
             auto_update: true,
+            totalNumber: 0,
             waiting_queue: [],
             state: true,
             errormsg: "",
@@ -185,10 +186,7 @@ export default {
             set: function (val) {
                 const that = this;
                 try {
-                    if (!Array.isArray(val)) {
-                        val = [val];
-                    }
-                    val = submissionCollection = submissionCollection.concat(val);
+                    val = submissionCollection = submissionCollection.concat(this.toArray(val));
                     if (this.firstRender) {
                         this.firstRender = false;
                         this.firstBloodList = firstBloodListFactory(that.total);
@@ -223,6 +221,12 @@ export default {
         }
     },
     methods: {
+        toArray (val) {
+            if (!Array.isArray(val)) {
+                val = [val];
+            }
+            return val;
+        },
         updateSubmitter (el: Submitter) {
             el.calculatePenaltyTime();
             el.calculateAC();
@@ -252,9 +256,10 @@ export default {
             this.submitter.sort(SubmitterComparator("greater"));
             let rnk = 1;
             window.submitter = this.submitter;
-            _.forEach(this.submitter, val => (val.rank = (val.ac > 0 ? rnk++ : rnk)));
+            _.forEach(this.submitter, val => val.rank = val.ac > 0 ? (++this.totalNumber, rnk++) : rnk);
         },
-        rankClass (rank, total) {
+        rankClass (rank) {
+            const total = this.totalNumber;
             if (parseInt(rank) === 1) {
                 return "ui yellow";
             }
@@ -666,12 +671,12 @@ export default {
     }
 
     .ui.yellow {
-        background: #FFD700;
+        background: #FFD700!important;
         color: #000 !important;
     }
 
     .ui.orange {
-        background-color: #FE9A76;
+        background-color: #FE9A76!important;
         color: #000 !important;
     }
 

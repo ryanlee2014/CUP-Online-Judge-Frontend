@@ -19,7 +19,7 @@
             <div class="four wide column">
                 <div class="ui link card">
                     <div class="image">
-                        <router-link tag="img" :src="`/avatar/${thread_head.user_id}.jpg`" :to="`/user/${thread_head.user_id}`" v-if="thread_head.avatar === 1"></router-link>
+                        <router-link tag="img" :src="getAvatarURL(thread_head)" :to="`/user/${thread_head.user_id}`" v-if="hasAvatarURL(thread_head)"></router-link>
                         <img src="/assets/images/wireframe/white-image.png" v-else>
                     </div>
                     <div class="content">
@@ -102,6 +102,7 @@
 
 <script>
 import mixins from "../mixin/init";
+import avatarMixin from "../mixin/avatarMixin";
 import mermaid from "mermaid";
 import markdownIt from "../lib/markdownIt/markdownIt";
 const $ = window.$ = window.jQuery = require("jquery");
@@ -109,7 +110,7 @@ const Clipboard = require("clipboard");
 require("../static/js/semantic.min");
 export default {
     name: "tutorial",
-    mixins: [mixins],
+    mixins: [mixins, avatarMixin],
     data: function () {
         return {
             content: "",

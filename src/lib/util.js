@@ -384,5 +384,26 @@ export default {
                     }, 50);
                 });
             });
+    },
+    getAvatarURL (state) {
+        const hasAvatar = !!state.avatar;
+        const avatarUrl = typeof state.avatarUrl === "string" ? state.avatarUrl.trim() : "";
+        if (hasAvatar && avatarUrl.length === 0) {
+            return `/avatar/${state.user_id}.jpg`;
+        }
+        else if (avatarUrl.length > 0) {
+            return avatarUrl;
+        }
+        else {
+            return "/image/default-user.png";
+        }
+    },
+    hasAvatarURL (state) {
+        const hasAvatar = !!state.avatar;
+        const avatarUrl = typeof state.avatarUrl === "string" ? state.avatarUrl.trim() : "";
+        if (hasAvatar && avatarUrl.length === 0) {
+            return true;
+        }
+        else return avatarUrl.length > 0;
     }
 }

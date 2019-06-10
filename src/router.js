@@ -389,8 +389,23 @@ const router = new Router({
             }
         },
         {
+            path: "/admin/contest/team/list",
+            name: "Contest Team List",
+            component: () => import("./views/admin/contest/userlist.vue"),
+            meta: {
+                auth: true,
+                admin: true
+            }
+        },
+        {
+            path: "/forbidden/privilege",
+            name: "No privilege",
+            component: () => import("./views/error/noprivilege.vue")
+        },
+        {
             path: "*",
-            redirect: "/"
+            name: "",
+            component: () => import("./views/error/404.vue")
         }
     ]
 });

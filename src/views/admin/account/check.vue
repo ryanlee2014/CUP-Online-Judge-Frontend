@@ -36,8 +36,10 @@
 </template>
 
 <script>
+import mixins from "../../../mixin/init";
 export default {
     name: "check",
+    mixins: [mixins],
     data () {
         return {
             userListText: "",

@@ -71,9 +71,8 @@
                         </router-link>
                     </td>
                     <td>
-                        <img class="ui avatar image" :src="'/avatar/'+row.user_id+'.jpg'" v-if="row.avatar"
+                        <img class="ui avatar image" :src="getAvatarURL(row)"
                              style="object-fit: cover;">
-                        <img class="ui avatar image" src="/image/default-user.png" style="object-fit: cover;" v-else>
                     </td>
                     <td>
                         {{convertHTML(row.nick)}}
@@ -133,11 +132,13 @@
 <script>
 import markdownIt from "../../lib/markdownIt/markdownIt";
 import tableCard from "./components/tableCard";
+import avatarMixin from "../../mixin/avatarMixin";
 const $ = require("jquery");
 window.$ = window.jQuery = $;
 require("../../static/js/semantic.min");
 export default {
     name: "MainContent",
+    mixins: [avatarMixin],
     props: {
         rank: Object
     },

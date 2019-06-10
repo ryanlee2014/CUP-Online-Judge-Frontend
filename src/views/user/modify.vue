@@ -6,14 +6,7 @@
                     <div class="column">
                         <div class="ui card" style="width: 100%">
                             <div class="image">
-                                <img :src="img_src()" id="head"
-                                     onclick="document.getElementById('myinput').click()"><input id="myinput"
-                                                                                                 multiple name="pic[]"
-                                                                                                 style="display:none"
-                                                                                                 type="file">
-                            </div>
-                            <div class="content">
-                                <a class="header" href="javascript:buttonclick();"><i class="upload icon"></i>上传头像</a>
+                                <img v-lazy="img_src" id="head">
                             </div>
                         </div>
                     </div>
@@ -81,28 +74,26 @@
                                             <input name="github" type="text" v-model="github">
                                         </div>
                                     </div>
-
                                     <div class="field">
-                                        <label>Biography</label>
+                                        <label>AvatarURL(可使用外链,若需要自行上传,请参考<router-link to="/discuss/thread/15">如何使用图床</router-link>并将链接贴在下面)</label>
+                                        <input name="avatarUrl" type="text" v-model="avatarUrl">
+                                    </div>
+                                    <div class="field">
+                                        <label>Biography(支持markdown语法)</label>
                                         <input name="biography" type="text" v-model="biography">
                                     </div>
                                     <div class="fields">
                                         <div class="field">
                                             <label></label>
-                                            <input @click.prevent="updateInformation" class="ui primary button" name="submit" type="submit"
+                                            <input @click.prevent="updateInformation" class="ui primary button"
+                                                   name="submit" type="submit"
                                                    value="Submit">
                                         </div>
                                         <div class="field">
                                             <label></label>
-                                            <input @click.prevent="reset" class="ui secondary button" name="reset" type="reset"
+                                            <input @click.prevent="reset" class="ui secondary button" name="reset"
+                                                   type="reset"
                                                    value="Reset">
-                                        </div>
-                                        <div class="field">
-                                            <label>
-                                            </label>
-                                            <div class="ui button">
-                                                <a href=export_ac_code.php>Download All AC Source</a>
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -133,10 +124,12 @@ export default {
             password: "",
             newpassword: "",
             repeatpassword: "",
+            dirty: false,
             email: "",
             school: "",
             nick: this.$store.getters.nick,
-            avatar: this.$store.getters.avatar
+            avatar: this.$store.getters.avatar,
+            avatarUrl: this.$store.getters.avatarUrl
         };
     },
     mounted () {
@@ -156,6 +149,7 @@ export default {
             this.axios.post("/api/user/update/profile", this.$data)
                 .then(({ data }) => {
                     if (data.status === "OK") {
+                        this.$store.dispatch("NavStatus");
                         alert("更改成功");
                     }
                     else {
@@ -166,17 +160,47 @@ export default {
         reset () {
             location.reload();
         },
-        img_src () {
-            if (this.avatar) {
-                return `/avatar/${this.user_id}.jpg`;
-            }
-            else {
-                return "https://semantic-ui.com/images/wireframe/square-image.png";
+        refreshImage () {
+            if (this.dirty) {
+                this.dirty = false;
+                this.$nextTick(() => {
+                    setTimeout(() => {
+                        this.$Lazyload.lazyLoadHandler();
+                        this.$forceUpdate();
+                    }, 0);
+                });
             }
         }
     },
+    watch: {
+        avatarUrl () {
+            this.refreshImage();
+        },
+        img_src () {
+            this.refreshImage();
+        }
+    },
     computed: {
-        ...mapGetters(["user_id"])
+        ...mapGetters(["user_id"]),
+        img_src: {
+            get () {
+                if (this.avatar && !this.avatarUrl.length > 0) {
+                    return `/avatar/${this.user_id}.jpg`;
+                }
+                else if (this.avatarUrl.length > 0) {
+                    return this.avatarUrl;
+                }
+                else {
+                    return "https://semantic-ui.com/images/wireframe/square-image.png";
+                }
+            },
+            set (val) {
+                if (val !== this.avatarUrl) {
+                    this.dirty = true;
+                    this.avatarUrl = val.trim();
+                }
+            }
+        }
     }
 };
 </script>

@@ -24,9 +24,8 @@
             <td>
                 <div class="ui grid">
                     <div class="four wide column" style="margin:auto">
-                        <img :src="'/avatar/'+row.user_id+'.jpg'" class="ui avatar image"
-                             style="object-fit: cover;" v-if="row.avatar||user[row.user_id].avatar">
-                        <img class="ui avatar image" src="/image/default-user.png" style="object-fit: cover;" v-else>
+                        <img :src="getAvatarURL(row)" class="ui avatar image"
+                             style="object-fit: cover;">
                     </div>
                     <div class="twelve wide column">
                         <router-link :to="`/user/${row.user_id}`">
@@ -89,11 +88,12 @@
 
 <script>
 import util from "../../lib/util";
-
+import avatarMixin from "../../mixin/avatarMixin";
 const _ = require("lodash");
 const dayjs = require("dayjs");
 export default {
     name: "status-table",
+    mixins: [avatarMixin],
     props: {
         problem_list: Array,
         answer_icon: Array,
