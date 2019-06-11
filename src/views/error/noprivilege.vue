@@ -10,8 +10,10 @@
 </template>
 
 <script>
+import mixins from "../../mixin/init";
 export default {
-    name: "noprivilege"
+    name: "noprivilege",
+    mixins: [mixins]
 };
 </script>
 

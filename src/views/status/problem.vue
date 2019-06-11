@@ -153,11 +153,11 @@ const $ = require("jquery");
 window.$ = window.jQuery = $;
 const Chart = require("chart.js");
 require("../../static/js/semantic.min");
-var hasDrawLineChart = {};
-var hasRendered = {};
+let hasDrawLineChart = {};
+let hasRendered = {};
 
 function drawLineChart (data, target = "default") {
-    var data_array = [];
+    let data_array = [];
 
     if (!hasDrawLineChart[target]) {
         hasDrawLineChart[target] = true;
@@ -169,18 +169,18 @@ function drawLineChart (data, target = "default") {
         return;
     }
     am4core.useTheme(am4themes_animated);
-    var chart = am4core.create("problem_code_length", am4charts.XYChart);
+    let chart = am4core.create("problem_code_length", am4charts.XYChart);
 
     chart.data = data_array;
 
     // Create axes
-    var dateAxis = chart.xAxes.push(new am4charts.DateAxis());
+    let dateAxis = chart.xAxes.push(new am4charts.DateAxis());
     dateAxis.renderer.minGridDistance = 60;
 
     chart.yAxes.push(new am4charts.ValueAxis());
 
     // Create series
-    var series = chart.series.push(new am4charts.LineSeries());
+    let series = chart.series.push(new am4charts.LineSeries());
     series.dataFields.valueY = "value";
     series.dataFields.dateX = "date";
     series.tooltipText = "{value}";
@@ -195,12 +195,12 @@ function drawLineChart (data, target = "default") {
 
     series.tooltip.pointerOrientation = "vertical";
     // Make bullets grow on hover
-    var bullet = series.bullets.push(new am4charts.CircleBullet());
+    let bullet = series.bullets.push(new am4charts.CircleBullet());
     bullet.circle.strokeWidth = 2;
     bullet.circle.radius = 4;
     bullet.circle.fill = am4core.color("#fff");
 
-    var bullethover = bullet.states.create("hover");
+    let bullethover = bullet.states.create("hover");
     bullethover.properties.scale = 1.3;
 
     // Make a panning cursor
@@ -229,11 +229,11 @@ function drawChordGraph (data, pid, prefix = "chord_graph") {
     am4core.useTheme(am4themes_animated);
     // Themes end
 
-    var chart = am4core.create("chord_graph", am4charts.ChordDiagram);
+    let chart = am4core.create("chord_graph", am4charts.ChordDiagram);
 
     _.forEach(data, function (el) {
         if (el.from != pid) {
-            var tmp = el.from;
+            let tmp = el.from;
             el.from = el.to;
             el.to = tmp;
         }
@@ -255,29 +255,29 @@ function drawChordGraph (data, pid, prefix = "chord_graph") {
     chart.dataFields.value = "value";
 
     // make nodes draggable
-    var nodeTemplate = chart.nodes.template;
+    let nodeTemplate = chart.nodes.template;
     nodeTemplate.readerTitle = "点击块可显示或隐藏";
     nodeTemplate.showSystemTooltip = true;
 
-    var nodeLink = chart.links.template;
-    var bullet = nodeLink.bullets.push(new am4charts.CircleBullet());
+    let nodeLink = chart.links.template;
+    let bullet = nodeLink.bullets.push(new am4charts.CircleBullet());
     bullet.fillOpacity = 1;
     bullet.circle.radius = 5;
     bullet.locationX = 0.5;
 
     // create animations
     chart.events.on("ready", function () {
-        for (var i = 0; i < chart.links.length; i++) {
-            var link = chart.links.getIndex(i);
-            var bullet = link.bullets.getIndex(0);
+        for (let i = 0; i < chart.links.length; i++) {
+            let link = chart.links.getIndex(i);
+            let bullet = link.bullets.getIndex(0);
 
             animateBullet(bullet);
         }
     });
 
     function animateBullet (bullet) {
-        var duration = 3000 * Math.random() + 2000;
-        var animation = bullet.animate([{ property: "locationX", from: 0, to: 1 }], duration);
+        let duration = 3000 * Math.random() + 2000;
+        let animation = bullet.animate([{ property: "locationX", from: 0, to: 1 }], duration);
         animation.events.on("animationended", function (event) {
             animateBullet(event.target.object);
         });
@@ -305,7 +305,7 @@ export default {
     computed: {
         submitStatus: {
             get: function () {
-                var prob_stat = {};
+                let prob_stat = {};
                 _.forEach(this.problem_stat, function (val) {
                     prob_stat[val.result] = val.total;
                 });
@@ -321,7 +321,7 @@ export default {
                 };
             },
             set: function (val) {
-                var stat = val.data.problem_status;
+                let stat = val.data.problem_status;
                 this.problem_stat = stat;
                 this.submit_stat = val.data.solution_status;
                 this.problem_submit_stat = val.data.submit_status;
@@ -337,14 +337,14 @@ export default {
     methods: {
         page: function (num) {
             this.current_page += num;
-            var that = this;
+            let that = this;
             $.get("/api/problemstatus/" + this.pid + "?page=" + this.current_page, function (data) {
                 that.submitStatus = data;
                 that.setQuery();
             });
         },
         setQuery: function () {
-            var queryObject = {};
+            let queryObject = {};
             if (this.current_page !== 0) { queryObject["page"] = this.current_page + 1; }
             else {
                 delete queryObject["page"];
@@ -354,8 +354,8 @@ export default {
     },
     mounted: function () {
         document.title = `Problem ${this.pid} Statistics -- ${document.title}`;
-        var that = this;
-        var current_title = $("title").text();
+        let that = this;
+        let current_title = $("title").text();
         $("title").text("Status:Problem " + this.pid + " - " + current_title);
         this.current_page = Math.max(0, this.current_page - 1);
         $.get("/api/status/problem/code_length/problem/" + this.pid, function (data) {
@@ -370,16 +370,16 @@ export default {
             else {
                 return;
             }
-            var colors = _.values(window.chartColors);
+            let colors = _.values(window.chartColors);
             colors.push("#af63f4");
             colors.push("#00b5ad");
             colors.push("#350ae8");
             colors.push("#E2EAE9");
-            var ncolor = ["#3366CC", "#DC3912", "#FF9900", "#109618", "#990099", "#3B3EAC", "#0099C6", "#DD4477", "#66AA00", "#B82E2E", "#316395", "#994499", "#22AA99", "#AAAA11", "#6633CC", "#E67300", "#8B0707", "#329262", "#5574A6", "#3B3EAC"];
+            let ncolor = ["#3366CC", "#DC3912", "#FF9900", "#109618", "#990099", "#3B3EAC", "#0099C6", "#DD4477", "#66AA00", "#B82E2E", "#316395", "#994499", "#22AA99", "#AAAA11", "#6633CC", "#E67300", "#8B0707", "#329262", "#5574A6", "#3B3EAC"];
             _.forEach(ncolor, function (val) {
                 colors.push(val);
             });
-            var config = {
+            let config = {
                 type: "pie",
                 data: {
                     datasets: [{
@@ -397,15 +397,15 @@ export default {
                     responsive: true
                 }
             };
-            var lang = {};
-            var labels = {};
+            let lang = {};
+            let labels = {};
             _.forEach(that.submitStatus.time_range, function (val) {
                 labels[val.diff] = true;
                 lang[val.language] = {};
             });
             labels = _.map(labels, function (val, index) {
-                var arr = index.split("-");
-                var str = arr[0] + "ms";
+                let arr = index.split("-");
+                let str = arr[0] + "ms";
                 if (arr.length > 1) { str += " - " + arr[1] + "ms"; }
                 return str;
             });
@@ -433,17 +433,17 @@ export default {
             });
 
             _.forEach(that.submitStatus.time_range, function (val) {
-                var arr = val.diff.split("-");
-                var diffstr = arr[0] + "ms";
+                let arr = val.diff.split("-");
+                let diffstr = arr[0] + "ms";
                 if (arr.length > 1) {
                     diffstr += " - " + arr[1] + "ms";
                 }
                 lang[val.language][diffstr] = val.total;
             });
-            var _colors = _.map(colors, function (val) {
+            let _colors = _.map(colors, function (val) {
                 return val;
             });
-            var config2 = {
+            let config2 = {
                 type: "bar",
                 labels: labels,
                 datasets: _.map(lang, function (val, index) {
@@ -454,8 +454,8 @@ export default {
                     };
                 })
             };
-            var mlabels = {};
-            var mlang = {};
+            let mlabels = {};
+            let mlang = {};
             _colors = _.map(colors, function (val) {
                 return val;
             });
@@ -503,20 +503,20 @@ export default {
 
             _.forEach(that.submitStatus.memory_range, function (val) {
                 if (val.diff.indexOf("-") !== -1) {
-                    var arr = val.diff.split("-");
+                    let arr = val.diff.split("-");
                     arr[0] = (parseFloat(arr[0]) / 1024).toFixed(2);
                     if (arr.length > 1) { arr[1] = (parseFloat(arr[1]) / 1024).toFixed(2); }
-                    var diffstr = arr[0] + "MB";
+                    let diffstr = arr[0] + "MB";
                     if (arr.length > 1) { diffstr += " - " + arr[1] + "MB"; }
                     mlang[val.language][diffstr] = val.total;
                 }
                 else {
-                    var str = val.diff.substring(1, val.diff.length);
+                    let str = val.diff.substring(1, val.diff.length);
                     str = (parseFloat(str) / 1024).toFixed(2);
                     mlang[val.language][">" + str + "MB"] = val.total;
                 }
             });
-            var config3 = {
+            let config3 = {
                 type: "bar",
                 labels: mlabels,
                 datasets: _.map(mlang, function (val, index) {
@@ -527,10 +527,10 @@ export default {
                     };
                 })
             };
-            var ctx = document.getElementById("chart-area").getContext("2d");
+            let ctx = document.getElementById("chart-area").getContext("2d");
             window.myPie = new Chart(ctx, config);
-            var btx = document.getElementById("bar-area").getContext("2d");
-            var mtx = document.getElementById("memory_bar_area").getContext("2d");
+            let btx = document.getElementById("bar-area").getContext("2d");
+            let mtx = document.getElementById("memory_bar_area").getContext("2d");
             window.myBar = new Chart(btx, {
                 type: "bar",
                 data: config2,

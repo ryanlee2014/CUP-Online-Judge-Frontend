@@ -140,12 +140,12 @@ export default {
                 .accordion({
                     "exclusive": false
                 });
-            var copy_content = new Clipboard(".copy.context", {
+            let copyContent = new Clipboard(".copy.context", {
                 text: function (trigger) {
                     return $(trigger).parent().next().text();
                 }
             });
-            copy_content.on("success", function (e) {
+            copyContent.on("success", function (e) {
                 $(e.trigger)
                     .popup({
                         title: "Finished",
@@ -179,7 +179,7 @@ export default {
                 this.content = d.data;
                 this.owner = d.self;
             });
-        const $title = $("title").html();
+        const $title = document.title;
         $("title").html("Tutorial " + this.id + " -- " + $title);
     }
 };

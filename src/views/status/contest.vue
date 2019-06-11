@@ -198,13 +198,13 @@ const Cookies = require("js-cookie");
 require("../../static/js/semantic.min");
 
 function draw (_result) {
-    var result = _result.result;
-    var _label = _result.label;
-    var _labels = [];
-    var _submits = [];
-    var _accepteds = [];
-    var _persent = [];
-    var total_submit = 0; var total_accepted = 0;
+    let result = _result.result;
+    let _label = _result.label;
+    let _labels = [];
+    let _submits = [];
+    let _accepteds = [];
+    let _persent = [];
+    let total_submit = 0; let total_accepted = 0;
     _.forEach(result, function (i) {
         if (i[_label[0]] && i[_label[1]]) {
             _labels.push(i[_label[0]] + "-" + i[_label[1]]);
@@ -215,7 +215,7 @@ function draw (_result) {
             _persent.push((i.accepted / i.submit * 100).toString().substring(0, 5));
         }
     });
-    var config = {
+    let config = {
         type: "line",
         data: {
             labels: _labels,
@@ -288,16 +288,16 @@ function draw (_result) {
             }
         }
     };
-    var ctx = document.getElementById("canvas").getContext("2d");
+    let ctx = document.getElementById("canvas").getContext("2d");
     window.myLine = new Chart(ctx, config);
 }
 
-var hasDrawLineChart = {};
+let hasDrawLineChart = {};
 function drawLineChart (data, target = "default") {
 // Themes begin
 
     // Themes end
-    var data_array = [];
+    let data_array = [];
 
     if (!hasDrawLineChart[target]) {
         hasDrawLineChart[target] = true;
@@ -309,18 +309,18 @@ function drawLineChart (data, target = "default") {
         return;
     }
     am4core.useTheme(am4themes_animated);
-    var chart = am4core.create("contest_code_length", am4charts.XYChart);
+    let chart = am4core.create("contest_code_length", am4charts.XYChart);
 
     chart.data = data_array;
 
     // Create axes
-    var dateAxis = chart.xAxes.push(new am4charts.DateAxis());
+    let dateAxis = chart.xAxes.push(new am4charts.DateAxis());
     dateAxis.renderer.minGridDistance = 60;
 
     chart.yAxes.push(new am4charts.ValueAxis());
 
     // Create series
-    var series = chart.series.push(new am4charts.LineSeries());
+    let series = chart.series.push(new am4charts.LineSeries());
     series.dataFields.valueY = "value";
     series.dataFields.dateX = "date";
     series.tooltipText = "{value}";
@@ -378,11 +378,11 @@ export default {
             this.search();
         },
         privilege: function () {
-            var that = this;
+            let that = this;
             this.search().then(function () { that.search(); });
         },
         auto_refresh: function (newVal) {
-            var that = this;
+            let that = this;
             if (newVal) {
                 this.search().then(function () { that.search(); });
             }
@@ -400,12 +400,12 @@ export default {
     computed: {
         statistics: {
             get: function () {
-                var lang = {};
-                var status = {};
-                var maxResult = 0;
-                var minResult = 19;
-                var maxNum = 0;
-                var used_lang = {};
+                let lang = {};
+                let status = {};
+                let maxResult = 0;
+                let minResult = 19;
+                let maxNum = 0;
+                let used_lang = {};
                 _.forEach(this.stat, function (val) {
                     if (!status[val.num]) {
                         status[val.num] = {};
@@ -451,7 +451,7 @@ export default {
                         }
                     });
                 });
-                var totalSumProblem = {};
+                let totalSumProblem = {};
                 _.forEach(status, function (val, index) {
                     if (!totalSumProblem[index]) {
                         totalSumProblem[index] = 0;
@@ -460,7 +460,7 @@ export default {
                         totalSumProblem[index] += val2;
                     });
                 });
-                var totalSumResult = {};
+                let totalSumResult = {};
                 _.forEach(lang, function (val, index) {
                     if (!totalSumResult[index]) {
                         totalSumResult[index] = 0;
@@ -469,7 +469,7 @@ export default {
                         totalSumResult[index] += val2;
                     });
                 });
-                var langsum = {};
+                let langsum = {};
                 _.forEach(lang, function (val) {
                     _.forEach(val, function (v, idx) {
                         if (!langsum[idx]) {
@@ -480,7 +480,7 @@ export default {
                         }
                     });
                 });
-                var statsum = {};
+                let statsum = {};
                 _.forEach(status, function (val) {
                     _.forEach(val, function (v, idx) {
                         if (!statsum[idx]) {
@@ -491,12 +491,12 @@ export default {
                         }
                     });
                 });
-                var d = _.reduce(totalSumProblem, function (a, b) { return a + b; }, 0);
+                let d = _.reduce(totalSumProblem, function (a, b) { return a + b; }, 0);
                 if (maxResult === 0) {
                     maxNum = -1;
                 }
-                var tot_res = [];
-                for (var i = minResult; i <= maxResult; ++i)tot_res.push(i);
+                let tot_res = [];
+                for (let i = minResult; i <= maxResult; ++i)tot_res.push(i);
                 return {
                     total_problem: maxNum || 0,
                     total_result: tot_res || [],
@@ -533,7 +533,7 @@ export default {
             return this.$route.query.language;
         },
         setQuery: function () {
-            var queryobject = {};
+            let queryobject = {};
             queryobject["cid"] = this.cid;
             if (this.user_id && this.user_id.length > 0) { queryobject["user_id"] = this.user_id; }
             if (this.problem_result && this.problem_result !== -1) { queryobject["jresult"] = this.problem_result; }
@@ -542,7 +542,7 @@ export default {
             this.$router.push({ path: this.$route.path, query: queryobject });
         },
         search_func: function (data) {
-            var that = this;
+            let that = this;
             this.setQuery();
             that.problem_list = data.result;
             that.icon_list = data.const_list.icon_list;
@@ -560,22 +560,22 @@ export default {
         search: function () {
             this.dim = true;
             this.page_cnt = 0;
-            var problem_id = this.problem_id || "null";
-            var user_id = this.user_id || "null";
-            var language = this.language == -1 ? "null" : this.language;
-            var result = this.problem_result == -1 ? "null" : this.problem_result;
-            var page_cnt = this.page_cnt * 20;
-            var cid = this.cid || "";
-            var sim = Number(this.sim_checkbox);
-            var pri = Number(this.privilege);
-            var that = this;
+            let problem_id = this.problem_id || "null";
+            let user_id = this.user_id || "null";
+            let language = this.language == -1 ? "null" : this.language;
+            let result = this.problem_result == -1 ? "null" : this.problem_result;
+            let page_cnt = this.page_cnt * 20;
+            let cid = this.cid || "";
+            let sim = Number(this.sim_checkbox);
+            let pri = Number(this.privilege);
+            let that = this;
             $.get("/api/status/" + problem_id + "/" + user_id + "/" + language + "/" + result + "/" + page_cnt + "/" + cid + "/" + sim + "/" + pri, function (data) {
                 that.dim = false;
                 that.search_func(data);
             });
         },
         list_self_only: function () {
-            var self_user_id = Cookies.get("user_id");
+            let self_user_id = Cookies.get("user_id");
             if (this.user_id == null || this.user_id != self_user_id) {
                 this.user_id = self_user_id;
             }
@@ -587,15 +587,15 @@ export default {
         page: function (num) {
             this.dim = true;
             this.page_cnt += num;
-            var problem_id = this.problem_id || "null";
-            var user_id = this.user_id || "null";
-            var language = this.language == -1 ? "null" : this.language;
-            var result = this.problem_result == -1 ? "null" : this.problem_result;
-            var page_cnt = this.page_cnt * 20;
-            var cid = this.cid || "";
-            var sim_checkbox = Number(this.sim_checkbox);
-            var pri = Number(this.privilege);
-            var that = this;
+            let problem_id = this.problem_id || "null";
+            let user_id = this.user_id || "null";
+            let language = this.language == -1 ? "null" : this.language;
+            let result = this.problem_result == -1 ? "null" : this.problem_result;
+            let page_cnt = this.page_cnt * 20;
+            let cid = this.cid || "";
+            let sim_checkbox = Number(this.sim_checkbox);
+            let pri = Number(this.privilege);
+            let that = this;
             $.get("/api/status/" + problem_id + "/" + user_id + "/" + language + "/" + result + "/" + page_cnt + "/" + cid + "/" + sim_checkbox + "/" + pri, function (data) {
                 that.dim = false;
                 that.search_func(data);
@@ -609,7 +609,7 @@ export default {
             if (!this.auto_refresh) {
                 return;
             }
-            var obj = {};
+            let obj = {};
             if ((!this.user_id || this.user_id === data.user_id) && (!~this.problem_result || data.val.result === this.problem_result) && (this.language === -1 || this.language === data.val.language) && !this.page_cnt && (!this.problem_id || parseInt(this.problem_id) === Math.abs(data.val.pid))) {
                 obj.problem_id = Math.abs(data.val.id);
                 obj.solution_id = data.submission_id;
@@ -639,15 +639,15 @@ export default {
             if (this.privilege && isNaN(data.contest_id)) {
                 return;
             }
-            var solution_id = data.solution_id;
-            var status = data.state;
-            var time = data.time;
-            var memory = data.memory;
-            var pass_rate = data.pass_rate;
-            var contest_id = parseInt(data.contest_id);
-            var num = parseInt(data.num);
-            var sim = parseInt(data.sim);
-            var sim_s_id = parseInt(data.sim_s_id);
+            let solution_id = data.solution_id;
+            let status = data.state;
+            let time = data.time;
+            let memory = data.memory;
+            let pass_rate = data.pass_rate;
+            let contest_id = parseInt(data.contest_id);
+            let num = parseInt(data.num);
+            let sim = parseInt(data.sim);
+            let sim_s_id = parseInt(data.sim_s_id);
             for (let i of this.problem_list) {
                 if (i.solution_id == solution_id) {
                     console.warn("int", i);
@@ -677,12 +677,12 @@ export default {
         });
     },
     created: function () {
-        var that = this;
-        var problem_id = (this.problem_id = this.getProblemID() || null) || "null";
-        var user_id = (this.user_id = this.getUserId() || null) || "null";
-        var language = (this.language = this.getLanguage() || -1) == -1 ? "null" : this.getLanguage();
-        var result = (this.problem_result = this.getResult() || -1) == -1 ? "null" : this.problem_result;
-        var cid = this.cid || "";
+        let that = this;
+        let problem_id = (this.problem_id = this.getProblemID() || null) || "null";
+        let user_id = (this.user_id = this.getUserId() || null) || "null";
+        let language = (this.language = this.getLanguage() || -1) == -1 ? "null" : this.getLanguage();
+        let result = (this.problem_result = this.getResult() || -1) == -1 ? "null" : this.problem_result;
+        let cid = this.cid || "";
         $.get("/api/status/" + problem_id + "/" + user_id + "/" + language + "/" + result + "/0/" + cid, function (data) {
             that.dim = false;
             that.finish = true;
@@ -695,7 +695,7 @@ export default {
     },
     mounted: function () {
         document.title = `Contest ${this.cid} Status -- ${document.title}`;
-        var that = this;
+        let that = this;
         $.get("/api/status/graph?cid=" + this.cid, function (data) {
             draw(data);
         });

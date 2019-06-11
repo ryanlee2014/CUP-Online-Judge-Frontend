@@ -37,6 +37,7 @@ import mixins from "../../../mixin/init";
 const dayjs = require("dayjs");
 export default {
     name: "userlist",
+    mixins: [mixins],
     data () {
         return {
             contestAccountList: [],

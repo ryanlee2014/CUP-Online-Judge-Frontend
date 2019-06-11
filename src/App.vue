@@ -1,6 +1,7 @@
 <template>
     <div id="app">
-        <AdminNavbar :admin="admin" :avatar="avatar" :contest="contest" :homepage="homepage" :logined="logined" :nick="nick"
+        <AdminNavbar :admin="admin" :avatar="avatar" :contest="contest" :homepage="homepage" :logined="logined"
+                     :nick="nick"
                      :user_id="user_id" v-if="adminView"></AdminNavbar>
         <Navbar :admin="admin" :avatar="avatar" :contest="contest" :homepage="homepage" :logined="logined" :nick="nick"
                 :user_id="user_id" v-else></Navbar>
@@ -14,6 +15,7 @@
 import Navbar from "./components/nav/Navbar";
 import AdminNavbar from "./components/nav/AdminNavbar";
 import Bottom from "./components/bottom/Bottom";
+import util from "./lib/util";
 import { mapGetters } from "vuex";
 
 const $ = require("jquery");
@@ -34,6 +36,7 @@ export default {
     },
     mounted () {
         this.$store.dispatch("NavStatus");
+        util.initToTopButton();
         setTimeout(() => {
             this.connectTry(10);
         }, 1500);
@@ -62,19 +65,21 @@ export default {
                 }
             });
         },
-        async connectTry (times) {
-            while (times-- > 0) {
-                if (this.$socket && this.$socket.connect && typeof this.$socket.connect === "function") {
-                    if (!this.$socket.connected) {
-                        this.$socket.connect();
-                        this.$socket.emit("getUser");
+        connectTry (times) {
+            (async () => {
+                while (times-- > 0) {
+                    if (this.$socket && this.$socket.connect && typeof this.$socket.connect === "function") {
+                        if (!this.$socket.connected) {
+                            this.$socket.connect();
+                            this.$socket.emit("getUser");
+                        }
+                        else {
+                            break;
+                        }
                     }
-                    else {
-                        break;
-                    }
+                    await Promise.delay(500);
                 }
-                await Promise.delay(500);
-            }
+            })();
         }
     },
     computed: mapGetters(["logined", "avatar", "admin", "user_id", "nick"])

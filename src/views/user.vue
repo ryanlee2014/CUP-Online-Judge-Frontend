@@ -693,7 +693,7 @@ export default {
                             submission: timeobj,
                             accept: acobj
                         },
-                        avatar: this.hasAvatarURL(d.data.information) ? this.getAvatarURL(d.data.information) : "/assets/images/wireframe/white-image.png",
+                        avatar: this.hasAvatarURL(d.data.information) ? this.getAvatarURL(Object.assign({ user_id }, d.data.information)) : "/assets/images/wireframe/white-image.png",
                         user_id: user_id,
                         acm_user: d.data.acm_user,
                         privilege: privilege,

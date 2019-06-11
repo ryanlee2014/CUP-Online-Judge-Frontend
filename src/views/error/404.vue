@@ -12,8 +12,11 @@
 </template>
 
 <script>
+import mixins from "../../mixin/init";
+
 export default {
-    name: "404"
+    name: "404",
+    mixins: [mixins]
 };
 </script>
 

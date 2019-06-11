@@ -111,9 +111,10 @@
 
 <script>
 import { mapGetters } from "vuex";
-
+import mixins from "../../mixin/init";
 export default {
     name: "modify",
+    mixins: [mixins],
     data () {
         return {
             blog: "",

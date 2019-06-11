@@ -52,6 +52,7 @@ import aceEditor from "../../components/submit/codeEditor/aceEditor";
 import aceThemeSelector from "../../components/submit/codeEditor/aceComponent/aceThemeSelector";
 import monacoEditor from "../../components/submit/codeEditor/monacoEditor";
 import monacoThemeSelector from "../../components/submit/codeEditor/monacoComponent/monacoThemeSelector";
+import mixins from "../../mixin/init";
 const langMap = {
     "c11": 0,
     "cpp17": 1,
@@ -88,6 +89,7 @@ const langMap = {
 const detectLang = require("../../lib/langDetector");
 export default {
     name: "whiteboard",
+    mixins: [mixins],
     components: {
         aceEditor,
         aceThemeSelector,

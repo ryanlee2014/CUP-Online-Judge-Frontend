@@ -79,10 +79,10 @@ export default {
         };
     },
     watch: {
-        search: function (newVal, oldVal) {
-            var that = this;
-            var page = this.page * 20;
-            var url = "/api/discuss/";
+        search: function (newVal) {
+            let that = this;
+            let page = this.page * 20;
+            let url = "/api/discuss/";
             if (newVal && newVal.length > 0) {
                 url += "search/" + newVal;
             }
@@ -103,13 +103,10 @@ export default {
             });
         }
     },
-    created: function () {
-
-    },
     mounted: function () {
         document.title = `Discuss -- ${document.title}`;
-        var page = this.page * 20;
-        var that = this;
+        let page = this.page * 20;
+        let that = this;
         $.get("/api/discuss?page=" + page, function (data) {
             if (data.contest_mode) {
                 that.contest_mode = true;

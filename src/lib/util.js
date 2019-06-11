@@ -111,6 +111,7 @@ export default {
         return tmp.place;
     },
     init: function (homepage, finished) {
+        $("body, html").animate({scrollTop: 0}, 0);
         jQuery.event.special.touchstart = {
             setup: function (_, ns, handle) {
                 if (ns.includes("noPreventDefault")) {
@@ -357,7 +358,18 @@ export default {
                 popup: ".flowing.popup.dropdown_menu_group"
             })
         }
-
+        $(document)
+            .ready(function () {
+                binding_method();
+                $(function () {
+                    setTimeout(function () {
+                        $("body").prepend('<a href="#top" id="toTop" style="z-index:999"><i class="arrow alternate huge circle up icon"></i></a>');
+                        $("#toTop").scrollToTop();
+                    }, 50);
+                });
+            });
+    },
+    initToTopButton: function () {
         (function (a) {
             a.fn.scrollToTop = function (c) {
                 let d = {speed: 800};
@@ -374,16 +386,6 @@ export default {
                 })
             }
         })(jQuery);
-        $(document)
-            .ready(function () {
-                binding_method();
-                $(function () {
-                    setTimeout(function () {
-                        $("body").prepend('<a href="#top" id="toTop" style="z-index:999"><i class="arrow alternate huge circle up icon"></i></a>');
-                        $("#toTop").scrollToTop();
-                    }, 50);
-                });
-            });
     },
     getAvatarURL (state) {
         const hasAvatar = !!state.avatar;
