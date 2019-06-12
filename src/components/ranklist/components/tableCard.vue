@@ -43,12 +43,6 @@ export default {
     name: "tableCard",
     mixins: [avatarMixin],
     props: {
-        _name: {
-            type: Object,
-            default: () => {
-                return {};
-            }
-        },
         content: {
             type: Array,
             default: () => []

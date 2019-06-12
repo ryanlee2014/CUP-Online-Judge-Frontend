@@ -67,6 +67,7 @@ export default {
         },
         connectTry (times) {
             (async () => {
+                let Promise = require("bluebird");
                 while (times-- > 0) {
                     if (this.$socket && this.$socket.connect && typeof this.$socket.connect === "function") {
                         if (!this.$socket.connected) {

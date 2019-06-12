@@ -94,15 +94,15 @@
                 <i class="left arrow icon"></i>
                 Prev
             </a>
-            <a :class="'ui right labeled icon button '+((page+1)*50 >= registed_user?'disabled':'')" @click="page*50<registed_user&&_page(1,$event)"
+            <a :class="'ui right labeled icon button '+((page+1)*50+1 > registed_user?'disabled':'')" @click="page*50<registed_user&&_page(1,$event)"
                class="ui right labeled icon button">
                 <i class="right arrow icon"></i>
                 Next
             </a>
         </div>
-        <table-card :content="acmmem" :page="page" :_name="_name" v-show="mode === 2" @click="mode = 2"></table-card>
-        <table-card :content="retiremem" :page="page" :_name="_name" v-show="mode === 3" @click="mode = 3"></table-card>
-        <table-card :content="recent_register" :page="page" :_name="_name" v-show="mode === 4" @click="mode = 4"></table-card>
+        <table-card :content="acmmem" :page="page" v-show="mode === 2" @click="mode = 2"></table-card>
+        <table-card :content="retiremem" :page="page"  v-show="mode === 3" @click="mode = 3"></table-card>
+        <table-card :content="recent_register" :page="page" v-show="mode === 4" @click="mode = 4"></table-card>
     </div>
 </template>
 
@@ -166,12 +166,6 @@ export default {
         }
     },
     computed: {
-        _name: function () {
-            if (this.ranklistData._name) {
-                return this.ranklistData._name;
-            }
-            return {};
-        },
         ranklist: function () {
             return this.ranklistData.ranklist;
         },
@@ -194,19 +188,19 @@ export default {
     },
     methods: {
         convertHTML: function (str) {
-            var doc = document.createElement("div");
+            const doc = document.createElement("div");
             doc.innerHTML = str;
             return doc.innerText;
         },
         search_user: function ($event) {
-            var that = this;
+            const that = this;
             this.search = $event.target.value;
             $.get("/api/ranklist?page=" + this.page + "&search=" + this.search + "&time_stamp=" + this.time_stamp, function (data) {
                 that.ranklistData = data;
             });
         },
         timestamp: function (time, $event) {
-            var that = this;
+            const that = this;
             this.time_stamp = time;
             $.get("/api/ranklist?page=" + this.page + "&search=" + this.search + "&time_stamp=" + this.time_stamp, function (data) {
                 that.ranklistData = data;
@@ -214,14 +208,14 @@ export default {
         },
         _page: function (diff, $event) {
             this.page += diff;
-            var that = this;
+            const that = this;
             $.get("/api/ranklist?page=" + this.page + "&search=" + this.search + "&time_stamp=" + this.time_stamp, function (data) {
                 that.ranklistData = data;
             });
         }
     },
     mounted: function () {
-        var that = this;
+        const that = this;
         $.get("/api/ranklist/user", function (data) {
             that.registed_user = data[0].tot_user;
             that.acm_user = data[0].acm_user;
