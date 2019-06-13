@@ -212,7 +212,7 @@ function draw (_result) {
             total_accepted += i.accepted;
             _submits.push(total_submit || 0);
             _accepteds.push(total_accepted || 0);
-            _persent.push((i.accepted / i.submit * 100).toString().substring(0, 5));
+            _persent.push((total_accepted / total_submit * 100).toString().substring(0, 5));
         }
     });
     let config = {
@@ -261,7 +261,7 @@ function draw (_result) {
                     display: true,
                     scaleLabel: {
                         display: true,
-                        labelString: _label[0] + " - " + _label[1]
+                        labelString: _label[0] + " : " + _label[1]
                     }
                 }],
                 yAxes: [{

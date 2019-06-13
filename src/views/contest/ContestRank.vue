@@ -256,6 +256,7 @@ export default {
             this.submitter.sort(SubmitterComparator("greater"));
             let rnk = 1;
             window.submitter = this.submitter;
+            this.totalNumber = 0;
             _.forEach(this.submitter, val => val.rank = val.ac > 0 ? (++this.totalNumber, rnk++) : rnk);
         },
         rankClass (rank) {
