@@ -137,6 +137,10 @@
         <p>Copyright©️<a href="https://github.com/ryanlee2014" target="_blank">Ryan Lee</a></p>
         <h2 class="ui header">Monaco Editor</h2>
         <p></p>
+        <p></p>
+        <h2 class="ui header">CUP Online Judge NG FrontEnd</h2>
+        <p><i class="github icon"></i><a href="https://github.com/ryanlee2014/CUP-Online-Judge-NG-FrontEnd" target="_blank">https://github.com/ryanlee2014/CUP-Online-Judge-NG-FrontEnd</a></p>
+        <p>Copyright© <a href="https://github.com/ryanlee2014" target="_blank">Ryan Lee</a></p>
         <h1></h1>
     </div>
 </template>

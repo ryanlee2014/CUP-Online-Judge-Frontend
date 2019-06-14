@@ -8,17 +8,17 @@ function trimMinorVersion (version) {
 }
 
 export default function () {
-    const os_name = platform.os.family;
-    const os_version = platform.os.version;
-    const browser_name = platform.name;
-    const browser_version = trimMinorVersion(platform.version);
+    const osName = platform.os.family;
+    const osVersion = platform.os.version;
+    const browserName = platform.name;
+    const browserVersion = trimMinorVersion(platform.version);
     const PlatformInfo = {
-        os_name,
-        os_version,
-        browser_name,
-        browser_version
+        os_name: osName,
+        os_version: osVersion,
+        browser_name: browserName,
+        browser_version: browserVersion
     };
-    let storePlatformInfo = {};
+    let storePlatformInfo;
     try {
         storePlatformInfo = JSON.parse(localStorage.platformInfo);
     }

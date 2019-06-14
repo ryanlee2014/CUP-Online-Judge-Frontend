@@ -1,5 +1,7 @@
+import {notUndefinedOrNull} from "../store/util/index";
 const $ = require("jquery");
 const jQuery = $;
+
 export default {
     detectIP: function (tmp) {
         let ip;
@@ -361,12 +363,6 @@ export default {
         $(document)
             .ready(function () {
                 binding_method();
-                $(function () {
-                    setTimeout(function () {
-                        $("body").prepend('<a href="#top" id="toTop" style="z-index:999"><i class="arrow alternate huge circle up icon"></i></a>');
-                        $("#toTop").scrollToTop();
-                    }, 50);
-                });
             });
     },
     initToTopButton: function () {
@@ -386,6 +382,14 @@ export default {
                 })
             }
         })(jQuery);
+        $(document).ready(() => {
+            $(function () {
+                setTimeout(function () {
+                    $("body").prepend('<a href="#top" id="toTop" style="z-index:999"><i class="arrow alternate huge circle up icon"></i></a>');
+                    $("#toTop").scrollToTop();
+                }, 50);
+            });
+        });
     },
     getAvatarURL (state) {
         const hasAvatar = !!state.avatar;
@@ -407,5 +411,13 @@ export default {
             return true;
         }
         else return avatarUrl.length > 0;
+    },
+    stringify (target) {
+        if (notUndefinedOrNull(target)) {
+            return target + "";
+        }
+        else {
+            return "";
+        }
     }
 }

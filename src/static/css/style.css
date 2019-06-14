@@ -382,3 +382,7 @@ a {
     margin-left: auto;
     margin-right: auto;
 }
+
+tr {
+    cursor: inherit!important;
+}

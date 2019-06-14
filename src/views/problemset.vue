@@ -406,6 +406,13 @@ export default {
                     });
                 });
             });
+        },
+        initjQueryMethods () {
+            $(".ui.search")
+                .popup({
+                    on: "click",
+                    content: this.$t("press enter to search")
+                });
         }
     },
     created: function () {
@@ -431,10 +438,11 @@ export default {
         });
     },
     updated: function () {
+        this.initjQueryMethods();
     },
     mounted: function () {
         document.title = `Problem Set -- ${document.title}`;
-        $(".ui.search")
+        /* $(".ui.search")
             .search({
                 apiSettings: {
                     url: "/api/problem/module/search/{query}"
@@ -449,7 +457,7 @@ export default {
                     "title", "description", "source", "problem_id", "label"
                 ],
                 minCharacters: 2
-            });
+            }); */
         if (this.show_label_cloud) {
             setTimeout(this.drawLabelCloud, 300);
         }

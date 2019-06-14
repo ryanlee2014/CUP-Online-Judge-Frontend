@@ -71,12 +71,12 @@ The judge machine only accepts input using `stdin` and outputs the result to `st
 | Accept / Answer Correct | Code Passes All Evaluation Samples |
 | Presentation Error / Format Error | Code results can pass all samples, but there is no format that meets the requirements of the topic |
 | Wrong Answer / Answer Error | Code did not pass all the evaluation examples |
-Time Limit Exceeded/Time Overrun | The code runs out of time and the program is forcibly terminated early |
-Memory Limit Exceeded/Memory Overrun | The code runs out of memory and the program is forcibly terminated early |
-Output Limit Exceeded/Output Limit | The code runs out of the correct output (generally more than twice the correct output length) or **exceeds the evaluation machine's limit on the output file (256MB)** |
-Runtime Error/Run Error | Code error occurred during run/access illegal memory space/Illegal call system operation/float number divide-by-zero error/system error |
+|Time Limit Exceeded/Time Overrun | The code runs out of time and the program is forcibly terminated early |
+|Memory Limit Exceeded/Memory Overrun | The code runs out of memory and the program is forcibly terminated early |
+|Output Limit Exceeded/Output Limit | The code runs out of the correct output (generally more than twice the correct output length) or **exceeds the evaluation machine's limit on the output file (256MB)** |
+|Runtime Error/Run Error | Code error occurred during run/access illegal memory space/Illegal call system operation/float number divide-by-zero error/system error |
 | Compile Error | An error occurred during compilation, compilation failed |
-Add to queue/joined queue | code has been added to the crawler submission queue, waiting to send a submit request to the remote server |
+|Add to queue/joined queue | code has been added to the crawler submission queue, waiting to send a submit request to the remote server |
 | Server Refuse/Submission rejected by server | Code was not successfully submitted to the target server due to invalid code/target server status, etc. |
 | System Error / System Error | The system could not complete the evaluation due to unforeseen reasons |
 

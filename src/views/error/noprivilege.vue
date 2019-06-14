@@ -2,9 +2,9 @@
     <div class="ui container padding">
         <div class="ui large warning message">
             <div class="header">
-                无权访问
+                {{$t("no privilege to access")}}
             </div>
-            您不能访问本页面
+            {{$t("you cannot access to this page")}}
         </div>
     </div>
 </template>

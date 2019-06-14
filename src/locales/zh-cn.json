@@ -1,4 +1,5 @@
 {
+  "404statement": "您所访问的页面不存在",
   "about": "关于",
   "about-icpc": "国际大学生程序设计竞赛（英语：International Collegiate Programming Contest, ICPC）是一项旨在展示大学生创新能力、团队精神和在压力下编写程序、分析和解决问题能力的年度竞赛。经过40多年的发展，国际大学生程序设计竞赛已经发展成为最具影响力的大学生计算机竞赛。赛事之前仅由IBM公司赞助，2017年新增JetBrains公司赞助, 2018年起，美国计算机协会（ACM）不再赞助ICPC。（Wikipedia）",
   "accept": "正确",
@@ -38,6 +39,7 @@
   "edit problem": "编辑题目",
   "email": "邮件",
   "end time": "结束时间",
+  "error": "错误",
   "fail password": "检测失败的密码",
   "fail user_id": "检测失败的账号",
   "faq": "常见问答",
@@ -68,12 +70,14 @@
   "loading": "加载中，请稍后",
   "local": "本地",
   "login to your account": "登录您的账号",
+  "majiyabakune": "可了不得",
   "memory": "内存",
   "memory limit": "内存限制",
   "message": "hello i18n !!",
   "modify time": "更改时间",
   "month": "月份",
   "nick": "昵称",
+  "no privilege to access": "无权访问",
   "offline": "离线",
   "oj_name": "中国石油大学(北京)在线评测系统",
   "opensource-notice": "开放源代码声明",
@@ -84,6 +88,7 @@
   "pass": "通过",
   "password": "密码",
   "plagiarism information": "判重信息",
+  "press enter to search": "按下Enter进行搜索",
   "privacy policy": "隐私政策",
   "private": "私有",
   "privilege": "权限",
@@ -154,5 +159,6 @@
   "user_id": "用户",
   "version": "版本",
   "view": "查看",
-  "whiteboard": "白板"
+  "whiteboard": "白板",
+  "you cannot access to this page": "您不能访问本页面"
 }

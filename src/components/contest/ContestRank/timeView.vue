@@ -25,19 +25,19 @@ export default {
         };
     },
     mounted: function () {
-        var that = this;
+        let that = this;
         setInterval(function () {
             that.current_time = dayjs().format("YYYY-MM-DD HH:mm:ss");
         }, 1000);
     },
     methods: {
         format_time: function (second) {
-            var arr = ["还有", "已经过"];
-            var passed = Number(second > 0);
+            let arr = ["还有", "已经过"];
+            let passed = Number(second > 0);
             return arr[passed] + this.format_date(second);
         },
         format_date: function (second, mode = 0) {
-            var fill_zero = function (str) {
+            let fill_zero = function (str) {
                 if (str.length < 2) {
                     return "0" + str;
                 }
@@ -46,17 +46,19 @@ export default {
                 }
             };
             second = Math.abs(second);
-            var hour = String(parseInt(second / 3600));
+            let hour = String(parseInt(second / 3600));
             hour = fill_zero(hour);
 
-            var minute = String(parseInt((second - hour * 3600) / 60));
+            let minute = String(parseInt((second - hour * 3600) / 60));
             minute = fill_zero(minute);
-            var sec = String(second % 60);
+            let sec = String(second % 60);
             sec = fill_zero(sec);
             if (mode) {
                 return hour + " : " + minute + " : " + sec;
             }
-            else { return hour + ":" + minute + ":" + sec; }
+            else {
+                return hour + ":" + minute + ":" + sec;
+            }
         }
     }
 };

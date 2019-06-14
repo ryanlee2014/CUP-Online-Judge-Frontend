@@ -111,6 +111,7 @@
 
 <script>
 import { mapGetters } from "vuex";
+import util from "../../lib/util";
 import mixins from "../../mixin/init";
 export default {
     name: "modify",
@@ -130,7 +131,7 @@ export default {
             school: "",
             nick: this.$store.getters.nick,
             avatar: this.$store.getters.avatar,
-            avatarUrl: this.$store.getters.avatarUrl
+            avatarUrl: util.stringify(this.$store.getters.avatarUrl || "")
         };
     },
     mounted () {
@@ -185,11 +186,12 @@ export default {
         ...mapGetters(["user_id"]),
         img_src: {
             get () {
-                if (this.avatar && !this.avatarUrl.length > 0) {
+                const avatarUrl = util.stringify(this.avatarUrl);
+                if (this.avatar && !avatarUrl.length > 0) {
                     return `/avatar/${this.user_id}.jpg`;
                 }
-                else if (this.avatarUrl.length > 0) {
-                    return this.avatarUrl;
+                else if (avatarUrl.length > 0) {
+                    return avatarUrl;
                 }
                 else {
                     return "https://semantic-ui.com/images/wireframe/square-image.png";

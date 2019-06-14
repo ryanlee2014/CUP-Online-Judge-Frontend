@@ -1,6 +1,5 @@
-function isObject (obj) {
-    return typeof obj === "object" && obj !== null;
-}
+import { isObject, notUndefinedOrNull } from "../util/index";
+
 function addContestPrivilege (state, contest) {
     if (isObject(contest)) {
         for (let property in contest) {
@@ -40,7 +39,7 @@ export default {
         state.userInfo.nick = payload.nick;
         state.userInfo.avatar = !!payload.avatar;
         state.userInfo.admin = !!payload.admin;
-        state.userInfo.avatarUrl = payload.avatarUrl ? payload.avatarUrl : "";
+        state.userInfo.avatarUrl = notUndefinedOrNull(payload.avatar) ? payload.avatarUrl : "";
         addContestPrivilege(state, payload.contest);
         addProblemMakerPrivilege(state, payload.problem_maker);
         addContestMakerPrivilege(state, payload.contest_maker);

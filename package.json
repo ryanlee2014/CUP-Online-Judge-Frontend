@@ -1,6 +1,6 @@
 {
   "name": "CUP-Online-Judge-NG-Frontend",
-  "version": "0.13.0",
+  "version": "0.14.0",
   "private": true,
   "scripts": {
     "flow": "flow",
@@ -34,8 +34,6 @@
     "dragscroll": "0.0.8",
     "file-saver": "^2.0.2",
     "fingerprintjs2": "^2.1.0",
-    "flow-bin": "^0.100.0",
-    "flow-typed": "^2.5.2",
     "fomantic-ui": "^2.7.5",
     "jquery": "^3.4.1",
     "js-cookie": "^2.2.0",
@@ -56,7 +54,9 @@
     "vue-lazyload": "^1.2.6",
     "vue-router": "^3.0.3",
     "vue-socket.io": "^3.0.7",
+    "vue-worker": "^1.2.1",
     "vuex": "^3.1.1",
+    "workerize-loader": "^1.0.4",
     "xlsx": "^0.14.3"
   },
   "devDependencies": {
@@ -71,6 +71,8 @@
     "eslint-plugin-flowtype": "^3.9.1",
     "eslint-plugin-flowtype-errors": "^4.1.0",
     "cross-env": "^5.2.0",
+    "flow-bin": "^0.100.0",
+    "flow-typed": "^2.5.2",
     "eslint": "^5.16.0",
     "eslint-plugin-vue": "^5.0.0",
     "increase-memory-limit": "^1.0.7",

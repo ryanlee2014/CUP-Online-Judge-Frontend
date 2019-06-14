@@ -5,7 +5,7 @@
                 {{$t("loading")}}
             </h2>
             <div class="ui grid" v-show="finished">
-                <div class="row">
+                <div class="row" v-if="!error">
                     <div class="five wide column">
                         <div class="ui card" id="user_card" style="width: 100%; ">
                             <div class="blurring dimmable image" id="avatar_container">
@@ -455,6 +455,12 @@
                         </div>
                     </div>
                 </div>
+                <div class="row" v-else>
+                    <div class="ui huge error message" style="margin: auto">
+                        <div class="header"><i class="remove icon"></i> {{$t("error")}}</div>
+                        <p>{{statement}}</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -481,6 +487,7 @@ export default {
             markdownIt,
             admin: false,
             biography: "",
+            error: false,
             const_variable: {},
             article_publish: [],
             nick: "",
@@ -489,6 +496,7 @@ export default {
             school: "",
             github: "",
             email: "",
+            statement: "",
             vjudge_solved: 0,
             os: "",
             browser: "",
@@ -530,10 +538,15 @@ export default {
     },
     methods: {
         initData: function () {
-            const user_id = this.$route.params.user_id;
+            const userId = this.$route.params.user_id;
             const that = this;
-            this.axios.get(`/api/user/${user_id}`)
+            this.axios.get(`/api/user/${userId}`)
                 .then(({ data }) => {
+                    if (!data.data.hasOwnProperty("information")) {
+                        this.statement = `The user "${userId}" is not exist.`;
+                        this.error = true;
+                        return;
+                    }
                     let d = data;
                     let submission = d.data.submission;
                     let local = [];
@@ -637,7 +650,9 @@ export default {
                         delete other_site_submission["LOCAL"];
                     }
                     for (let idx in other_site_submission) {
-                        other_site_submission[idx] = pick_ac(other_site_submission[idx]);
+                        if (other_site_submission.hasOwnProperty(idx)) {
+                            other_site_submission[idx] = pick_ac(other_site_submission[idx]);
+                        }
                     }
                     let privilege = d.data.privilege;
                     if (privilege && privilege.length > 0) {
@@ -666,7 +681,7 @@ export default {
                     d.data.os.sort(dsort);
                     d.data.browser.sort(dsort);
                     let github_info = d.data.information.github || "";
-                    if (github_info.lastIndexOf("/") == github_info.length - 1) {
+                    if (github_info.lastIndexOf("/") === github_info.length - 1) {
                         github_info = github_info.substring(0, github_info.length - 1);
                     }
                     if (github_info.indexOf("github.com") !== -1) {
@@ -693,8 +708,8 @@ export default {
                             submission: timeobj,
                             accept: acobj
                         },
-                        avatar: this.hasAvatarURL(d.data.information) ? this.getAvatarURL(Object.assign({ user_id }, d.data.information)) : "/assets/images/wireframe/white-image.png",
-                        user_id: user_id,
+                        avatar: this.hasAvatarURL(d.data.information) ? this.getAvatarURL(Object.assign({ user_id: userId }, d.data.information)) : "/assets/images/wireframe/white-image.png",
+                        user_id: userId,
                         acm_user: d.data.acm_user,
                         privilege: privilege,
                         submission: {

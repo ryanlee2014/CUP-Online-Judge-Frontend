@@ -10,17 +10,18 @@
 
         <div class="ui grid">
             <div class="row">
-                <div class="left aligned eleven wide column">
+                <div class="left aligned eight wide column">
                     <TimeView
                         :start_time="start_time"
                     ></TimeView>
                 </div>
-                <div class="right aligned five wide column">
-                    <button @click="playRanklist" class="ui primary button" v-if="!playing">播放排名变化</button>
-                    <div class="ui buttons" v-else>
-                        <button @click="pausePlayRanklist" class="ui primary button">{{playing ? "暂停" : "继续"}}</button>
-                        <button @click="stopPlayRanklist" class="ui primary button">停止</button>
-                    </div>
+                <div class="right aligned eight wide column">
+                    <button @click="playRanklist" class="ui primary button item" v-if="!playing">播放排名变化</button>
+                    <span v-if="playing">
+                        {{playingTime}}
+                    </span>
+                    <button @click="pausePlayRanklist" class="ui primary button" v-if="playing">{{playing ? "暂停" : "继续"}}</button>
+                    <button @click="stopPlayRanklist" class="ui primary button" v-if="playing">停止</button>
                     <div class="ui toggle checkbox"><input @click="auto_update = !auto_update" type="checkbox">
                         <label>暂停自动更新排名</label></div>
                     <div class="ui toggle checkbox"><input @click="add_name=!add_name" type="checkbox">
@@ -29,7 +30,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="ranking dragscroll" style="width:100%;height:700px;overflow:auto">
+                <div class="ranking dragscroll" style="width:100%;overflow:auto">
                     <table class="ui small celled table" id='rank'>
                         <thead>
                         <tr align=center class=toprow>
@@ -45,7 +46,8 @@
                         </tr>
                         </thead>
                         <transition-group name="list-complete" tag="tbody">
-                            <tr :key="key" class="list-complete-item" v-for="(row,key) in submitter">
+                            <tr :key="row.user_id" class="list-complete-item" style="cursor: grab!important;"
+                                v-for="(row,key) in submitter">
                                 <td :class="rankClass(key)"
                                     style="text-align:center;font-weight:bold;position: sticky; left: 0">{{row.rank}}
                                 </td>
@@ -61,7 +63,8 @@
                                     </router-link>
                                 </td>
                                 <td style="text-align:center">{{format_date(row.penalty_time)}}</td>
-                                <td :class="p.accept.length > 0?p.first_blood ? 'first accept':'accept':''" :key="key"
+                                <td :class="p.accept.length > 0?p.first_blood ? 'first accept':'accept':''"
+                                    :key="key + 0"
                                     style="text-align:center"
                                     v-for="(p,key) in row.problem.toArray()">
                                     <b :class="'text '+ (p.accept.length > 0 ? p.first_blood?'first accept':'accept':'red')">
@@ -166,6 +169,7 @@ export default {
             add_name: false,
             auto_update: true,
             totalNumber: 0,
+            playingTime: dayjs(),
             waiting_queue: [],
             state: true,
             errormsg: "",
@@ -177,7 +181,8 @@ export default {
             backup_data: [],
             firstRender: true,
             userStructure: {},
-            firstBloodList: undefined
+            firstBloodList: undefined,
+            worker: null
         };
     },
     computed: {
@@ -242,7 +247,9 @@ export default {
                     }
                     submitter[val[i].user_id.toLowerCase()] = SubmitterFactory(val[i].nick, this.total, val[i].user_id);
                 }
-                submitter[val[i].user_id.toLowerCase()].addData(val[i]);
+                if (val[i].num < this.total) {
+                    submitter[val[i].user_id.toLowerCase()].addData(val[i]);
+                }
             }
         },
         initUserTable (submitter) {
@@ -299,6 +306,7 @@ export default {
                     while (backupTempData.length > 0 && data.result < 4 && data.result >= 11) {
                         data = backupTempData.shift();
                     }
+                    this.playingTime = dayjs(data.in_date).format("YYYY-MM-DD HH:mm:ss");
                     this.scoreboard = data;
                     if (backupTempData.length === 0) {
                         this.endInterval();
@@ -672,12 +680,12 @@ export default {
     }
 
     .ui.yellow {
-        background: #FFD700!important;
+        background: #FFD700 !important;
         color: #000 !important;
     }
 
     .ui.orange {
-        background-color: #FE9A76!important;
+        background-color: #FE9A76 !important;
         color: #000 !important;
     }
 
