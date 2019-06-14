@@ -13,8 +13,8 @@
             <th width="9%">{{$t("judger")}}</th>
         </tr>
         </thead>
-        <tbody>
-        <tr :key="row.solution_id" v-for="row in problem_lists" :class="row.sim?'warning need_popup':'need_popup'" :data-html="'<b>IP:'+row.ip+'</b><br><p>类型:'+detect_place(row.ip)+'</p><p>用户指纹:<br>'+row.fingerprint+'<br>硬件指纹:<br>'+row.fingerprintRaw+'</p>'">
+        <transition-group name="list-complete" tag="tbody">
+        <tr :key="row.solution_id" v-for="row in problem_lists" :class="(row.sim?'warning need_popup':'need_popup') + ' list-complete-item'" :data-html="'<b>IP:'+row.ip+'</b><br><p>类型:'+detect_place(row.ip)+'</p><p>用户指纹:<br>'+row.fingerprint+'<br>硬件指纹:<br>'+row.fingerprintRaw+'</p>'">
             <td>{{row.solution_id}}</td>
             <td><div class="ui grid">
             <div class="four wide column" style="margin:auto">
@@ -62,7 +62,7 @@
             <td>{{new Date(row.in_date).toLocaleString()}}<br><p>类型:{{detect_place(row.ip)}}</p></td>
             <td>{{row.judger}}</td>
         </tr>
-        </tbody>
+        </transition-group>
     </table>
 </template>
 
@@ -156,5 +156,21 @@ export default {
 </script>
 
 <style scoped>
+    .list-complete-item {
+        transition: all 0.5s;
+        display: table-row;
+    }
 
+    .list-complete-enter, .list-complete-leave-to
+        /* .list-complete-leave-active for below version 2.1.8 */
+    {
+        opacity: 0;
+        transform: translateX(31px);
+    }
+
+    .list-complete-leave-active {
+        opacity: 0;
+        position: absolute;
+        transform: translateX(-31px);
+    }
 </style>

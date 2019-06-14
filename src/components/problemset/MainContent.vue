@@ -4,26 +4,26 @@
         <thead>
         <tr class='toprow'>
             <!--<th width='2%'></th>-->
-            <th @click="sort('problem_id',$event)" width='10%'>
+            <th @click="sort('problem_id',$event)" width='12%'>
                 <a><i :class="'sort numeric icon '+(order?'down':'up')"
                       v-show="order_target == 'problem_id'"></i>
                     <i :class="'sort numeric icon '+(order?'down':'up')"
                        style="opacity: 0" v-show="order_target != 'problem_id'"></i>
                     {{$t("id")}}
                 </a></th>
-            <th class="left aligned" width='56%'>{{$t("title")}}</th>
+            <th class="left aligned" width='62%'>{{$t("title")}}</th>
             <th width='15%'>
                 <a @click="sort('accepted',$event,1)"><i :class="'sort numeric icon '+(order?'down':'up')"
                                                          v-show="order_target == 'accepted'"></i>{{$t("accept")}}
                 </a> / <a @click="sort('submit',$event,1)"><i :class="'sort numeric icon '+(order?'down':'up')"
                                                               v-show="order_target == 'submit'"></i>{{$t("submit")}}
             </a></th>
-            <th style="cursor:hand" width='10%'><a @click="sort('present',$event,1)"><i
+            <th style="cursor:hand" width='11%'><a @click="sort('present',$event,1)"><i
                     :class="'sort numeric icon '+(order?'down':'up')" v-show="order_target == 'present'"></i>{{$t("accept percentage")}}</a>
             </th>
         </tr>
         </thead>
-        <tbody>
+        <transition-group name="list-complete" tag="tbody" mode="out-in">
         <!--
         <transition-group tag="tbody"
                           name="grip-table"
@@ -31,16 +31,16 @@
                           leave-active-class="animated fadeOut"
                           mode="out-in"
         >-->
-        <tr :key="row.problem_id" style="vertical-align:middle" v-for="row in filterTableRow">
+        <tr :key="row.problem_id" style="vertical-align:middle; width: 100%;" class="list-complete-item" v-for="row in filterTableRow">
             <!--<td>
             </td>-->
-            <td>
+            <td style="width: 12%">
                 <i class="checkmark icon" v-if="row.ac === true"></i>
                 <i class="remove icon" v-else-if="row.ac === false"></i>
                 <i class="checkmark icon" style="opacity: 0" v-else></i>
                 {{row.problem_id}}
             </td>
-            <td>
+            <td class="problemTitle">
                 <div class="left aligned">
                     <router-link :style="show_tag ? 'vertical-align:sub':''" :to="`/problem/submit/${row.problem_id}`"
                                  v-html="markdownIt.renderRaw(row.title)"></router-link>
@@ -55,18 +55,18 @@
                     </div>
                 </div>
             </td>
-            <td>
+            <td style="width: 15%">
                 <div class="center">
                     {{row.accepted}} / {{row.submit}}
                 </div>
             </td>
-            <td>
+            <td style="width: 11%">
                 <div class="center">
                     {{(parseInt(row.accepted)/Math.max(parseInt(row.submit),1)*100).toString().substring(0,4)}} %
                 </div>
             </td>
         </tr>
-        </tbody>
+        </transition-group>
         <!--</transition-group>-->
         <!--<div class="ui active inverted dimmer" v-if="dim">
             <div class="ui large text loader">Loading</div>
@@ -120,29 +120,33 @@ export default {
             const color = {};
             let i;
             for (i in _color) {
-                color[i] = _color[i];
+                if (_color.hasOwnProperty(i)) {
+                    color[i] = _color[i];
+                }
             }
             color["标签待整理"] = "black";
             for (i in data.problem) {
-                var label = data.problem[i].label;
-                var labels = [];
-                for (var j of label ? label.split(" ") : ["标签待整理"]) {
-                    labels.push(j);
+                if (data.problem.hasOwnProperty(i)) {
+                    let label = data.problem[i].label;
+                    let labels = [];
+                    for (let j of label ? label.split(" ") : ["标签待整理"]) {
+                        labels.push(j);
+                    }
+                    labels.sort(function (a, b) {
+                        if (a === "简单" || a === "普通" || a === "困难") {
+                            return 1;
+                        }
+                        else if (b === "简单" || b === "普通" || b === "困难") {
+                            return -1;
+                        }
+                        else {
+                            if (a < b) return -1;
+                            else if (a == b) return 0;
+                            else return 1;
+                        }
+                    });
+                    data.problem[i].label = labels;
                 }
-                labels.sort(function (a, b) {
-                    if (a == "简单" || a == "普通" || a == "困难") {
-                        return 1;
-                    }
-                    else if (b == "简单" || b == "普通" || b == "困难") {
-                        return -1;
-                    }
-                    else {
-                        if (a < b) return -1;
-                        else if (a == b) return 0;
-                        else return 1;
-                    }
-                });
-                data.problem[i].label = labels;
             }
             const problemArray = typeof data.problem === "undefined" ? [] : data.problem;
             return {
@@ -168,5 +172,28 @@ export default {
 </script>
 
 <style scoped>
+    .list-complete-item {
+        transition: all 0.5s;
+        display: table-row;
+    }
 
+    .list-complete-enter, .list-complete-leave-to
+        /* .list-complete-leave-active for below version 2.1.8 */
+    {
+        opacity: 0;
+        transform: translateX(31px);
+    }
+
+    .list-complete-leave-active {
+        opacity: 0;
+        position: absolute;
+        transform: translateX(-31px);
+    }
+
+    .list-complete-leave-active .problemTitle {
+        width: 68%!important;
+    }
+    .problemTitle {
+        width: 62%
+    }
 </style>

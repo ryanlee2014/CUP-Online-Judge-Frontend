@@ -239,7 +239,7 @@ export default {
             this.$router.push({ path: this.$route.path, query: queryObject });
         },
         page: function (num, arrow) {
-            this.dim = true;
+            // this.dim = true;
             let page = this.current_page = arrow ? this.current_page + arrow : num;
             let search_tag = this.search_tag || "none";
             let order = this.order;
@@ -248,12 +248,12 @@ export default {
             let that = this;
             this.setQuery();
             $.get("/api/problemset/" + page + "/" + search_tag + "/" + order_target + "/" + order + "/?label=" + this.label, function (data) {
-                that.dim = false;
+                // that.dim = false;
                 that.tables = data;
             });
         },
         sort: function (target, event, default_order = 0) {
-            this.dim = true;
+            // this.dim = true;
             let prev_target_equal_to_current = this.order_target == target;
             this.order_target = target;
             let page = this.current_page = 0;
@@ -271,7 +271,7 @@ export default {
             }
             this.label = label;
             let search_tag = this.search_tag || "none";
-            this.dim = true;
+            // this.dim = true;
             let order_target = this.order_target;
             let page = this.current_page = 0;
             let order = this.order;
@@ -287,7 +287,7 @@ export default {
                 return;
             }
             this.search_tag = label == "none" ? "" : label;
-            this.dim = true;
+            // this.dim = true;
             let order_target = this.order_target;
             let page = this.current_page = 0;
             let order = this.order;
@@ -305,7 +305,7 @@ export default {
             else {
                 this.label = "";
             }
-            this.dim = true;
+            // this.dim = true;
             let order_target = this.order_target;
             let page = this.current_page;
             let order = this.order;

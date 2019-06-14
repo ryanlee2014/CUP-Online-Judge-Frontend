@@ -190,11 +190,12 @@ export default {
             get: () => undefined,
             set: function (val) {
                 const that = this;
+                this.auto_update = false;
                 try {
                     val = submissionCollection = submissionCollection.concat(this.toArray(val));
                     if (this.firstRender) {
                         this.firstRender = false;
-                        this.firstBloodList = firstBloodListFactory(that.total);
+                        this.firstBloodList = firstBloodListFactory();
                         let submitter = {};
                         this.initUserTable(submitter);
                         this.fillSubmitterList(submitter, val);
@@ -216,12 +217,13 @@ export default {
                 }
                 catch (e) {
                     that.state = false;
-                    that.submitter = {};
+                    that.submitter = [];
                     console.log(e);
                     let str = e.stack;
                     str = str.replace(/\n/g, "<br>");
                     that.errormsg = str;
                 }
+                this.auto_update = true;
             }
         }
     },
@@ -294,7 +296,7 @@ export default {
                 return atime.isAfter(btime) ? 1 : -1;
             });
             submissionCollection = [];
-            this.submitter = {};
+            this.submitter = [];
             this.firstRender = true;
             this.startInterval();
         },
@@ -540,7 +542,7 @@ export default {
                     $.get("/api/scoreboard/" + cid, function (d) {
                         if (d.status !== "OK") {
                             that.state = false;
-                            that.submitter = {};
+                            that.submitter = [];
                             let str;
                             if (d.contest_mode === true) {
                                 str = "根据设置，内容非公开";
@@ -589,7 +591,7 @@ export default {
                     $.get("/api/scoreboard/" + cid, function (d) {
                         if (d.status !== "OK" && !d.statement) {
                             that.state = false;
-                            that.submitter = {};
+                            that.submitter = [];
                             let str = "根据设置，内容非公开";
                             str = str.replace(/\n/g, "<br>");
                             that.errormsg = str;
