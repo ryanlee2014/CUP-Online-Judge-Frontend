@@ -1,6 +1,6 @@
 <template>
-    <div :style="{width:'100%',height:'460px',fontSize:fontSize+'px'}" cols=180
-         id="source" rows=20
+    <div :style="{width:'100%',height:`${height}px`,fontSize:fontSize+'px'}" cols=180
+         ref="source" rows=20
          style="width:100%;height:460px"></div>
 </template>
 
@@ -57,6 +57,14 @@ export default {
         value: {
             type: String,
             default: ""
+        },
+        readOnly: {
+            type: Boolean,
+            default: false
+        },
+        height: {
+            type: Number,
+            default: 460
         }
     },
     data () {
@@ -110,10 +118,12 @@ export default {
     },
     methods: {
         initEditor () {
-            this.editor = monaco.editor.create(document.getElementById("source"), {
+            this.editor = monaco.editor.create(this.$refs.source, {
                 value: this.value,
                 language: languageMap[this.selected_language],
-                fontLigatures: true
+                fontLigatures: true,
+                scrollBeyondLastLine: false,
+                readOnly: this.readOnly
             });
             this.editor.updateOptions({
                 fontSize: this.getFontSizeFromStorage()

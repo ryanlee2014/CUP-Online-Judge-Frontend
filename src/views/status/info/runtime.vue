@@ -114,7 +114,7 @@ export default {
                 let modifiedModel = monaco.editor.createModel(right, "plain/text");
                 this.$forceUpdate();
                 this.$nextTick(() => {
-                    const diffEditor = this.diffEditor = monaco.editor.createDiffEditor(document.getElementById("container"));
+                    const diffEditor = this.diffEditor = monaco.editor.createDiffEditor(document.getElementById("container"), { scrollBeyondLastLine: false });
                     diffEditor.setModel({
                         original: originalModel,
                         modified: modifiedModel

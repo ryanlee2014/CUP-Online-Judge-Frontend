@@ -23,7 +23,7 @@ import leftPanel from "./sidePage/leftPanel";
 import rightPanel from "./sidePage/rightPanel";
 
 export default {
-    name: "sideProblemView.vue",
+    name: "sideProblemView",
     components: {
         leftPanel,
         rightPanel

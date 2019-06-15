@@ -20,41 +20,30 @@
                 <a :class="'item'" class="not-compile" data-clipboard-action="copy" id="clipbtn"
                    style="float:left;"
                    v-cloak v-if="prepend||append">{{$t("copy code")}}</a>
-
             </div>
             <div class="right menu">
-                <div class="item">
-                </div>
-
                 <ace-theme-selector v-if="!editorPackage" v-model="theme"></ace-theme-selector>
                 <monaco-theme-selector v-else v-model="theme"></monaco-theme-selector>
 
             </div>
         </div>
-        <div :ace-mode="'ace/mode/'+language[selected_language]" :ace-theme="static_theme"
-             ace-gutter="true" class="prepend code"
-             id="prependCodeHighlight"
-             style="width: 100%;padding:0px;line-height:1.2;text-align:left;margin-bottom:0px;"
-             v-if="prepend" v-text="current_prepend">
-        </div>
+        <ace-static :content="current_prepend" :selected_language="selected_language" :static_theme="static_theme" v-if="!editorPackage && prepend"></ace-static>
+        <monaco-static :content="current_prepend" :selected_language="selected_language" :static_theme="static_theme" v-if="editorPackage && prepend"></monaco-static>
         <ace-editor :fontSize="fontSize + ''" :selected_language="selected_language" :theme="theme"
                     v-if="!editorPackage" v-model="code"></ace-editor>
         <monaco-editor :fontSize="fontSize + ''" :selected_language="selected_language" :theme="theme"
                        v-else v-model="code">
 
         </monaco-editor>
-        <div :ace-mode="'ace/mode/'+language[selected_language]" :ace-theme="static_theme" ace-gutter="true"
-             class="append code" id="appendCodeHighlight"
-             style="width: 100%; padding:0px; line-height:1.2;text-align:left;margin-bottom:0px;"
-             v-html="current_append" v-if="append">
-        </div>
+        <ace-static :content="current_append" :selected_language="selected_language" :static_theme="static_theme" v-if="!editorPackage && append"></ace-static>
+        <monaco-static :content="current_append" :selected_language="selected_language" :static_theme="static_theme" v-if="editorPackage && append"></monaco-static>
         <div class="ui menu borderless" id="statusBar" style="margin: 0;
         padding: 0;
         position: relative;
         height: 30px;
         color: black;width:100%">
             <div class="item" style="text-align:center;">
-                CUP Online Judge&nbsp;&nbsp;
+                {{title}}
                 <div class="item">
                     <div class="ui toggle checkbox" v-cloak v-if="!iscontest">
                         <input name="share" type="checkbox" v-model="share">
@@ -104,9 +93,11 @@
 <script>
 import aceEditor from "../../../components/submit/codeEditor/aceEditor";
 import aceThemeSelector from "../../../components/submit/codeEditor/aceComponent/aceThemeSelector";
+import aceStatic from "../../../components/submit/codeEditor/aceComponent/aceStatic";
 import monacoEditor from "../../../components/submit/codeEditor/monacoEditor";
 import monacoThemeSelector from "../../../components/submit/codeEditor/monacoComponent/monacoThemeSelector";
-
+import monacoStatic from "../../../components/submit/codeEditor/monacoComponent/monacoStatic";
+import envConfig from "../../../../config/environment";
 const ace = require("brace");
 const Clipboard = require("clipboard");
 const detectLang = require("../../../lib/langDetector");
@@ -123,7 +114,9 @@ export default {
         aceEditor,
         aceThemeSelector,
         monacoEditor,
-        monacoThemeSelector
+        monacoThemeSelector,
+        aceStatic,
+        monacoStatic
     },
     data () {
         let _baseData = {
@@ -139,9 +132,9 @@ export default {
             editorPackage: false,
             code: "",
             language,
+            title: envConfig.title,
             current_prepend: "",
             current_append: "",
-            highlight: null,
             dirty: false
         };
         const config = this.initConfig();
@@ -230,9 +223,6 @@ export default {
             }
         },
         static_theme (val) {
-            if (this.editorPackage) {
-                return;
-            }
             this.config.static_theme = val;
             localStorage.submitConfig = JSON.stringify(this.config);
         },
@@ -242,9 +232,6 @@ export default {
             }
             this.config.theme = val;
             localStorage.submitConfig = JSON.stringify(this.config);
-            if (this.editorPackage) {
-                return;
-            }
             this.static_theme = val;
             const prependView = this.prependView;
             if (prependView) {
@@ -289,18 +276,6 @@ export default {
             }
             this.current_append = val[this.selected_language];
         },
-        current_append: function (val) {
-            if (!val) {
-                return;
-            }
-            this.renderAppendHighlight();
-        },
-        current_prepend: function (val) {
-            if (!val) {
-                return;
-            }
-            this.renderPrependHighlight();
-        },
         share: function (val) {
             this.$store.commit("setCodeInfo", {
                 share: !!val
@@ -323,52 +298,8 @@ export default {
         this.initConfig();
         this.initClipboard();
         this.initSolutionCode();
-        this.initHighlight();
     },
     methods: {
-        renderHighlight () {
-            this.renderPrependHighlight();
-            this.renderAppendHighlight();
-        },
-        renderHighlightBase (selector) {
-            const h = this.highlight;
-            if (h instanceof Promise) {
-                h.then((highlight) => {
-                    this.$nextTick(() => {
-                        _.forEach(document.querySelectorAll(selector), function (val, index) {
-                            highlight(val, {
-                                mode: val.getAttribute("ace-mode"),
-                                theme: val.getAttribute("ace-theme"),
-                                startLineNumber: 1,
-                                showGutter: val.getAttribute("ace-gutter"),
-                                trim: true
-                            }, function (highlighted) {
-                            });
-                        });
-                    });
-                });
-            }
-        },
-        renderPrependHighlight () {
-            this.renderHighlightBase("#prependCodeHighlight");
-        },
-        renderAppendHighlight () {
-            this.renderHighlightBase("#appendCodeHighlight");
-        },
-        initHighlight () {
-            this.highlight = new Promise((resolve) => {
-                require("brace/ext/static_highlight");
-                ace.acequire(["ace/ext/static_highlight"], function (fn) {
-                    resolve(fn);
-                });
-            });
-            this.highlight.then(() => {
-                if (this.dirty) {
-                    this.dirty = false;
-                    this.renderHighlight();
-                }
-            });
-        },
         initConfig () {
             const defaultConfig = {
                 editorPackage: false,

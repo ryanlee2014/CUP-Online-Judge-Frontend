@@ -9,14 +9,23 @@ const getters = {
         const hasAvatar = !!state.userInfo.userInfo.avatar;
         const avatarUrl = state.userInfo.userInfo.avatarUrl;
         const userId = state.userInfo.userInfo.user_id;
-        if (hasAvatar && notUndefinedOrNull(avatarUrl) && avatarUrl.length === 0) {
-            return `/avatar/${userId}.jpg`;
+        try {
+            if (hasAvatar && (!notUndefinedOrNull(avatarUrl) || avatarUrl.length === 0)) {
+                return `/avatar/${userId}.jpg`;
+            }
+            else if (notUndefinedOrNull(avatarUrl) && avatarUrl.length > 0) {
+                return avatarUrl;
+            }
+            else {
+                return "/image/default-user.png";
+            }
         }
-        else if (!notUndefinedOrNull(avatarUrl) && avatarUrl.length > 0) {
-            return avatarUrl;
-        }
-        else {
-            return "/image/default-user.png";
+        catch (e) {
+            console.log(e);
+            console.log("hasAvatar", hasAvatar);
+            console.log("avatarUrl", avatarUrl);
+            console.log("userId", userId);
+            console.log("notUndefinedOrNull", notUndefinedOrNull(avatarUrl));
         }
     },
     avatarUrl: state => notUndefinedOrNull(state.userInfo.userInfo.avatarUrl) ? state.userInfo.userInfo.avatarUrl : "",

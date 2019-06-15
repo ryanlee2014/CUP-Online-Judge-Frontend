@@ -1,7 +1,6 @@
 <template>
-    <div :style="{width:'100%',height:'460px',fontSize:fontSize+'px'}" cols=180
-         id="source" rows=20
-         style="width:100%;height:460px"></div>
+    <div :style="{width:'100%',height:`${height}px`,fontSize:fontSize+'px'}"
+         ref="source" style="width:100%;height:460px"></div>
 </template>
 
 <script>
@@ -28,6 +27,10 @@ export default {
         value: {
             type: String,
             default: ""
+        },
+        height: {
+            type: Number,
+            default: 460
         }
     },
     data () {
@@ -37,7 +40,6 @@ export default {
         };
     },
     mounted () {
-        console.log("aceEditor get value", this.value);
         this.initEditor();
     },
     watch: {
@@ -64,7 +66,7 @@ export default {
     },
     methods: {
         initEditor () {
-            const editor = this.editor = ace.edit("source");
+            const editor = this.editor = ace.edit(this.$refs.source);
             editor.getSession().setValue(this.value);
             editor.on("change", () => {
                 this.source_code = this.editor.getSession().getValue();
