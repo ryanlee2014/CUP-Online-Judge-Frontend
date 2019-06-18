@@ -19,7 +19,7 @@ import mixins from "../../mixin/init";
 export default {
     name: "copyright",
     mixins: [mixins],
-    data () {
+    mounted () {
         document.title = `Copyright -- ${document.title}`;
     }
 };

@@ -57,8 +57,16 @@ export default {
             rightUserID: "",
             leftSolutionID: this.$route.params.left,
             rightSolutionID: this.$route.params.right,
-            left: {},
-            right: {},
+            left: {
+                code: {
+                    in_date: dayjs()
+                }
+            },
+            right: {
+                code: {
+                    in_date: dayjs()
+                }
+            },
             dayjs
         };
     },

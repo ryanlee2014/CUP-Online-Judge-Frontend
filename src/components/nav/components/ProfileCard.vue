@@ -43,12 +43,10 @@
 
 <script>
 import store from "../../../store";
-import mixins from "../../../mixin/init";
 import util from "../../../lib/util";
 
 export default {
     name: "ProfileCard",
-    mixins: [mixins],
     props: {
         user_id: {
             type: String,
@@ -88,7 +86,7 @@ export default {
         }
     },
     updated () {
-        util.init();
+        util.bindDropdown();
     }
 };
 </script>

@@ -36,7 +36,9 @@
                                 <pagination
                                     :current_page="current_page"
                                     :page_cnt="page_cnt"
-                                    :total="total"></pagination>
+                                    :total="total"
+                                    @pageUpdated="preloadContent"
+                                ></pagination>
                             </div>
                         </div>
                     </div>
@@ -87,7 +89,6 @@
                 </div>
                 <div class="four wide column" v-show="show_label_cloud">
                     <div class="ui sticky element">
-
                         <div class="ui fluid card">
                             <div class="content">
                                 <div class="header">{{$t("labelcloud")}}</div>
@@ -105,7 +106,8 @@
                             <pagination
                                 :current_page="current_page"
                                 :page_cnt="page_cnt"
-                                :total="total"></pagination>
+                                :total="total"
+                                @pageUpdated="preloadContent"></pagination>
                         </div>
                     </div>
                 </div>
@@ -182,6 +184,8 @@ function parseQueryString (query) {
 }
 
 let query_string = parseQueryString(window.location.hash.substring(1));
+const pageCache = {};
+
 export default {
     name: "problemset",
     mixins: [mixins],
@@ -413,6 +417,9 @@ export default {
                     on: "click",
                     content: this.$t("press enter to search")
                 });
+        },
+        preloadContent (pageList) {
+            // console.log(pageList);
         }
     },
     created: function () {

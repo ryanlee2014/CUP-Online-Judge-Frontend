@@ -100,8 +100,8 @@ export default {
         ContestMode
     },
     mounted () {
-        const solution_id = this.$route.params.solution_id;
-        document.title = `Solution ${solution_id} -- ${document.title}`;
+        const solutionId = this.$route.params.solution_id;
+        document.title = `Solution ${solutionId} -- ${document.title}`;
         this.bindClipboardDOM();
         this.initData();
     },

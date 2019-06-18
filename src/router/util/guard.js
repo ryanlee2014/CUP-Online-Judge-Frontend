@@ -81,6 +81,16 @@ const Guard = function (to, from, next) {
             getLoginInfo(to, next);
         }
     }
+    else if (to.meta.auth === false) {
+        if (store.getters.logined) {
+            next({
+                path: `/user/${store.getters.user_id}`
+            });
+        }
+        else {
+            next();
+        }
+    }
     else {
         next();
     }

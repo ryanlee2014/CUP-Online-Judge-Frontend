@@ -1,5 +1,5 @@
 <template>
-    <div class="ui borderless network secondary menu" id="navbar-large">
+    <div class="ui borderless network secondary menu invertTarget" id="navbar-large">
         <div class="ui container">
             <router-link class="item" exact-active-class="active" to="/">
                 <i class="home icon"></i>
@@ -48,6 +48,19 @@
                     </router-link>
                 </div>
             </div>
+            <div class="ui dropdown item">
+                <div class="text">
+                    <i class="laptop icon"></i>
+                        {{$t("judge manage")}}
+                </div>
+                <i class="dropdown icon"></i>
+                <div class="menu">
+                    <router-link class="item" exact-active-class="active" to="/admin/judge/rejudge">
+                        <i class="check double icon"></i>
+                        {{$t("rejudge manage")}}
+                    </router-link>
+                </div>
+            </div>
             <SocketMenu :connected="connected" :judger="judger" :logined="logined" :nick="nick"
                         :user="user"></SocketMenu>
         </div>
@@ -88,5 +101,7 @@ export default {
 </script>
 
 <style scoped>
-
+    .ui.container {
+        width: 95%!important
+    }
 </style>

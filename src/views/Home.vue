@@ -157,9 +157,6 @@ export default {
     mixins: [mixins],
     mounted () {
         document.title = `Home -- ${document.title}`;
-        setTimeout(() => {
-            util.init(true, true);
-        }, 500);
         $(document).ready(function () {
             $(".image").visibility({
                 type: "image",
@@ -167,6 +164,8 @@ export default {
                 duration: 500
             });
         });
+        util.init(true, true);
+        $(".ui.borderless.network.secondary.menu").addClass("inverted");
         $(".club").attr("data-title", "点击访问GitHub")
             .popup({
                 position: "top center",
@@ -179,11 +178,11 @@ export default {
                 on: "hover"
             });
         $.get("/api/update_log/latest", function (d) {
-            var data = d.data[0];
-            var version = data.version;
-            var vj_version = data.vj_version;
-            var content = data.msg;
-            var time = dayjs(data.mtime).format("YYYY-MM-DD");
+            let data = d.data[0];
+            let version = data.version;
+            let vj_version = data.vj_version;
+            let content = data.msg;
+            let time = dayjs(data.mtime).format("YYYY-MM-DD");
             $(".maintain").html("Version:" + time).attr("data-html", "<div class='ui header'>" + "升级维护内容" + "<div class='sub header'>引擎版本:" + version + "</div><div class='sub header'>VJ版本:" + vj_version + "</div></div><div class='content'>" + content + "</div>")
                 .popup({
                     position: "top center",
@@ -215,12 +214,11 @@ export default {
 
         (function () {
             window.picid = 5;
-            $(".ui.borderless.network.secondary.menu").addClass("inverted");
             $.get("/api/login/", function (data) {
-                var logined = data.logined;
+                let logined = data.logined;
                 setTimeout(function () {
                     $("#main_container").removeClass("unvisible");
-                    var main_timeline = anime.timeline({ loop: false })
+                    let maintainTime = anime.timeline({ loop: false })
                         .add({
                             targets: ".ml14 .line",
                             scaleX: [0, 1],
@@ -238,12 +236,12 @@ export default {
                             duration: 800,
                             offset: "-=600",
                             delay: function (el, i) {
-                                return 0 + 25 * i;
+                                return 25 * +i;
                             }
                         });
                     // eslint-disable-next-line no-constant-condition
                     if (logined && false) {
-                        main_timeline.add({
+                        maintainTime.add({
                             targets: "#main_masthead",
                             translateX: ["25%", 0],
                             easing: "easeInOutQuart",
@@ -264,8 +262,8 @@ export default {
                             duration: 500,
                             offset: "-=300",
                             complete: function () {
-                                var $style = $("style");
-                                var $html = $style.eq($style.length - 1).html();
+                                let $style = $("style");
+                                let $html = $style.eq($style.length - 1).html();
                                 $html += "\n.gr5::after{\nopacity:0.5;\n}\n";
                                 $style.eq($style.length - 1).html($html);
                             }

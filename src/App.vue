@@ -6,7 +6,7 @@
         <Navbar :admin="admin" :avatar="avatar" :contest="contest" :homepage="homepage" :logined="logined" :nick="nick"
                 :user_id="user_id" v-else></Navbar>
         <transition name="fade">
-            <router-view/>
+            <router-view class="router"/>
         </transition>
         <Bottom></Bottom>
     </div>
@@ -48,6 +48,7 @@ export default {
             const matchedPath = to.matched[0].path.substring(1);
             this.contest = matchedPath !== "contest" && matchedPath.includes("contest");
             this.$store.commit("setRouteInfo", { path: to.path, fullPath: to.fullPath });
+            this.$store.commit("setHomepage", { homepage: this.homepage });
             this.$socket.emit("updateURL", { url: to.fullPath });
             this.initForRouter();
         }
@@ -103,5 +104,8 @@ export default {
         .ui.container {
             width: 70%
         }
+    }
+    .router {
+        min-height: 90%;
     }
 </style>

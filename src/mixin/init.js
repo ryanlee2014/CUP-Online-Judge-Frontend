@@ -4,8 +4,8 @@ const $ = require("jquery");
 window.$ = window.jQuery = $;
 require("../../semantic/semantic-ui/semantic");
 export default {
-    mounted () {
-        util.init();
+    beforeMount () {
+        util.init(this.$store.getters.homepage);
         document.title = config.title;
     }
 };

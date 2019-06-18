@@ -16,14 +16,13 @@ import LargeContest from "./size/large/ContestNav";
 import Small from "./size/Small/Small";
 import Nano from "./size/nano/nano";
 import ProfileCard from "./components/ProfileCard";
-import init from "../../mixin/init";
 import NavbarMixin from "../../mixin/NavbarMixin";
 const Promise = require("bluebird");
 
 const $ = require("jquery");
 export default {
     name: "Navbar",
-    mixins: [init, NavbarMixin],
+    mixins: [NavbarMixin],
     components: {
         Large,
         Small,
@@ -35,5 +34,7 @@ export default {
 </script>
 
 <style scoped>
-
+    .ui.container {
+        width: 95%!important
+    }
 </style>

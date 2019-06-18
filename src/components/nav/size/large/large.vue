@@ -1,5 +1,5 @@
 <template>
-    <div class="ui borderless network secondary menu" id="navbar-large">
+    <div class="ui borderless network secondary menu invertTarget" id="navbar-large">
         <div class="ui container">
             <router-link class="item" exact-active-class="active" to="/"><i class="home icon"></i>{{$t("home")}}</router-link>
             <router-link class="item" exact-active-class="active" to="/problemset"><i class="browser icon"></i>{{$t("problemset")}}</router-link>
@@ -58,4 +58,7 @@ export default {
 </script>
 
 <style scoped>
+    .ui.container {
+        width: 95%!important
+    }
 </style>

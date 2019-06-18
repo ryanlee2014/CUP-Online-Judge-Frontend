@@ -19,53 +19,56 @@
                                                               v-show="order_target == 'submit'"></i>{{$t("submit")}}
             </a></th>
             <th style="cursor:hand" width='11%'><a @click="sort('present',$event,1)"><i
-                    :class="'sort numeric icon '+(order?'down':'up')" v-show="order_target == 'present'"></i>{{$t("accept percentage")}}</a>
+                :class="'sort numeric icon '+(order?'down':'up')" v-show="order_target == 'present'"></i>{{$t("accept percentage")}}</a>
             </th>
         </tr>
         </thead>
-        <transition-group name="list-complete" tag="tbody" mode="out-in">
-        <!--
-        <transition-group tag="tbody"
-                          name="grip-table"
-                          enter-active-class="animated fadeIn"
-                          leave-active-class="animated fadeOut"
-                          mode="out-in"
-        >-->
-        <tr :key="row.problem_id" style="vertical-align:middle; width: 100%;" class="list-complete-item" v-for="row in filterTableRow">
-            <!--<td>
-            </td>-->
-            <td style="width: 12%">
-                <i class="checkmark icon" v-if="row.ac === true"></i>
-                <i class="remove icon" v-else-if="row.ac === false"></i>
-                <i class="checkmark icon" style="opacity: 0" v-else></i>
-                {{row.problem_id}}
-            </td>
-            <td class="problemTitle">
-                <div class="left aligned">
-                    <router-link :style="show_tag ? 'vertical-align:sub':''" :to="`/problem/submit/${row.problem_id}`"
-                                 v-html="markdownIt.renderRaw(row.title)"></router-link>
-                    <sub v-if="row.new">New</sub>
-                    <div class="show_tag_controled" style="float:right;">
+        <transition-group mode="out-in" name="list-complete" tag="tbody">
+            <!--
+            <transition-group tag="tbody"
+                              name="grip-table"
+                              enter-active-class="animated fadeIn"
+                              leave-active-class="animated fadeOut"
+                              mode="out-in"
+            >-->
+            <tr :key="row.problem_id" class="list-complete-item" style="vertical-align:middle; width: 100%;"
+                v-for="row in filterTableRow">
+                <!--<td>
+                </td>-->
+                <td style="width: 12%">
+                    <i class="checkmark icon" v-if="row.ac === true"></i>
+                    <i class="remove icon" v-else-if="row.ac === false"></i>
+                    <i class="checkmark icon" style="opacity: 0" v-else></i>
+                    {{row.problem_id}}
+                </td>
+                <td class="problemTitle">
+                    <div class="left aligned">
+                        <router-link :style="show_tag ? 'vertical-align:sub':''"
+                                     :to="`/problem/submit/${row.problem_id}`"
+                                     v-html="markdownIt.renderRaw(row.title)"></router-link>
+                        <sub v-if="row.new">New</sub>
+                        <div class="show_tag_controled" style="float:right;">
                     <span :key="_tag" class="ui header" v-for="_tag in row.label">
-                        <a :class="(typeof result.color[_tag] !== 'undefined'?result.color[_tag]:(result.color[_tag] = lodash.values(result.color)[Math.floor(Math.random() * lodash.values(result.color).length)],result.color[_tag]))+' ui label'" @click="tag(_tag,$event)"
+                        <a :class="(typeof result.color[_tag] !== 'undefined'?result.color[_tag]:(result.color[_tag] = lodash.values(result.color)[Math.floor(Math.random() * lodash.values(result.color).length)],result.color[_tag]))+' ui label'"
+                           @click="tag(_tag,$event)"
                            v-show="show_tag">
                             {{_tag}}
                         </a>
                     </span>
+                        </div>
                     </div>
-                </div>
-            </td>
-            <td style="width: 15%">
-                <div class="center">
-                    {{row.accepted}} / {{row.submit}}
-                </div>
-            </td>
-            <td style="width: 11%">
-                <div class="center">
-                    {{(parseInt(row.accepted)/Math.max(parseInt(row.submit),1)*100).toString().substring(0,4)}} %
-                </div>
-            </td>
-        </tr>
+                </td>
+                <td style="width: 15%">
+                    <div class="center">
+                        {{row.accepted}} / {{row.submit}}
+                    </div>
+                </td>
+                <td style="width: 11%">
+                    <div class="center">
+                        {{(parseInt(row.accepted)/Math.max(parseInt(row.submit),1)*100).toString().substring(0,4)}} %
+                    </div>
+                </td>
+            </tr>
         </transition-group>
         <!--</transition-group>-->
         <!--<div class="ui active inverted dimmer" v-if="dim">
@@ -77,35 +80,37 @@
 <script>
 // eslint-disable-next-line no-unused-vars
 import markdownIt from "../../lib/markdownIt/markdownIt";
+
 const lodash = require("lodash");
 export default {
     name: "mainContent",
-    directives: {
-        tableUpdated: {
-            componentUpdated: function () {
-                $(".ui.sticky.element")
-                    .sticky({
-                        context: "#problemset",
-                        offset: 40,
-                        observeChanges: false,
-                        refreshOnLoad: true,
-                        refreshOnResize: true
-                    });
-            }
-        }
-    },
     props: {
-        data: Object,
-        dim: {
-            type: Boolean,
-            default: function () {
-                return false;
+        data: {
+            type: Object,
+            default: () => {
+                return {};
             }
         },
-        show_tag: Boolean,
-        order: Number,
-        order_target: String,
-        hide_currect: Boolean
+        dim: {
+            type: Boolean,
+            default: false
+        },
+        show_tag: {
+            type: Boolean,
+            default: false
+        },
+        order: {
+            type: Number,
+            default: 0
+        },
+        order_target: {
+            type: String,
+            default: ""
+        },
+        hide_currect: {
+            type: Boolean,
+            default: false
+        }
     },
     data: function () {
         return {
@@ -113,26 +118,22 @@ export default {
             lodash
         };
     },
+    watch: {
+        data () {
+            this.$nextTick(() => {
+                this.bindSticky();
+            });
+        }
+    },
     computed: {
         result: function () {
             const data = this.data;
-            const _color = data.color;
-            const color = {};
-            let i;
-            for (i in _color) {
-                if (_color.hasOwnProperty(i)) {
-                    color[i] = _color[i];
-                }
-            }
+            const color = Object.assign({}, data.color);
             color["标签待整理"] = "black";
-            for (i in data.problem) {
+            for (let i in data.problem) {
                 if (data.problem.hasOwnProperty(i)) {
-                    let label = data.problem[i].label;
-                    let labels = [];
-                    for (let j of label ? label.split(" ") : ["标签待整理"]) {
-                        labels.push(j);
-                    }
-                    labels.sort(function (a, b) {
+                    const label = data.problem[i].label;
+                    data.problem[i].label = (label ? label.split(" ") : ["标签待整理"]).sort(function (a, b) {
                         if (a === "简单" || a === "普通" || a === "困难") {
                             return 1;
                         }
@@ -141,11 +142,10 @@ export default {
                         }
                         else {
                             if (a < b) return -1;
-                            else if (a == b) return 0;
+                            else if (a === b) return 0;
                             else return 1;
                         }
                     });
-                    data.problem[i].label = labels;
                 }
             }
             const problemArray = typeof data.problem === "undefined" ? [] : data.problem;
@@ -166,6 +166,16 @@ export default {
         },
         tag: function (label, event) {
             this.$parent.tag(label, event);
+        },
+        bindSticky () {
+            $(".ui.sticky.element")
+                .sticky({
+                    context: "#problemset",
+                    offset: 40,
+                    observeChanges: false,
+                    refreshOnLoad: true,
+                    refreshOnResize: true
+                });
         }
     }
 };
@@ -186,14 +196,11 @@ export default {
 
     .list-complete-leave-active {
         opacity: 0;
-        position: absolute;
         transform: translateX(-31px);
     }
 
     .list-complete-leave-active .problemTitle {
-        width: 68%!important;
+        opacity: 0;
     }
-    .problemTitle {
-        width: 62%
-    }
+
 </style>

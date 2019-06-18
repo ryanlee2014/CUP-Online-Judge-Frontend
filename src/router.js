@@ -398,9 +398,25 @@ const router = new Router({
             }
         },
         {
+            path: "/admin/judge/rejudge",
+            name: "Rejudge",
+            component: () => import("./views/admin/judge/rejudge.vue"),
+            meta: {
+                admin: true
+            }
+        },
+        {
             path: "/forbidden/privilege",
             name: "No privilege",
             component: () => import("./views/error/noprivilege.vue")
+        },
+        {
+            path: "/user/register",
+            name: "Register",
+            component: () => import("./views/user/register.vue"),
+            meta: {
+                auth: false
+            }
         },
         {
             path: "*",

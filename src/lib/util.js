@@ -1,6 +1,77 @@
 import {notUndefinedOrNull} from "../store/util/index";
 const $ = require("jquery");
 const jQuery = $;
+function binding_method(homepage, finished) {
+    // fix menu when passed
+    if ($('.fixed.menu').html())
+        $('.masthead')
+            .visibility({
+                once: false,
+                onBottomPassed: function () {
+                    // $('.following.bar').addClass('light fixed');
+                    $('.fixed.menu').transition('fade in');
+                    //('.network.menu').addClass('secondary')
+                    //$('.network.menu').removeClass('inverted');
+                },
+                onBottomPassedReverse: function () {
+                    // $('.following.bar').removeClass('light fixed')
+                    $('.fixed.menu').transition('fade out');
+                    // $('.network.menu').removeClass('secondary');
+                    // $('.network.menu').addClass('inverted');
+                }
+            })
+        ;
+
+    // create sidebar and attach to menu open
+    if ($('.ui.sidebar.mobile').html())
+        $('.ui.sidebar.mobile')
+            .sidebar('attach events', '.toc.item')
+        ;
+
+    function lightin() {
+        $('.following.bar').addClass('light fixed');
+        $('.fixed.menu').transition('fade in');
+        //$('.network.menu').addClass('secondary')
+        if (typeof homepage === "boolean" && homepage && finished)
+            $('.network.menu').removeClass('inverted');
+    }
+
+    function lightout() {
+        $('.following.bar').removeClass('light fixed');
+        $('.fixed.menu').transition('fade out');
+        //('.network.menu').removeClass('secondary');
+        if (typeof homepage === "boolean" && homepage && finished)
+            $('.network.menu').addClass('inverted');
+    }
+
+    $('body')
+        .visibility({
+            once: false,
+            offset: -10,
+            observeChanges: false,
+            continuous: false,
+            refreshOnLoad: true,
+            refreshOnResize: true,
+            onTopPassedReverse: lightout,
+            onTopPassed: lightin
+        });
+    $('.message .close')
+        .off("click")
+        .on('click', function () {
+            $(this)
+                .closest('.message')
+                .transition('fade')
+            ;
+        });
+    $(".detail").popup({
+        exclusive: true
+        , hoverable: true,
+        popup: ".flowing.popup.dropdown_menu_group"
+    });
+    if (typeof homepage !== "boolean" || !homepage) {
+        $('.network.menu').removeClass('inverted');
+    }
+}
 
 export default {
     detectIP: function (tmp) {
@@ -258,112 +329,55 @@ export default {
         if (navigator.userAgent.indexOf("MSIE") !== -1) {
             location.href = "notie.php";
         }
-
-        function binding_method() {
-            if ($('.ui.accordion').html())
-                $('.ui.accordion')
-                    .accordion({
-                        'exclusive': false
-                    })
-                ;
-            if ($('.ui.menu .ui.dropdown').html())
-                $('.ui.menu .ui.dropdown').dropdown({
-                    on: 'hover',
-                    onShow: function () {
-                        if ($(".following.bar").length > 1)
-                            $(".topmenu").css({
-                                zIndex: 999
-                            })
-                    },
-                    onHide: function () {
-                        if ($(".following.bar").length > 1)
-                            $(".topmenu").css({
-                                zIndex: 99
-                            })
-                    }
-                });
-
-            if ($('.ui.search.dropdown').html()) {
-                $('.ui.search.dropdown').dropdown({
-                    on: 'hover'
-                });
-            }
-            if ($('.ui.dropdown.selection'))
-                $('.ui.dropdown.selection').dropdown({
-                    on: 'hover'
-                });
-            // fix menu when passed
-            if ($('.fixed.menu').html())
-                $('.masthead')
-                    .visibility({
-                        once: false,
-                        onBottomPassed: function () {
-                            // $('.following.bar').addClass('light fixed');
-                            $('.fixed.menu').transition('fade in');
-                            //('.network.menu').addClass('secondary')
-                            //$('.network.menu').removeClass('inverted');
-                        },
-                        onBottomPassedReverse: function () {
-                            // $('.following.bar').removeClass('light fixed')
-                            $('.fixed.menu').transition('fade out');
-                            // $('.network.menu').removeClass('secondary');
-                            // $('.network.menu').addClass('inverted');
-                        }
-                    })
-                ;
-
-            // create sidebar and attach to menu open
-            if ($('.ui.sidebar.mobile').html())
-                $('.ui.sidebar.mobile')
-                    .sidebar('attach events', '.toc.item')
-                ;
-
-            function lightin() {
-                $('.following.bar').addClass('light fixed');
-                $('.fixed.menu').transition('fade in');
-                //$('.network.menu').addClass('secondary')
-                if (typeof homepage === "boolean" && homepage && finished)
-                    $('.network.menu').removeClass('inverted');
-            }
-
-            function lightout() {
-                $('.following.bar').removeClass('light fixed');
-                $('.fixed.menu').transition('fade out');
-                //('.network.menu').removeClass('secondary');
-                if (typeof homepage === "boolean" && homepage && finished)
-                    $('.network.menu').addClass('inverted');
-            }
-
-            $('body')
-                .visibility({
-                    once: false,
-                    offset: -10,
-                    observeChanges: false,
-                    continuous: false,
-                    refreshOnLoad: true,
-                    refreshOnResize: true,
-                    onTopPassedReverse: lightout,
-                    onTopPassed: lightin
-                });
-            $('.message .close')
-                .off("click")
-                .on('click', function () {
-                    $(this)
-                        .closest('.message')
-                        .transition('fade')
-                    ;
+        binding_method(homepage, finished);
+        this.bindDropdown();
+    },
+    bindDropdown: function () {
+        if ($('.ui.accordion').html())
+            $('.ui.accordion')
+                .accordion({
+                    'exclusive': false
                 })
             ;
-            $(".detail").popup({
-                exclusive: true
-                , hoverable: true,
-                popup: ".flowing.popup.dropdown_menu_group"
-            })
-        }
-        $(document)
-            .ready(function () {
-                binding_method();
+        if ($('.ui.menu .ui.dropdown').html())
+            $('.ui.menu .ui.dropdown').dropdown({
+                on: 'hover',
+                onShow: function () {
+                    if ($(".following.bar").length > 1)
+                        $(".topmenu").css({
+                            zIndex: 999
+                        })
+                },
+                onHide: function () {
+                    if ($(".following.bar").length > 1)
+                        $(".topmenu").css({
+                            zIndex: 99
+                        })
+                }
             });
+
+        if ($('.ui.search.dropdown').html()) {
+            $('.ui.search.dropdown').dropdown({
+                on: 'hover'
+            });
+        }
+        if ($('.ui.dropdown.selection'))
+            $('.ui.dropdown.selection').dropdown({
+                on: 'hover'
+            });
+        $('.message .close')
+            .off("click")
+            .on('click', function () {
+                $(this)
+                    .closest('.message')
+                    .transition('fade')
+                ;
+            });
+        $(".detail").popup({
+            exclusive: true
+            , hoverable: true,
+            popup: ".flowing.popup.dropdown_menu_group"
+        });
     },
     initToTopButton: function () {
         (function (a) {

@@ -104,5 +104,7 @@ export default {
 </script>
 
 <style scoped>
-
+    .ui.container {
+        width: 95%!important
+    }
 </style>

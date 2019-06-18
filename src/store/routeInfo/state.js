@@ -1,4 +1,5 @@
 export default {
     fullPath: "/",
-    path: "/"
+    path: "/",
+    homepage: false
 };

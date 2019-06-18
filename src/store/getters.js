@@ -34,6 +34,7 @@ const getters = {
     onlineUser: state => state.socket.onlineUser,
     path: state => state.routeInfo.path,
     fullPath: state => state.routeInfo.fullPath,
+    homepage: state => state.routeInfo.homepage,
     code: state => state.code.code,
     share: state => state.code.share,
     language: state => state.code.language

@@ -360,15 +360,14 @@ export default {
                 }
             });
             Fingerprint2.get(function (components) {
-                let values = components.map(function (component) {
-                    return component.value;
-                });
+                let values = components.map(el => el.value);
                 that.fingerprintRaw = Fingerprint2.x64hash128(values.join(""), 31);
-                $.get("/api/status/ip", function (data) {
-                    const ip = data.ip;
-                    values.push(ip);
-                    that.fingerprint = Fingerprint2.x64hash128(values.join(""), 31);
-                });
+                that.axios.get("/api/status/ip")
+                    .then(({ data }) => {
+                        const ip = data.ip;
+                        values.push(ip);
+                        that.fingerprint = Fingerprint2.x64hash128(values.join(""), 31);
+                    });
             });
 
             this.description = descriptionMarkdownIt.render(this.description || "");
@@ -394,12 +393,8 @@ export default {
         },
         codeTooShort (options, next) {
             let ret;
-            if (this.$store.getters.code.length < 15) {
+            if (ret = this.$store.getters.code.length < 15) {
                 this.confirm_text += "<h2><div style=\"text-align: center;\">代码过短</div></h2>";
-                ret = true;
-            }
-            else {
-                ret = false;
             }
             if (typeof next === "function") {
                 next();
@@ -420,12 +415,8 @@ export default {
             const code = this.$store.getters.code;
             const cppRegex = /#include[\s]+?[<"][a-zA-Z]{1,20}[>"]/;
             let ret;
-            if (cppRegex.test(code) && this.isCLanguage()) {
-                ret = true;
+            if (ret = cppRegex.test(code) && this.isCLanguage()) {
                 this.confirm_text += "<h2><div style=\"text-align: center;\">您提交的代码包含C++的头文件，而您选择的语言为C。是否提交?</div></h2>";
-            }
-            else {
-                ret = false;
             }
             if (typeof next === "function") {
                 next();
