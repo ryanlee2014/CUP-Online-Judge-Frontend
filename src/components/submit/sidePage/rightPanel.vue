@@ -27,16 +27,16 @@
 
             </div>
         </div>
-        <ace-static :content="current_prepend" :selected_language="selected_language" :static_theme="static_theme" v-if="!editorPackage && prepend"></ace-static>
-        <monaco-static :content="current_prepend" :selected_language="selected_language" :static_theme="static_theme" v-if="editorPackage && prepend"></monaco-static>
+        <ace-static :content="current_prepend" :fontSize="fontSize + ''" :selected_language="selected_language" :static_theme="static_theme" v-if="!editorPackage && prepend"></ace-static>
+        <monaco-static :content="current_prepend" :fontSize="fontSize + ''" :selected_language="selected_language" :static_theme="static_theme" v-if="editorPackage && prepend"></monaco-static>
         <ace-editor :fontSize="fontSize + ''" :selected_language="selected_language" :theme="theme"
                     v-if="!editorPackage" v-model="code"></ace-editor>
         <monaco-editor :fontSize="fontSize + ''" :selected_language="selected_language" :theme="theme"
                        v-else v-model="code">
 
         </monaco-editor>
-        <ace-static :content="current_append" :selected_language="selected_language" :static_theme="static_theme" v-if="!editorPackage && append"></ace-static>
-        <monaco-static :content="current_append" :selected_language="selected_language" :static_theme="static_theme" v-if="editorPackage && append"></monaco-static>
+        <ace-static :content="current_append" :fontSize="fontSize + ''" :selected_language="selected_language" :static_theme="static_theme" v-if="!editorPackage && append"></ace-static>
+        <monaco-static :content="current_append" :fontSize="fontSize + ''" :selected_language="selected_language" :static_theme="static_theme" v-if="editorPackage && append"></monaco-static>
         <div class="ui menu borderless" id="statusBar" style="margin: 0;
         padding: 0;
         position: relative;

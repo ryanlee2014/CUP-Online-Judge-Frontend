@@ -179,6 +179,12 @@ export default {
             }
         });
     },
+    beforeDestroy () {
+        $(".topmenu").css({
+            borderBottom: "",
+            boxShadow: ""
+        });
+    },
     methods: {
         convertHTML (html) {
             doc.innerText = html;

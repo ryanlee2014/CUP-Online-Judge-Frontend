@@ -1,6 +1,17 @@
 <template>
     <div class="ui container padding">
-        <Pagination :current_page="current_page" :page_cnt="page_cnt" :total="total_number"></Pagination>
+        <div class="ui grid">
+            <div class="row">
+                <div class="thirteen wide column">
+                    <Pagination :current_page="current_page" :page_cnt="page_cnt" :total="total_number"></Pagination>
+                </div>
+                <div class="three wide right aligned column">
+                    <router-link to="/admin/contest/add" class="ui primary button">
+                        {{$t("add contest")}}
+                    </router-link>
+                </div>
+            </div>
+        </div>
         <table class="ui celled structured table">
             <thead>
             <tr>
@@ -8,6 +19,7 @@
                 <th>{{$t("title")}}</th>
                 <th>{{$t("start time")}}</th>
                 <th>{{$t("end time")}}</th>
+                <th>{{$t("copy contest")}}</th>
                 <th>{{$t("available")}}</th>
                 <th>{{$t("remove")}}</th>
             </tr>
@@ -27,13 +39,19 @@
                     {{dayjs(row.end_time).format("YYYY-MM-DD HH:mm")}}
                 </td>
                 <td>
-                    <button @click="defunct(row.contest_id)" :class="'ui inverted labeled icon button ' + (defunctToBoolean(row.defunct) ? 'green': 'red')">
+                    <router-link :to="`/admin/contest/copy/${row.contest_id}`" class="ui inverted blue tiny labeled icon button">
+                        <i class="copy icon"></i>
+                        {{$t("copy")}}
+                    </router-link>
+                </td>
+                <td>
+                    <button @click="defunct(row.contest_id)" :class="'ui inverted tiny labeled icon button ' + (defunctToBoolean(row.defunct) ? 'green': 'red')">
                         <i :class="(defunctToBoolean(row.defunct) ? 'checkmark':'remove') + ' icon'"></i>
                         {{defunctToBoolean(row.defunct) ? $t("available") : $t("unavailable")}}
                     </button>
                 </td>
                 <td>
-                    <button @click="remove(row.contest_id)" class="ui labeled icon black button">
+                    <button @click="remove(row.contest_id)" class="ui labeled tiny icon black button">
                         <i class="trash icon"></i>
                         {{$t("remove")}}
                     </button>

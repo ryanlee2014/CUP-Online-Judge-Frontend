@@ -65,6 +65,10 @@ export default {
         height: {
             type: Number,
             default: 460
+        },
+        minimap: {
+            type: Boolean,
+            default: true
         }
     },
     data () {
@@ -109,6 +113,13 @@ export default {
                     fontSize: parseInt(val)
                 });
             }
+        },
+        height () {
+            if (this.editor) {
+                this.$nextTick(() => {
+                    this.editor.layout();
+                });
+            }
         }
     },
     mounted () {
@@ -121,6 +132,9 @@ export default {
             this.editor = monaco.editor.create(this.$refs.source, {
                 value: this.value,
                 language: languageMap[this.selected_language],
+                minimap: {
+                    enabled: this.minimap
+                },
                 fontLigatures: true,
                 scrollBeyondLastLine: false,
                 readOnly: this.readOnly

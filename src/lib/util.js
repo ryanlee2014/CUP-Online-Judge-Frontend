@@ -63,14 +63,7 @@ function binding_method(homepage, finished) {
                 .transition('fade')
             ;
         });
-    $(".detail").popup({
-        exclusive: true
-        , hoverable: true,
-        popup: ".flowing.popup.dropdown_menu_group"
-    });
-    if (typeof homepage !== "boolean" || !homepage) {
-        $('.network.menu').removeClass('inverted');
-    }
+
 }
 
 export default {

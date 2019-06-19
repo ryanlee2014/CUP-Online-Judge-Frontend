@@ -104,6 +104,14 @@ const router = new Router({
             }
         },
         {
+            path: "/user/register",
+            name: "Register",
+            component: () => import("./views/user/register.vue"),
+            meta: {
+                auth: false
+            }
+        },
+        {
             path: "/user/:user_id",
             name: "user information",
             component: () => import("./views/user.vue"),
@@ -409,14 +417,6 @@ const router = new Router({
             path: "/forbidden/privilege",
             name: "No privilege",
             component: () => import("./views/error/noprivilege.vue")
-        },
-        {
-            path: "/user/register",
-            name: "Register",
-            component: () => import("./views/user/register.vue"),
-            meta: {
-                auth: false
-            }
         },
         {
             path: "*",

@@ -1067,6 +1067,15 @@ export default {
                     });
                     $("title").html(that.user_id + " " + that.nick + " " + $title);
                 });
+        },
+        initLanguagePie (options, next) {
+
+        },
+        initResultPie (options, next) {
+
+        },
+        initLineGraph (options, next) {
+
         }
     },
     computed: {

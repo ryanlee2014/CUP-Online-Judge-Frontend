@@ -1,5 +1,5 @@
 <template>
-    <monaco-editor v-if="render" :selected_language="selected_language" :theme="static_theme" v-model="content" :readOnly="true" :height="22*content.split('\n').length"></monaco-editor>
+    <monaco-editor v-if="render" :fontSize="fontSize" :selected_language="selected_language" :theme="static_theme" v-model="content" :readOnly="true" :height="height" :minimap="false"></monaco-editor>
 </template>
 
 <script>
@@ -21,6 +21,10 @@ export default {
         static_theme: {
             type: String,
             default: "vs-dark"
+        },
+        fontSize: {
+            type: String,
+            default: "16"
         }
     },
     data () {
@@ -32,7 +36,12 @@ export default {
     computed: {
         height: {
             get () {
-                return 22 * this.lines;
+                let fontSize = parseInt(this.fontSize);
+                if (fontSize < 6) {
+                    fontSize = 6;
+                }
+                let heightOfEachLine = Math.round((fontSize * 4 + 2) / 3);
+                return heightOfEachLine * this.lines + 10;
             },
             set (val) {
                 this.lines = val;

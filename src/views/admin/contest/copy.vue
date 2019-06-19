@@ -6,15 +6,17 @@
 import mixins from "../../../mixin/init";
 import contestEditMixin from "../../../mixin/contestEditMixin";
 import ContestEditor from "../../../components/contest/manage/edit";
-import Middleware from "../../../module/Middleware/core";
 export default {
-    name: "edit",
+    name: "copy",
     mixins: [mixins, contestEditMixin],
     components: {
         ContestEditor
     },
     data () {
         return {};
+    },
+    mounted () {
+
     },
     methods: {
         edit (val) {
