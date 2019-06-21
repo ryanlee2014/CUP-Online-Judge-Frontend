@@ -191,6 +191,10 @@ export default {
         externalUserListText: {
             type: String,
             default: ""
+        },
+        externalProblemSelected: {
+            type: String,
+            default: ""
         }
     },
     data () {
@@ -294,6 +298,9 @@ export default {
         },
         externalUserListText (val) {
             this.userListText = val;
+        },
+        externalProblemSelected (val) {
+            this.problemSelected = val;
         },
         contestInfo (data) {
             if (data.data.length > 0) {

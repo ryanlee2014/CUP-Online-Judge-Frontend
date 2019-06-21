@@ -410,7 +410,28 @@ const router = new Router({
             name: "Rejudge",
             component: () => import("./views/admin/judge/rejudge.vue"),
             meta: {
+                auth: true,
                 admin: true
+            }
+        },
+        {
+            path: "/admin/contest/add",
+            name: "Add contest",
+            component: () => import("./views/admin/contest/add.vue"),
+            meta: {
+                auth: true,
+                admin: true,
+                contest_manager: true
+            }
+        },
+        {
+            path: "/admin/contest/copy/:contest_id",
+            name: "Copy contest",
+            component: () => import("./views/admin/contest/copy.vue"),
+            meta: {
+                auth: true,
+                admin: true,
+                contest_manager: true
             }
         },
         {

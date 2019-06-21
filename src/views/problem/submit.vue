@@ -62,6 +62,7 @@ import LimitHostname from "../../components/contestMode/limitHostname";
 import mixins from "../../mixin/init";
 import Middleware from "../../module/Middleware/core";
 import ConfirmModal from "../../components/submit/modal/confirms";
+
 const doc = document.createElement("div");
 const dayjs = require("dayjs");
 const Clipboard = require("clipboard");
@@ -514,9 +515,9 @@ export default {
                 window.handler_interval = setTimeout(this.resume, 1000);
             }
         },
-        checkJava: function (submit_language) {
+        checkJava: function (submitLanguage) {
             let code;
-            switch (submit_language) {
+            switch (submitLanguage) {
             case 3:
             case 23:
             case 24:

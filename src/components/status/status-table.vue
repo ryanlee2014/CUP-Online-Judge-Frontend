@@ -10,7 +10,7 @@
                 </div>
             </th>
             <th>{{$t("problem_id")}}</th>
-            <th width="14%">{{$t("result")}}</th>
+            <th width="15%">{{$t("result")}}</th>
             <th v-if="isadmin">{{$t("contest_id")}}</th>
             <th>{{$t("memory")}}/{{$t("time")}}</th>
             <th>{{$t("language")}}/{{$t("length")}}</th>

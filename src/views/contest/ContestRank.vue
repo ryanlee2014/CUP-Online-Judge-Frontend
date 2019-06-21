@@ -326,6 +326,7 @@ export default {
         },
         pausePlayRanklist () {
             if (this.playing) {
+                this.playing = false;
                 clearInterval(this.playInterval);
             }
             else {

@@ -98,27 +98,27 @@
 </template>
 <i18n>
     {
-        "zh-cn": {
-            "user submit statistics": "用户提交信息统计",
-            "current server time": "当前服务器时间",
-            "ranklist statistic": "排名统计",
-            "start": "开始",
-            "end": "结束"
-        },
-        "en": {
-            "user submit statistics": "User Submit Statistics",
-            "current server time": "Server Time",
-            "ranklist statistic": "Ranklist Statistics",
-            "start": "Start",
-            "end": "End"
-        },
-        "ja": {
-            "user submit statistics": "ユーザー提出統計",
-            "current server time": "サーバー時間",
-            "ranklist statistic": "ランキング統計",
-            "start": "始め",
-            "end": "終わり"
-        }
+    "zh-cn": {
+    "user submit statistics": "用户提交信息统计",
+    "current server time": "当前服务器时间",
+    "ranklist statistic": "排名统计",
+    "start": "开始",
+    "end": "结束"
+    },
+    "en": {
+    "user submit statistics": "User Submit Statistics",
+    "current server time": "Server Time",
+    "ranklist statistic": "Ranklist Statistics",
+    "start": "Start",
+    "end": "End"
+    },
+    "ja": {
+    "user submit statistics": "ユーザー提出統計",
+    "current server time": "サーバー時間",
+    "ranklist statistic": "ランキング統計",
+    "start": "始め",
+    "end": "終わり"
+    }
     }
 </i18n>
 
@@ -160,7 +160,7 @@ export default {
                 this.contest_list = data.data;
                 this.intervalID = setInterval(() => {
                     this.current_time = dayjs();
-                }, 1000);
+                }, 3000);
             });
         this.init();
     },
@@ -240,6 +240,9 @@ export default {
             return `${day}天${hour}小时${minute}分${sec}秒`;
         },
         contestTimeFormat: function (row) {
+            if (row.hasOwnProperty("_format_") && typeof row._format_ === "string") {
+                return row._format_;
+            }
             let startTime;
             if (!dayjs.isDayjs(row.start_time)) {
                 startTime = dayjs(row.start_time);
@@ -249,8 +252,10 @@ export default {
                 endTime = dayjs(row.end_time);
             }
             const currentTime = this.current_time;
-            if (currentTime.isAfter(endTime)) {
-                return `${endTime.format("YYYY-MM-DD HH:mm")}${this.$t("end")}`;
+            if (row.isEnd || currentTime.isAfter(endTime)) {
+                row.isEnd = true;
+                // eslint-disable-next-line no-return-assign
+                return row._format_ = `${endTime.format("YYYY-MM-DD HH:mm")}${this.$t("end")}`;
             }
             else if (currentTime.isBefore(startTime)) {
                 return `${startTime.format("YYYY-MM-DD HH:mm")}${this.$t("start")}`;
@@ -261,6 +266,9 @@ export default {
         },
         percentageRunning: function (row) {
             let startTime;
+            if (row.isEnd === true) {
+                return 100;
+            }
             if (!dayjs.isDayjs(row.start_time)) {
                 startTime = dayjs(row.start_time);
             }
@@ -273,6 +281,7 @@ export default {
                 return 0;
             }
             else if (currentTime.isAfter(endTime)) {
+                row.isEnd = true;
                 return 100;
             }
             else {
@@ -280,9 +289,6 @@ export default {
                 let totalDiff = endTime.diff(startTime, "second");
                 return parseInt(Math.floor(diffTime * 100 / totalDiff));
             }
-        },
-        run: function () {
-
         }
     }
 };

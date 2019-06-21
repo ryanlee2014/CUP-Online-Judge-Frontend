@@ -1,5 +1,5 @@
 <template>
-    <div :class="progressBarClass" ref="progressBarElement">
+    <div :class="progressBarClass" ref="progressBarElement" v-observe-visibility="visibilityChanged">
         <div class="bar"></div>
     </div>
 </template>
@@ -13,8 +13,11 @@ function forceUpdate () {
     }
 }
 function mountFunc () {
+    if (this.element === null) {
+        this.element = $(this.$refs.progressBarElement);
+    }
     if (this.prevPercentage !== this.percentage) {
-        $(this.$refs.progressBarElement).progress({
+        this.element.progress({
             percent: this.percentage,
             autoSuccess: false
         });
@@ -25,8 +28,19 @@ export default {
     name: "progressBar",
     data () {
         return {
-            prevPercentage: 0
+            prevPercentage: 0,
+            element: null
         };
+    },
+    methods: {
+        visibilityChanged (isVisible, entry) {
+            if (isVisible && this.active) {
+                this.element.progress("set active");
+            }
+            else {
+                this.element.progress("remove active");
+            }
+        }
     },
     props: {
         size: {

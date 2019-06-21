@@ -3,7 +3,8 @@ export default {
         return {
             contest_id: this.$route.params.contest_id,
             data: {},
-            userListText: ""
+            userListText: "",
+            problemSelected: ""
         };
     },
     mounted () {
@@ -21,6 +22,12 @@ export default {
                 .then(({ data }) => {
                     if (data.data.length > 0) {
                         this.userListText = data.data.map(el => el.user_id).join("\n");
+                    }
+                });
+            this.axios.get(`/api/contest/problem/${this.contest_id}`)
+                .then(({ data }) => {
+                    if (data.status === "OK") {
+                        this.problemSelected = data.data.map(el => el.pid).join("\n");
                     }
                 });
         }
