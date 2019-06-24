@@ -45,15 +45,16 @@
                     <i :class="answer_icon[row.result]+' icon'"></i>
                     {{result[row.result]}}
                 </router-link>
-                <br v-if="row.sim||row.pass_rate>0.05 || row.result == 3">
+                <br v-if="row.sim||(row.result == 3 && !!row.pass_point && !!row.total_point)">
                 <a :class="answer_class[row.result]" v-cloak
                    v-if="row.result == 3 && !!row.pass_point && !!row.total_point"><i :class="answer_icon[row.result]+' icon'" style="opacity:0"></i>({{row.pass_point ||
                     0}}/{{row.total_point || 0}})</a>
                 <router-link :class="answer_class[row.result]" :to="`/compare/${row.solution_id}/${row.sim_id}`"
                              v-if="row.sim">
                     <br v-if="row.result == 3">
-                    {{(Boolean(row.sim) === false?'':row.sim_id+' ('+row.sim+'%)')}}
+                    <span v-if="!!row.sim"><i :class="answer_icon[row.result]+' icon'" style="opacity:0"></i>{{row.sim_id+' ('+row.sim+'%)'}}</span>
                 </router-link>
+                <br v-if="row.result !== 4 && row.pass_rate > 0.05">
                 <a :class="answer_class[row.result]" v-if="row.result !== 4 && row.pass_rate > 0.05"><i
                         :class="answer_icon[row.result]+' icon'" style="opacity:0"></i>Passed:{{(row.pass_rate*100).toFixed(1)}}%</a>
 

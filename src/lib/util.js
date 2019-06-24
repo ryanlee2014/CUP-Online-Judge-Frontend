@@ -121,7 +121,10 @@ export default {
                     tmp.place = "IPv6";
                 } else if (tmp.intranet_ip.match(/10\.3\.[\s\S]+/)) {
                     tmp.place = "地质楼";
-                } else if (tmp.intranet_ip.match(/10\.200\.33\.[0-9]{1,3}/)) {
+                } else if (tmp.intranet_ip.match(/10\.200\.32\.[0-9]{1,3}/)) {
+                    tmp.place = "润杰机房五楼";
+                }
+                else if (tmp.intranet_ip.match(/10\.200\.33\.[0-9]{1,3}/)) {
                     tmp.place = "润杰机房六楼";
                 } else {
                     tmp.place = "未知";
@@ -160,7 +163,9 @@ export default {
                     tmp.place = "其他Wi-Fi";
                 } else if (tmp.intranet_ip.match(/172\.16\.[\s\S]+/)) {
                     tmp.place = "VPN";
-                } else if (tmp.intranet_ip.match(/10\.200\.33\.[0-9]{1,3}/)) {
+                }  else if (tmp.intranet_ip.match(/10\.200\.32\.[0-9]{1,3}/)) {
+                    tmp.place = "润杰机房五楼";
+                }else if (tmp.intranet_ip.match(/10\.200\.33\.[0-9]{1,3}/)) {
                     tmp.place = "润杰机房六楼";
                 } else if (tmp.intranet_ip.match(/2001:[\s\S]+/) && tmp.ip && !tmp.ip.match(/[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/)) {
                     tmp.place = "IPv6";
