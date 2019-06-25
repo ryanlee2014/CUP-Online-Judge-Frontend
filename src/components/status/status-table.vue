@@ -96,13 +96,35 @@ export default {
     name: "status-table",
     mixins: [avatarMixin],
     props: {
-        problem_list: Array,
-        answer_icon: Array,
-        answer_class: Array,
-        target: Object,
-        language_name: Array,
-        result: Array,
-        self: String,
+
+        problem_list: {
+            type: Array,
+            default: () => []
+        },
+        answer_icon: {
+            type: Array,
+            default: () => []
+        },
+        answer_class: {
+            type: Array,
+            default: () => []
+        },
+        target: {
+            type: Object,
+            default: () => Object.create(null)
+        },
+        language_name: {
+            type: Array,
+            default: () => []
+        },
+        result: {
+            type: Array,
+            default: () => []
+        },
+        self: {
+            type: String,
+            default: ""
+        },
         isadmin: {
             type: Boolean,
             default: false
@@ -116,9 +138,9 @@ export default {
     },
     methods: {
         memory_parse: function (_memory) {
-            var unit = ["KB", "MB", "GB"];
-            var cnt = 0;
-            var memory = parseInt(_memory);
+            let unit = ["KB", "MB", "GB"];
+            let cnt = 0;
+            let memory = parseInt(_memory);
             while (memory > 1024) {
                 memory /= 1024;
                 ++cnt;
@@ -126,9 +148,9 @@ export default {
             return memory.toString().substring(0, 5) + unit[cnt];
         },
         time_parse: function (_time) {
-            var unit = ["ms", "s"];
-            var cnt = 0;
-            var time = parseInt(_time);
+            let unit = ["ms", "s"];
+            let cnt = 0;
+            let time = parseInt(_time);
             while (time > 1000) {
                 ++cnt;
                 time /= 1000;
@@ -139,7 +161,7 @@ export default {
             if (!ip) {
                 return "未知";
             }
-            var tmp = {
+            let tmp = {
                 intranet_ip: ip,
                 place: ""
             };
@@ -155,11 +177,11 @@ export default {
     },
     computed: {
         problem_lists: function () {
-            var that = this;
+            let that = this;
             _.forEach(this.problem_list, function (i) {
                 that.user[i.user_id] = that.user[i.user_id] || i;
             });
-            var doc = document.createElement("div");
+            let doc = document.createElement("div");
             _.forEach(this.problem_list, function (val, i) {
                 doc.innerHTML = that.problem_list[i].nick;
                 that.problem_list[i].nick = doc.innerText;

@@ -1,23 +1,32 @@
 <template>
-    <contest-edit @postData="add"></contest-edit>
+    <contest-editor @postData="add"></contest-editor>
 </template>
 
 <script>
 import mixins from "../../../mixin/init";
 import ContestEditMixin from "../../../mixin/contestEditMixin";
-import ContestEdit from "../../../components/contest/manage/edit";
+import ContestEditor from "../../../components/contest/manage/edit";
 export default {
     name: "add",
     mixins: [mixins, ContestEditMixin],
     components: {
-        ContestEdit
+        ContestEditor
     },
     data () {
         return {};
     },
     methods: {
         add (val) {
-
+            val = this.dataFormat(val);
+            this.axios.post("/api/admin/contest/add", val)
+                .then(({ data }) => {
+                    if (data.status === "OK") {
+                        alert(this.$t("success"));
+                    }
+                    else {
+                        alert(this.$t("error"));
+                    }
+                });
         }
     }
 };

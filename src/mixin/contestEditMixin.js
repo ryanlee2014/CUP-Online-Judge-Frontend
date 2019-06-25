@@ -27,9 +27,17 @@ export default {
             this.axios.get(`/api/contest/problem/${this.contest_id}`)
                 .then(({ data }) => {
                     if (data.status === "OK") {
-                        this.problemSelected = data.data.map(el => el.pid).join("\n");
+                        this.problemSelected = data.data.map(el => el.pid).join(",");
                     }
                 });
+        },
+        dataFormat (val) {
+            val = _.cloneDeep(val);
+            delete val.userListText;
+            delete val.languageSelected;
+            delete val.languageSet;
+            val.problemSelected = val.problemSelected.split(",").map(el => parseInt(el));
+            return val;
         }
     }
 };
