@@ -167,5 +167,6 @@
   "version": "Version",
   "view": "View",
   "whiteboard": "Whiteboard",
-  "you cannot access to this page": "You couldn't access to this page"
+  "you cannot access to this page": "You couldn't access to this page",
+  "you have been banned": "You have been banned. Please contact administrator."
 }

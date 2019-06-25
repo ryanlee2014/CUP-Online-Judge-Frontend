@@ -440,6 +440,11 @@ const router = new Router({
             component: () => import("./views/error/noprivilege.vue")
         },
         {
+            path: "/ban",
+            name: "Ban view",
+            component: () => import("./views/error/ban.vue")
+        },
+        {
             path: "*",
             name: "",
             component: () => import("./views/error/404.vue")
