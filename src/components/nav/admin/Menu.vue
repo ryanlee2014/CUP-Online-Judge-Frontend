@@ -46,6 +46,10 @@
                         <i class="user check icon"></i>
                         {{$t("account checker")}}
                     </router-link>
+                    <router-link to="/admin/user/ban" class="item" exact-active-class="active">
+                        <i class="bell slash icon"></i>
+                        {{$t("ban manage")}}
+                    </router-link>
                 </div>
             </div>
             <div class="ui dropdown item">

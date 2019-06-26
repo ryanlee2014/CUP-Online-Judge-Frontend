@@ -168,5 +168,7 @@
   "view": "見る",
   "whiteboard": "ホワイトボード",
   "you cannot access to this page": "あなたはこのページを訪問する権利がありません",
-  "you have been banned": "このアカウントはバンされた。詳しくはアドミニストレーターを連絡してください"
+  "you have been banned": "このアカウントはバンされた。詳しくはアドミニストレーターを連絡してください",
+  "ban manage": "バン管理",
+  "ban time": "バン時間"
 }

@@ -168,5 +168,7 @@
   "view": "查看",
   "whiteboard": "白板",
   "you cannot access to this page": "您不能访问本页面",
-  "you have been banned": "您被系统封禁，请联系管理员。"
+  "you have been banned": "您被系统封禁，请联系管理员。",
+  "ban manage": "封禁管理",
+  "ban time": "封禁时间"
 }
