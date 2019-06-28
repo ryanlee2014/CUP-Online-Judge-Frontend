@@ -435,6 +435,15 @@ const router = new Router({
             }
         },
         {
+            path: "/admin/user/ban",
+            name: "Ban manage",
+            component: () => import("./views/admin/account/ban.vue"),
+            meta: {
+                auth: true,
+                admin: true
+            }
+        },
+        {
             path: "/forbidden/privilege",
             name: "No privilege",
             component: () => import("./views/error/noprivilege.vue")
