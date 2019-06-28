@@ -37,7 +37,7 @@
                 </router-link>
                     <router-link v-if="row.sim" :to="`/compare/${row.solution_id}/${row.sim_id}`" :class="answer_class[row.result]">
                         <br>
-                        {{(Boolean(row.sim) === false?'':row.sim_id+' ('+row.sim+'%)')}}
+                        <i :class="answer_icon[row.result]+' icon'" style="opacity:0" v-if="!!row.sim"></i>{{(Boolean(row.sim) === false?'':row.sim_id+' ('+row.sim+'%)')}}
                     </router-link>
                    <br>
                    <a :class="answer_class[row.result]" v-if="row.result !== 4 && row.pass_rate > 0.05"><i :class="answer_icon[row.result]+' icon'" style="opacity:0"></i>Passed:{{(row.pass_rate*100).toString().substring(0,4)}}%</a>

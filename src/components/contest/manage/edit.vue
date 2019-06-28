@@ -8,12 +8,19 @@
                         <input name="title" placeholder="contest title" type="text" v-model="title">
                     </div>
                     <div class="field">
-                        <div class="two fields">
+                        <div class="three fields">
                             <div class="field">
                                 <div class="ui toggle checkbox">
                                     <input @click="Public = !Public" class="hidden" tabindex="0" type="checkbox"
                                            v-model="Public">
-                                    <label>{{$t("available")}}</label>
+                                    <label>{{$t("public contest")}}</label>
+                                </div>
+                            </div>
+                            <div class="field">
+                                <div class="ui toggle checkbox">
+                                    <input @click="defunct = !defunct" class="hidden" tabindex="0" type="checkbox"
+                                           v-model="defunct">
+                                    <label>{{$t("hide contest")}}</label>
                                 </div>
                             </div>
                             <div class="field">
@@ -309,7 +316,7 @@ export default {
                 this.startTime = new Date(res.start_time);
                 this.endTime = new Date(res.end_time);
                 this.description = res.description;
-                this.defunct = res.defunct === "N";
+                this.defunct = res.defunct === "Y";
                 this.Public = !!this.private;
                 this.ContestMode = !!res.cmod_visible;
                 this.LangmaskToLanguageSelected(res.langmask);

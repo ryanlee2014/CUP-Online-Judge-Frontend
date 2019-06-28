@@ -170,5 +170,7 @@
   "you cannot access to this page": "您不能访问本页面",
   "you have been banned": "您被系统封禁，请联系管理员。",
   "ban manage": "封禁管理",
-  "ban time": "封禁时间"
+  "ban time": "封禁时间",
+  "public contest": "公有竞赛",
+  "hide contest": "隐藏竞赛"
 }
