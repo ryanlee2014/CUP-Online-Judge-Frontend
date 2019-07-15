@@ -14,6 +14,9 @@
   "available": "Available",
   "average length": "Average Length",
   "average plagiarism percentage": "Average Plagiarism Percentage",
+  "ban end time": "Expired Time",
+  "ban manage": "Ban Manage",
+  "ban time": "Ban time",
   "biography": "Motto",
   "browser": "Browser",
   "cc-by-nc-nd": "Attribution-NonCommercial-NoDerivatives 4.0",
@@ -53,6 +56,7 @@
   "general": "General",
   "general user": "General User",
   "hall of fame": "Hall of fame",
+  "hide contest": "Hide Contest",
   "hidepassedproblem": "Hide passed problem",
   "hint": "Hint",
   "history": "History",
@@ -108,6 +112,7 @@
   "problemset": "ProblemSet",
   "programming language": "Programming Language",
   "public": "Public",
+  "public contest": "Public Contest",
   "publish": "Public post",
   "rank": "Rank",
   "ranklist": "Ranklist",
@@ -168,9 +173,5 @@
   "view": "View",
   "whiteboard": "Whiteboard",
   "you cannot access to this page": "You couldn't access to this page",
-  "you have been banned": "You have been banned. Please contact administrator.",
-  "ban manage": "Ban Manage",
-  "ban time": "Ban time",
-  "public contest": "Public Contest",
-  "hide contest": "Hide Contest"
+  "you have been banned": "You have been banned. Please contact administrator."
 }

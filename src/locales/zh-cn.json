@@ -14,6 +14,9 @@
   "available": "可见",
   "average length": "平均长度",
   "average plagiarism percentage": "平均判重度",
+  "ban end time": "封禁结束时间",
+  "ban manage": "封禁管理",
+  "ban time": "封禁时间",
   "biography": "个人介绍",
   "browser": "浏览器",
   "cc-by-nc-nd": "署名-非商业性使用-禁止演绎 4.0",
@@ -53,6 +56,7 @@
   "general": "通用",
   "general user": "普通用户",
   "hall of fame": "名人堂",
+  "hide contest": "隐藏竞赛",
   "hidepassedproblem": "隐藏通过题目",
   "hint": "提示",
   "history": "历史",
@@ -108,6 +112,7 @@
   "problemset": "问题集",
   "programming language": "编程语言",
   "public": "公开",
+  "public contest": "公有竞赛",
   "publish": "发表的帖子",
   "rank": "排名",
   "ranklist": "排名",
@@ -168,9 +173,5 @@
   "view": "查看",
   "whiteboard": "白板",
   "you cannot access to this page": "您不能访问本页面",
-  "you have been banned": "您被系统封禁，请联系管理员。",
-  "ban manage": "封禁管理",
-  "ban time": "封禁时间",
-  "public contest": "公有竞赛",
-  "hide contest": "隐藏竞赛"
+  "you have been banned": "您被系统封禁，请联系管理员。"
 }

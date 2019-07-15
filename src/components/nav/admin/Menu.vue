@@ -65,6 +65,10 @@
                     </router-link>
                 </div>
             </div>
+            <router-link class="item" exact-active-class="active" to="/admin/global_setting">
+                <i class="home icon"></i>
+                {{$t("global setting")}}
+            </router-link>
             <SocketMenu :connected="connected" :judger="judger" :logined="logined" :nick="nick"
                         :user="user"></SocketMenu>
         </div>

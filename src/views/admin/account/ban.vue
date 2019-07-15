@@ -4,7 +4,7 @@
             <thead>
             <tr>
                 <th>{{$t("user_id")}}</th>
-                <th>{{$t("ban time")}}</th>
+                <th>{{$t("ban end time")}}</th>
                 <th>{{$t("edit")}}</th>
                 <th>{{$t("remove")}}</th>
             </tr>
@@ -17,10 +17,12 @@
                 <td>
                     {{dayjs(row.bantime).format("YYYY-MM-DD HH:mm:ss")}}
                 </td>
-                <td>
-                    <button @click="edit(row.user_id)" class="ui tiny button">
-                        {{$t("edit")}}
-                    </button>
+                <td :ref="row.user_id" class="ui calendar">
+                    <div>
+                        <div @click="edit(row.user_id)" class="ui tiny button">
+                            {{$t("edit")}}
+                        </div>
+                    </div>
                 </td>
                 <td>
                     <button @click="remove(row.user_id)" class="ui labeled tiny icon black button">
@@ -72,6 +74,9 @@ export default {
                         alert(this.$t("fail"));
                     }
                 });
+        },
+        edit (userId) {
+            $(this.$refs[userId]).calendar();
         }
     }
 };

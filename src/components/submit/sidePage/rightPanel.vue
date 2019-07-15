@@ -381,7 +381,6 @@ export default {
     .code {
         width: 50%;
         white-space: pre-wrap;
-        border: solid lightgrey 1px
     }
 
     script {

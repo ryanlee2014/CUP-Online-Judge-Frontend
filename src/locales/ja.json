@@ -14,6 +14,9 @@
   "available": "可用",
   "average length": "平均の長さ",
   "average plagiarism percentage": "平均剽窃度",
+  "ban end time": "制限終わり時間",
+  "ban manage": "バン管理",
+  "ban time": "バン時間",
   "biography": "モットー",
   "browser": "ブラウザ",
   "cc-by-nc-nd": "表示 - 非営利 - 改変禁止 4.0",
@@ -53,6 +56,7 @@
   "general": "メニュー",
   "general user": "一般ユーザー",
   "hall of fame": "栄誉殿堂",
+  "hide contest": "コンテスト隠し",
   "hidepassedproblem": "合格する質問を隠す",
   "hint": "ヒント",
   "history": "提出記録",
@@ -108,6 +112,7 @@
   "problemset": "問題セット",
   "programming language": "プログラミング言語",
   "public": "公開",
+  "public contest": "開放的なコンテスト",
   "publish": "公開された投稿",
   "rank": "ランキング",
   "ranklist": "ランキング",
@@ -168,9 +173,5 @@
   "view": "見る",
   "whiteboard": "ホワイトボード",
   "you cannot access to this page": "あなたはこのページを訪問する権利がありません",
-  "you have been banned": "このアカウントはバンされた。詳しくはアドミニストレーターを連絡してください",
-  "ban manage": "バン管理",
-  "ban time": "バン時間",
-  "public contest": "開放的なコンテスト",
-  "hide contest": "コンテスト隠し"
+  "you have been banned": "このアカウントはバンされた。詳しくはアドミニストレーターを連絡してください"
 }
