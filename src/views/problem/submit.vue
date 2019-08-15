@@ -191,6 +191,10 @@ export default {
             doc.innerText = html;
             return doc.innerHTML.split(" ").join("&nbsp;");
         },
+        convertText (text) {
+            doc.innerHTML = text;
+            return doc.innerText.split("&nbsp;").join(" ");
+        },
         bindClipboard () {
             const copyContent = new Clipboard(".copy.context", {
                 text: function (trigger) {
@@ -357,15 +361,16 @@ export default {
                     });
                 }
             });
-            $.get("/api/photo/hint/" + id, function (data) {
-                if (data.status === "OK") {
-                    hintMarkdownIt.__image = {};
-                    _.forEach(data.data, function (val) {
-                        hintMarkdownIt.__image[val.name] = val.data;
-                        that.hint = hintMarkdownIt.render(that.original_content.hint || "");
-                    });
-                }
-            });
+            this.axios.get(`/api/photo/hint/${id}`)
+                .then(({ data }) => {
+                    if (data.status === "OK") {
+                        hintMarkdownIt.__image = {};
+                        _.forEach(data.data, function (val) {
+                            hintMarkdownIt.__image[val.name] = val.data;
+                            that.hint = hintMarkdownIt.render(that.original_content.hint || "");
+                        });
+                    }
+                });
             Fingerprint2.get(function (components) {
                 let values = components.map(el => el.value);
                 that.fingerprintRaw = Fingerprint2.x64hash128(values.join(""), 31);
@@ -453,14 +458,13 @@ export default {
                 return;
             }
             this.hide_warning = true;
-            const middleware = new Middleware();
-            middleware
+            new Middleware()
                 .use(this.initConfirms)
                 .use(this.codeTooShort)
                 .use(this.checkCppButInCLanguage)
                 .use(this.ModalPopup)
-                .use(this.presubmit);
-            middleware.commit();
+                .use(this.presubmit)
+                .commit();
         },
         presubmit: function () {
             let that = this;
@@ -539,8 +543,8 @@ export default {
             }
             let now = parseInt(dayjs() + "");
             localStorage.setItem("test_run_time", now + 300 * 1000);
-            let submit_language = parseInt(this.$store.getters.language);
-            if (!this.checkJava(submit_language)) {
+            let submitLanguage = parseInt(this.$store.getters.language);
+            if (!this.checkJava(submitLanguage)) {
                 return;
             }
             let that = this;
@@ -609,13 +613,11 @@ export default {
                 this.wsresult(data);
                 this.wsfs_result(data);
             });
-            this.sockets.subscribe("reject_submit", (data) => {
-                this.error_callback(data);
-            });
+            this.sockets.subscribe("reject_submit", this.error_callback);
         },
         wsresult: function (data) {
             // let res = data.split(',');
-            const judge_result = [
+            const judgeResult = [
                 "等待",
                 "等待重判",
                 "编译中",
@@ -653,21 +655,21 @@ export default {
                 $("#right-side").transition("shake");
             }
             if (status === 0) {
-                $(".progess_text").text(judge_result[status]);
+                $(".progess_text").text(judgeResult[status]);
                 // setTimeout("frush_result(" + runner_id + ")", 250);
                 $progressResult.progress({
                     percent: 20
                 });
             }
             else if (status === 2) {
-                $(".progess_text").text(judge_result[status]);
+                $(".progess_text").text(judgeResult[status]);
                 // setTimeout("frush_result(" + runner_id + ")", 250);
                 $progressResult.progress({
                     percent: 40
                 });
             }
             else if (status === 3) {
-                $(".progess_text").text(judge_result[status] + " 已通过测试点:" + passPoint + "  通过率:" + passRate.toString().substring(0, 3) + "%");
+                $(".progess_text").text(judgeResult[status] + " 已通过测试点:" + passPoint + "  通过率:" + passRate.toString().substring(0, 3) + "%");
                 // setTimeout("frush_result(" + runner_id + ")", 250);
                 $progressResult.progress({
                     percent: 40
@@ -675,7 +677,7 @@ export default {
             }
             else if (status === 4) {
                 // count=0;
-                let str = judge_result[status] + " 内存使用:" + memory + "KB 运行时间:" + time + "ms";
+                let str = judgeResult[status] + " 内存使用:" + memory + "KB 运行时间:" + time + "ms";
                 if (sim) {
                     str += " 触发判重 与运行号: " + simSourceID + "代码重复 重复率:" + sim + "%";
                 }
@@ -686,47 +688,48 @@ export default {
                 $progressResult.progress("set success");
                 let contestID = parseInt(this.$route.params.contest_id);
                 if (!isNaN(contestID) && contestID > 1000) {
-                    $.get(`/api/contest/rest/${contestID}`, function (data) {
-                        let json = data.data;
-                        for (let i of json) {
-                            for (let j in i) {
-                                if (i.hasOwnProperty(j) && i[j] === null) {
-                                    i[j] = 0;
+                    that.axios.get(`/api/contest/rest/${contestID}`)
+                        .then(({ data }) => {
+                            let json = data.data;
+                            for (let i of json) {
+                                for (let j in i) {
+                                    if (i.hasOwnProperty(j) && i[j] === null) {
+                                        i[j] = 0;
+                                    }
                                 }
                             }
-                        }
-                        setTimeout(function () {
-                            $(".mainwindow").html("").animate({ width: 0, borderRadius: 0, padding: 0 });
-                        }, 500);
-                        let str = "<a class='item'><h3>剩下未完成的题目</h3></a>";
-                        if (json.length === 0) {
-                            str += "<a class='item'><h2>恭喜AK</h2>";
-                        }
-                        else {
-                            json.sort(function (a, b) {
-                                if (a["pnum"] > b["pnum"]) return 1;
-                                else if (parseInt(a["pnum"]) === parseInt(b["pnum"])) return 0;
-                                else return -1;
-                            });
-                        }
-                        for (let i in json) {
-                            if (json.hasOwnProperty(i)) {
-                                str += "<a class='item' href='" + `/contest/problem/${contestID}/${json[i].pnum}` + "'><div class='ui small teal label'>通过:&nbsp;" + json[i]["accepted"] + "</div><div class='ui small label'>提交:&nbsp;" + json[i]["submit"] + "</div>" + json[i]["pnum"] + " . " + json[i]["title"] + "</a>";
+                            setTimeout(function () {
+                                $(".mainwindow").html("").animate({ width: 0, borderRadius: 0, padding: 0 });
+                            }, 500);
+                            let str = "<a class='item'><h3>剩下未完成的题目</h3></a>";
+                            if (json.length === 0) {
+                                str += "<a class='item'><h2>恭喜AK</h2>";
                             }
-                        }
-                        let plainHTML = "<div id=\"next_problem\"><div class=\"ui massive vertical menu\" style=\"position:relative;float:left;margin-left:20px\">" + str + "</div></div>";
-                        const $acMenu = $(".ui.massive.vertical.menu");
-                        if ($acMenu.length === 0) {
-                            $("#total_control").append(plainHTML);
-                        }
-                        else {
-                            $acMenu.html(str).fadeIn();
-                        }
-                    });
+                            else {
+                                json.sort(function (a, b) {
+                                    if (a["pnum"] > b["pnum"]) return 1;
+                                    else if (parseInt(a["pnum"]) === parseInt(b["pnum"])) return 0;
+                                    else return -1;
+                                });
+                            }
+                            for (let i in json) {
+                                if (json.hasOwnProperty(i)) {
+                                    str += "<a class='item' href='" + `/contest/problem/${contestID}/${json[i].pnum}` + "'><div class='ui small teal label'>通过:&nbsp;" + json[i]["accepted"] + "</div><div class='ui small label'>提交:&nbsp;" + json[i]["submit"] + "</div>" + json[i]["pnum"] + " . " + json[i]["title"] + "</a>";
+                                }
+                            }
+                            let plainHTML = "<div id=\"next_problem\"><div class=\"ui massive vertical menu\" style=\"position:relative;float:left;margin-left:20px\">" + str + "</div></div>";
+                            const $acMenu = $(".ui.massive.vertical.menu");
+                            if ($acMenu.length === 0) {
+                                $("#total_control").append(plainHTML);
+                            }
+                            else {
+                                $acMenu.html(str).fadeIn();
+                            }
+                        });
                 }
             }
             else if (status === 5 || status === 6) {
-                $(".progess_text").text("在第" + (passPoint + 1) + "个测试点发生 " + judge_result[status] + "  通过率:" + passRate.toString().substring(0, 3) + "%");
+                $(".progess_text").text("在第" + (passPoint + 1) + "个测试点发生 " + judgeResult[status] + "  通过率:" + passRate.toString().substring(0, 3) + "%");
                 $progressResult.progress({
                     percent: 100
                 });
@@ -735,7 +738,7 @@ export default {
             else if (status === 13) {
                 if (typeof compileInfo !== "undefined") compileInfo = this.nl2br(compileInfo);
                 else compileInfo = "";
-                $(".progess_text").text("在第" + (passPoint + 1) + "个测试点发生 " + judge_result[status] + " 内存使用:" + memory + "KB 运行时间:" + time + "ms");
+                $(".progess_text").text("在第" + (passPoint + 1) + "个测试点发生 " + judgeResult[status] + " 内存使用:" + memory + "KB 运行时间:" + time + "ms");
                 compileInfo = compileInfo.split(" ").join("&nbsp;");
                 if (compileInfo && compileInfo.trim().length > 0) {
                     $(".compile.header").html("<br>" + compileInfo);
@@ -749,7 +752,7 @@ export default {
             else {
                 if (typeof compileInfo !== "undefined") compileInfo = "<br>" + this.convertHTML(compileInfo);
                 else compileInfo = "";
-                $(".progess_text").text("在第" + (passPoint + 1) + "个测试点发生 " + judge_result[status] + "  通过率:" + passRate.toString().substring(0, 3) + "%");
+                $(".progess_text").text("在第" + (passPoint + 1) + "个测试点发生 " + judgeResult[status] + "  通过率:" + passRate.toString().substring(0, 3) + "%");
                 if (compileInfo.length > 0) {
                     $(".compile.header").html(compileInfo);
                     $(".warning.message").show();
@@ -761,9 +764,14 @@ export default {
             }
         },
         wsfs_result: function (data) {
+            if (typeof data === "undefined" || data === null) {
+                console.warn("Function wsfs_result receive illegal data");
+                return;
+            }
             let state = data["state"];
             let testRunResult = data["test_run_result"];
-            let compileInfo = this.convertHTML(data["compile_info"]);
+            let compileInfo = data["compile_info"];
+            // let compileInfo = this.convertHTML(data["compile_info"]);
             if (state >= 4) {
                 if (testRunResult || compileInfo) {
                     $("#out").text("运行结果:\n" + (testRunResult || "") + (compileInfo || ""));

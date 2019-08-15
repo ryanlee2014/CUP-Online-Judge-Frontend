@@ -89,6 +89,7 @@ export default {
                 if (oldModel) {
                     oldModel.dispose();
                 }
+                this.modelEventRegistry();
             }
         },
         value (val) {
@@ -142,8 +143,10 @@ export default {
             this.editor.updateOptions({
                 fontSize: this.getFontSizeFromStorage()
             });
-            const currentModel = this.editor.getModel();
             monaco.editor.setTheme(this.getThemeFromStorage());
+        },
+        modelEventRegistry () {
+            const currentModel = this.editor.getModel();
             currentModel.onDidChangeContent(() => {
                 this.source_code = this.editor.getModel().getValue();
                 this.$store.commit("setCodeInfo", {
