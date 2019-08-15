@@ -38,7 +38,7 @@
     "jquery": "^3.4.1",
     "js-cookie": "^2.2.0",
     "katex": "^0.10.2",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.15",
     "markdown-it-anchor": "^5.2.3",
     "markdown-it-highlightjs": "^3.0.0",
     "mermaid": "^8.0.0",
