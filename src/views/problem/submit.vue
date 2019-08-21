@@ -222,7 +222,7 @@ export default {
                 sid: solutionId
             };
             this.escapeParameter(parseData);
-            await initData();
+            await this.initData();
             this.markdownItRender();
             this.bindClipboard();
             $modal = $(".ui.basic.confirms.modal");
