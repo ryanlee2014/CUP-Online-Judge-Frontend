@@ -222,12 +222,12 @@ export default {
                 sid: solutionId
             };
             this.escapeParameter(parseData);
-            await this.initData();
+            await this.initData(parseData);
             this.markdownItRender();
             this.bindClipboard();
             $modal = $(".ui.basic.confirms.modal");
         },
-        initData: function () {
+        initData: function (parseData) {
             return this.axios.get("/api/problem/local", { params: parseData })
                 .then(({ data }) => {
                     if (data.status === "error") {
