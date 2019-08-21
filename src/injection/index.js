@@ -1,4 +1,5 @@
 import Middleware from "../module/Middleware/core";
+import axios from "axios";
 
 export default function () {
     // eslint-disable-next-line no-extend-native
@@ -17,5 +18,19 @@ export default function () {
             afterfn.apply(this, arguments);
             return ret;
         };
+    };
+
+    const _get = axios.get;
+    const _post = axios.post;
+    axios.get = function () {
+        return _get.apply(this, arguments).catch(reason => {
+            console.log("GET ERROR: ", reason);
+        });
+    };
+
+    axios.post = function () {
+        return _post.apply(this, arguments).catch(reason => {
+            console.log("POST ERROR: ", reason);
+        });
     };
 }

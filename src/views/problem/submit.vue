@@ -213,112 +213,112 @@ export default {
         },
         asyncFunc: async function () {
             let copyParams = JSON.parse(JSON.stringify(this.$route.params));
-            let { problem_id, contest_id, topic_id, num, solution_id } = copyParams;
+            let { problem_id: problemId, contest_id: contestId, topic_id: topicId, num, solution_id: solutionId } = copyParams;
             let parseData = {
-                id: problem_id,
-                cid: contest_id,
-                tid: topic_id,
+                id: problemId,
+                cid: contestId,
+                tid: topicId,
                 pid: num,
-                sid: solution_id
+                sid: solutionId
             };
             this.escapeParameter(parseData);
-            await new Promise(resolve => {
-                this.axios.get("/api/problem/local", { params: parseData })
-                    .then(({ data }) => {
-                        if (data.status === "error") {
-                            if (data.statement) {
-                                alert(data.statement);
-                            }
-                            this.contest_mode = data.contest_mode;
-                            this.limit = false;
-                            return;
-                        }
-                        let addr = data.limit_hostname;
-                        if (data.isadmin) {
-                            addr = null;
-                        }
-                        if (addr && location.href.indexOf("addr") === -1) {
-                            this.limit = true;
-                            this.contest_mode = false;
-                            this.address = addr;
-                            return;
-                        }
-                        const d = data.problem;
-                        const sourceCode = data.source;
-                        const iseditor = data.editor;
-                        const isadmin = data.isadmin;
-                        this.$store.commit("setCodeInfo", { code: sourceCode });
-                        let _data = {
-                            temp_title: d.title,
-                            problem_id: d.problem_id,
-                            original_id: d.problem_id,
-                            iscontest: !!this.$route.params.contest_id,
-                            description: d.description,
-                            original_content: {
-                                description: d.description,
-                                input: d.input,
-                                output: d.output,
-                                hint: d.hint
-                            },
-                            time: parseFloat(d.time_limit),
-                            memory: parseInt(d.memory_limit),
-                            input: d.input,
-                            output: d.output,
-                            uploader: d.uploader,
-                            sampleinput: d.sample_input,
-                            sampleoutput: d.sample_output,
-                            test_run_sampleinput: d.sample_input,
-                            test_run_sampleoutput: d.sample_output,
-                            hint: d.hint,
-                            fingerprint: "",
-                            fingerprintRaw: "",
-                            submit: parseInt(d.submit),
-                            accepted: parseInt(d.accepted),
-                            source: d.source,
-                            show_style: "preview",
-                            not_show_toolbar: false,
-                            spj: Boolean(parseInt(d.spj)),
-                            single_page: false,
-                            bodyOnTop: true,
-                            isRenderBodyOnTop: false,
-                            source_code: sourceCode,
-                            language_name: d.language_name,
-                            prepend: d.prepend,
-                            append: d.append,
-                            langmask: d.langmask,
-                            isadmin: isadmin,
-                            iseditor: iseditor,
-                            share: false,
-                            selected_language: localStorage.getItem("lastlang") && Boolean(1 << parseInt(localStorage.getItem("lastlang")) & (~d.langmask)) ? parseInt(localStorage.getItem("lastlang")) : Math.log2(~d.langmask & -~d.langmask),
-                            language_template: d.language_template,
-                            fontSize: 18,
-                            hide_warning: true,
-                            confirm_text: "",
-                            submitDisabled: false,
-                            resume_time: 0,
-                            finished: false
-                        };
-                        if (_data.input && _data.input.indexOf(".in") !== -1) {
-                            _data.input += "\n\n**(输入文件不需要用户调用文件操作，仅需使用标准输入输出即可)**";
-                        }
-                        if (_data.output && _data.output.indexOf(".out") !== -1) {
-                            _data.output += "\n\n**(输出文件不需要用户调用文件操作，仅需使用标准输入输出即可)**";
-                        }
-                        if (this.$route.params.problem_id) {
-                            _data.problem_id = d.problem_id;
-                        }
-                        else {
-                            _data.problem_id = 1001 + parseInt(this.$route.params.num);
-                        }
-                        document.title = _data.problem_id + ":" + _data.temp_title + " -- CUP Online Judge";
-                        Object.assign(this, _data);
-                        $(".not-compile").removeClass("not-compile");
-                        resolve();
-                    });
-            });
+            await initData();
             this.markdownItRender();
             this.bindClipboard();
             $modal = $(".ui.basic.confirms.modal");
+        },
+        initData: function () {
+            return this.axios.get("/api/problem/local", { params: parseData })
+                .then(({ data }) => {
+                    if (data.status === "error") {
+                        if (data.statement) {
+                            alert(data.statement);
+                        }
+                        this.contest_mode = data.contest_mode;
+                        this.limit = false;
+                        return;
+                    }
+                    let addr = data.limit_hostname;
+                    if (data.isadmin) {
+                        addr = null;
+                    }
+                    if (addr && location.href.indexOf("addr") === -1) {
+                        this.limit = true;
+                        this.contest_mode = false;
+                        this.address = addr;
+                        return;
+                    }
+                    const d = data.problem;
+                    const sourceCode = data.source;
+                    const iseditor = data.editor;
+                    const isadmin = data.isadmin;
+                    this.$store.commit("setCodeInfo", { code: sourceCode });
+                    let _data = {
+                        temp_title: d.title,
+                        problem_id: d.problem_id,
+                        original_id: d.problem_id,
+                        iscontest: !!this.$route.params.contest_id,
+                        description: d.description,
+                        original_content: {
+                            description: d.description,
+                            input: d.input,
+                            output: d.output,
+                            hint: d.hint
+                        },
+                        time: parseFloat(d.time_limit),
+                        memory: parseInt(d.memory_limit),
+                        input: d.input,
+                        output: d.output,
+                        uploader: d.uploader,
+                        sampleinput: d.sample_input,
+                        sampleoutput: d.sample_output,
+                        test_run_sampleinput: d.sample_input,
+                        test_run_sampleoutput: d.sample_output,
+                        hint: d.hint,
+                        fingerprint: "",
+                        fingerprintRaw: "",
+                        submit: parseInt(d.submit),
+                        accepted: parseInt(d.accepted),
+                        source: d.source,
+                        show_style: "preview",
+                        not_show_toolbar: false,
+                        spj: Boolean(parseInt(d.spj)),
+                        single_page: false,
+                        bodyOnTop: true,
+                        isRenderBodyOnTop: false,
+                        source_code: sourceCode,
+                        language_name: d.language_name,
+                        prepend: d.prepend,
+                        append: d.append,
+                        langmask: d.langmask,
+                        isadmin: isadmin,
+                        iseditor: iseditor,
+                        share: false,
+                        selected_language: localStorage.getItem("lastlang") && Boolean(1 << parseInt(localStorage.getItem("lastlang")) & (~d.langmask)) ? parseInt(localStorage.getItem("lastlang")) : Math.log2(~d.langmask & -~d.langmask),
+                        language_template: d.language_template,
+                        fontSize: 18,
+                        hide_warning: true,
+                        confirm_text: "",
+                        submitDisabled: false,
+                        resume_time: 0,
+                        finished: false
+                    };
+                    if (_data.input && _data.input.indexOf(".in") !== -1) {
+                        _data.input += "\n\n**(输入文件不需要用户调用文件操作，仅需使用标准输入输出即可)**";
+                    }
+                    if (_data.output && _data.output.indexOf(".out") !== -1) {
+                        _data.output += "\n\n**(输出文件不需要用户调用文件操作，仅需使用标准输入输出即可)**";
+                    }
+                    if (this.$route.params.problem_id) {
+                        _data.problem_id = d.problem_id;
+                    }
+                    else {
+                        _data.problem_id = 1001 + parseInt(this.$route.params.num);
+                    }
+                    document.title = _data.problem_id + ":" + _data.temp_title + " -- CUP Online Judge";
+                    Object.assign(this, _data);
+                    $(".not-compile").removeClass("not-compile");
+                });
         },
         escapeParameter: function (val) {
             for (let i in val) {
@@ -327,6 +327,18 @@ export default {
                 }
             }
         },
+        markdownInitHandler: function (thisObj, url, attribute) {
+            const that = this;
+            this.axios.get(url).then(({ data }) => {
+                if (data.status === "OK") {
+                    thisObj.__image = {};
+                    _.forEach(data.data, val => {
+                        thisObj.__image[val.name] = val.data;
+                        that[attribute] = thisObj.render(that.original_content[attribute] || "");
+                    });
+                }
+            });
+        },
         markdownItRender: function () {
             const that = this;
             const id = this.original_id;
@@ -334,45 +346,12 @@ export default {
             let inputMarkdownIt = this.inputMarkdownIt = markdownIt.newInstance("input", that.original_id);
             let outputMarkdownIt = this.outputMarkdownIt = markdownIt.newInstance("output", that.original_id);
             let hintMarkdownIt = this.hintMarkdownIt = markdownIt.newInstance("hint", that.original_id);
-            $.get("/api/photo/description/" + id, function (data) {
-                if (data.status === "OK") {
-                    descriptionMarkdownIt.__image = {};
-                    _.forEach(data.data, function (val) {
-                        descriptionMarkdownIt.__image[val.name] = val.data;
-                        that.description = descriptionMarkdownIt.render(that.original_content.description || "");
-                    });
-                }
-            });
-            $.get("/api/photo/input/" + id, function (data) {
-                if (data.status === "OK") {
-                    inputMarkdownIt.__image = {};
-                    _.forEach(data.data, function (val) {
-                        inputMarkdownIt.__image[val.name] = val.data;
-                        that.input = inputMarkdownIt.render(that.original_content.input || "");
-                    });
-                }
-            });
-            $.get("/api/photo/output/" + id, function (data) {
-                if (data.status === "OK") {
-                    outputMarkdownIt.__image = {};
-                    _.forEach(data.data, function (val) {
-                        outputMarkdownIt.__image[val.name] = val.data;
-                        that.output = outputMarkdownIt.render(that.original_content.output || "");
-                    });
-                }
-            });
-            this.axios.get(`/api/photo/hint/${id}`)
-                .then(({ data }) => {
-                    if (data.status === "OK") {
-                        hintMarkdownIt.__image = {};
-                        _.forEach(data.data, function (val) {
-                            hintMarkdownIt.__image[val.name] = val.data;
-                            that.hint = hintMarkdownIt.render(that.original_content.hint || "");
-                        });
-                    }
-                });
+            this.markdownInitHandler(descriptionMarkdownIt, `/api/photo/description/${id}`, "description");
+            this.markdownInitHandler(inputMarkdownIt, `/api/photo/input/${id}`, "input");
+            this.markdownInitHandler(outputMarkdownIt, `/api/photo/output/${id}`, "output");
+            this.markdownInitHandler(hintMarkdownIt, `/api/photo/hint/${id}`, "hint");
             Fingerprint2.get(function (components) {
-                let values = components.map(el => el.value);
+                const values = components.map(el => el.value);
                 that.fingerprintRaw = Fingerprint2.x64hash128(values.join(""), 31);
                 that.axios.get("/api/status/ip")
                     .then(({ data }) => {
@@ -390,18 +369,14 @@ export default {
         switch_screen: function () {
             this.single_page = !this.single_page;
             document.documentElement.scrollTop = 0;
+            let attribute = "";
             if (this.single_page) {
-                $(".topmenu").css({
-                    borderBottom: "none",
-                    boxShadow: "none"
-                });
+                attribute = "none";
             }
-            else {
-                $(".topmenu").css({
-                    borderBottom: "",
-                    boxShadow: ""
-                });
-            }
+            $(".topmenu").css({
+                borderBottom: attribute,
+                boxShadow: attribute
+            });
         },
         codeTooShort (options, next) {
             let ret;

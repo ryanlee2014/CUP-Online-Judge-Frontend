@@ -1,4 +1,5 @@
 const MonacoEditorPlugin = require("monaco-editor-webpack-plugin");
+const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 
 module.exports = {
     chainWebpack: config => {
@@ -53,10 +54,15 @@ module.exports = {
             }
         }
     },
-    configureWebpack: {
-        plugins: [
-            new MonacoEditorPlugin()
-        ]
+    configureWebpack: config => {
+        return {
+            plugins: [
+                new MonacoEditorPlugin(),
+                new BundleAnalyzerPlugin({
+                    analyzerMode: "static"
+                })
+            ]
+        };
     },
 
     assetsDir: "./static",
