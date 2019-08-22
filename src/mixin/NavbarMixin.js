@@ -1,3 +1,4 @@
+const $ = require("jquery");
 export default {
     props: {
         user_id: {

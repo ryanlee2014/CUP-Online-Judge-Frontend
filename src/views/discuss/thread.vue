@@ -62,7 +62,7 @@ import MainContent from "../../components/discuss/MainContent";
 import mixins from "../../mixin/init";
 import avatarMixin from "../../mixin/avatarMixin";
 import markdownIt from "../../lib/markdownIt/markdownIt";
-import mermaid from "mermaid";
+import mermaidMixin from "../../mixin/mermaidMixin";
 
 const $ = require("jquery");
 const _ = require("lodash");
@@ -73,7 +73,7 @@ export default {
     components: {
         MainContent
     },
-    mixins: [mixins, avatarMixin],
+    mixins: [mixins, avatarMixin, mermaidMixin],
     data: function () {
         return {
             page: 0,
@@ -121,15 +121,6 @@ export default {
         reply: function () {
             return this.table_val.discuss;
         }
-    },
-    created: function () {
-        $(document).on("click", function () {
-            $(".mermaid").each(function (el, v) {
-                if ($(v).is(":visible")) {
-                    mermaid.init(undefined, v);
-                }
-            });
-        });
     },
     beforeUpdate: function () {
         // console.time("update use time");

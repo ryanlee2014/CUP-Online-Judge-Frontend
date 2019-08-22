@@ -130,7 +130,6 @@ const $ = require("jquery");
 const jQuery = $;
 window.jQuery = $;
 const _ = require("lodash");
-require("../static/js/semantic.min");
 $("#show_tag")
     .checkbox()
     .first().checkbox({
@@ -217,7 +216,14 @@ export default {
     },
     computed: {
         tables: {
-            get: () => undefined,
+            get: function () {
+                return {
+                    page_cnt: this.page_cnt,
+                    total: this.total,
+                    table: this._t,
+                    recent_one_month: this.recent_one_month
+                };
+            },
             set: function (_t) {
                 this.page_cnt = _t.step;
                 this.total = _t.total;

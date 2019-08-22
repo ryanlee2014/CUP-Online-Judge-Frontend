@@ -12,9 +12,9 @@ import mavonEditor from "./lib/mavon-editor/mavon-editor";
 import VueObserveVisibility from "vue-observe-visibility";
 import i18n from "./i18n";
 import Injection from "./injection/index";
-import axiosInterceptors from "./router/middleware/axiosInterceptors";
+import AxiosInterceptors from "./router/middleware/AxiosInterceptors";
 Injection();
-axiosInterceptors();
+AxiosInterceptors();
 browserUpdate({ required: { e: -3, f: -3, o: -3, s: -3, c: -6 }, insecure: true, unsupported: true, api: 2019.05 });
 Vue.use(VueAxios, axios);
 Vue.use(VueWorker);
@@ -42,7 +42,3 @@ new Vue({
     i18n,
     render: h => h(App)
 }).$mount("#app");
-
-Vue.directive("tableUpdated", {
-
-});

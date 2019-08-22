@@ -1,6 +1,8 @@
 import {notUndefinedOrNull} from "../store/util/index";
 const $ = require("jquery");
 const jQuery = $;
+window.jQuery = window.$ = $;
+require("../../semantic/semantic-ui/semantic.min");
 function binding_method(homepage, finished) {
     // fix menu when passed
     if ($('.fixed.menu').html())

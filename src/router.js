@@ -1,6 +1,5 @@
 import Vue from "vue";
 import Router from "vue-router";
-import Home from "./views/Home.vue";
 import adminAuth from "./lib/router";
 import Guard from "./router/util/guard";
 
@@ -12,7 +11,7 @@ const router = new Router({
         {
             path: "/",
             name: "home",
-            component: Home
+            component: () => import("./views/Home.vue")
         },
         {
             path: "/about",

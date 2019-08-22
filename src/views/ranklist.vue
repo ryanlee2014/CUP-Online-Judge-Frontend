@@ -14,7 +14,6 @@ import RankList from "../components/ranklist/MainContent";
 import mixins from "../mixin/init";
 const $ = require("jquery");
 window.$ = window.jQuery = $;
-require("../static/js/semantic.min");
 export default {
     name: "ranklist",
     mixins: [mixins],

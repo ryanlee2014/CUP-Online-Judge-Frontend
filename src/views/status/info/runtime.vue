@@ -63,32 +63,37 @@ export default {
     },
     methods: {
         initContext (text) {
-            let left_idx = 0; let right_idx = 0;
+            let leftIndex = 0;
+            let rightIndex = 0;
             let left = [];
             let right = [];
             let cnt = 10;
-            while (left_idx !== -1 && right_idx !== -1) {
-                left_idx = text.indexOf("------测试输出前100行-----", left_idx + 1);
-                right_idx = text.indexOf("------用户输出前100行-----", right_idx + 1);
-                if (!(left_idx !== -1 && right_idx !== -1)) {
+            text = text.split("------测试输出前100行-----").join("[TestRunOut]").split("------用户输出前100行-----").join("[UserOut]")
+                .split("------测试输出(左)与用户输出(右)前200行的区别-----").join("[DIFF]");
+            window.text = text;
+            while (leftIndex !== -1 && rightIndex !== -1) {
+                leftIndex = text.indexOf("[TestRunOut]", leftIndex + 1);
+                rightIndex = text.indexOf("[UserOut]", rightIndex + 1);
+                if (!(leftIndex !== -1 && rightIndex !== -1)) {
                     break;
                 }
-                left.push(text.substring(left_idx, right_idx) + "\n");
+                left.push(text.substring(leftIndex, rightIndex) + "\n");
                 --cnt;
                 if (cnt <= 0) {
                     break;
                 }
             }
-            left_idx = 0;
+            leftIndex = rightIndex = 0;
             cnt = 10;
             // eslint-disable-next-line no-constant-condition
             while (true) {
-                left_idx = text.indexOf("------用户输出前100行-----", left_idx + 1);
-                right_idx = text.indexOf("------测试输出(左)与用户输出(右)前200行的区别-----", right_idx + 1);
-                if (!(left_idx !== -1 && right_idx !== -1)) {
+                leftIndex = text.indexOf("[UserOut]", leftIndex + 1);
+                rightIndex = text.indexOf("[DIFF]", rightIndex + 1);
+                if (!(leftIndex !== -1 && rightIndex !== -1)) {
                     break;
                 }
-                right.push(text.substring(left_idx, right_idx) + "\n");
+                right.push(text.substring(leftIndex, rightIndex) + "\n");
+                console.log(text.substring(leftIndex, rightIndex));
                 --cnt;
                 if (cnt <= 0) {
                     break;
@@ -108,8 +113,8 @@ export default {
             });
             if (text && text.length && left && left.length) {
                 this.diffmode = true;
-                left = left.split("------测试输出前100行-----").join("");
-                right = right.split("------用户输出前100行-----").join("");
+                left = left.split("[TestRunOut]").join("");
+                right = right.split("[UserOut]").join("");
                 let originalModel = monaco.editor.createModel(left, "plain/text");
                 let modifiedModel = monaco.editor.createModel(right, "plain/text");
                 this.$forceUpdate();

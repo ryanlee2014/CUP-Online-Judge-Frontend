@@ -103,14 +103,14 @@
 <script>
 import mixins from "../mixin/init";
 import avatarMixin from "../mixin/avatarMixin";
-import mermaid from "mermaid";
+import mermaidMixin from "../mixin/mermaidMixin";
 import markdownIt from "../lib/markdownIt/markdownIt";
 const $ = window.$ = window.jQuery = require("jquery");
 const Clipboard = require("clipboard");
 require("../static/js/semantic.min");
 export default {
     name: "tutorial",
-    mixins: [mixins, avatarMixin],
+    mixins: [mixins, avatarMixin, mermaidMixin],
     data: function () {
         return {
             content: "",
@@ -124,15 +124,6 @@ export default {
             language_markdown: [],
             markdownIt
         };
-    },
-    created: function () {
-        $(document).on("click", function () {
-            $(".mermaid").each(function (el, v) {
-                if ($(v).is(":visible")) {
-                    mermaid.init(undefined, v);
-                }
-            });
-        });
     },
     updated () {
         this.$nextTick(function () {
