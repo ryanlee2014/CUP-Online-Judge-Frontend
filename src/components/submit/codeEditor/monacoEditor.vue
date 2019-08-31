@@ -144,6 +144,7 @@ export default {
                 fontSize: this.getFontSizeFromStorage()
             });
             monaco.editor.setTheme(this.getThemeFromStorage());
+            this.modelEventRegistry();
         },
         modelEventRegistry () {
             const currentModel = this.editor.getModel();

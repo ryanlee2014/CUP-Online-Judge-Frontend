@@ -144,22 +144,22 @@ export function ProblemFactory (): Problem {
         }
     };
     baseProblem.calculatePenaltyTime = function () {
-        const start_time = this.start_time;
+        const startTime = this.start_time;
         if (this.accept.length > 0) {
             this.accept.sort(earlyFirstComparator);
             this.submit.sort(earlyFirstComparator);
-            let difftime = this.accept[0].diff(start_time, "second");
+            let diffTime = this.accept[0].diff(startTime, "second");
             this.try_time = 0;
             for (let submission of this.submit) {
                 if (submission.isBefore(this.accept[0])) {
                     ++this.try_time;
-                    difftime += 1200;
+                    diffTime += 1200; // 20min
                 }
                 else {
                     break;
                 }
             }
-            return difftime;
+            return diffTime;
         }
         else {
             return 0;
@@ -194,7 +194,7 @@ export function ProblemListFactory (total: number): ProblemList {
         }
         else {
             total = Math.max(i, total);
-            return problem[i] = ProblemFactory();
+            return (problem[i] = ProblemFactory());
         }
     };
 
@@ -242,11 +242,11 @@ export function NickFactory (nick: any) {
 /**
  * @return {string}
  */
-export function UserIDFactory (user_id: any) {
-    if (typeof user_id !== "string") {
-        user_id = "";
+export function UserIDFactory (userId: any) {
+    if (typeof userId !== "string") {
+        userId = "";
     }
-    return user_id.trim();
+    return userId.trim();
 }
 
 export function SetFactory () {
@@ -298,24 +298,24 @@ export function firstBloodListFactory (total: number) {
             return this[i];
         }
         else {
-            return this[i] = firstBloodFactory();
+            return (this[i] = firstBloodFactory());
         }
     };
     firstBlood.newInstance = firstBloodListFactory;
     return firstBlood;
 }
 
-export function SubmitterFactory (nick: ?string, total_problem: number, user_id: ?string): Submitter {
+export function SubmitterFactory (nick: ?string, totalProblem: number, userId: ?string): Submitter {
     return {
         ac: 0,
         nick: NickFactory(nick),
-        problem: ProblemListFactory(total_problem),
+        problem: ProblemListFactory(totalProblem),
         penalty_time: 0,
         fingerprintSet: SetFactory(),
         hardwareFingerprintSet: SetFactory(),
         ipSet: SetFactory(),
         real_name: "",
-        user_id: UserIDFactory(user_id),
+        user_id: UserIDFactory(userId),
         addData (val: any) {
             this.fingerprintSet.add(val.fingerprint);
             this.hardwareFingerprintSet.add(val.fingerprintRaw);

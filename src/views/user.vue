@@ -550,15 +550,15 @@ export default {
                     let d = data;
                     let submission = d.data.submission;
                     let local = [];
-                    let local_accept;
+                    let localAccept;
                     let hdu = [];
-                    let hdu_accept;
+                    let hduAccept;
                     let poj = [];
-                    let poj_accept;
+                    let pojAccept;
                     let uva = [];
-                    let uva_accept;
+                    let uvaAccept;
                     let other = [];
-                    let other_accept;
+                    let otherAccept;
                     const pick_ac = function (arr) {
                         let res = [];
                         _.forEach(arr, function (val) {
@@ -587,7 +587,7 @@ export default {
                     };
                     let analsubmission = [];
                     let now = dayjs();
-                    let other_site_submission = {};
+                    let otherSideSubmission = {};
                     _.forEach(submission, function (val) {
                         if ((val.time = dayjs(val.time)).add(3, "month").isAfter(now)) {
                             analsubmission.push(val);
@@ -607,11 +607,11 @@ export default {
                         else {
                             other.push(val);
                         }
-                        if (other_site_submission[val.oj_name] && other_site_submission[val.oj_name].length > 0) {
-                            other_site_submission[val.oj_name].push(val);
+                        if (otherSideSubmission[val.oj_name] && otherSideSubmission[val.oj_name].length > 0) {
+                            otherSideSubmission[val.oj_name].push(val);
                         }
                         else {
-                            other_site_submission[val.oj_name] = [val];
+                            otherSideSubmission[val.oj_name] = [val];
                         }
                     });
                     analsubmission.sort(function (a, b) {
@@ -641,17 +641,17 @@ export default {
                         }
                     });
 
-                    hdu_accept = pick_ac(hdu);
-                    local_accept = pick_ac(local);
-                    poj_accept = pick_ac(poj);
-                    uva_accept = pick_ac(uva);
-                    other_accept = pick_ac(other);
-                    if (other_site_submission["LOCAL"]) {
-                        delete other_site_submission["LOCAL"];
+                    hduAccept = pick_ac(hdu);
+                    localAccept = pick_ac(local);
+                    pojAccept = pick_ac(poj);
+                    uvaAccept = pick_ac(uva);
+                    otherAccept = pick_ac(other);
+                    if (otherSideSubmission["LOCAL"]) {
+                        delete otherSideSubmission["LOCAL"];
                     }
-                    for (let idx in other_site_submission) {
-                        if (other_site_submission.hasOwnProperty(idx)) {
-                            other_site_submission[idx] = pick_ac(other_site_submission[idx]);
+                    for (let idx in otherSideSubmission) {
+                        if (otherSideSubmission.hasOwnProperty(idx)) {
+                            otherSideSubmission[idx] = pick_ac(otherSideSubmission[idx]);
                         }
                     }
                     let privilege = d.data.privilege;
@@ -677,7 +677,7 @@ export default {
                     let dsort = function (a, b) {
                         return b.cnt - a.cnt;
                     };
-                    console.log(other_site_submission);
+                    console.log(otherSideSubmission);
                     d.data.os.sort(dsort);
                     d.data.browser.sort(dsort);
                     let github_info = d.data.information.github || "";
@@ -720,18 +720,18 @@ export default {
                             other: other
                         },
                         accept: {
-                            hdu: hdu_accept,
-                            poj: poj_accept,
-                            uva: uva_accept,
-                            local: local_accept,
-                            other: other_accept
+                            hdu: hduAccept,
+                            poj: pojAccept,
+                            uva: uvaAccept,
+                            local: localAccept,
+                            other: otherAccept
                         },
                         rank: d.data.rank,
                         vjudge_rank: d.data.vjudge_rank,
                         last_login: d.data.login_time ? d.data.login_time[0] ? d.data.login_time[0].time : "" : "",
-                        local_accepted: local_accept.length,
-                        accepted_details: other_site_submission,
-                        other_accepted: hdu_accept.length + poj_accept.length + uva_accept.length + other_accept.length,
+                        local_accepted: localAccept.length,
+                        accepted_details: otherSideSubmission,
+                        other_accepted: hduAccept.length + pojAccept.length + uvaAccept.length + otherAccept.length,
                         same_percentage_aver: parseInt(d.data.sim_average_percentage),
                         same_problem_time: parseInt(d.data.sim_count),
                         same_aver_length: parseInt(d.data.sim_average_length),

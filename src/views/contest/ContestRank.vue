@@ -105,10 +105,10 @@
                             <td>{{row.fingerprintSet.size}}</td>
                             <td>{{row.hardwareFingerprintSet.size}}</td>
                             <td>{{row.ipSet.size}}</td>
-                            <td>{{row.ipSet.size === 1 ? detect_place(Array.from(row.ipSet)[0]) : row.ipSet.size ===
+                            <td>{{row.ipSet.size === 1 ? detectPlace(Array.from(row.ipSet)[0]) : row.ipSet.size ===
                                 0?"无":"略"}}
                             </td>
-                            <td :bgcolor="'#FF' + (format_color(Math.max(Math.floor((1 << 8) - (256 * Math.max(p.sim - 69,0) / 31.0)) - 1, 0)))"
+                            <td :bgcolor="'#FF' + (formatColor(Math.max(Math.floor((1 << 8) - (256 * Math.max(p.sim - 69,0) / 31.0)) - 1, 0)))"
                                 :key="key"
                                 align="left" v-for="(p,key) in row.problem.toArray()">
                                 {{ (p.submit.length > 0)?"(-":""}}{{p.try_time > 0 ? p.try_time + ")" : p.submit.length
@@ -127,7 +127,6 @@
 </template>
 
 <script>
-// @flow weak
 import mixins from "../../mixin/init";
 import { saveAs } from "file-saver";
 import utils from "../../lib/util";
@@ -193,25 +192,25 @@ export default {
                 this.auto_update = false;
                 try {
                     val = submissionCollection = submissionCollection.concat(this.toArray(val));
+                    let submitter;
                     if (this.firstRender) {
                         this.firstRender = false;
                         this.firstBloodList = firstBloodListFactory();
-                        let submitter = {};
+                        submitter = {};
                         this.initUserTable(submitter);
                         this.fillSubmitterList(submitter, val);
                         this.userStructure = submitter;
                         this.submitter = submitter = Object.values(submitter);
                         submitter.forEach(this.updateSubmitter);
-                        this.calculateRank();
                     }
                     else {
-                        let submitter = this.userStructure;
+                        submitter = this.userStructure;
                         let lazyUpdateSet = new Set();
                         this.fillSubmitterList(submitter, val);
                         val.forEach(el => typeof submitter[el.user_id.toLowerCase()] !== "undefined" ? lazyUpdateSet.add(submitter[el.user_id.toLowerCase()]) : "");
                         lazyUpdateSet.forEach(this.updateSubmitter);
-                        this.calculateRank();
                     }
+                    this.calculateRank();
                     window.temp_data = submissionCollection;
                     window.datas = this.submitter;
                 }
@@ -234,7 +233,7 @@ export default {
             }
             return val;
         },
-        updateSubmitter (el: Submitter) {
+        updateSubmitter (el) {
             el.calculatePenaltyTime();
             el.calculateAC();
             el.calculateFirstBlood(this.firstBloodList);
@@ -266,14 +265,12 @@ export default {
             let rnk = 1;
             window.submitter = this.submitter;
             this.totalNumber = 0;
-            _.forEach(this.submitter, val => val.rank = val.ac > 0 ? (++this.totalNumber, rnk++) : rnk);
+            _.forEach(this.submitter, val => (val.rank = val.ac > 0 ? (++this.totalNumber, rnk++) : rnk));
         },
         rankClass (rank) {
             const total = this.totalNumber;
-            if (parseInt(rank) === 1) {
-                return "ui yellow";
-            }
-            else if (rank <= total * 0.1 + 1) {
+            rank = parseInt(rank);
+            if (rank <= total * 0.1 + 1) {
                 return "ui yellow";
             }
             else if (rank <= total * 0.3 + 1) {
@@ -341,22 +338,19 @@ export default {
             this.backup_data = [];
             this.auto_update = true;
         },
+        fillZero (str) {
+            if (str.length < 2) {
+                return "0" + str;
+            }
+            else {
+                return str;
+            }
+        },
         format_date: function (second, mode = 0) {
-            const fill_zero = function (str) {
-                if (str.length < 2) {
-                    return "0" + str;
-                }
-                else {
-                    return str;
-                }
-            };
-            let hour = String(parseInt(second / 3600));
-            hour = fill_zero(hour);
-
-            let minute = String(parseInt((second - hour * 3600) / 60));
-            minute = fill_zero(minute);
-            let sec = String(second % 60);
-            sec = fill_zero(sec);
+            const fillZero = this.fillZero;
+            const hour = fillZero(parseInt(second / 3600).toString());
+            const minute = fillZero(parseInt((second - hour * 3600) / 60).toString());
+            const sec = fillZero((second % 60).toString());
             if (mode) {
                 return hour + "：" + minute + "：" + sec;
             }
@@ -364,7 +358,7 @@ export default {
                 return hour + ":" + minute + ":" + sec;
             }
         },
-        format_color: function (num) {
+        formatColor: function (num) {
             let str = num.toString(16);
             if (num < 16) {
                 return "0" + str + "0" + str;
@@ -373,7 +367,7 @@ export default {
                 return "" + str + "" + str;
             }
         },
-        detect_place: function (ip) {
+        detectPlace: function (ip) {
             if (!ip) {
                 return "未知";
             }
@@ -478,25 +472,26 @@ export default {
             let that = this;
             if (!newVal) return;
             for (let i = 0; i < this.submitter.length; ++i) {
-                $.get("/api/user/nick/" + this.decodeHTML(this.submitter[i].nick), function (data) {
-                    if (data && data.data && data.data.length > 0) {
-                        let nick = data.nick;
-                        let nickArray = data.data;
-                        let user_id = "";
-                        for (let j = 0; j < nickArray.length; ++j) {
-                            if (!isNaN(nickArray[j].user_id)) {
-                                user_id = nickArray[j].user_id;
-                                break;
+                this.axios.get(`/api/user/nick/${this.decodeHTML(this.submitter[i].nick)}`)
+                    .then(({ data }) => {
+                        if (data && data.data && data.data.length > 0) {
+                            let nick = data.nick;
+                            let nickArray = data.data;
+                            let userId = "";
+                            for (let j = 0; j < nickArray.length; ++j) {
+                                if (!isNaN(nickArray[j].user_id)) {
+                                    userId = nickArray[j].user_id;
+                                    break;
+                                }
+                            }
+                            for (let j = 0; j < that.submitter.length; ++j) {
+                                if (that.decodeHTML(that.submitter[j].nick) === nick) {
+                                    that.submitter[j].real_name = userId;
+                                    break;
+                                }
                             }
                         }
-                        for (let j = 0; j < that.submitter.length; ++j) {
-                            if (that.decodeHTML(that.submitter[j].nick) === nick) {
-                                that.submitter[j].real_name = user_id;
-                                break;
-                            }
-                        }
-                    }
-                });
+                    });
             }
         }
     },

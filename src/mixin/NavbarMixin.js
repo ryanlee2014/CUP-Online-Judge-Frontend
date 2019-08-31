@@ -41,8 +41,8 @@ export default {
     methods: {
         bindSocketObserver () {
             const that = this;
-            this.$socket._connected = this.$socket.connected;
             Object.defineProperty(this.$socket, "connected", {
+                _connected: this.$socket.connected,
                 get: function () {
                     return this._connected;
                 },
@@ -103,8 +103,6 @@ export default {
         });
         this.sockets.subscribe("msg", (data) => {
             setTimeout(() => {
-                // $(".item.online_num").attr("data-html", "<div class='header'>From:" + data["user_id"] + "<br>" + data["nick"] + "</div><div class='content'>" + data["content"] + "</div>")
-                //    .popup("show").popup("set position", "bottom center");
                 $("body")
                     .toast({
                         class: "info",
