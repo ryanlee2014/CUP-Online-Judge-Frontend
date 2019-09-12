@@ -23,7 +23,7 @@
             </th>
         </tr>
         </thead>
-        <transition-group mode="out-in" name="list-complete" tag="tbody">
+        <transition-group mode="out-in" name="list-complete" tag="tbody" v-on:after-enter="bindSticky">
             <!--
             <transition-group tag="tbody"
                               name="grip-table"
@@ -117,13 +117,6 @@ export default {
             markdownIt,
             lodash
         };
-    },
-    watch: {
-        data () {
-            this.$nextTick(() => {
-                this.bindSticky();
-            });
-        }
     },
     computed: {
         result: function () {
