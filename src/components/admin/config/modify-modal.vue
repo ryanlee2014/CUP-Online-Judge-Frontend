@@ -28,7 +28,7 @@
                     </div>
                 </div>
                 <div class="field">
-                    <button @click="submit">Submit</button>
+                    <button @click="submit" class="ui button primary">Submit</button>
                 </div>
             </div>
         </div>

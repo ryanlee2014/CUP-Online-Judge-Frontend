@@ -35,7 +35,7 @@
                 </td>
                 <td>
                     <button class="ui tiny primary button" @click="activateModal('edit', row)">Modify</button>
-                    <button class="ui tiny secondary button">Delete</button>
+                    <button class="ui tiny secondary button" @click="removeConfig(row.key)">Delete</button>
                 </td>
             </tr>
             </tbody>
@@ -101,6 +101,12 @@ export default {
                     else {
                         alert("更新失败");
                     }
+                });
+        },
+        removeConfig (key) {
+            this.axios.post(`/api/setting/devconfig/${this.prefix}/delete`, { key })
+                .then(({ data }) => {
+                    alert(data.status === "OK" ? "删除成功" : "删除失败");
                 });
         }
     }
