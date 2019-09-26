@@ -107,6 +107,7 @@ export default {
             this.axios.post(`/api/setting/devconfig/${this.prefix}/delete`, { key })
                 .then(({ data }) => {
                     alert(data.status === "OK" ? "删除成功" : "删除失败");
+                    setTimeout(() => { this.init(); }, 1000);
                 });
         }
     }
