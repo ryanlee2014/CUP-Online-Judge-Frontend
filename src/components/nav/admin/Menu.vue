@@ -65,10 +65,23 @@
                     </router-link>
                 </div>
             </div>
-            <router-link class="item" exact-active-class="active" to="/admin/global_setting">
-                <i class="home icon"></i>
-                {{$t("global setting")}}
-            </router-link>
+            <div class="ui dropdown item">
+                <div class="text">
+                    <i class="laptop icon"></i>
+                    {{$t("global setting")}}
+                </div>
+                <i class="dropdown icon"></i>
+                <div class="menu">
+                    <router-link class="item" exact-active-class="active" to="/admin/config/manager">
+                        <i class="check double icon"></i>
+                        {{$t("config manager")}}
+                    </router-link>
+                    <router-link class="item" exact-active-class="active" to="/admin/switch/manager">
+                        <i class="check double icon"></i>
+                        {{$t("switch manager")}}
+                    </router-link>
+                </div>
+            </div>
             <SocketMenu :connected="connected" :judger="judger" :logined="logined" :nick="nick"
                         :user="user"></SocketMenu>
         </div>

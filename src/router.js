@@ -434,6 +434,24 @@ const router = new Router({
             }
         },
         {
+            path: "/admin/config/manager",
+            name: "Config Manager",
+            component: () => import("./views/admin/config/config-manager.vue"),
+            meta: {
+                auth: true,
+                admin: true
+            }
+        },
+        {
+            path: "/admin/switch/manager",
+            name: "Switch Manager",
+            component: () => import("./views/admin/config/switch-manager.vue"),
+            meta: {
+                auth: true,
+                admin: true
+            }
+        },
+        {
             path: "/admin/user/ban",
             name: "Ban manage",
             component: () => import("./views/admin/account/ban.vue"),

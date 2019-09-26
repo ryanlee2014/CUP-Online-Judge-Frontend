@@ -84,6 +84,7 @@ export default {
         };
         const query = this.$route.query;
         let currentPage;
+        // eslint-disable-next-line no-prototype-builtins
         if (query.hasOwnProperty("page")) {
             currentPage = parseInt(query.page);
         }
