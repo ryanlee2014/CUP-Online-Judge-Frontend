@@ -103,7 +103,7 @@
     },
     "rules": {
       "vue/no-unused-vars": "off",
-      "vue/no-unused-components": "1",
+      "vue/no-unused-components": 1,
       "no-console": "off",
       "no-unused-vars": "off",
       "no-useless-escape": "off",
