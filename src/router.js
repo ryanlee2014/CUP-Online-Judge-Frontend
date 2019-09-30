@@ -466,6 +466,11 @@ const router = new Router({
             component: () => import("./views/error/noprivilege.vue")
         },
         {
+            path: "/unavailable",
+            name: "Unavailable",
+            component: () => import("./views/error/unavailable.vue")
+        },
+        {
             path: "/ban",
             name: "Ban view",
             component: () => import("./views/error/ban.vue")

@@ -10,6 +10,11 @@ export default function () {
             });
             return Promise.reject(response);
         }
+        else if (data.rule === -1) {
+            router.replace({
+                path: "/unavailable"
+            });
+        }
         else {
             return Promise.resolve(response);
         }
