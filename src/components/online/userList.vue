@@ -74,6 +74,7 @@ export default {
                 }
                 else {
                     this.tmp_userlist = newval;
+                    /*
                     var oldUser = []; var newUser = [];
                     _.forEach(this.userlist, function (v) {
                         oldUser.push(v.user_id);
@@ -86,6 +87,7 @@ export default {
                     if (JSON.stringify(oldUser) !== JSON.stringify(newUser)) {
                         this.need_popup = true;
                     }
+                     */
                 }
             }
         }
@@ -102,11 +104,12 @@ export default {
     },
     mounted () {
         const fn = () => {
-            const original = JSON.stringify(this.onlineList);
-            const newVal = JSON.stringify(this.$store.getters.onlineUser);
+            const onlineUser = this.$store.getters.onlineUser;
+            const original = JSON.stringify(this.userlist.map(el => (el && el.user_id) || ""));
+            const newVal = JSON.stringify(onlineUser.map(el => el.user_id));
             if (original !== newVal) {
                 this.need_popup = true;
-                this.userlist = JSON.parse(newVal);
+                this.userlist = JSON.parse(JSON.stringify(onlineUser));
             }
         };
         fn();
