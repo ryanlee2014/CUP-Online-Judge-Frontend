@@ -51,9 +51,10 @@ export default {
     },
     methods: {
         activate (payload) {
-            if (typeof payload !== "undefined" && typeof payload.key === "string") {
-                Object.assign(this, payload);
+            if (typeof payload === "undefined" || typeof payload.key !== "string") {
+                payload = { key: "", value: "", comment: "" };
             }
+            Object.assign(this, payload);
             $(this.$refs.modal).modal("show");
         },
         deactivate () {
