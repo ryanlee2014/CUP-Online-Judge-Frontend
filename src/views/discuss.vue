@@ -107,14 +107,14 @@ export default {
         document.title = `Discuss -- ${document.title}`;
         let page = this.page * 20;
         let that = this;
-        $.get("/api/discuss?page=" + page, function (data) {
+        this.axios.get("/api/discuss?page=" + page).then(({ data }) => {
             if (data.contest_mode) {
                 that.contest_mode = true;
                 return;
             }
             that.table = data;
         });
-        $.get("/api/discuss?page=" + page, function (data) {
+        this.axios.get("/api/discuss?page=" + page).then(({ data }) => {
             if (data.contest_mode) {
                 that.contest_mode = true;
                 return;

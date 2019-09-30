@@ -14,6 +14,7 @@ export default function () {
             router.replace({
                 path: "/unavailable"
             });
+            return Promise.reject(response);
         }
         else {
             return Promise.resolve(response);

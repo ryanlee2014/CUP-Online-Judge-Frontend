@@ -257,10 +257,10 @@ export default {
             // handler.activate.call(obj.target);
             let that = this;
             this.setQuery();
-            $.get("/api/problemset/" + page + "/" + search_tag + "/" + order_target + "/" + order + "/?label=" + this.label, function (data) {
-                // that.dim = false;
-                that.tables = data;
-            });
+            this.axios.get("/api/problemset/" + page + "/" + search_tag + "/" + order_target + "/" + order + "/?label=" + this.label)
+                .then(({ data }) => {
+                    that.tables = data;
+                });
         },
         sort: function (target, event, default_order = 0) {
             // this.dim = true;
@@ -270,10 +270,11 @@ export default {
             let search_tag = this.search_tag || "none";
             let order = this.order = prev_target_equal_to_current ? (-this.order + 1) : default_order;
             let that = this;
-            $.get("/api/problemset/" + page + "/" + search_tag + "/" + target + "/" + order + "/?label=" + this.label, function (data) {
-                that.dim = false;
-                that.tables = data;
-            });
+            this.axios.get("/api/problemset/" + page + "/" + search_tag + "/" + target + "/" + order + "/?label=" + this.label)
+                .then(({ data }) => {
+                    that.dim = false;
+                    that.tables = data;
+                });
         },
         tag: function (label) {
             if (label == "标签待整理") {
@@ -287,10 +288,11 @@ export default {
             let order = this.order;
             let that = this;
             this.setQuery();
-            $.get("/api/problemset/" + page + "/" + search_tag + "/" + order_target + "/" + order + "/?label=" + this.label, function (data) {
-                that.dim = false;
-                that.tables = data;
-            });
+            this.axios.get("/api/problemset/" + page + "/" + search_tag + "/" + order_target + "/" + order + "/?label=" + this.label)
+                .then(({ data }) => {
+                    that.dim = false;
+                    that.tables = data;
+                });
         },
         searching: function (label) {
             if (label == "标签待整理") {
@@ -303,10 +305,11 @@ export default {
             let order = this.order;
             let that = this;
             this.setQuery();
-            $.get("/api/problemset/" + page + "/" + label + "/" + order_target + "/" + order + "/?label=" + this.label, function (data) {
-                that.dim = false;
-                that.tables = data;
-            });
+            this.axios.get("/api/problemset/" + page + "/" + label + "/" + order_target + "/" + order + "/?label=" + this.label)
+                .then(({ data }) => {
+                    that.dim = false;
+                    that.tables = data;
+                });
         },
         remove: function (type) {
             if (type == "search") {
@@ -321,10 +324,11 @@ export default {
             let order = this.order;
             let that = this;
             this.setQuery();
-            $.get("/api/problemset/" + page + "/" + (this.search_tag || "none") + "/" + order_target + "/" + order + "/?label=" + this.label, function (data) {
-                that.dim = false;
-                that.tables = data;
-            });
+            this.axios.get("/api/problemset/" + page + "/" + (this.search_tag || "none") + "/" + order_target + "/" + order + "/?label=" + this.label)
+                .then(({ data }) => {
+                    that.dim = false;
+                    that.tables = data;
+                });
         },
         check: function () {
             this.show_tag = Boolean(-this.show_tag + 1);
@@ -348,8 +352,9 @@ export default {
         drawLabelCloud: function () {
             this.has_draw = true;
             let that = this;
-            new Promise(function () {
-                $.get("/api/problem/local/?label=true", function (d) {
+            this.axios.get("/api/problem/local/?label=true")
+                .then(response => {
+                    const d = response.data;
                     G2.Shape.registerShape("point", "cloud", {
                         drawShape: function drawShape (cfg, container) {
                             let attrs = getTextAttrs(cfg);
@@ -415,7 +420,6 @@ export default {
                         // location.href = "?tag=" + encodeURI();
                     });
                 });
-            });
         },
         initjQueryMethods () {
             $(".ui.search")
@@ -441,14 +445,15 @@ export default {
         $("#show_cloud").checkbox((that.show_label_cloud ? "" : "un") + "check");
 
         this.current_page = page;
-        $.get("/api/problemset/" + page + "/" + (this.search_tag || "none") + "/" + this.order_target + "/" + this.order + "/?label=" + this.label, function (data) {
-            if (data.total) {
-                that.tables = data;
-            }
-            else {
-                that.contest_mode = data.contest_mode;
-            }
-        });
+        this.axios.get("/api/problemset/" + page + "/" + (this.search_tag || "none") + "/" + this.order_target + "/" + this.order + "/?label=" + this.label)
+            .then(({ data }) => {
+                if (data.total) {
+                    that.tables = data;
+                }
+                else {
+                    that.contest_mode = data.contest_mode;
+                }
+            });
     },
     updated: function () {
         this.initjQueryMethods();
