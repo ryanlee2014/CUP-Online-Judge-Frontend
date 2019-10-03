@@ -155,7 +155,7 @@ function getTextAttrs (cfg) {
     });
 }
 
-let _parameterCache = {};
+const _parameterCache = {};
 
 function getParameterByName (name, url) {
     if (!url) url = window.location.href;
@@ -182,8 +182,7 @@ function parseQueryString (query) {
     return parsed;
 }
 
-let query_string = parseQueryString(window.location.hash.substring(1));
-const pageCache = {};
+const queryString = parseQueryString(window.location.hash.substring(1));
 
 export default {
     name: "problemset",
@@ -198,13 +197,13 @@ export default {
         return {
             table: {},
             dim: false,
-            current_page: query_string.page || 1,
-            search_tag: query_string.search || getParameterByName("tag") || "",
-            label: query_string.label || getParameterByName("label") || "",
-            order: query_string.order || 0,
-            order_target: query_string.target || "problem_id",
+            current_page: queryString.page || 1,
+            search_tag: queryString.search || getParameterByName("tag") || "",
+            label: queryString.label || getParameterByName("label") || "",
+            order: queryString.order || 0,
+            order_target: queryString.target || "problem_id",
             show_tag: localStorage.getItem("show_tag") === "true",
-            page_cnt: query_string.page_cnt || 50,
+            page_cnt: queryString.page_cnt || 50,
             total: 0,
             recent_one_month: -1,
             hide_currect: localStorage.getItem("hide_currect") === "true",
@@ -251,80 +250,83 @@ export default {
         page: function (num, arrow) {
             // this.dim = true;
             let page = this.current_page = arrow ? this.current_page + arrow : num;
-            let search_tag = this.search_tag || "none";
+            let searchTag = this.search_tag || "none";
             let order = this.order;
-            let order_target = this.order_target;
-            // handler.activate.call(obj.target);
+            let orderTarget = this.order_target;
             let that = this;
             this.setQuery();
-            this.axios.get("/api/problemset/" + page + "/" + search_tag + "/" + order_target + "/" + order + "/?label=" + this.label)
+            this.axios.get("/api/problemset/" + page + "/" + searchTag + "/" + orderTarget + "/" + order + "/?label=" + this.label)
                 .then(({ data }) => {
                     that.tables = data;
                 });
         },
-        sort: function (target, event, default_order = 0) {
+        sort: function (target, event, defaultOrder = 0) {
             // this.dim = true;
-            let prev_target_equal_to_current = this.order_target == target;
+            let prevTargetEquivToCurrent = this.order_target === target;
             this.order_target = target;
             let page = this.current_page = 0;
-            let search_tag = this.search_tag || "none";
-            let order = this.order = prev_target_equal_to_current ? (-this.order + 1) : default_order;
+            let searchTag = this.search_tag || "none";
+            let order = this.order = prevTargetEquivToCurrent ? (-this.order + 1) : defaultOrder;
             let that = this;
-            this.axios.get("/api/problemset/" + page + "/" + search_tag + "/" + target + "/" + order + "/?label=" + this.label)
+            this.axios.get("/api/problemset/" + page + "/" + searchTag + "/" + target + "/" + order + "/?label=" + this.label)
                 .then(({ data }) => {
                     that.dim = false;
                     that.tables = data;
                 });
         },
         tag: function (label) {
-            if (label == "标签待整理") {
+            if (label === "标签待整理") {
                 return;
             }
             this.label = label;
-            let search_tag = this.search_tag || "none";
+            let searchTag = this.search_tag || "none";
             // this.dim = true;
-            let order_target = this.order_target;
+            let orderTarget = this.order_target;
             let page = this.current_page = 0;
             let order = this.order;
             let that = this;
             this.setQuery();
-            this.axios.get("/api/problemset/" + page + "/" + search_tag + "/" + order_target + "/" + order + "/?label=" + this.label)
+            this.axios.get("/api/problemset/" + page + "/" + searchTag + "/" + orderTarget + "/" + order + "/?label=" + this.label)
                 .then(({ data }) => {
                     that.dim = false;
                     that.tables = data;
                 });
         },
         searching: function (label) {
-            if (label == "标签待整理") {
+            if (label === "标签待整理") {
                 return;
             }
-            this.search_tag = label == "none" ? "" : label;
+            this.search_tag = label === "none" ? "" : label;
             // this.dim = true;
-            let order_target = this.order_target;
+            let orderTarget = this.order_target;
             let page = this.current_page = 0;
             let order = this.order;
             let that = this;
             this.setQuery();
-            this.axios.get("/api/problemset/" + page + "/" + label + "/" + order_target + "/" + order + "/?label=" + this.label)
+            const problemId = parseInt(label);
+            this.axios.get("/api/problemset/" + page + "/" + label + "/" + orderTarget + "/" + order + "/?label=" + this.label)
                 .then(({ data }) => {
                     that.dim = false;
+                    if (!isNaN(problemId)) {
+                        (data.problem || []).sort((a, b) => a.problem_id === problemId ? -1 : b.problem_id === problemId ? 1 : 0);
+                    }
                     that.tables = data;
                 });
         },
         remove: function (type) {
-            if (type == "search") {
+            if (type === "search") {
                 this.search_tag = "";
             }
             else {
                 this.label = "";
             }
             // this.dim = true;
-            let order_target = this.order_target;
+            let orderTarget = this.order_target;
             let page = this.current_page;
             let order = this.order;
             let that = this;
             this.setQuery();
-            this.axios.get("/api/problemset/" + page + "/" + (this.search_tag || "none") + "/" + order_target + "/" + order + "/?label=" + this.label)
+            this.axios.get("/api/problemset/" + page + "/" + (this.search_tag || "none") + "/" + orderTarget + "/" + order + "/?label=" + this.label)
                 .then(({ data }) => {
                     that.dim = false;
                     that.tables = data;
@@ -434,7 +436,7 @@ export default {
     },
     created: function () {
         let that = this;
-        let page = parseInt(getParameterByName("page") || query_string.page || "1") - 1;
+        let page = parseInt(getParameterByName("page") || queryString.page || "1") - 1;
         $(document).ready(function () {
             $("#show_tag").checkbox((that.show_tag ? "" : "un") + "check");
             $("#hide_currect").checkbox((that.hide_currect ? "" : "un") + "check");
