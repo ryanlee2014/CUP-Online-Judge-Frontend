@@ -8,7 +8,7 @@ import router from "./router";
 import store from "./store";
 import VueSocketIO from "vue-socket.io";
 import VueWorker from "vue-worker";
-import mavonEditor from "./lib/mavon-editor/mavon-editor";
+import mavonEditor from "./lib/mavon-editor/mavon-editor.vue";
 import VueObserveVisibility from "vue-observe-visibility";
 import i18n from "./i18n";
 import Injection from "./injection/index";
@@ -33,8 +33,7 @@ Vue.use(new VueSocketIO({
 }));
 Vue.config.productionTip = false;
 Vue.config.performance = true;
-
-Vue.use(mavonEditor);
+Vue.component("mavon-editor", mavonEditor);
 Vue.use(VueObserveVisibility);
 new Vue({
     router,
