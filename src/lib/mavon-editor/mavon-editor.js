@@ -14779,7 +14779,7 @@
         }
     }, function (t, e, n) {
         var r, i;
-        !function () {
+        (function () {
             var a = {version: "3.5.17"}, o = [].slice, s = function (t) {
                 return o.call(t)
             }, u = document;
@@ -21122,7 +21122,7 @@
             }, a.xml = xe(function (t) {
                 return t.responseXML
             }), this.d3 = a, void 0 === (i = "function" == typeof (r = a) ? r.call(e, n, e, t) : r) || (t.exports = i)
-        }()
+        }).apply(window)
     }, function (t, e, n) {
         "use strict";
         t.exports = n(784)
