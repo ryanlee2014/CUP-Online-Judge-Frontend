@@ -1,12 +1,15 @@
 <template>
     <div class="ui container padding">
+        <h2 class="ui dividing header">Modify Password</h2>
         <div class="ui form">
             <div class="field">
                 <div class="two fields">
                     <div class="field">
+                        <label>{{$t("user_id")}}</label>
                         <input type="text" v-model="user_id">
                     </div>
                     <div class="field">
+                        <label>{{$t("password")}}</label>
                         <input type="text" v-model="password">
                     </div>
                 </div>
@@ -15,7 +18,7 @@
                 <div class="fields">
                     <div class="field">
                         <button class="ui primary button" @click="changePassword">
-                            {{$t("change password")}}
+                            {{$t("modify password")}}
                         </button>
                     </div>
                 </div>
@@ -26,6 +29,7 @@
 
 <script>
 import mixins from "../../../mixin/init";
+
 export default {
     name: "password",
     mixins: [mixins],

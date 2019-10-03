@@ -50,6 +50,10 @@
                         <i class="bell slash icon"></i>
                         {{$t("ban manage")}}
                     </router-link>
+                    <router-link to="/admin/user/password" class="item" exact-active-class="active">
+                        <i class="user check icon"></i>
+                        {{$t("modify password")}}
+                    </router-link>
                 </div>
             </div>
             <div class="ui dropdown item">

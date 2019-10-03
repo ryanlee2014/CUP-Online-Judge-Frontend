@@ -387,6 +387,15 @@ const router = new Router({
             }
         },
         {
+            path: "/admin/user/password",
+            name: "Modify User Password",
+            component: () => import("./views/admin/account/password.vue"),
+            meta: {
+                auth: true,
+                admin: true
+            }
+        },
+        {
             path: "/admin/user/check",
             name: "User account checker",
             component: () => import("./views/admin/account/check.vue"),
