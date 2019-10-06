@@ -36710,6 +36710,7 @@
                     fn.apply(this,arguments);
                 }
             }
+            /*
             t.render = t.render.before(function() {
                 this.__visit_images = {};
                 for(const key in this.__image) {
@@ -36717,13 +36718,12 @@
                 }
             });
             t.render = t.render.after(function() {
-                /*
                 for(const key in this.__visit_images) {
                     delete this.__visit_images[key];
                     this.image_del(key);
                 }
-                 */
             });
+            */
             t.image_add = function (e, n) {
                 t.__image instanceof Object || (t.__image = {}), t.__image[e] = n
             }, t.image_del = function (e) {
@@ -36736,9 +36736,12 @@
                 var s = e[r].attrs;
                 if (t.__image instanceof Object) for (var u = 0; u < s.length; u++)
                     if ("src" === s[u][0] && t.__image.hasOwnProperty(e[r].attrs[u][1])) {
+                        /*
                         if (t.__visit_images.hasOwnProperty(e[r].attrs[u][1])) {
                             delete t.__visit_images[e[r].attrs[u][1]];
                         }
+
+                         */
                         s.push(["rel", s[u][1]]), s[u][1] = t.__image[e[r].attrs[u][1]];
                         break
                     }

@@ -252,7 +252,7 @@ export default {
         },
         imageHandler: function (key, data) {
             let mx = -1;
-            const that = this;
+            var that = this;
             _.forEach(data.data, function (val, idx) {
                 that.$children[key].markdownIt.image_add_with_check(val.name, val.data);
                 mx = Math.max(mx, parseInt(val.name));
