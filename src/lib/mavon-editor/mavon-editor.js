@@ -36695,18 +36695,53 @@
             }
     }, function (t, e) {
         t.exports = function (t, e) {
+            Function.prototype.before = function(fn){
+                var _this = this;
+                return function(){
+                    fn.apply(this,arguments);
+                    return _this.apply(this,arguments);
+                }
+            }
+
+            Function.prototype.after = function(fn){
+                var _this = this;
+                return function(){
+                    var r = _this.apply(this,arguments);
+                    fn.apply(this,arguments);
+                }
+            }
+            t.render = t.render.before(function() {
+                this.__visit_images = {};
+                for(const key in this.__image) {
+                    this.__visit_images[key] = true;
+                }
+            });
+            t.render = t.render.after(function() {
+                /*
+                for(const key in this.__visit_images) {
+                    delete this.__visit_images[key];
+                    this.image_del(key);
+                }
+                 */
+            });
             t.image_add = function (e, n) {
                 t.__image instanceof Object || (t.__image = {}), t.__image[e] = n
             }, t.image_del = function (e) {
                 t.__image instanceof Object || (t.__image = {}), delete t.__image[e]
+            }, t.image_add_with_check = function (e, n) {
+                t.image_add(e, n);
             };
             var n = t.renderer.rules.image;
             t.renderer.rules.image = function (e, r, i, a, o) {
                 var s = e[r].attrs;
-                if (t.__image instanceof Object) for (var u = 0; u < s.length; u++) if ("src" === s[u][0] && t.__image.hasOwnProperty(e[r].attrs[u][1])) {
-                    s.push(["rel", s[u][1]]), s[u][1] = t.__image[e[r].attrs[u][1]];
-                    break
-                }
+                if (t.__image instanceof Object) for (var u = 0; u < s.length; u++)
+                    if ("src" === s[u][0] && t.__image.hasOwnProperty(e[r].attrs[u][1])) {
+                        if (t.__visit_images.hasOwnProperty(e[r].attrs[u][1])) {
+                            delete t.__visit_images[e[r].attrs[u][1]];
+                        }
+                        s.push(["rel", s[u][1]]), s[u][1] = t.__image[e[r].attrs[u][1]];
+                        break
+                    }
                 return n(e, r, i, a, o)
             }
         }

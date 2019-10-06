@@ -251,15 +251,14 @@ export default {
             });
         },
         imageHandler: function (key, data) {
-            var mx = 0;
-            var that = this;
-            that.$children[key].markdownIt.__image = {};
+            let mx = -1;
+            const that = this;
             _.forEach(data.data, function (val, idx) {
-                that.$children[key].markdownIt.__image[val.name] = val.data;
+                that.$children[key].markdownIt.image_add_with_check(val.name, val.data);
                 mx = Math.max(mx, parseInt(val.name));
             });
-            that.$children[key].$children[0].num = mx + 1;
-            that.$children[key].iRender();
+            this.$children[key].$children[0].num = mx + 1;
+            this.$children[key].iRender();
         },
         initData: function () {
             const that = this;
