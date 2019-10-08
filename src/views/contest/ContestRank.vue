@@ -63,20 +63,12 @@
                                     </router-link>
                                 </td>
                                 <td style="text-align:center">{{format_date(row.penalty_time)}}</td>
-                                <td :class="p.accept.length > 0?p.first_blood ? 'first accept':'accept':''"
-                                    :key="key + 0"
-                                    style="text-align:center"
-                                    v-for="(p,key) in row.problem.toArray()">
-                                    <b :class="'text '+ (p.accept.length > 0 ? p.first_blood?'first accept':'accept':'red')">
-                                        {{ (p.accept.length > 0 || p.submit.length > 0)?"+":""}}
-                                        {{p.try_time > 0 ? p.try_time : p.accept.length == 0 && p.submit.length >
-                                        0?p.submit.length : ""}}</b>
-                                    <br v-if="p.accept.length > 0">
-                                    <span :class="p.first_blood?'first accept text':''"
-                                          v-if="p.accept.length > 0 && typeof p.accept[0].diff === 'function'">
-                {{format_date(p.accept[0].diff(p.start_time,"second"))}}
-            </span>
-                                </td>
+                                <ResultGrid :gridBackground="p.accept.length > 0?p.first_blood ? 1:-1:0"
+                                            :problem="p"
+                                            :key="key + 0"
+                                            :format_date="format_date"
+                                            v-for="(p,key) in row.problem.toArray()"
+                                ></ResultGrid>
                             </tr>
                         </transition-group>
                     </table>
@@ -132,6 +124,7 @@ import { saveAs } from "file-saver";
 import utils from "../../lib/util";
 import TimeView from "../../components/contest/ContestRank/timeView";
 import ErrorView from "../../components/contest/ContestRank/errorView";
+import ResultGrid from "../../components/contest/ContestRank/ResultGrid";
 import {
     SubmitterFactory,
     firstBloodListFactory,
@@ -155,7 +148,8 @@ export default {
     mixins: [mixins],
     components: {
         ErrorView,
-        TimeView
+        TimeView,
+        ResultGrid
     },
     data: function () {
         return {
