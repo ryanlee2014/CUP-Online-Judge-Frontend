@@ -1,5 +1,5 @@
 <template>
-    <td :class="gridBackgroundClass()" :data-html="generateDataHTML" ref="block" @mouseenter="triggerPopup"
+    <td :class="gridBackgroundClass" :data-html="generateDataHTML" ref="block" @mouseenter="triggerPopup"
         style="text-align:center">
         <b :class="'text '+ (problem.accept.length > 0 ? problem.first_blood?'first accept':'accept':'red')">
             {{ (problem.accept.length > 0 || problem.submit.length > 0)?"+":""}}
@@ -42,17 +42,6 @@ export default {
             htmlBuilder += this.buildItem();
             htmlBuilder += "</div>";
             return htmlBuilder;
-        }
-    },
-    methods: {
-        triggerPopup () {
-            const submit = this.problem.submit;
-            const accept = this.problem.accept;
-            if (submit.length > 0 || accept.length > 0) {
-                $(this.$refs.block).popup({
-                    hoverable: true
-                }).popup("show");
-            }
         },
         gridBackgroundClass () {
             const gridBackground = this.gridBackground;
@@ -64,6 +53,17 @@ export default {
             }
             else {
                 return "accept";
+            }
+        }
+    },
+    methods: {
+        triggerPopup () {
+            const submit = this.problem.submit;
+            const accept = this.problem.accept;
+            if (submit.length > 0 || accept.length > 0) {
+                $(this.$refs.block).popup({
+                    hoverable: true
+                }).popup("show");
             }
         },
         buildItem () {
