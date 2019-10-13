@@ -246,9 +246,13 @@
                         <h4>铜奖</h4>
                         <p>队名:昆仑山下送晚霞</p>
                         <p>成员:单联天 王亚奇 夏方略</p>
+                        <h4>纪念奖</h4>
+                        <p>队名:祖国盛开石油花</p>
+                        <p>成员:吴乾铿 陈若朋 李军贤</p>
                     </div>
                 </div>
                 <img data-src="/glory_image/CCPC2019HARBIN.jpg" class="ui image">
+                <img data-src="/glory_image/CCPC2019HARBIN2.jpg" class="ui image">
             </div>
             <div class="ui segment" id="yourlegend">
                 <h3 class="ui header contents">20XX XX(XX大学)</h3>
@@ -285,13 +289,13 @@ export default {
                 offset: 50
             });
         });
-        var $headers = $(".ui.header.contents");
-        var len = $headers.length;
-        var list = $("#linkedlist");
-        for (var i = 0; i < len; ++i) {
-            var id = $headers.eq(i).parent().attr("id");
-            var name = $headers.eq(i).text();
-            var ahtml = "<a name='" + id + "' ></a>";
+        const $headers = $(".ui.header.contents");
+        const len = $headers.length;
+        const list = $("#linkedlist");
+        for (let i = 0; i < len; ++i) {
+            const id = $headers.eq(i).parent().attr("id");
+            const name = $headers.eq(i).text();
+            let ahtml = "<a name='" + id + "' ></a>";
             $headers.eq(i).append(ahtml);
             ahtml = "<a class='quick item' href='#" + id + "' >" + name + "</a>";
             list.append(ahtml);
