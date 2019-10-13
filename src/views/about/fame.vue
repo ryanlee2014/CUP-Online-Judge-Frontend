@@ -238,6 +238,18 @@
                 <img class="ui image" data-src="/glory_image/2019CCCC_1.jpg">
                 <img class="ui image" data-src="/glory_image/2019CCCC_2.jpg">
             </div>
+            <div class="ui segment" id="ccpc2019harbin">
+                <h3 class="ui header contents">2019 哈尔滨(东北林业大学)</h3>
+                <div class="ui right rail">
+                    <div class="ui sticky CCPC2019HARBIN">
+                        <h3 class="ui header">CCPC2019 哈尔滨</h3>
+                        <h4>铜奖</h4>
+                        <p>队名:昆仑山下送晚霞</p>
+                        <p>成员:单联天 王亚奇 夏方略</p>
+                    </div>
+                </div>
+                <img src="/glory_image/CCPC2019HARBIN.jpg" class="ui image">
+            </div>
             <div class="ui segment" id="yourlegend">
                 <h3 class="ui header contents">20XX XX(XX大学)</h3>
                 <div class="ui right rail">
