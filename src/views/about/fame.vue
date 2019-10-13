@@ -248,7 +248,7 @@
                         <p>成员:单联天 王亚奇 夏方略</p>
                     </div>
                 </div>
-                <img src="/glory_image/CCPC2019HARBIN.jpg" class="ui image">
+                <img data-src="/glory_image/CCPC2019HARBIN.jpg" class="ui image">
             </div>
             <div class="ui segment" id="yourlegend">
                 <h3 class="ui header contents">20XX XX(XX大学)</h3>
