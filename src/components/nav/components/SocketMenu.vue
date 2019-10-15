@@ -14,7 +14,10 @@
             <router-link class="ui button" to="/login">登录</router-link>
         </div>
         <div class="item">
+            <!--
             <router-link class="ui primary button" to="/register">注册</router-link>
+            -->
+            <a href="/registerpage.php" class="ui primary button">注册</a>
         </div>
     </div>
 </template>
