@@ -301,6 +301,7 @@ export default {
     },
     methods: {
         initConfig () {
+            this.iscontest = this.$route.fullPath.includes("contest");
             const defaultConfig = {
                 editorPackage: false,
                 theme: "ace/theme/monokai",

@@ -69,7 +69,6 @@ const Clipboard = require("clipboard");
 const _ = require("lodash");
 let $ = window.$ = window.jQuery = require("jquery");
 let $modal;
-require("../../static/js/semantic.min");
 export default {
     name: "submitter",
     mixins: [mixins],
