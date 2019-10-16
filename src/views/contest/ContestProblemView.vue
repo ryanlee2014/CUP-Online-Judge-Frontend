@@ -90,7 +90,6 @@ import ContestMode from "../../components/contestMode/block";
 import LimitHostname from "../../components/contest/ContestProblemView/LimitHostname";
 import mixins from "../../mixin/init";
 import markdownIt from "../../lib/markdownIt/markdownIt";
-const $ = window.$ = window.jQuery = require("jquery");
 const _ = require("lodash");
 const dayjs = require("dayjs");
 require("../../static/js/semantic.min");
@@ -151,51 +150,53 @@ export default {
             const contestID = this.$route.params.contest_id;
             const that = this;
             this.cid = parseInt(contestID);
-            $.get("/api/contest/problem/" + contestID, function (_d) {
-                if (_d.status !== "OK") {
-                    if (_d.statement === "Permission denied") {
-                        that.mode = 1;
+            this.axios.get("/api/contest/problem/" + contestID)
+                .then(({ data }) => {
+                    const _d = data;
+                    if (_d.status !== "OK") {
+                        if (_d.statement === "Permission denied") {
+                            that.mode = 1;
+                            return;
+                        }
+                        else if (_d.error_code === 101) {
+                            that.mode = 2;
+                            return;
+                        }
+                        else if (_d.contest_mode) {
+                            that.mode = 3;
+                            return;
+                        }
+                    }
+                    _.forEach(_d.data, function (val) {
+                        if (!val.accepted) val.accepted = 0;
+                        if (!val.submit) val.submit = 0;
+                    });
+                    let addr = _d.limit;
+                    let contestMode = _d.contest_mode;
+                    if (_d.admin) {
+                        addr = null;
+                        contestMode = false;
+                    }
+                    if (addr && location.href.indexOf(addr) === -1) {
+                        that.mode = 4;
+                        that.limit_content = "根据管理员设置的策略，本次contest请使用" + addr + "访问";
                         return;
                     }
-                    else if (_d.error_code === 101) {
-                        that.mode = 2;
-                        return;
-                    }
-                    else if (_d.contest_mode) {
-                        that.mode = 3;
-                        return;
-                    }
-                }
-                _.forEach(_d.data, function (val) {
-                    if (!val.accepted) val.accepted = 0;
-                    if (!val.submit) val.submit = 0;
-                });
-                let addr = _d.limit;
-                let contestMode = _d.contest_mode;
-                if (_d.admin) {
-                    addr = null;
-                    contestMode = false;
-                }
-                if (addr && location.href.indexOf(addr) === -1) {
-                    that.mode = 4;
-                    that.limit_content = "根据管理员设置的策略，本次contest请使用" + addr + "访问";
-                    return;
-                }
-                that.problem_table = _d.data;
+                    that.problem_table = _d.data;
 
-                let info = _d.info;
-                that.start_time = dayjs(info.start_time);
-                that.end_time = dayjs(info.end_time);
-                that.title = info.title;
-                that.contest_mode = contestMode;
-                that.description = info.description;
-                that.admin = _d.admin;
-                // that.contest_mode = info.contest_mode;
-                that.private_contest = Boolean(info.private_contest);
-                if (typeof resolve === "function") {
-                    resolve();
-                }
-            });
+                    let info = _d.info;
+                    that.start_time = dayjs(info.start_time);
+                    that.end_time = dayjs(info.end_time);
+                    that.title = info.title;
+                    that.contest_mode = contestMode;
+                    that.description = info.description;
+                    that.admin = _d.admin;
+                    // that.contest_mode = info.contest_mode;
+                    that.private_contest = Boolean(info.private);
+                    if (typeof resolve === "function") {
+                        resolve();
+                    }
+                });
         },
         detect_source: function (row) {
             if (!row.oj_name || row.oj_name.toLowerCase() === "local") {
