@@ -26,7 +26,7 @@
                                     </div>
                                 </div>
                                 <div
-                                    class="header" v-cloak>{{nick}}&nbsp;&nbsp;<a
+                                    class="header" v-cloak><span v-html="nick"></span>&nbsp;&nbsp;<a
                                     :href="'mail.php?to_user='+user_id" v-cloak><i class="mail icon"></i></a></div>
                                 <div class="meta" v-cloak>
                                     <i class="user circle outline icon"></i>
