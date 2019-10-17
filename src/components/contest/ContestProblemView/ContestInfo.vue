@@ -19,8 +19,8 @@
         <div style="text-align: center;">
             <div class="row padding">
                 <div class="ui buttons mini">
-                    <a :href="'copystatus.php?cid='+cid" class="ui button orange" v-if="admin">判重表</a>
-                    <a :href="'copymap.php?cid='+cid" class="ui button yellow" v-if="admin">判重图</a>
+                    <a :href="'/copystatus.php?cid='+cid" class="ui button orange" v-if="admin">判重表</a>
+                    <a :href="'/copymap.php?cid='+cid" class="ui button yellow" v-if="admin">判重图</a>
                 </div>
             </div>
         </div>

@@ -92,7 +92,6 @@ import mixins from "../../mixin/init";
 import markdownIt from "../../lib/markdownIt/markdownIt";
 const _ = require("lodash");
 const dayjs = require("dayjs");
-require("../../static/js/semantic.min");
 export default {
     name: "ContestProblemView",
     components: {
