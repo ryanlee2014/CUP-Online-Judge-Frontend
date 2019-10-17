@@ -212,7 +212,6 @@ const _ = require("lodash");
 const Chart = require("chart.js");
 const Cookies = require("js-cookie");
 window.$ = window.jQuery = $;
-require("../static/js/semantic.min");
 function draw (_result) {
     let result = _result.result;
     let _label = _result.label;
