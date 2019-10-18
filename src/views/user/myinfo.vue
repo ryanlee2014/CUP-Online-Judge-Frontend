@@ -10,8 +10,11 @@ export default {
     mixins: [mixins],
     data () {
         return {
-            userId: this.$store.getters.user_id
+            userId: ""
         };
+    },
+    mounted () {
+        this.userId = this.$store.getters.user_id;
     },
     components: {
         UserContainer
