@@ -13,9 +13,9 @@
                             <i class='edit icon'></i>修改帐号
                         </router-link>
                         <br>
-                        <a class="item" @click="myinfo">
+                        <router-link to="/myinfo" class="item">
                             <i class='archive icon'></i>个人信息
-                        </a>
+                        </router-link>
                         <br>
                         <router-link :to="`/status/?user_id=${user_id}`" class="item">
                             <i class='send icon'></i>我的提交
@@ -83,9 +83,6 @@ export default {
                         location.reload();
                     }
                 });
-        },
-        myinfo: function () {
-            this.$router.push({ path: `/user/${this.$store.getters.user_id}` });
         }
     },
     updated () {

@@ -2,7 +2,7 @@ import Vue from "vue";
 import Router from "vue-router";
 import adminAuth from "./lib/router";
 import Guard from "./router/util/guard";
-import store from './store';
+import store from "./store";
 
 Vue.use(Router);
 
@@ -115,6 +115,14 @@ const router = new Router({
             path: "/user/:user_id",
             name: "user information",
             component: () => import("./views/user.vue"),
+            meta: {
+                auth: true
+            }
+        },
+        {
+            path: "/myinfo",
+            name: "My Information",
+            component: () => import("./views/user/myinfo.vue"),
             meta: {
                 auth: true
             }
