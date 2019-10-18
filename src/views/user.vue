@@ -19,6 +19,9 @@ export default {
             userId: this.$route.params.user_id
         };
     },
+    mounted () {
+        this.userId = this.$route.params.user_id;
+    },
     components: {
         UserContainer
     }
