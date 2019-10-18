@@ -13,7 +13,7 @@
                             <i class='edit icon'></i>修改帐号
                         </router-link>
                         <br>
-                        <router-link :to="`/user/${user_id}`" class="item">
+                        <router-link :to="`/myinfo`" class="item">
                             <i class='archive icon'></i>个人信息
                         </router-link>
                         <br>
