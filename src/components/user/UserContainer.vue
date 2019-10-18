@@ -543,7 +543,10 @@ export default {
     },
     watch: {
         userId (newUserId) {
-            this.initData(newUserId);
+            if (newUserId && newUserId.length && newUserId.length > 0) {
+                this.initData(newUserId);
+                document.title = `User ${this.user_id} -- ${document.title}`;
+            }
         }
     },
     methods: {
@@ -1092,10 +1095,6 @@ export default {
         online: function () {
             return this.$store.getters.onlineUser.some(el => el.user_id === this.user_id);
         }
-    },
-    mounted: async function () {
-        document.title = `User ${this.user_id} -- ${document.title}`;
-        this.initData();
     }
 };
 </script>
