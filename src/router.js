@@ -120,14 +120,6 @@ const router = new Router({
             }
         },
         {
-            path: "/myinfo",
-            name: "My Information",
-            redirect: `/user/${store.getters.user_id}`,
-            meta: {
-                auth: true
-            }
-        },
-        {
             path: "/other_contest_schedure",
             name: "other oj contest schedure",
             component: () => import("./views/other_contest_schedure.vue")
