@@ -254,6 +254,34 @@
                 <img data-src="/glory_image/CCPC2019HARBIN.jpg" class="ui image">
                 <img data-src="/glory_image/CCPC2019HARBIN2.jpg" class="ui image">
             </div>
+            <div class="ui segment" id="icpc2019ningxia">
+                <h3 class="ui header contents">2019 宁夏(宁夏理工学院)</h3>
+                <div class="ui right rail">
+                    <div class="ui sticky ICPC2019NINGXIA">
+                        <h3 class="ui header">ICPC2019 宁夏</h3>
+                        <h4>银奖</h4>
+                        <p>队名:海是那浪的依托</p>
+                        <p>成员:夏方略 连浩丞 王亚奇</p>
+                    </div>
+                </div>
+                <img data-src="/glory_image/ICPC2019NINGXIA.jpg" class="ui image">
+            </div>
+            <div class="ui segment" id="ccpc2019xiamen">
+                <h3 class="ui header contents">2019 厦门(厦门理工学院)</h3>
+                <div class="ui right rail">
+                    <div class="ui sticky CCPC2019XIAMEN">
+                        <h3 class="ui header">CCPC2019 厦门</h3>
+                        <h4>纪念奖</h4>
+                        <p>队名:我当个石油工人多荣耀</p>
+                        <p>成员:高宇翔 李昊元 许思睿</p>
+                        <h4>纪念奖</h4>
+                        <p>队名:头顶天山鹅毛雪</p>
+                        <p>成员:王博 周浩楠 付旭</p>
+                    </div>
+                </div>
+                <img data-src="/glory_image/CCPC2019XIAMEN1.jpg" class="ui image">
+                <img data-src="/glory_image/CCPC2019XIAMEN2.jpg" class="ui image">
+            </div>
             <div class="ui segment" id="yourlegend">
                 <h3 class="ui header contents">20XX XX(XX大学)</h3>
                 <div class="ui right rail">
