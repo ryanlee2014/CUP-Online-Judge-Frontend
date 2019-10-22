@@ -174,5 +174,22 @@
   "whiteboard": "Whiteboard",
   "you cannot access to this page": "You couldn't access to this page",
   "you have been banned": "You have been banned. Please contact administrator.",
-  "modify password": "Modify Password"
+  "modify password": "Modify Password",
+  "等待": "Waiting",
+  "等待重判": "Wait for rejudge",
+  "编译中": "Compiling",
+  "运行并评判": "Running & Judging",
+  "答案正确": "Passed",
+  "格式错误": "Wrong format",
+  "答案错误": "Wrong answer",
+  "时间超限": "Time limit exceeded",
+  "内存超限": "Memory limit exceeded",
+  "输出超限": "Output limit exceeded",
+  "运行错误": "Runtime error",
+  "编译错误": "Compile error",
+  "编译成功": "Compile finish",
+  "运行完成": "Running completed",
+  "已加入队列": "In queue",
+  "提交被拒绝": "Rejected",
+  "系统错误": "System error"
 }

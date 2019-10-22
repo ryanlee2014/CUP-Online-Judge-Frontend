@@ -33,7 +33,7 @@
             <td>
                 <router-link :to="`/status/info/${infoRoute(row.result)}/${row.solution_id}`" :class="answer_class[row.result]">
                     <i v-cloak :class="answer_icon[row.result]+' icon'"></i>
-                    {{result[row.result]}}
+                    {{$t(result[row.result])}}
                 </router-link>
                     <router-link v-if="row.sim" :to="`/compare/${row.solution_id}/${row.sim_id}`" :class="answer_class[row.result]">
                         <br>
