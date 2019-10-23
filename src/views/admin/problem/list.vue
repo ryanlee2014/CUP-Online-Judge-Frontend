@@ -67,7 +67,7 @@ export default {
         };
         const query = this.$route.query;
         let currentPage;
-        if (query.hasOwnProperty("page")) {
+        if (Object.prototype.hasOwnProperty.call(query, "page")) {
             currentPage = parseInt(query.page);
         }
         if (!isNaN(currentPage)) {

@@ -220,27 +220,28 @@ export default {
             const currentTime = this.current_time;
             return currentTime.isBefore(endTime) && currentTime.isAfter(startTime);
         },
+        fillZero: function (str) {
+            if (str.length < 2) {
+                return "0" + str;
+            }
+            else {
+                return str;
+            }
+        },
         formatDate: function (second) {
-            let fill_zero = function (str) {
-                if (str.length < 2) {
-                    return "0" + str;
-                }
-                else {
-                    return str;
-                }
-            };
+            let fillZero = this.fillZero;
             second = Math.abs(second);
             let day = parseInt(second / 3600 / 24);
             let hour = parseInt((second - day * 3600 * 24) / 3600);
             let minute = parseInt((second - day * 3600 * 24 - hour * 3600) / 60);
             let sec = second % 60;
-            hour = fill_zero(hour + "");
-            minute = fill_zero(minute + "");
-            sec = fill_zero(sec + "");
+            hour = fillZero(hour + "");
+            minute = fillZero(minute + "");
+            sec = fillZero(sec + "");
             return `${day}天${hour}小时${minute}分${sec}秒`;
         },
         contestTimeFormat: function (row) {
-            if (row.hasOwnProperty("_format_") && typeof row._format_ === "string") {
+            if (Object.prototype.hasOwnProperty.call(row, "_format_") && typeof row._format_ === "string") {
                 return row._format_;
             }
             let startTime;

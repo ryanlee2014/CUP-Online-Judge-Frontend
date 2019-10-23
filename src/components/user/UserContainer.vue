@@ -555,7 +555,7 @@ export default {
             const that = this;
             this.axios.get(`/api/user/${userId}`)
                 .then(({ data }) => {
-                    if (!data.data.hasOwnProperty("information")) {
+                    if (!Object.prototype.hasOwnProperty.call(data.data, "information")) {
                         this.statement = `The user "${userId}" is not exist.`;
                         this.error = true;
                         return;
@@ -663,7 +663,7 @@ export default {
                         delete otherSideSubmission["LOCAL"];
                     }
                     for (let idx in otherSideSubmission) {
-                        if (otherSideSubmission.hasOwnProperty(idx)) {
+                        if (Object.prototype.hasOwnProperty.call(otherSideSubmission, idx)) {
                             otherSideSubmission[idx] = pick_ac(otherSideSubmission[idx]);
                         }
                     }
@@ -801,7 +801,8 @@ export default {
                                             data: [
                                                 that.local_accepted,
                                                 _.reduce(that.submission.local, function (result, val) {
-                                                    if (val.result == 6) {
+                                                    val.result = parseInt(val.result);
+                                                    if (val.result === 6) {
                                                         return result + 1;
                                                     }
                                                     else {
@@ -809,7 +810,7 @@ export default {
                                                     }
                                                 }, 0),
                                                 _.reduce(that.submission.local, function (result, val) {
-                                                    if (val.result == 10) {
+                                                    if (val.result === 10) {
                                                         return result + 1;
                                                     }
                                                     else {
@@ -817,7 +818,7 @@ export default {
                                                     }
                                                 }, 0),
                                                 _.reduce(that.submission.local, function (result, val) {
-                                                    if (val.result == 7) {
+                                                    if (val.result === 7) {
                                                         return result + 1;
                                                     }
                                                     else {
@@ -825,7 +826,7 @@ export default {
                                                     }
                                                 }, 0),
                                                 _.reduce(that.submission.local, function (result, val) {
-                                                    if (val.result == 8) {
+                                                    if (val.result === 8) {
                                                         return result + 1;
                                                     }
                                                     else {
@@ -833,7 +834,7 @@ export default {
                                                     }
                                                 }, 0),
                                                 _.reduce(that.submission.local, function (result, val) {
-                                                    if (val.result == 9) {
+                                                    if (val.result === 9) {
                                                         return result + 1;
                                                     }
                                                     else {
@@ -841,7 +842,7 @@ export default {
                                                     }
                                                 }, 0),
                                                 _.reduce(that.submission.local, function (result, val) {
-                                                    if (val.result == 11) {
+                                                    if (val.result === 11) {
                                                         return result + 1;
                                                     }
                                                     else {
@@ -849,7 +850,7 @@ export default {
                                                     }
                                                 }, 0),
                                                 _.reduce(that.submission.local, function (result, val) {
-                                                    if (val.result == 5) {
+                                                    if (val.result === 5) {
                                                         return result + 1;
                                                     }
                                                     else {

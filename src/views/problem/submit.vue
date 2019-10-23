@@ -321,7 +321,7 @@ export default {
         },
         escapeParameter: function (val) {
             for (let i in val) {
-                if (val.hasOwnProperty(i) && typeof val[i] === "undefined") {
+                if (Object.prototype.hasOwnProperty.call(val, i) && typeof val[i] === "undefined") {
                     delete val[i];
                 }
             }
@@ -667,7 +667,7 @@ export default {
                             let json = data.data;
                             for (let i of json) {
                                 for (let j in i) {
-                                    if (i.hasOwnProperty(j) && i[j] === null) {
+                                    if (Object.prototype.hasOwnProperty.call(i, j) && i[j] === null) {
                                         i[j] = 0;
                                     }
                                 }
@@ -687,7 +687,7 @@ export default {
                                 });
                             }
                             for (let i in json) {
-                                if (json.hasOwnProperty(i)) {
+                                if (Object.prototype.hasOwnProperty.call(json, i)) {
                                     str += "<a class='item' href='" + `/contest/problem/${contestID}/${json[i].pnum}` + "'><div class='ui small teal label'>通过:&nbsp;" + json[i]["accepted"] + "</div><div class='ui small label'>提交:&nbsp;" + json[i]["submit"] + "</div>" + json[i]["pnum"] + " . " + json[i]["title"] + "</a>";
                                 }
                             }

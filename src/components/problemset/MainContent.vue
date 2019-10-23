@@ -124,7 +124,7 @@ export default {
             const color = Object.assign({}, data.color);
             color["标签待整理"] = "black";
             for (let i in data.problem) {
-                if (data.problem.hasOwnProperty(i)) {
+                if (Object.prototype.hasOwnProperty.call(data.problem, i)) {
                     const label = data.problem[i].label;
                     data.problem[i].label = (label ? label.split(" ") : ["标签待整理"]).sort(function (a, b) {
                         if (a === "简单" || a === "普通" || a === "困难") {

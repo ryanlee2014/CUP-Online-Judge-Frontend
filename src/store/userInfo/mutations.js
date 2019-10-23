@@ -3,7 +3,7 @@ import { isObject, notUndefinedOrNull } from "../util/index";
 function addContestPrivilege (state, contest) {
     if (isObject(contest)) {
         for (let property in contest) {
-            if (contest.hasOwnProperty(property)) {
+            if (Object.prototype.hasOwnProperty.call(contest, property)) {
                 state.userInfo.contest[property] = true;
             }
         }
@@ -13,7 +13,7 @@ function addContestPrivilege (state, contest) {
 function addProblemMakerPrivilege (state, problemMaker) {
     if (isObject(problemMaker)) {
         for (let property in problemMaker) {
-            if (problemMaker.hasOwnProperty(property)) {
+            if (Object.prototype.hasOwnProperty.call(problemMaker, property)) {
                 state.userInfo.problem_maker[property] = true;
             }
         }
@@ -23,7 +23,7 @@ function addProblemMakerPrivilege (state, problemMaker) {
 function addContestMakerPrivilege (state, contestMaker) {
     if (isObject(contestMaker)) {
         for (let property in contestMaker) {
-            if (contestMaker.hasOwnProperty(property)) {
+            if (Object.prototype.hasOwnProperty.call(contestMaker, property)) {
                 state.userInfo.contest_maker[property] = true;
             }
         }

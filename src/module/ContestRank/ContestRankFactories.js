@@ -88,7 +88,7 @@ export function earlyFirstComparator (a: dayjs, b: dayjs) {
 export function toArray (targetObject: any) {
     let newArray = [];
     for (let index in targetObject) {
-        if (targetObject.hasOwnProperty(index) && !isNaN(parseInt(index))) {
+        if (Object.prototype.hasOwnProperty.call(targetObject, index) && !isNaN(parseInt(index))) {
             newArray.push(targetObject[index]);
         }
     }
@@ -205,7 +205,7 @@ export function ProblemListFactory (total: number): ProblemList {
     problem.calculatePenaltyTime = function () {
         let penaltyTime = 0;
         for (let index in problem) {
-            if (problem.hasOwnProperty(index) && !isNaN(parseInt(index))) {
+            if (Object.prototype.hasOwnProperty.call(problem, index) && !isNaN(parseInt(index))) {
                 penaltyTime += problem[index].calculatePenaltyTime();
             }
         }
@@ -215,7 +215,7 @@ export function ProblemListFactory (total: number): ProblemList {
     problem.calculateAC = function () {
         let ac = 0;
         for (let index in problem) {
-            if (problem.hasOwnProperty(index) && !isNaN(parseInt(index))) {
+            if (Object.prototype.hasOwnProperty.call(problem, index) && !isNaN(parseInt(index))) {
                 if (problem[index].accept.length > 0) {
                     ++ac;
                 }
@@ -333,7 +333,7 @@ export function SubmitterFactory (nick: ?string, totalProblem: number, userId: ?
         calculateFirstBlood (firstBloodList: FirstBloodList) {
             for (let index in this.problem) {
                 try {
-                    if (this.problem.hasOwnProperty(index) && !isNaN(parseInt(index)) && this.problem[index].isAccepted()) {
+                    if (Object.prototype.hasOwnProperty.call(this.problem, index) && !isNaN(parseInt(index)) && this.problem[index].isAccepted()) {
                         let difftime = this.problem[index].getAcceptTime().diff(this.problem[index].start_time, "second");
                         firstBloodList.get(index).setFirstBlood(difftime, this.problem.get(index));
                     }

@@ -21,7 +21,7 @@ export default {
         }
     },
     mounted () {
-        if (localStorage.hasOwnProperty("locale")) {
+        if (Object.prototype.hasOwnProperty.call(localStorage, "locale")) {
             this.$i18n.locale = localStorage.locale;
         }
     }
