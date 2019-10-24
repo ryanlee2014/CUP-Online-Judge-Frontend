@@ -33,7 +33,9 @@ function checkAdmin (to, admin, next) {
             continue;
         }
         needPrivilege = !!(needPrivilege || key !== "auth");
+
         if (meta[key] && store.getters[key]) {
+            needPrivilege = false;
             next();
         }
     }
