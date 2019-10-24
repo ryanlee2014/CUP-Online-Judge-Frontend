@@ -690,6 +690,14 @@ export default {
                     let dsort = function (a, b) {
                         return b.cnt - a.cnt;
                     };
+                    for (const key in otherSideSubmission) {
+                        if (!Object.prototype.hasOwnProperty.call(otherSideSubmission, key)) {
+                            continue;
+                        }
+                        if (typeof key !== "string" || key.length === 0) {
+                            delete otherSideSubmission[key];
+                        }
+                    }
                     console.log(otherSideSubmission);
                     d.data.os.sort(dsort);
                     d.data.browser.sort(dsort);
