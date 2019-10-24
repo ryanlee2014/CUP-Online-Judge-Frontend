@@ -71,7 +71,7 @@
         </div>
         <div class="ui piled segment">
             <h2 class="ui dividing header">做题人员流向</h2>
-            <div class="amcharts" id="chord_graph">加载中</div>
+            <div class="amcharts" id="chord_graph" v-observe-visibility="initSolveMap">加载中</div>
         </div>
         <div class="ui grid">
             <div class="eight wide column">
@@ -299,7 +299,8 @@ export default {
             isadmin: false,
             self: "",
             time_range: {},
-            memory_range: {}
+            memory_range: {},
+            initedSolveMap: false
         };
     },
     computed: {
@@ -335,6 +336,18 @@ export default {
         }
     },
     methods: {
+        initSolveMap () {
+            if (this.initedSolveMap) {
+                return;
+            }
+            this.initedSolveMap = true;
+            this.axios.get(`/api/status/problem/solve_map/${this.pid}`)
+                .then(({ data }) => {
+                    if (data.status === "OK") {
+                        _.delay(drawChordGraph, 0, data.data, that.pid);
+                    }
+                });
+        },
         page: function (num) {
             this.current_page += num;
             let that = this;
@@ -577,11 +590,6 @@ export default {
                     }
                 }
             });
-        });
-        $.get("/api/status/problem/solve_map/" + this.pid, function (data) {
-            if (data.status == "OK") {
-                _.delay(drawChordGraph, 0, data.data, that.pid);
-            }
         });
     }
 };

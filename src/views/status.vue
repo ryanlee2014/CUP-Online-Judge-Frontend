@@ -705,16 +705,16 @@ export default {
         current_tag: function (newVal, oldVal) {
             if (newVal === "user") {
                 $.get("/api/status/device/browser", function (data) {
-                    if (data.status == "OK") {
+                    if (data.status === "OK") {
                         _.delay(drawDynamicInteractiveLineChart, 0, data.data, "browser", "browser_statistics");
                     }
                     $.get("/api/status/device/os", function (data) {
-                        if (data.status == "OK") {
+                        if (data.status === "OK") {
                             _.delay(drawDynamicInteractiveLineChart, 0, data.data, "os", "os_statistics");
                         }
                     });
                     $.get("/api/status/problem/solve_map/", function (data) {
-                        if (data.status == "OK") {
+                        if (data.status === "OK") {
                             _.delay(drawChordGraph, 0, data.data);
                         }
                     });
