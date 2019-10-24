@@ -11,41 +11,43 @@ function checkAdmin (to, admin, next) {
     if (meta.admin && admin) {
         next();
     }
-    getSelfInfo().then(({ data }) => {
-        if (data.data && data.data.user_id) {
-            store.commit("setUserData", data.data);
-            store.commit("loginMutate", { login: true });
-        }
-        else {
-            next({
-                path: "/login",
-                query: {
-                    redirect: to.fullPath
-                }
-            });
-        }
-    });
-
-    let needPrivilege = false;
-
-    for (const key in meta) {
-        if (!Object.prototype.hasOwnProperty.call(meta, key)) {
-            continue;
-        }
-        needPrivilege = !!(needPrivilege || key !== "auth");
-
-        if (meta[key] && store.getters[key]) {
-            needPrivilege = false;
-            next();
-        }
-    }
-    if (needPrivilege) {
-        next({
-            path: "/forbidden/privilege"
-        });
-    }
     else {
-        next();
+        getSelfInfo().then(({ data }) => {
+            if (data.data && data.data.user_id) {
+                store.commit("setUserData", data.data);
+                store.commit("loginMutate", { login: true });
+            }
+            else {
+                next({
+                    path: "/login",
+                    query: {
+                        redirect: to.fullPath
+                    }
+                });
+            }
+
+            let needPrivilege = false;
+
+            for (const key in meta) {
+                if (!Object.prototype.hasOwnProperty.call(meta, key)) {
+                    continue;
+                }
+                needPrivilege = !!(needPrivilege || key !== "auth");
+
+                if (meta[key] && store.getters[key]) {
+                    needPrivilege = false;
+                    next();
+                }
+            }
+            if (needPrivilege) {
+                next({
+                    path: "/forbidden/privilege"
+                });
+            }
+            else {
+                next();
+            }
+        });
     }
 }
 
