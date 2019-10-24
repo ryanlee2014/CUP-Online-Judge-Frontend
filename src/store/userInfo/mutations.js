@@ -39,6 +39,7 @@ export default {
         state.userInfo.nick = payload.nick;
         state.userInfo.avatar = !!payload.avatar;
         state.userInfo.admin = !!payload.admin;
+        state.userInfo.editor = !!payload.editor;
         state.userInfo.avatarUrl = notUndefinedOrNull(payload.avatar) ? payload.avatarUrl : "";
         addContestPrivilege(state, payload.contest);
         addProblemMakerPrivilege(state, payload.problem_maker);

@@ -6,6 +6,7 @@ export default {
         avatar: false,
         avatarUrl: "",
         admin: false,
+        editor: false,
         contest_manager: false,
         contest: {},
         problem_maker: {},

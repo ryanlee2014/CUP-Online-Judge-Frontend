@@ -203,7 +203,8 @@ const router = new Router({
             meta: {
                 auth: true,
                 admin: true,
-                contest_manager: true
+                contest_manager: true,
+                editor: true
             }
         },
         {

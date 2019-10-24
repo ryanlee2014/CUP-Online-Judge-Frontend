@@ -8,36 +8,41 @@ function getSelfInfo () {
 
 function checkAdmin (to, admin, next) {
     const meta = to.meta;
-    if (meta.admin) {
-        if (admin) {
-            next();
+    if (meta.admin && admin) {
+        next();
+    }
+    getSelfInfo().then(({ data }) => {
+        if (data.data && data.data.user_id) {
+            store.commit("setUserData", data.data);
+            store.commit("loginMutate", { login: true });
         }
         else {
-            getSelfInfo().then(({ data }) => {
-                if (data.data && data.data.user_id) {
-                    store.commit("setUserData", data.data);
-                    store.commit("loginMutate", { login: true });
-                    if (data.data.admin) {
-                        next();
-                    }
-                    else {
-                        next({
-                            path: "/forbidden/privilege"
-                        });
-                    }
-                }
-                else {
-                    next({
-                        path: "/login",
-                        query: {
-                            redirect: to.fullPath
-                        }
-                    });
+            next({
+                path: "/login",
+                query: {
+                    redirect: to.fullPath
                 }
             });
         }
+    });
+
+    let needPrivilege = false;
+
+    for (const key in meta) {
+        if (!Object.prototype.hasOwnProperty.call(meta, key)) {
+            continue;
+        }
+        needPrivilege = !!(needPrivilege || key !== "auth");
+        if (meta[key] && store.getters[key]) {
+            next();
+        }
     }
-    else if (!meta.admin) {
+    if (needPrivilege) {
+        next({
+            path: "/forbidden/privilege"
+        });
+    }
+    else {
         next();
     }
 }
