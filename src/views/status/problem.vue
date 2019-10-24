@@ -344,7 +344,7 @@ export default {
             this.axios.get(`/api/status/problem/solve_map/${this.pid}`)
                 .then(({ data }) => {
                     if (data.status === "OK") {
-                        _.delay(drawChordGraph, 0, data.data, that.pid);
+                        _.delay(drawChordGraph, 0, data.data, this.pid);
                     }
                 });
         },
