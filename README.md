@@ -3,9 +3,9 @@
 本项目使用Vue.js开发。
 * 请勿添加以`/api`为前缀的路由，该前缀为后端请求预留。
 
-**Demo: [CUP-NG](http://ng.cupacm.com)**(仅限CUP校内网访问)
+**Demo: [CUP-NG](http://acm.cup.edu.cn)**(~~公网也许可以访问~~)
 
-**由于vue-cli3打包过程中存在内存泄漏的问题，请保证预留至少4GB的内存空间**
+**请保证预留至少4GB的内存空间用于打包构建**
 
 ## Run Vue CLI GUI
 ```
