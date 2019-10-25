@@ -30,6 +30,8 @@ const getters = {
     },
     avatarUrl: state => notUndefinedOrNull(state.userInfo.userInfo.avatarUrl) ? state.userInfo.userInfo.avatarUrl : "",
     admin: state => !!state.userInfo.userInfo.admin,
+    contest_manager: state => !!state.userInfo.userInfo.contest_manager,
+    contest_maker: state => !!state.userInfo.userInfo.contest_maker,
     editor: state => !!state.userInfo.userInfo.editor,
     token: state => state.userInfo.token,
     onlineUser: state => state.socket.onlineUser,

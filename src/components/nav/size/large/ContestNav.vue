@@ -41,6 +41,7 @@
             <router-link :to="`/contest/status/${contest_id}`" class="item" exact-active-class="active">{{$t("contest history")}}
             </router-link>
             <router-link :to="`/contest/rank/${contest_id}`" class="item" exact-active-class="active">{{$t("contest ranklist")}}</router-link>
+            <router-link v-if="hasPrivilege" :to="`/contest/edit/${contest_id}`" class="item" exact-active-class="active">{{$t("edit contest")}}</router-link>
             <SocketMenu :connected="connected" :judger="judger" :logined="logined" :nick="nick" :user="user"
             ></SocketMenu>
         </div>
@@ -49,9 +50,9 @@
 <i18n>
     {
         "zh-cn": {
-            "contest problem": "比赛问题",
-            "contest history": "比赛提交历史",
-            "contest ranklist": "比赛排名"
+            "contest problem": "竞赛问题",
+            "contest history": "竞赛提交历史",
+            "contest ranklist": "竞赛排名"
         },
         "en": {
             "contest problem": "Contest ProblemSet",
@@ -67,11 +68,19 @@
 </i18n>
 <script>
 import SocketMenu from "../../components/SocketMenu";
+import { mapGetters } from "vuex";
 
 export default {
     name: "ContestNav",
     components: {
         SocketMenu
+    },
+    computed: {
+        hasPrivilege () {
+            const contestId = this.contest_id;
+            return !!(this.contest_maker[`m${contestId}`] || this.contest_manager || this.admin);
+        },
+        ...mapGetters(["contest_maker", "contest_manager"])
     },
     props: {
         nick: {
