@@ -39,7 +39,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr :key="key" :class="row.ac === 1?'positive':row.ac === -1?'negative':''"
+                            <tr :id="'popup' + key" @mouseenter="triggerPopup(key, row.pid)" :key="key" :class="row.ac === 1?'positive':row.ac === -1?'negative':''"
                                 v-for="(row,key) in problem_table">
                                 <td class="center aligned">{{row.oj_name?row.oj_name:row.pid?"LOCAL ":""}}{{row.pid}}<br
                                         v-if="row.pid">Problem {{row.pnum + 1001}}
@@ -90,7 +90,9 @@ import ContestMode from "../../components/contestMode/block";
 import LimitHostname from "../../components/contest/ContestProblemView/LimitHostname";
 import mixins from "../../mixin/init";
 import markdownIt from "../../lib/markdownIt/markdownIt";
+import { mapGetters } from "vuex";
 const _ = require("lodash");
+const $ = require("jquery");
 const dayjs = require("dayjs");
 export default {
     name: "ContestProblemView",
@@ -104,19 +106,19 @@ export default {
     mixins: [mixins],
     data: function () {
         return {
-            cid: 0,
+            cid: parseInt(this.$route.params.contest_id),
             problem_table: [],
             start_time: dayjs(),
             end_time: dayjs(),
             description: "",
             title: "",
             now: dayjs(),
+            problemInfo: {},
             current_mode: 0,
             order: 1,
             type: 0,
             contest_mode: false,
             limit_content: "",
-            admin: false,
             private_contest: false,
             dayjs,
             markdownIt
@@ -134,17 +136,57 @@ export default {
                     this.run(this.run);
                 }
             }
-        }
+        },
+        ...mapGetters(["admin", "contest_manager"])
     },
     mounted: function () {
         const contestID = this.$route.params.contest_id;
         document.title = `Contest ${contestID} -- ${document.title}`;
+        this.getInfo();
         this.run(this.run);
     },
     updated: function () {
 
     },
     methods: {
+        getInfo () {
+            if (!(this.admin || this.contest_manager)) {
+                return;
+            }
+            this.axios.get(`/api/contest/problem_info/${this.cid}`)
+                .then(({ data }) => {
+                    if (data.status === "OK") {
+                        const problemList = data.data;
+                        problemList.forEach(e => this.problemInfo[e.problem_id] = e);
+                    }
+                });
+        },
+        triggerPopup (key, problem_id) {
+            const html = this.problemDetail(problem_id);
+            $("#popup" + key).popup({
+                hoverable: true,
+                html
+            }).popup("show");
+        },
+        problemDetail (problem_id) {
+            console.log("problem_id", problem_id);
+            const problemInfo = this.problemInfo[problem_id];
+            console.log("this.problemInfo", this.problemInfo);
+            console.log("problemInfo", problemInfo);
+            if (problemInfo) {
+                const accepted = problemInfo.accepted;
+                const submit = problemInfo.submit;
+                const passRate = Math.floor(accepted * 100 / submit);
+                const label = problemInfo.label;
+                let html = `<div class="content">
+提交: ${submit} 通过:${accepted} 通过率:${passRate}%
+<br>
+标签:${label}
+</div>`;
+                return html;
+            }
+            return "";
+        },
         run: function (resolve) {
             const contestID = this.$route.params.contest_id;
             const that = this;
@@ -189,7 +231,6 @@ export default {
                     that.title = info.title;
                     that.contest_mode = contestMode;
                     that.description = info.description;
-                    that.admin = _d.admin;
                     // that.contest_mode = info.contest_mode;
                     that.private_contest = Boolean(info.private);
                     if (typeof resolve === "function") {
