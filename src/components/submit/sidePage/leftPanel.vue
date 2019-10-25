@@ -80,7 +80,7 @@
             </div>
             <div class="content">
                 <p :key="key" v-for="(row, key) in contestList">
-                    <router-link  :to="`/contest/problem/${row.contest_id}`">
+                    <router-link  :to="`/contest/${row.contest_id}`">
                         <a :class="`ui ${isPrivateContestLabel(row.private)} label`">{{isPrivateContest(row.private)}}</a>
                         Contest {{row.contest_id}}: {{row.title}}
                     </router-link>
