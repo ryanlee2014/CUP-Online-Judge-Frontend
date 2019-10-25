@@ -78,7 +78,7 @@ var language_flag = {
 }
 var languages = [
     {
-        'language': [language_flag["cpp17"],language_flag["cpp11"],language_flag["clangpp17"],language_flag["clangpp"],language_flag["c11"]],
+        'language': [language_flag["cpp11"],language_flag["cpp17"],language_flag["clangpp17"],language_flag["clangpp"],language_flag["c11"]],
         'checkers': [
             // Primitive variable declaration.
             {pattern: /(char|long|int|float|double)( )+\w+( )*=?/, points: 2},
