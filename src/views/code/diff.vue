@@ -45,6 +45,7 @@
 <script>
 import * as monaco from "monaco-editor";
 import mixins from "../../mixin/init";
+import languageMap from "../../lib/constants/monaco-editor/language-map";
 const dayjs = require("dayjs");
 export default {
     name: "diff",
@@ -72,16 +73,8 @@ export default {
     },
     async mounted () {
         document.title = `Code compare -- ${document.title}`;
-        let leftPromise = new Promise(resolve => {
-            this.axios.get(`/api/source/local/${this.$route.params.left}?raw=1`).then(({ data }) => {
-                resolve(data);
-            });
-        });
-        let rightPromise = new Promise(resolve => {
-            this.axios.get(`/api/source/local/${this.$route.params.right}?raw=1`).then(({ data }) => {
-                resolve(data);
-            });
-        });
+        let leftPromise = this.axios.get(`/api/source/local/${this.$route.params.left}?raw=1`).then(({ data }) => data);
+        let rightPromise = this.axios.get(`/api/source/local/${this.$route.params.right}?raw=1`).then(({ data }) => data);
         let [leftData, rightData] = await Promise.all([leftPromise, rightPromise]);
         this.leftUserID = leftData.data.user_id;
         this.left = leftData.data;

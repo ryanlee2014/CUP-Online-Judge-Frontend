@@ -6,39 +6,8 @@
 
 <script>
 import * as monaco from "monaco-editor";
-const languageMap = [
-    "cpp",
-    "cpp",
-    "pascal",
-    "java",
-    "ruby",
-    "bash",
-    "python",
-    "php",
-    "perl",
-    "csharp",
-    "objectivec",
-    "freebasic",
-    "schema",
-    "cpp",
-    "cpp",
-    "lua",
-    "javascript",
-    "go",
-    "python",
-    "cpp",
-    "cpp",
-    "cpp",
-    "kotlin",
-    "java",
-    "java",
-    "python",
-    "python",
-    "java",
-    "cpp",
-    "cpp",
-    ""
-];
+import languageMap from "../../../lib/constants/monaco-editor/language-map";
+
 export default {
     name: "monacoEditor",
     props: {

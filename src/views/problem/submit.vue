@@ -44,7 +44,6 @@
                              :submitDisabled="submitDisabled"
                              :switch_screen="switch_screen" :time="time" :title="temp_title" :uploader="uploader"
                              v-show="!single_page">
-
             </sideProblemView>
         </div>
     </div>
