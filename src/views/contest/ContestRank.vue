@@ -66,6 +66,7 @@
                                 <ResultGrid :gridBackground="p.accept.length > 0?p.first_blood ? 1:-1:0"
                                             :problem="p"
                                             :key="key + 0"
+                                            :lock="popupLock"
                                             :format_date="format_date"
                                             v-for="(p,key) in row.problem.toArray()"
                                 ></ResultGrid>
@@ -125,6 +126,7 @@ import utils from "../../lib/util";
 import TimeView from "../../components/contest/ContestRank/timeView";
 import ErrorView from "../../components/contest/ContestRank/errorView";
 import ResultGrid from "../../components/contest/ContestRank/ResultGrid";
+import AwaitLock from "await-lock";
 import {
     SubmitterFactory,
     firstBloodListFactory,
@@ -161,6 +163,7 @@ export default {
             auto_update: true,
             totalNumber: 0,
             playingTime: dayjs(),
+            popupLock: new AwaitLock(),
             waiting_queue: [],
             state: true,
             errormsg: "",
@@ -508,6 +511,14 @@ export default {
         window.datas = [];
         submissionCollection = [];
         document.title = `Contest Rank ${this.cid} -- ${document.title}`;
+        const lock = this.popupLock;
+        $(window).scroll(function () {
+            lock.tryAcquire();
+            clearTimeout($.data(this, "scrollTimer"));
+            $.data(this, "scrollTimer", setTimeout(function () {
+                lock.release();
+            }, 250));
+        });
         const that = this;
         bindDragEvent();
         (() => {

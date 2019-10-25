@@ -22,6 +22,10 @@ export default {
             type: Number,
             default: 0
         },
+        lock: {
+            type: Object,
+            default: () => {}
+        },
         problem: {
             type: Object,
             default: () => {
@@ -57,13 +61,18 @@ export default {
         }
     },
     methods: {
-        triggerPopup () {
+        async triggerPopup () {
+            const lock = this.lock;
             const submit = this.problem.submit;
             const accept = this.problem.accept;
             if (submit.length > 0 || accept.length > 0) {
-                $(this.$refs.block).popup({
-                    hoverable: true
-                }).popup("show");
+                const getLock = lock.tryAcquire();
+                if (getLock) {
+                    $(this.$refs.block).popup({
+                        hoverable: true
+                    }).popup("show");
+                    lock.release();
+                }
             }
         },
         buildItem () {
