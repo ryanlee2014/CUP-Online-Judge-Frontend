@@ -434,7 +434,11 @@ export default {
             // console.log(pageList);
         }
     },
-    created: function () {
+    updated: function () {
+        this.initjQueryMethods();
+    },
+    mounted: function () {
+        document.title = `Problem Set -- ${document.title}`;
         let that = this;
         let page = parseInt(getParameterByName("page") || queryString.page || "1") - 1;
         $(document).ready(function () {
@@ -450,18 +454,15 @@ export default {
         this.axios.get("/api/problemset/" + page + "/" + (this.search_tag || "none") + "/" + this.order_target + "/" + this.order + "/?label=" + this.label)
             .then(({ data }) => {
                 if (data.total) {
+                    if (this.show_label_cloud) {
+                        setTimeout(this.drawLabelCloud, 300);
+                    }
                     that.tables = data;
                 }
                 else {
                     that.contest_mode = data.contest_mode;
                 }
             });
-    },
-    updated: function () {
-        this.initjQueryMethods();
-    },
-    mounted: function () {
-        document.title = `Problem Set -- ${document.title}`;
         /* $(".ui.search")
             .search({
                 apiSettings: {
@@ -478,9 +479,6 @@ export default {
                 ],
                 minCharacters: 2
             }); */
-        if (this.show_label_cloud) {
-            setTimeout(this.drawLabelCloud, 300);
-        }
     }
 };
 
