@@ -84,6 +84,7 @@ export default {
             bodyOnTop: true,
             isRenderBodyOnTop: false,
             temp_title: "",
+            state: 0,
             problem_id: 0,
             contest_mode: false,
             limit: false,
@@ -473,6 +474,7 @@ export default {
                 fingerprintRaw: that.fingerprintRaw,
                 fingerprint: that.fingerprint
             };
+            this.state = 0;
             this.$socket.emit("submit", {
                 submission_id: "",
                 val: postdata
@@ -571,6 +573,7 @@ export default {
                     fingerprintRaw: that.fingerprintRaw
                 };
             }
+            this.state = 0;
             this.$socket.emit("submit", {
                 submission_id: "",
                 val: postdata
@@ -612,6 +615,10 @@ export default {
             ];
             const that = this;
             let status = parseInt(data["state"]);
+            if (status < this.state) {
+                return;
+            }
+            this.state = status;
             let compileInfo = data["compile_info"];
             let passPoint = data["pass_point"];
             let time = data["time"];
