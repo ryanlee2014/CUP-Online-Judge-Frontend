@@ -513,7 +513,7 @@ export default {
         },
         pre_test_run: function () {
             if (!this.$socket || (this.$socket && !this.$socket.connected)) {
-                alert("WebSocket服务未启动，请等待服务启动后提交\nWebSocket服务启动标志未:\n右上角显示在线人数");
+                alert("WebSocket服务未启动，请等待服务启动后提交\nWebSocket服务启动标识:\n右上角显示在线人数");
                 return;
             }
             let now = parseInt(dayjs() + "");
