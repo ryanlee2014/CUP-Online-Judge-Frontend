@@ -106,6 +106,9 @@ export default {
                 this.table_val = val;
                 this.owner = val.owner;
                 this.isadmin = val.admin;
+                this.$nextTick(() => {
+                    this.initMermaid();
+                });
             }
         },
         thread_head: function () {
@@ -145,26 +148,24 @@ export default {
             }, 600);
             return false;
         });
-        this.content = $content && $content.trim && $content.trim().length > 0 || ($container && $container.html() && $container.html().trim().length > 0);
+        this.content = ($content && $content.trim && $content.trim().length > 0) || ($container && $container.html() && $container.html().trim().length > 0);
     },
     mounted: function () {
         document.title = `Thread ${this.id} -- ${document.title}`;
-        var page = this.page * 20;
-        var that = this;
-        $.get("/api/discuss/" + this.id + "?page=" + page, function (data) {
-            that.table = data;
-            $.get("/api/discuss/" + that.id + "?page=" + page, function (data) {
+        const page = this.page * 20;
+        const that = this;
+        this.axios.get(`/api/discuss/${this.id}?page=${page}`)
+            .then(({ data }) => {
                 that.table = data;
             });
-        });
 
         this.$nextTick(function () {
-            var copy_content = new Clipboard(".copy.context", {
+            const copyContent = new Clipboard(".copy.context", {
                 text: function (trigger) {
                     return $(trigger).parent().next().text();
                 }
             });
-            copy_content.on("success", function (e) {
+            copyContent.on("success", function (e) {
                 $(e.trigger)
                     .popup({
                         title: "Finished",
@@ -177,33 +178,34 @@ export default {
     },
     methods: {
         replyComment: function () {
-            var send = {
+            const send = {
                 comment: this.replyText,
                 captcha: this.captcha
             };
-            var that = this;
-            $.post("/api/discuss/reply/" + this.id, send, function (data) {
-                if (data.status == "OK") {
-                    alert("回复成功");
-                    location.reload();
-                }
-                else {
-                    alert("回复失败！服务器发生未知错误");
-                }
-            });
+            this.axios.post(`/api/discuss/reply/${this.id}`, send)
+                .then(({ data }) => {
+                    if (data.status === "OK") {
+                        alert("回复成功");
+                        location.reload();
+                    }
+                    else {
+                        alert("回复失败！服务器发生未知错误");
+                    }
+                });
         },
-        block_reply: function (comment_id) {
-            $.get("/api/discuss/update/reply/block/" + this.id + "/" + comment_id, function (data) {
-                if (data.status == "OK") {
-                    alert("操作成功");
-                }
-                else {
-                    alert("操作失败");
-                }
-            });
+        block_reply: function (commentId) {
+            this.axios.get(`/api/discuss/update/reply/block/${this.id}/${commentId}`)
+                .then(({ data }) => {
+                    if (data.status === "OK") {
+                        alert("操作成功");
+                    }
+                    else {
+                        alert("操作失败");
+                    }
+                });
         },
         readTime: function (content) {
-            var doc = document.createElement("div");
+            const doc = document.createElement("div");
             doc.innerHTML = content;
             return parseInt(Math.ceil(doc.innerText.length / 300) ** 1.41428579532);
         }

@@ -350,3 +350,7 @@ a {
 tr {
     cursor: inherit!important;
 }
+
+.mermaid svg {
+    width: 100%
+}
