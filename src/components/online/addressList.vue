@@ -20,8 +20,10 @@
     float: left; /* add this */
     white-space: nowrap;
     overflow: hidden;
-"><a :href="decodeURI(location.origin+value.url)">{{
-                    decodeURI(location.origin+value.url) }}</a></td>
+">
+                    <router-link :to="value.url" v-if="!value.url.includes('.php')">{{decodeURI(location.origin+value.url) }}</router-link>
+                    <a v-else :href="decodeURI(location.origin+value.url)">{{decodeURI(location.origin+value.url) }}</a>
+                </td>
             </tr>
             </tbody>
         </table>
