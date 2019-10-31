@@ -258,8 +258,9 @@ export default {
             this.languageSelected = languageSet.join(",");
         },
         emitData () {
-            let tempData = _.cloneDeep(this.$data);
+            const tempData = _.cloneDeep(this.$data);
             tempData.langmask = this.LanguageSelectedToLangmask();
+            tempData.Public = tempData.Private;
             this.$emit("postData", tempData);
         },
         initjQuery () {
