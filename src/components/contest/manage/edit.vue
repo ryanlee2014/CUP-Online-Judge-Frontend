@@ -285,15 +285,16 @@ export default {
             $("#limitClassroom").dropdown("set selected", this.classroomSelected.split(","));
             $("#limitHostname").dropdown("set selected", this.hostname.split(","));
             $("#selectedLanguage").dropdown("set selected", this.languageSelected.split(","));
+            $(this.$refs.public).checkbox((!this.Private) ? "checked" : "unchecked");
+            $(this.$refs.contest).checkbox(this.ContestMode ? "checked" : "unchecked");
+            $(this.$refs.defunct).checkbox(this.defunct ? "chekced" : "unchecked");
         }
     },
     mounted () {
         this.initjQuery();
     },
     updated () {
-        $(this.$refs.public).checkbox((!this.Private) ? "checked" : "unchecked");
-        $(this.$refs.contest).checkbox(this.ContestMode ? "checked" : "unchecked");
-        $(this.$refs.defunct).checkbox(this.defunct ? "chekced" : "unchecked");
+
     },
     watch: {
         userListText (newVal, oldVal) {
