@@ -80,7 +80,7 @@ export default {
             const contestId = this.contest_id;
             return !!(this.contest_maker[`m${contestId}`] || this.contest_manager || this.admin);
         },
-        ...mapGetters(["contest_maker", "contest_manager"])
+        ...mapGetters(["contest_maker", "contest_manager", "admin"])
     },
     props: {
         nick: {
