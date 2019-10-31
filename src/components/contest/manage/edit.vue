@@ -10,21 +10,21 @@
                     <div class="field">
                         <div class="three fields">
                             <div class="field">
-                                <div class="ui toggle checkbox">
+                                <div class="ui toggle checkbox" ref="public">
                                     <input @click="Public = !Public" class="hidden" tabindex="0" type="checkbox"
                                            v-model="Public">
                                     <label>{{$t("public contest")}}</label>
                                 </div>
                             </div>
                             <div class="field">
-                                <div class="ui toggle checkbox">
+                                <div class="ui toggle checkbox" ref="defunct">
                                     <input @click="defunct = !defunct" class="hidden" tabindex="0" type="checkbox"
                                            v-model="defunct">
                                     <label>{{$t("hide contest")}}</label>
                                 </div>
                             </div>
                             <div class="field">
-                                <div class="ui toggle checkbox">
+                                <div class="ui toggle checkbox" ref="contest">
                                     <input @click="ContestMode = !ContestMode" class="hidden" tabindex="0"
                                            type="checkbox" v-model="ContestMode">
                                     <label>{{$t("contest mode available only")}}</label>
@@ -185,6 +185,7 @@
 <script>
 import Type from "../../../type";
 import Middleware from "../../../module/Middleware/core";
+import util from "../../../lib/util";
 
 const dayjs = require("dayjs");
 const _ = require("lodash");
@@ -286,6 +287,11 @@ export default {
     },
     mounted () {
         this.initjQuery();
+    },
+    updated () {
+        $(this.$refs.public).checkbox(this.Public ? "checked" : "unchecked");
+        $(this.$refs.contest).checkbox(this.ContestMode ? "checked" : "unchecked");
+        $(this.$refs.defunct).checkbox(this.defunct ? "chekced" : "unchecked");
     },
     watch: {
         userListText (newVal, oldVal) {
