@@ -189,6 +189,7 @@ import util from "../../../lib/util";
 
 const dayjs = require("dayjs");
 const _ = require("lodash");
+const $ = require("jquery");
 export default {
     name: "baseManage",
     props: {
