@@ -882,7 +882,7 @@ export default {
                     i.result = status;
                     i.time = time;
                     i.memory = memory;
-                    i.sim = data.sim;
+                    i.sim = sim;
                     i.sim_id = data.sim_s_id;
                     i.pass_rate = pass_rate;
                     i.total_point = total_point;
