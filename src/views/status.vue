@@ -781,20 +781,18 @@ export default {
             let that = this;
             this.dim = true;
             this.page_cnt = 0;
-            let problem_id = this.problem_id || "null";
-            let user_id = this.user_id || "null";
+            let problemId = this.problem_id || "null";
+            let userId = this.user_id || "null";
             let language = this.language == -1 ? "null" : this.language;
             let result = this.problem_result == -1 ? "null" : this.problem_result;
-            let page_cnt = this.page_cnt * 20;
+            let pageCount = this.page_cnt * 20;
             let sim = Number(this.sim_checkbox);
             let pri = Number(this.privilege);
-            return new Promise(function (resolve, reject) {
-                $.get("/api/status/" + problem_id + "/" + user_id + "/" + language + "/" + result + "/" + page_cnt + "/" + sim + "/" + pri, function (data) {
-                    that.dim = false;
-                    that.search_func(data);
-                    resolve();
+            return this.axios.get(`/api/status/${problemId}/${userId}/${language}/${result}/${pageCount}/${sim}/${pri}`)
+                .then(({ data }) => {
+                    this.dim = false;
+                    this.search_func(data);
                 });
-            });
         },
         list_self_only: function () {
             let that = this;
@@ -810,22 +808,23 @@ export default {
         page: function (num, $event) {
             this.dim = true;
             this.page_cnt += num;
-            let problem_id = this.problem_id || "null";
-            let user_id = this.user_id || "null";
+            let problemId = this.problem_id || "null";
+            let userId = this.user_id || "null";
             let language = this.language == -1 ? "null" : this.language;
             let result = this.problem_result == -1 ? "null" : this.problem_result;
-            let page_cnt = this.page_cnt * 20;
-            let sim_checkbox = Number(this.sim_checkbox);
+            let pageCount = this.page_cnt * 20;
+            let simCheckbox = Number(this.sim_checkbox);
             let pri = Number(this.privilege);
-            let that = this;
-            $.get("/api/status/" + problem_id + "/" + user_id + "/" + language + "/" + result + "/" + page_cnt + "/" + sim_checkbox + "/" + pri, function (data) {
-                that.dim = false;
-                that.search_func(data);
-                $.get("/api/status/" + problem_id + "/" + user_id + "/" + language + "/" + result + "/" + page_cnt + "/" + sim_checkbox + "/" + pri, function (data) {
-                    that.dim = false;
-                    that.search_func(data);
+            this.axios.get(`/api/status/${problemId}/${userId}/${language}/${result}/${pageCount}/${simCheckbox}/${pri}`)
+                .then(({ data }) => {
+                    this.dim = false;
+                    this.search_func(data);
+                    this.axios.get(`/api/status/${problemId}/${userId}/${language}/${result}/${pageCount}/${simCheckbox}/${pri}`)
+                        .then(({ data }) => {
+                            this.dim = false;
+                            this.search_func(data);
+                        });
                 });
-            });
         },
         Submit: function (data) {
             if (!this.auto_refresh) {
