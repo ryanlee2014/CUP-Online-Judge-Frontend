@@ -13,7 +13,7 @@
                     </div>
                 </div>
                 <div class="column" style="z-index: 1700;">
-                    <select multiple class="ui search dropdown label selection"  @change="label = select('.label.selection.ui.dropdown').dropdown('get value');">
+                    <select multiple class="ui search dropdown label selection"  @change="label = select('.label.selection.ui.dropdown').dropdown('get value')">
                         <option :key="lb" v-for="lb in all_label" :value="lb" v-text="lb"></option>
                     </select>
                 </div>
@@ -100,7 +100,7 @@
                 <h2 class="ui header">Files</h2>
             </div>
             <div class="row">
-                <a :key="file_name" class="ui label" v-for="file_name in files">{{file_name}}</a>
+                <a :key="file_name" class="ui label" v-for="file_name in files" :href="makeHref(file_name)">{{file_name}}</a>
             </div>
             <div class="row">
                 <h2 class="ui header">
@@ -218,41 +218,44 @@ export default {
         };
     },
     methods: {
+        makeHref (fileName) {
+            return `/api/admin/problem/download/data/${this.id}/${fileName}`;
+        },
         submit: function () {
             let from = "local";
             const id = this.id;
-            var send_obj = { imageData: {} };
-            for (var i of this.$children) {
-                var target = i.$vnode.data.model;
-                send_obj[target.expression] = target.value;
-                send_obj.imageData[target.expression] = i.markdownIt.__image || {};
+            const sendObj = { imageData: {} };
+            for (const i of this.$children) {
+                const target = i.$vnode.data.model;
+                sendObj[target.expression] = target.value;
+                sendObj.imageData[target.expression] = i.markdownIt.__image || {};
             }
 
-            send_obj["time"] = this.time;
-            send_obj["memory"] = this.memory;
-            send_obj["title"] = this.title;
-            send_obj["sampleinput"] = this.sampleinput;
-            send_obj["sampleoutput"] = this.sampleoutput;
-            send_obj["spj"] = Number(this.spj);
-            var labels = this.label;
+            sendObj["time"] = this.time;
+            sendObj["memory"] = this.memory;
+            sendObj["title"] = this.title;
+            sendObj["sampleinput"] = this.sampleinput;
+            sendObj["sampleoutput"] = this.sampleoutput;
+            sendObj["spj"] = Number(this.spj);
+            const labels = this.label;
             function unique (array) {
-                var res = array.filter(function (item, index, array) {
+                return array.filter(function (item, index, array) {
                     return array.indexOf(item) === index;
                 });
-                return res;
             }
 
-            send_obj["label"] = unique(labels).join(" ");
-            $.post("/api/problem/" + this.source + "/" + id, { json: send_obj }, function (data) {
-                if (data.status == "OK") {
-                    $.get("/api/problem/" + from + "?id=" + id);
-                    alert("提交成功");
-                }
-            });
+            sendObj["label"] = unique(labels).join(" ");
+            this.axios.post(`/api/problem/${this.source}/${id}`, { json: sendObj })
+                .then(({ data }) => {
+                    if (data.status === "OK") {
+                        this.axios.get(`/api/problem/${from}?id=${id}`);
+                        alert("提交成功");
+                    }
+                });
         },
         imageHandler: function (key, data) {
             let mx = -1;
-            var that = this;
+            const that = this;
             _.forEach(data.data, function (val, idx) {
                 that.$children[key].markdownIt.image_add_with_check(val.name, val.data);
                 mx = Math.max(mx, parseInt(val.name));
@@ -283,43 +286,40 @@ export default {
                         files: []
                     };
                     Object.assign(this, _data);
-                    $.get("/api/problem/" + this.source + "/?label=true", function (data) {
-                        that.all_label = data.data;
-                        let has_label = that.label;
-                        $(".label.selection.ui.dropdown")
-                            .dropdown({
-                                allowAdditions: true
-                            })
-                            .on("click", function () {
-                                that.label = $(".label.selection.ui.dropdown").dropdown("get value");
-                            });
-                        for (let i = 0; i < has_label.length; ++i) {
-                            $(".label.selection.ui.dropdown").dropdown("set selected", has_label[i]);
-                        }
-                    });
-                    $.get("/api/photo/description/" + id, function (data) {
-                        if (data.status == "OK") {
-                            that.imageHandler(0, data);
-                        }
-                    });
-                    $.get("/api/photo/input/" + id, function (data) {
-                        if (data.status == "OK") {
-                            that.imageHandler(1, data);
-                        }
-                    });
-                    $.get("/api/photo/output/" + id, function (data) {
-                        if (data.status == "OK") {
-                            that.imageHandler(2, data);
-                        }
-                    });
-                    $.get("/api/photo/hint/" + id, function (data) {
-                        if (data.status == "OK") {
-                            that.imageHandler(3, data);
-                        }
-                    });
-                    $.get("/api/file/" + id, function (data) {
-                        that.files = data.data;
-                    });
+                    this.axios.get(`/api/problem/${this.source}/?label=true`)
+                        .then(({ data }) => {
+                            const $dropdown = $(".label.selection.ui.dropdown");
+                            that.all_label = data.data;
+                            const hasLabel = that.label;
+                            $dropdown
+                                .dropdown({
+                                    allowAdditions: true
+                                })
+                                .on("click", function () {
+                                    that.label = $dropdown.dropdown("get value");
+                                });
+                            for (let i = 0; i < hasLabel.length; ++i) {
+                                $dropdown.dropdown("set selected", hasLabel[i]);
+                            }
+                        });
+                    this.initMarkdown("description", id, 0);
+                    this.initMarkdown("input", id, 1);
+                    this.initMarkdown("output", id, 2);
+                    this.initMarkdown("hint", id, 3);
+                    this.axios.get(`/api/file/${id}`)
+                        .then(({ data }) => {
+                            if (data.status === "OK") {
+                                this.files = data.data;
+                            }
+                        });
+                });
+        },
+        initMarkdown (path, id, code) {
+            this.axios.get(`/api/photo/${path}/${id}`)
+                .then(({ data }) => {
+                    if (data.status === "OK") {
+                        this.imageHandler(code, data);
+                    }
                 });
         }
     },
