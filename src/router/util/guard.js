@@ -27,7 +27,6 @@ function checkAdmin (to, admin, next) {
             }
 
             let needPrivilege = false;
-
             for (const key in meta) {
                 if (!Object.prototype.hasOwnProperty.call(meta, key)) {
                     continue;
@@ -39,7 +38,10 @@ function checkAdmin (to, admin, next) {
                     next();
                 }
             }
-            if (needPrivilege) {
+            if (admin) {
+                next();
+            }
+            else if (needPrivilege) {
                 next({
                     path: "/forbidden/privilege"
                 });
