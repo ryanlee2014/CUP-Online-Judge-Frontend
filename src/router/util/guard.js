@@ -38,7 +38,7 @@ function checkAdmin (to, admin, next) {
                     next();
                 }
             }
-            if (admin) {
+            if (store.getters.admin) {
                 next();
             }
             else if (needPrivilege) {
