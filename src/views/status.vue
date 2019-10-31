@@ -798,9 +798,9 @@ export default {
         },
         list_self_only: function () {
             let that = this;
-            let self_user_id = this.$store.getters.user_id;
-            if (this.user_id == null || this.user_id != self_user_id) {
-                this.user_id = self_user_id;
+            let selfUserId = this.$store.getters.user_id;
+            if (this.user_id == null || this.user_id !== selfUserId) {
+                this.user_id = selfUserId;
             }
             else {
                 this.user_id = null;
