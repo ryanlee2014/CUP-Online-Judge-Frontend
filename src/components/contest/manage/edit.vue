@@ -11,8 +11,8 @@
                         <div class="three fields">
                             <div class="field">
                                 <div class="ui toggle checkbox" ref="public">
-                                    <input @click="Public = !Public" class="hidden" tabindex="0" type="checkbox"
-                                           v-model="Public">
+                                    <input @click="Private = !Private" class="hidden" tabindex="0" type="checkbox"
+                                           v-model="Private">
                                     <label>{{$t("public contest")}}</label>
                                 </div>
                             </div>
@@ -211,7 +211,7 @@ export default {
             contest_id: this.$route.params.contest_id,
             title: "",
             defunct: false,
-            Public: true,
+            Private: true,
             ContestMode: false,
             startTime: "",
             endTime: "",
@@ -290,7 +290,7 @@ export default {
         this.initjQuery();
     },
     updated () {
-        $(this.$refs.public).checkbox(this.Public ? "checked" : "unchecked");
+        $(this.$refs.public).checkbox((!this.Private) ? "checked" : "unchecked");
         $(this.$refs.contest).checkbox(this.ContestMode ? "checked" : "unchecked");
         $(this.$refs.defunct).checkbox(this.defunct ? "chekced" : "unchecked");
     },
@@ -324,7 +324,7 @@ export default {
                 this.endTime = new Date(res.end_time);
                 this.description = res.description;
                 this.defunct = res.defunct === "Y";
-                this.Public = !!this.private;
+                this.Private = !!this.private;
                 this.ContestMode = !!res.cmod_visible;
                 this.LangmaskToLanguageSelected(res.langmask);
                 this.password = res.password;
