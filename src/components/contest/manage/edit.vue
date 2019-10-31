@@ -260,7 +260,7 @@ export default {
         emitData () {
             const tempData = _.cloneDeep(this.$data);
             tempData.langmask = this.LanguageSelectedToLangmask();
-            tempData.Public = tempData.Private;
+            tempData.Public = !tempData.Private;
             this.$emit("postData", tempData);
         },
         initjQuery () {
