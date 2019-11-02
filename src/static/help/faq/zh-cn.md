@@ -164,7 +164,7 @@ print(sum(map(int,input().split()))
 
 1. `main`函数的返回值必须为`int`,`void main()`等非标准的写法将不被允许
 2. 对于64位整数，请使用`long long/unsigned long long`而不是`__int64`声明变量，并使用`%lld`或`%llu`输入输出
-3. 由于众所周知的原因，`cin`和`cout`的速度慢于`scanf`以及`printf`。因此我们推荐使用后两者读写数据。(事实上`cin`以及`cout`并不一定比`scanf`和`printf`慢。详情见[感性对比评测机效率](discusscontext?id=8)以及[cin加速](http://www.hankcs.com/program/cpp/cin-tie-with-sync\_with\_stdio-acceleration-input-and-output.html))
+3. 由于众所周知的原因，`cin`和`cout`的速度慢于`scanf`以及`printf`。因此我们推荐使用后两者读写数据。(事实上`cin`以及`cout`并不一定比`scanf`和`printf`慢。详情见[感性对比评测机效率](/discuss/thread/8)以及[cin加速](http://www.hankcs.com/program/cpp/cin-tie-with-sync\_with\_stdio-acceleration-input-and-output.html))
 
 #### Java
 
