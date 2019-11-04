@@ -22,7 +22,7 @@
         </div>
     </div>
 </template>
-<i18n src="../locales/views/online.json"></i18n>
+<i18n src="../locales/online.json"></i18n>
 <script>
 import mixins from "../mixin/init";
 import addressList from "../components/online/addressList";

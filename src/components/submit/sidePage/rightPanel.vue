@@ -89,7 +89,7 @@
         <div id="clipcp" style="display:none"></div>
     </div>
 </template>
-<i18n src="../../../locales/components/submit/sidePage/rightPanel.json"></i18n>
+<i18n src="../../../locales/rightPanel.json"></i18n>
 <script>
 import aceEditor from "../../../components/submit/codeEditor/aceEditor";
 import aceThemeSelector from "../../../components/submit/codeEditor/aceComponent/aceThemeSelector";
