@@ -33,6 +33,7 @@
                             <router-link class="item" exact-active-class="active" to="/about/fame"><i
                                     class="chess queen icon"></i>{{$t("hall of fame")}}
                             </router-link>
+                            <a href="https://docs.cupacm.com" class="item" target="_blank"><i class="book icon"></i>{{$t("cupacm docs")}}</a>
                         </div>
                     </div>
                 </div>
