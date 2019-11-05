@@ -421,8 +421,7 @@ export default {
             }
 
             // downloadExl(doc);
-            let blob;
-            blob = new Blob([XLSContentHTML], { type: "application/vnd.ms-excel;charset=UTF-8;" });
+            const blob = new Blob([XLSContentHTML], { type: "application/vnd.ms-excel;charset=UTF-8;" });
             if (convertFlag) {
                 saveAs(blob, "Contest " + this.cid + " 多个contest.xls");
             }

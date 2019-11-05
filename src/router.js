@@ -378,6 +378,15 @@ const router = new Router({
             }
         },
         {
+            path: "/admin/export/problem",
+            name: "Admin export problem list",
+            component: () => import("./views/admin/export/ProblemList.vue"),
+            meta: {
+                auth: true,
+                admin: true
+            }
+        },
+        {
             path: "/contest/edit/:contest_id",
             name: "Contest Edit",
             component: () => import("./views/contest/manage/edit.vue"),

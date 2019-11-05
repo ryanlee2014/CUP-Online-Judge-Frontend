@@ -193,5 +193,7 @@
   "提交被拒绝": "提交被拒绝",
   "系统错误": "系统错误",
   "edit contest": "编辑竞赛",
-  "cupacm docs": "文档库"
+  "cupacm docs": "文档库",
+  "export": "导出列表",
+  "export problem": "标签导出题目列表"
 }

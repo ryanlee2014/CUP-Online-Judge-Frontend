@@ -193,5 +193,7 @@
   "提交被拒绝": "Rejected",
   "系统错误": "System error",
   "edit contest": "Edit Contest",
-  "cupacm docs": "Document Library"
+  "cupacm docs": "Document Library",
+  "export": "Export Excel",
+  "export problem": "Export Problem by Label"
 }
