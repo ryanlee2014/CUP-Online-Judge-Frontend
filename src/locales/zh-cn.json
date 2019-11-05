@@ -195,5 +195,6 @@
   "edit contest": "编辑竞赛",
   "cupacm docs": "文档库",
   "export": "导出列表",
-  "export problem": "标签导出题目列表"
+  "export problem": "标签导出题目列表",
+  "global setting": "全局设置"
 }

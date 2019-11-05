@@ -195,5 +195,6 @@
   "edit contest": "コンテストエディット",
   "cupacm docs": "ドキュメントライブラリー",
   "export": "エクスポートリスト",
-  "export problem": "問題エクスポート"
+  "export problem": "問題エクスポート",
+  "global setting": "システム設置"
 }

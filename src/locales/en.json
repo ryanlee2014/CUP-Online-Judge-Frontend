@@ -195,5 +195,6 @@
   "edit contest": "Edit Contest",
   "cupacm docs": "Document Library",
   "export": "Export Excel",
-  "export problem": "Export Problem by Label"
+  "export problem": "Export Problem by Label",
+  "global setting": "Global Setting"
 }
