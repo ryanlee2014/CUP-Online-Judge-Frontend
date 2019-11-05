@@ -1,4 +1,6 @@
 const MonacoEditorPlugin = require("monaco-editor-webpack-plugin");
+const CompressionPlugin = require("compression-webpack-plugin");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
     chainWebpack: config => {
@@ -54,11 +56,22 @@ module.exports = {
         }
     },
     configureWebpack: config => {
-        return {
+        const configs = {
             plugins: [
                 new MonacoEditorPlugin()
             ]
         };
+        if (process.env.NODE_ENV === "production") {
+            configs.plugins.push(new CompressionPlugin({
+                test: /\.js$|\.html$|\.css/,
+                threshold: 10240,
+                deleteOriginalAssets: false
+            }));
+            configs.plugins.push(new HtmlWebpackPlugin({
+                inject: "body"
+            }));
+        }
+        return configs;
     },
 
     assetsDir: "./static",
