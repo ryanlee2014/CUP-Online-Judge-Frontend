@@ -67,9 +67,6 @@ module.exports = {
                 threshold: 10240,
                 deleteOriginalAssets: false
             }));
-            configs.plugins.push(new HtmlWebpackPlugin({
-                inject: "body"
-            }));
         }
         return configs;
     },
