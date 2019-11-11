@@ -1,3 +1,4 @@
+// @ts-ignore
 import browserUpdate from "browser-update";
 import Vue from "vue";
 import VueAxios from "vue-axios";
@@ -6,7 +7,9 @@ import VueLazyload from "vue-lazyload";
 import App from "./App.vue";
 import router from "./router";
 import store from "./store";
+// @ts-ignore
 import VueSocketIO from "vue-socket.io";
+// @ts-ignore
 import VueWorker from "vue-worker";
 import mavonEditor from "./lib/mavon-editor/mavon-editor";
 import VueObserveVisibility from "vue-observe-visibility";
