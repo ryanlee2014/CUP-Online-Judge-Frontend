@@ -75,10 +75,10 @@ function emptyFunction (): void {
 
 export function earlyFirstComparator (a: dayjs, b: dayjs) {
     if (a.isBefore(b)) {
-        return 1;
+        return -1;
     }
     else if (a.isAfter(b)) {
-        return -1;
+        return 1;
     }
     else {
         return 0;
