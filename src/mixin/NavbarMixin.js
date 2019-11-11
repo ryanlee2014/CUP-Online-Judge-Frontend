@@ -1,4 +1,5 @@
 const $ = require("jquery");
+const config = require("../../package.json");
 export default {
     props: {
         user_id: {
@@ -88,6 +89,7 @@ export default {
             platform: window.navigator.platform,
             browser_core: window.navigator.product,
             useragent: window.navigator.userAgent,
+            frontend_version: config.version,
             screen: {
                 width: screen.availWidth,
                 height: screen.availHeight
