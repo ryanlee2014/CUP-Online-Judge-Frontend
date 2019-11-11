@@ -4,20 +4,21 @@
         <table class='ui padded celled selectable table' id='cs' width=90%>
             <thead>
             <tr align=center class=toprow>
-                <th onclick="sortTable('cs', 0, 'float');" width=15%>ID</th>
+                <th onclick="sortTable('cs', 0, 'float');" width=20%>ID</th>
                 <th width=20%>Name</th>
-                <th width=55%>href</th>
+                <th width=60%>href</th>
             </tr>
             </thead>
             <tbody id="online_user_table" refresh="true">
             <tr :key="idx" style="text-align:center" v-cloak v-for="(value,idx) in user">
-                <td>{{ value.user_id }}</td>
+                <td>{{ value.user_id }}<br>Ver: {{value.frontend_version}}</td>
                 <td>
                     <router-link :to="`/user/${value.user_id}`">{{value.nick}}</router-link>
                 </td>
                 <td style="
     width: 100%;
-    float: left; /* add this */
+    height: 100%;
+   /* float: left; /* add this */
     white-space: nowrap;
     overflow: hidden;
 ">
