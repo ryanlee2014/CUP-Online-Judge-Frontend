@@ -1,42 +1,50 @@
-// @flow
+import { Dayjs } from "dayjs";
 const dayjs = require("dayjs");
+
 const DEFAULT_TIME = dayjs();
-export type Problem = {
-    submit: Array<dayjs>,
-    accept: Array<dayjs>,
+export interface Problem {
+    [id: string]: any,
+    submit: Dayjs[],
+    accept: Dayjs[],
     sim: number,
     try_time: number,
-    start_time: dayjs,
+    start_time: Dayjs,
     first_blood: boolean,
     _submit: Set<number>,
     _accept: Set<number>,
-    set: function,
-    update: function,
-    addSubmit: function,
-    calculatePenaltyTime: function,
-    isAccepted: function,
-    getAcceptTime: function,
-    newInstance: function
+    set: (...arg: any[]) => any,
+    update: (...arg: any[]) => any,
+    addSubmit: (...arg: any[]) => any,
+    calculatePenaltyTime: (...arg: any[]) => any,
+    isAccepted: (...arg: any[]) => any,
+    getAcceptTime: (...arg: any[]) => any,
+    newInstance: (...arg: any[]) => any
+}
+
+export interface ISet<T> extends Set<T> {
+    newInstance: (...arg: any[]) => any
 }
 
 export type FirstBloodList = {
-    get: function,
-    newInstance: function
+    [id: string]: any,
+    get: (...arg: any[]) => any,
+    newInstance: (...arg: any[]) => any
 };
 
 export type FirstBlood = {
-    time: dayjs,
+    time: Dayjs | number,
     person: any,
-    setFirstBlood: function,
-    newInstance: function
+    setFirstBlood: (...arg: any[]) => any,
+    newInstance: (...arg: any[]) => any
 };
 
 export type ProblemList = {
-    get: function,
-    toArray: function,
-    calculatePenaltyTime: function,
-    calculateAC: function,
-    newInstance: function
+    [id: string]: any,
+    get: (...arg: any[]) => any,
+    toArray: (...arg: any[]) => any,
+    calculatePenaltyTime: (...arg: any[]) => any,
+    calculateAC: (...arg: any[]) => any,
+    newInstance: (...arg: any[]) => any
 };
 
 export type Submitter = {
@@ -49,11 +57,11 @@ export type Submitter = {
     ipSet: Set<any>,
     real_name: string,
     user_id: string,
-    addData: function,
-    calculatePenaltyTime: function,
-    calculateAC: function,
-    calculateFirstBlood: function,
-    newInstance: function
+    addData: (...arg: any[]) => any,
+    calculatePenaltyTime: (...arg: any[]) => any,
+    calculateAC: (...arg: any[]) => any,
+    calculateFirstBlood: (firstBloodList: FirstBloodList) => any,
+    newInstance: (...arg: any[]) => any
 };
 
 export function hashCode (str: String) {
@@ -73,7 +81,7 @@ function emptyFunction (): void {
     return undefined;
 }
 
-export function earlyFirstComparator (a: dayjs, b: dayjs) {
+export function earlyFirstComparator (a: Dayjs, b: Dayjs) {
     if (a.isBefore(b)) {
         return -1;
     }
@@ -252,13 +260,14 @@ export function UserIDFactory (userId: any) {
 export function SetFactory () {
     let set = new Set<any>();
     let _add = set.add;
-    // $FlowFixMe eslint-disable-next-line flowtype-errors/show-errors
-    set.add = function (val) {
+    set.add = function (val: any) {
         if (typeof val !== "undefined") {
+            // @ts-ignore
             _add.apply(set, arguments);
         }
+        return this;
     };
-    // $FlowFixMe eslint-disable-next-line flowtype-errors/show-errors
+    // @ts-ignore
     set.newInstance = SetFactory;
     return set;
 }
@@ -305,7 +314,7 @@ export function firstBloodListFactory (total: number) {
     return firstBlood;
 }
 
-export function SubmitterFactory (nick: ?string, totalProblem: number, userId: ?string): Submitter {
+export function SubmitterFactory (nick: string, totalProblem: number, userId?: string): Submitter {
     return {
         ac: 0,
         nick: NickFactory(nick),
@@ -349,7 +358,7 @@ export function SubmitterFactory (nick: ?string, totalProblem: number, userId: ?
     };
 }
 
-export function SubmitterComparator (policy: string): function {
+export function SubmitterComparator (policy: string) {
     let factor = 1;
     switch (policy.toLowerCase()) {
     case "greater":
