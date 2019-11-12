@@ -2,25 +2,18 @@
     <UserContainer :userId="userId"></UserContainer>
 </template>
 
-<script>
-import mixins from "../mixin/init";
-import UserContainer from "../components/user/UserContainer";
-
-export default {
-    name: "user",
-    mixins: [mixins],
-    data () {
-        return {
-            userId: ""
-        };
-    },
-    mounted () {
-        this.userId = this.$route.params.user_id;
-    },
+<script lang="ts">
+import InitMixin from "../mixin/init";
+import UserContainer from "../components/user/UserContainer.vue";
+import { Component, Mixins } from "vue-property-decorator";
+@Component({
     components: {
-        UserContainer
+        UserContainer: UserContainer
     }
-};
+})
+export default class User extends Mixins(InitMixin) {
+    userId = this.$route.params.user_id;
+}
 </script>
 
 <style scoped>

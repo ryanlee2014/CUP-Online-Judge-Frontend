@@ -145,15 +145,15 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 import mixins from "../../mixin/init";
-export default {
-    name: "opensource",
-    mixins: [mixins],
+import { Component, Mixins } from "vue-property-decorator";
+@Component
+export default class OpenSource extends Mixins(mixins) {
     mounted () {
         document.title = `Open Source -- ${document.title}`;
     }
-};
+}
 </script>
 
 <style scoped>

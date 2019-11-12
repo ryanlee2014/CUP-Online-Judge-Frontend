@@ -1,87 +1,68 @@
 import config from "../../package.json";
 import Vue from "vue";
+import { Component, Prop } from "vue-property-decorator";
 const $ = require("jquery");
-export default Vue.extend({
-    props: {
-        user_id: {
-            type: String,
-            default: ""
-        },
-        nick: {
-            type: String,
-            default: ""
-        },
-        admin: {
-            type: Boolean,
-            default: false
-        },
-        avatar: {
-            type: Boolean,
-            default: false
-        },
-        logined: {
-            type: Boolean,
-            default: false
-        },
-        homepage: {
-            type: Boolean,
-            default: false
-        },
-        contest: {
-            type: Boolean,
-            default: false
-        }
-    },
-    data () {
-        return {
-            user: 1,
-            judger: 0,
-            socketConnected: true,
-            intervalId: -1
-        };
-    },
-    methods: {
-        _connectTry (times: number) {
-            (async () => {
-                let Promise = require("bluebird");
-                while (times-- > 0) {
-                    if (this.$socket && this.$socket.connect && typeof this.$socket.connect === "function") {
-                        if (!this.$socket.connected) {
-                            this.$socket.connect();
-                            this.$socket.emit("getUser");
-                        }
-                        else {
-                            break;
-                        }
-                    }
-                    await Promise.delay(500);
-                }
-            })();
-        },
-        bindSocketObserver () {
-            const that = this;
-            Object.defineProperty(this.$socket, "connected", {
-                // @ts-ignore
-                _connected: this.$socket.connected,
-                get: function () {
-                    return this._connected;
-                },
-                set: function (val) {
-                    if (val === false) {
-                        that.intervalId = setInterval(() => {
-                            that._connectTry(1);
-                        }, 1000);
+
+declare module "vue/types/vue" {
+    interface Vue {
+        sockets: any,
+        $socket: any
+    }
+}
+@Component
+export default class NavbarMixin extends Vue {
+    @Prop({ default: "" }) user_id!: string;
+    @Prop({ default: false }) admin!: boolean;
+    @Prop({ default: false }) avatar!: boolean;
+    @Prop({ default: "" }) nick!: string;
+    @Prop({ default: false }) logined!: boolean;
+    @Prop({ default: false }) homepage!: boolean;
+    @Prop({ default: false }) contest!: boolean;
+    user = 1;
+    judger = 0;
+    socketConnected = true;
+    intervalId = -1;
+    _connectTry (times: number) {
+        (async () => {
+            let Promise = require("bluebird");
+            while (times-- > 0) {
+                if (this.$socket && this.$socket.connect && typeof this.$socket.connect === "function") {
+                    if (!this.$socket.connected) {
+                        this.$socket.connect();
+                        this.$socket.emit("getUser");
                     }
                     else {
-                        if (that.intervalId !== -1) {
-                            clearInterval(that.intervalId);
-                        }
+                        break;
                     }
-                    that.socketConnected = this._connected = val;
                 }
-            });
-        }
-    },
+                await Promise.delay(500);
+            }
+        })();
+    }
+    bindSocketObserver () {
+        const that = this;
+        Object.defineProperty(this.$socket, "connected", {
+            // @ts-ignore
+            _connected: this.$socket.connected,
+            get: function () {
+                return this._connected;
+            },
+            set: function (val) {
+                if (val === false) {
+                    that.intervalId = setInterval(() => {
+                        that._connectTry(1);
+                    }, 1000);
+                }
+                else {
+                    if (that.intervalId !== -1) {
+                        clearInterval(that.intervalId);
+                    }
+                }
+                that.socketConnected = this._connected = val;
+            }
+        });
+    }
+
     async mounted () {
         this.bindSocketObserver();
         this.socketConnected = this.$socket.connected;
@@ -143,4 +124,4 @@ export default Vue.extend({
             }
         });
     }
-});
+}

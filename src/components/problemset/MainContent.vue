@@ -1,5 +1,5 @@
 <template>
-    <table class='ui unstackable very basic center aligned large table' id='problemset' v-if="!dim" v-tableUpdated
+    <table class='ui unstackable very basic center aligned large table' id='problemset' v-if="!dim"
            width='90%'>
         <thead>
         <tr class='toprow'>

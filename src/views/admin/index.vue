@@ -7,16 +7,18 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 import mixins from "../../mixin/init";
-import Monitor from "../../components/admin/monitor";
-export default {
-    name: "index",
-    mixins: [mixins],
+import Monitor from "../../components/admin/monitor.vue";
+import { Mixins, Component } from "vue-property-decorator";
+@Component({
     components: {
-        Monitor
+        Monitor: Monitor
     }
-};
+})
+export default class AdminIndex extends Mixins(mixins) {
+
+}
 </script>
 
 <style scoped>

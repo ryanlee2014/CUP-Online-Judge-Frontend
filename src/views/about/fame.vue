@@ -299,15 +299,14 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 import mixins from "../../mixin/init";
-
-const $ = require("jquery");
-window.$ = window.jQuery = $;
-const _ = require("lodash");
-export default {
-    name: "fame",
-    mixins: [mixins],
+import { Component, Mixins } from "vue-property-decorator";
+import jquery from "jquery";
+import _ from "lodash";
+const $: any = jquery;
+@Component
+export default class Fame extends Mixins(mixins) {
     mounted () {
         document.title = `Hall of fame -- ${document.title}`;
         this.$Lazyload.$on("loaded", (el) => {
@@ -334,14 +333,15 @@ export default {
                     context: "#mainContent",
                     offset: 50
                 });
-            $(".quick.item").on("click", function (d) {
+            $(".quick.item").on("click", function (this: any) {
                 $([document.documentElement, document.body]).animate({
                     scrollTop: $(this.getAttribute("href")).offset().top - 50
                 }, 600);
                 return false;
             });
         });
-    },
+    }
+
     updated () {
         $(".ui.sticky.left")
             .sticky({
@@ -349,7 +349,7 @@ export default {
                 offset: 50
             });
     }
-};
+}
 </script>
 
 <style scoped>

@@ -11,21 +11,21 @@
     </div>
 </template>
 
-<script>
-export default {
-    name: "locale",
-    methods: {
-        locale (el) {
-            this.$i18n.locale = el.target.getAttribute("locale");
-            localStorage.locale = this.$i18n.locale;
-        }
-    },
+<script lang="ts">
+import Vue from "vue";
+import { Component } from "vue-property-decorator";
+@Component
+export default class Locale extends Vue {
+    locale (el: any) {
+        this.$i18n.locale = el.target.getAttribute("locale");
+        localStorage.locale = this.$i18n.locale;
+    }
     mounted () {
         if (Object.prototype.hasOwnProperty.call(localStorage, "locale")) {
             this.$i18n.locale = localStorage.locale;
         }
     }
-};
+}
 </script>
 
 <style scoped>

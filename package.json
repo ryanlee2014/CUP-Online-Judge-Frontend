@@ -20,6 +20,7 @@
     "@babel/preset-flow": "^7.0.0",
     "@ryanlee2014/markdown-it-katex": "^1.0.4",
     "@ryanlee2014/mavon-editor": "^1.0.2",
+    "@types/mermaid": "^8.2.1",
     "animejs": "^3.1.0",
     "auto-textarea": "^1.4.0",
     "await-lock": "^2.0.0",
@@ -86,7 +87,10 @@
   "devDependencies": {
     "@cnamts/vue-cli-plugin-proxy": "^2.2.1",
     "@kazupon/vue-i18n-loader": "^0.4.1",
+    "@types/animejs": "^3.1.0",
     "@types/chart.js": "^2.8.11",
+    "@types/jquery": "^3.3.31",
+    "@types/lodash": "^4.14.146",
     "@vue/cli": "^4.0.5",
     "@vue/cli-plugin-babel": "^4.0.5",
     "@vue/cli-plugin-eslint": "^4.0.5",

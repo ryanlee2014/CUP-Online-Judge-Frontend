@@ -9,28 +9,23 @@
     </div>
 </template>
 
-<script>
-import RankList from "../components/ranklist/MainContent";
-import mixins from "../mixin/init";
-const $ = require("jquery");
-window.$ = window.jQuery = $;
-export default {
-    name: "ranklist",
-    mixins: [mixins],
+<script lang="ts">
+import RankList from "../components/ranklist/MainContent.vue";
+import InitMixin from "../mixin/init";
+import { Mixins, Component } from "vue-property-decorator";
+@Component({
     components: {
-        RankList
-    },
-    data: function () {
-        return {
-            ranklist: {}
-        };
-    },
-    mounted: function () {
+        RankList: RankList
+    }
+})
+export default class Rank extends Mixins(InitMixin) {
+    ranklist = {};
+    mounted () {
         document.title = `Ranklist -- ${document.title}`;
         this.axios.get(`/api/ranklist/${this.$route.query.page ? `?page=${this.$route.query.page}` : ""}`)
-            .then(response => this.ranklist = response.data);
+            .then(response => { this.ranklist = response.data; });
     }
-};
+}
 </script>
 
 <style scoped>

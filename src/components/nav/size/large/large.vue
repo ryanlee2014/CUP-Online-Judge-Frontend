@@ -26,36 +26,22 @@
     </div>
 </template>
 
-<script>
-import SocketMenu from "../../components/SocketMenu";
-export default {
-    name: "large",
+<script lang="ts">
+import SocketMenu from "../../components/SocketMenu.vue";
+import { Component, Prop } from "vue-property-decorator";
+import Vue from "vue";
+@Component({
     components: {
-        SocketMenu
-    },
-    props: {
-        nick: {
-            type: String,
-            default: ""
-        },
-        logined: {
-            type: Boolean,
-            default: false
-        },
-        user: {
-            type: Number,
-            default: 0
-        },
-        judger: {
-            type: Number,
-            default: 0
-        },
-        connected: {
-            type: Boolean,
-            default: false
-        }
+        SocketMenu: SocketMenu
     }
-};
+})
+export default class LargeMenu extends Vue {
+    @Prop({ default: "" }) nick!: string;
+    @Prop({ default: false }) logined!: boolean;
+    @Prop({ default: 0 }) user!: number;
+    @Prop({ default: 0 }) judger!: number;
+    @Prop({ default: false }) connected!: boolean;
+}
 </script>
 
 <style scoped>

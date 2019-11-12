@@ -41,15 +41,15 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 import mixins from "../../mixin/init";
-export default {
-    name: "privacy",
-    mixins: [mixins],
+import { Component, Mixins } from "vue-property-decorator";
+@Component
+export default class Privacy extends Mixins(mixins) {
     mounted () {
         document.title = `Privacy -- ${document.title}`;
     }
-};
+}
 </script>
 
 <style scoped>

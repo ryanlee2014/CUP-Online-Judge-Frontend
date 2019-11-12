@@ -26,23 +26,12 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 import mixins from "../../mixin/init";
-export default {
-    name: "global_setting",
-    mixins: [mixins],
-    data () {
-        return {};
-    },
-    mounted () {
-
-    },
-    methods: {
-        initData () {
-
-        }
-    }
-};
+import { Component, Mixins } from "vue-property-decorator";
+@Component
+export default class GlobalSetting extends Mixins(mixins) {
+}
 </script>
 
 <style scoped>

@@ -10,27 +10,28 @@
     </div>
 </template>
 
-<script>
-import Large from "./size/large/large";
-import LargeContest from "./size/large/ContestNav";
-import Small from "./size/Small/Small";
-import Nano from "./size/nano/nano";
-import ProfileCard from "./components/ProfileCard";
+<script lang="ts">
+import Large from "./size/large/large.vue";
+import LargeContest from "./size/large/ContestNav.vue";
+import Small from "./size/Small/Small.vue";
+import Nano from "./size/nano/nano.vue";
+import ProfileCard from "./components/ProfileCard.vue";
 import NavbarMixin from "../../mixin/NavbarMixin";
+import { Component, Mixins } from "vue-property-decorator";
 const Promise = require("bluebird");
 
 const $ = require("jquery");
-export default {
-    name: "Navbar",
-    mixins: [NavbarMixin],
+@Component({
     components: {
-        Large,
-        Small,
-        Nano,
-        ProfileCard,
+        Large: Large,
+        Small: Small,
+        Nano: Nano,
+        ProfileCard: ProfileCard,
         LargeContest
     }
-};
+})
+export default class Navbar extends Mixins(NavbarMixin) {
+}
 </script>
 
 <style scoped>

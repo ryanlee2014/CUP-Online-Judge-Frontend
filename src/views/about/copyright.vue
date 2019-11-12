@@ -14,15 +14,16 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 import mixins from "../../mixin/init";
-export default {
-    name: "copyright",
-    mixins: [mixins],
+import { Component, Mixins } from "vue-property-decorator";
+
+@Component
+export default class CopyRight extends Mixins(mixins) {
     mounted () {
         document.title = `Copyright -- ${document.title}`;
     }
-};
+}
 </script>
 
 <style scoped>

@@ -9,7 +9,7 @@
                             <h3>Import Problem(RPK):</h3>
                             <div class="field">
                                 <a @click="selectFile" class="ui button">{{fileStatus}}</a>
-                                <input @change="fileChange" id="file" name="fps" style="display:none" type="file">
+                                <input @change="fileChange" ref="file" id="file" name="fps" style="display:none" type="file">
                             </div>
                             <div class="two field">
                                 <div class="ui left input" style="width: auto;"><input id="vcode" name="captcha"
@@ -29,29 +29,26 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 import mixins from "../../mixin/init";
+import { Component, Mixins } from "vue-property-decorator";
 
-export default {
-    name: "upload",
-    mixins: [mixins],
-    data: function () {
-        return {
-            fileStatus: "选择文件"
-        };
-    },
+@Component
+export default class ProblemUpload extends Mixins(mixins) {
+    fileStatus = "选择文件";
+    $refs!: {
+        file: HTMLFormElement
+    };
     mounted () {
         document.title = `Upload problem -- ${document.title}`;
-    },
-    methods: {
-        selectFile: function () {
-            $("#file").click();
-        },
-        fileChange: function ($event) {
-            this.fileStatus = $event.target.files[0].name;
-        }
     }
-};
+    fileChange (event: any) {
+        this.fileStatus = event.target.files[0].name;
+    }
+    selectFile () {
+        this.$refs.file.click();
+    }
+}
 </script>
 
 <style scoped>

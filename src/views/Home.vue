@@ -145,16 +145,23 @@
 
 </template>
 
-<script>
+<script lang="ts">
 // @ is an alias to /src
 import anime from "animejs";
+import { Mixins } from "vue-property-decorator";
 import util from "../lib/util";
-import mixins from "../mixin/init";
-const dayjs = require("dayjs");
-const $ = require("jquery");
-export default {
-    name: "home",
-    mixins: [mixins],
+import InitMixin from "../mixin/init";
+import dayjs from "dayjs";
+import jQuery from "jquery";
+import Component, { mixins } from "vue-class-component";
+const $: any = jQuery;
+declare global {
+    interface Window {
+       [id: string]: any
+    }
+}
+@Component
+export default class Home extends Mixins(InitMixin) {
     mounted () {
         document.title = `Home -- ${document.title}`;
         $(document).ready(function () {
@@ -165,6 +172,7 @@ export default {
             });
         });
         util.init(true, true);
+
         $(".ui.borderless.network.secondary.menu").addClass("inverted");
         $(".club").attr("data-title", "点击访问GitHub")
             .popup({
@@ -177,18 +185,19 @@ export default {
                 position: "top center",
                 on: "hover"
             });
-        $.get("/api/update_log/latest", function (d) {
-            let data = d.data[0];
-            let version = data.version;
-            let vj_version = data.vj_version;
-            let content = data.msg;
-            let time = dayjs(data.mtime).format("YYYY-MM-DD");
-            $(".maintain").html("Version:" + time).attr("data-html", "<div class='ui header'>" + "升级维护内容" + "<div class='sub header'>引擎版本:" + version + "</div><div class='sub header'>VJ版本:" + vj_version + "</div></div><div class='content'>" + content + "</div>")
-                .popup({
-                    position: "top center",
-                    on: "hover"
-                });
-        });
+        this.axios.get("/api/update_log/latest")
+            .then((response) => {
+                let data = response.data.data[0];
+                let version = data.version;
+                let vj_version = data.vj_version;
+                let content = data.msg;
+                let time = dayjs(data.mtime).format("YYYY-MM-DD");
+                $(".maintain").html("Version:" + time).attr("data-html", "<div class='ui header'>" + "升级维护内容" + "<div class='sub header'>引擎版本:" + version + "</div><div class='sub header'>VJ版本:" + vj_version + "</div></div><div class='content'>" + content + "</div>")
+                    .popup({
+                        position: "top center",
+                        on: "hover"
+                    });
+            });
         $(".support")
             .popup({
                 position: "bottom center",
@@ -205,7 +214,7 @@ export default {
             $(".packer").transition("fade down");
             $(".vultr").transition("fade up");
         });
-        $(".ml14 .letters").each(function () {
+        $(".ml14 .letters").each(function (this: HTMLElement) {
             // eslint-disable-next-line no-control-regex
             $(this).html($(this).attr("data-content").replace(/([^\x00-\x80]|\w)/g, "<span class='letter'>$&</span>"));
         });
@@ -214,7 +223,7 @@ export default {
 
         (function () {
             window.picid = 5;
-            $.get("/api/login/", function (data) {
+            $.get("/api/login/", function (data: any) {
                 let logined = data.logined;
                 setTimeout(function () {
                     $("#main_container").removeClass("unvisible");
@@ -235,7 +244,7 @@ export default {
                             easing: "easeOutExpo",
                             duration: 800,
                             offset: "-=600",
-                            delay: function (el, i) {
+                            delay: function (el: any, i: any) {
                                 return 25 * +i;
                             }
                         });
@@ -273,7 +282,7 @@ export default {
             });
         })();
     }
-};
+}
 </script>
 <style scoped>
     a {

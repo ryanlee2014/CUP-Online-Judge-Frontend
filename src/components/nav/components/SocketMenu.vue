@@ -22,49 +22,31 @@
     </div>
 </template>
 
-<script>
-import Locale from "../components/locale";
-export default {
-    name: "SocketMenu",
+<script lang="ts">
+import Locale from "../components/locale.vue";
+import Vue from "vue";
+import { Component, Prop } from "vue-property-decorator";
+@Component({
     components: {
-        Locale
-    },
-    props: {
-        nick: {
-            type: String,
-            default: ""
-        },
-        logined: {
-            type: Boolean,
-            default: false
-        },
-        user: {
-            type: Number,
-            default: 0
-        },
-        judger: {
-            type: Number,
-            default: 0
-        },
-        connected: {
-            type: Boolean,
-            default: false
+        Locale: Locale
+    }
+})
+export default class SocketMenu extends Vue {
+    @Prop({ default: "" }) nick!: string;
+    @Prop({ default: false }) logined!: boolean;
+    @Prop({ default: 0 }) user!: number;
+    @Prop({ default: 0 }) judger!: number;
+    @Prop({ default: false }) connected!: boolean;
+
+    get serverInfo () {
+        if (this.connected) {
+            return "<i class='users icon'></i>" + this.user + "人" + "&nbsp;<i class='microchip icon'></i>" + this.judger;
         }
-    },
-    data: function () {
-        return {};
-    },
-    computed: {
-        serverInfo: function () {
-            if (this.connected) {
-                return "<i class='users icon'></i>" + this.user + "人" + "&nbsp;<i class='microchip icon'></i>" + this.judger;
-            }
-            else {
-                return "与服务器连接丢失";
-            }
+        else {
+            return "与服务器连接丢失";
         }
     }
-};
+}
 </script>
 
 <style scoped>

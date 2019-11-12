@@ -36,50 +36,45 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 import mixins from "../../../mixin/init";
-
-const dayjs = require("dayjs");
-export default {
-    name: "ban",
-    mixins: [mixins],
-    data () {
-        return {
-            banList: [],
-            dayjs
-        };
-    },
+import dayjs from "dayjs";
+import { Component, Mixins } from "vue-property-decorator";
+import jquery from "jquery";
+const $: any = jquery;
+@Component
+export default class AdminBanUser extends Mixins(mixins) {
+    banList = [];
+    dayjs = dayjs;
     mounted () {
         this.initData();
-    },
-    methods: {
-        initData () {
-            this.axios.get("/api/admin/account/ban")
-                .then(({ data }) => {
-                    if (data.status === "OK") {
-                        this.banList = data.data;
-                    }
-                });
-        },
-        remove (userId) {
-            this.axios.post("/api/admin/account/ban/delete", {
-                user_id: userId
-            })
-                .then(({ data }) => {
-                    if (data.status === "OK") {
-                        alert(this.$t("success"));
-                        this.initData();
-                    }
-                    else {
-                        alert(this.$t("fail"));
-                    }
-                });
-        },
-        edit (userId) {
-            $(this.$refs[userId]).calendar();
-        }
     }
-};
+    initData () {
+        this.axios.get("/api/admin/account/ban")
+            .then(({ data }) => {
+                if (data.status === "OK") {
+                    this.banList = data.data;
+                }
+            });
+    }
+    remove (userId: string) {
+        this.axios.post("/api/admin/account/ban/delete", {
+            user_id: userId
+        })
+            .then(({ data }) => {
+                if (data.status === "OK") {
+                    alert(this.$t("success"));
+                    this.initData();
+                }
+                else {
+                    alert(this.$t("fail"));
+                }
+            });
+    }
+    edit (userId: string) {
+        $(this.$refs[userId]).calendar();
+    }
+}
 </script>
 
 <style scoped>
