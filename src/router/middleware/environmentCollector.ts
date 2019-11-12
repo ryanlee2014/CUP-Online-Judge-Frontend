@@ -3,7 +3,7 @@ import Axios from "axios";
 const platform = require("platform");
 const _ = require("lodash");
 
-function trimMinorVersion (version) {
+function trimMinorVersion (version: string) {
     return version.split(".")[0];
 }
 

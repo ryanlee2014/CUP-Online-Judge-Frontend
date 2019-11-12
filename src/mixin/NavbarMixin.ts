@@ -1,6 +1,7 @@
+import config from "../../package.json";
+import Vue from "vue";
 const $ = require("jquery");
-const config = require("../../package.json");
-export default {
+export default Vue.extend({
     props: {
         user_id: {
             type: String,
@@ -40,7 +41,7 @@ export default {
         };
     },
     methods: {
-        _connectTry (times) {
+        _connectTry (times: number) {
             (async () => {
                 let Promise = require("bluebird");
                 while (times-- > 0) {
@@ -60,6 +61,7 @@ export default {
         bindSocketObserver () {
             const that = this;
             Object.defineProperty(this.$socket, "connected", {
+                // @ts-ignore
                 _connected: this.$socket.connected,
                 get: function () {
                     return this._connected;
@@ -98,13 +100,13 @@ export default {
 
         const _subscribe = this.sockets.subscribe;
         const that = this;
-        this.sockets.subscribe = (events, callback) => {
+        this.sockets.subscribe = (events: any, callback: (...arg: any[]) => any) => {
             _subscribe.call(this.sockets, events, function () {
                 that.socketConnected = true;
-                callback.apply(that, arguments);
+                callback.apply(that, arguments as unknown as any[]);
             });
         };
-        this.sockets.subscribe("user", (data) => {
+        this.sockets.subscribe("user", (data: any) => {
             this.socketConnected = true;
             this.user = parseInt(data.user.user_cnt);
             this.judger = parseInt(data.judger ? data.judger.length : 0);
@@ -114,13 +116,13 @@ export default {
             this.socketConnected = true;
             this.$socket.emit("auth", authMsg);
         });
-        this.sockets.subscribe("judgerChange", (data) => {
+        this.sockets.subscribe("judgerChange", (data: any) => {
             this.judger = data.length;
         });
         this.sockets.subscribe("disconnect", () => {
             this.socketConnected = false;
         });
-        this.sockets.subscribe("msg", (data) => {
+        this.sockets.subscribe("msg", (data: any) => {
             setTimeout(() => {
                 $("body")
                     .toast({
@@ -141,4 +143,4 @@ export default {
             }
         });
     }
-};
+});

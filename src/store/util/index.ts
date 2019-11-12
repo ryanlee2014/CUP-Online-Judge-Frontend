@@ -1,7 +1,7 @@
-export function notUndefinedOrNull (el) {
+export function notUndefinedOrNull (el: any) {
     return typeof el !== "undefined" && el !== null;
 }
 
-export function isObject (obj) {
+export function isObject (obj: any) {
     return typeof obj === "object" && obj !== null;
 }

@@ -30,18 +30,15 @@
 </template>
 
 <script>
-import mixins from "../mixin/init";
+import InitMixin from "../mixin/init";
+import dayjs from "dayjs";
+import Component, { mixins } from "vue-class-component";
 
-const dayjs = require("dayjs");
-export default {
-    name: "about",
-    mixins: [mixins],
-    data () {
-        return {
-            dayjs
-        };
-    }
-};
+@Component
+export default class About extends mixins(InitMixin) {
+    dayjs = dayjs;
+}
+
 </script>
 
 <style scoped>

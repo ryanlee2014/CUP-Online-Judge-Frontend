@@ -5,10 +5,11 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from "vue";
 import markdownIt from "../lib/markdownIt/markdownIt";
 import mixins from "../mixin/init";
-export default {
+export default Vue.extend({
     name: "faq",
     mixins: [mixins],
     data: function () {
@@ -22,7 +23,9 @@ export default {
     },
     i18n: (() => {
         const locales = require.context("../static/help/faq", true, /[A-Za-z0-9-_,\s]+\.md$/i);
-        const messages = {};
+        const messages:{
+            [id: string]: any
+        } = {};
         locales.keys().forEach(el => {
             const matched = el.match(/([A-Za-z0-9-_]+)\./i);
             if (matched && matched.length > 1) {
@@ -35,7 +38,7 @@ export default {
             messages
         };
     })()
-};
+});
 </script>
 
 <style scoped>

@@ -52,7 +52,7 @@
                 <router-link :class="answer_class[row.result]" :to="`/compare/${row.solution_id}/${row.sim_id}`"
                              v-if="row.sim">
                     <br v-if="row.result == 3">
-                    <span v-if="!!row.sim"><i :class="answer_icon[row.result]+' icon'" style="opacity:0"></i>{{row.sim_id+' ('+row.sim+'%)'}}</span>
+                    <span v-if="!!row.sim"><i :class="answer_icon[row.result]+' icon'" style="opacity:0"></i>{{'('+row.sim+'%)'}}</span>
                 </router-link>
                 <br v-if="row.result !== 4 && row.pass_rate > 0.05">
                 <a :class="answer_class[row.result]" v-if="row.result !== 4 && row.pass_rate > 0.05"><i
@@ -90,8 +90,9 @@
 <script>
 import util from "../../lib/util";
 import avatarMixin from "../../mixin/avatarMixin";
-const _ = require("lodash");
-const dayjs = require("dayjs");
+import dayjs from "dayjs";
+import * as _ from "lodash";
+
 export default {
     name: "status-table",
     mixins: [avatarMixin],

@@ -5,7 +5,7 @@ module.exports = {
             {
                 useBuiltIns: "usage"
             }
-        ], "@babel/preset-flow"
+        ]
     ],
     sourceType: "unambiguous"
 };

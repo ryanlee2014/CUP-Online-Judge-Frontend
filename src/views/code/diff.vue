@@ -42,12 +42,36 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from "vue";
 import * as monaco from "monaco-editor";
 import mixins from "../../mixin/init";
 import languageMap from "../../lib/constants/monaco-editor/language-map";
-const dayjs = require("dayjs");
-export default {
+import dayjs, { Dayjs } from "dayjs";
+import editor = monaco.editor;
+import IDiffEditor = editor.IDiffEditor;
+interface ICode {
+    code: {
+        // eslint-disable-next-line camelcase
+        in_date: Dayjs,
+        source?: string
+    },
+    length?: number,
+    trimlength?: number
+}
+interface IData {
+    diffEditor: IDiffEditor | null,
+    // eslint-disable-next-line camelcase
+    problem_id: number,
+    leftUserID: string,
+    rightUserID: string,
+    leftSolutionID: string | number | undefined,
+    rightSolutionID: string | number | undefined,
+    left: ICode,
+    right: ICode,
+    dayjs: Dayjs
+}
+export default Vue.extend({
     name: "diff",
     mixins: [mixins],
     data () {
@@ -69,7 +93,7 @@ export default {
                 }
             },
             dayjs
-        };
+        } as unknown as IData;
     },
     async mounted () {
         document.title = `Code compare -- ${document.title}`;
@@ -78,18 +102,18 @@ export default {
         let [leftData, rightData] = await Promise.all([leftPromise, rightPromise]);
         this.leftUserID = leftData.data.user_id;
         this.left = leftData.data;
-        this.left.length = this.left.code.source.length;
-        this.left.trimlength = this.left.code.source.split(" ").join("").split("\n").join("").length;
+        this.left.length = this.left.code.source!.length;
+        this.left.trimlength = this.left.code.source!.split(" ").join("").split("\n").join("").length;
         this.rightUserID = rightData.data.user_id;
         this.right = rightData.data;
-        this.right.length = this.right.code.source.length;
-        this.right.trimlength = this.right.code.source.split(" ").join("").split("\n").join("").length;
+        this.right.length = this.right.code.source!.length;
+        this.right.trimlength = this.right.code.source!.split(" ").join("").split("\n").join("").length;
         this.problem_id = leftData.data.code.problem_id;
-        let originalModel = monaco.editor.createModel(leftData.data.code.source, "cpp");
-        let modifiedModel = monaco.editor.createModel(rightData.data.code.source, "cpp");
+        const originalModel = monaco.editor.createModel(leftData.data.code.source, languageMap[leftData.data.code.language]);
+        const modifiedModel = monaco.editor.createModel(rightData.data.code.source, languageMap[rightData.data.code.language]);
         this.$forceUpdate();
         this.$nextTick(() => {
-            const diffEditor = this.diffEditor = monaco.editor.createDiffEditor(document.getElementById("container"), {
+            const diffEditor = this.diffEditor = monaco.editor.createDiffEditor(document.getElementById("container")!, {
                 scrollBeyondLastLine: false
             });
             diffEditor.setModel({
@@ -103,7 +127,7 @@ export default {
             this.diffEditor.dispose();
         }
     }
-};
+});
 </script>
 
 <style scoped>
