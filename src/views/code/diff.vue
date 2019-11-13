@@ -48,6 +48,7 @@ import * as monaco from "monaco-editor";
 import mixins from "../../mixin/init";
 import languageMap from "../../lib/constants/monaco-editor/language-map";
 import dayjs, { Dayjs } from "dayjs";
+import { Mixins, Component } from "vue-property-decorator";
 import editor = monaco.editor;
 import IDiffEditor = editor.IDiffEditor;
 interface ICode {
@@ -59,42 +60,30 @@ interface ICode {
     length?: number,
     trimlength?: number
 }
-interface IData {
-    diffEditor: IDiffEditor | null,
-    // eslint-disable-next-line camelcase
-    problem_id: number,
-    leftUserID: string,
-    rightUserID: string,
-    leftSolutionID: string | number | undefined,
-    rightSolutionID: string | number | undefined,
-    left: ICode,
-    right: ICode,
-    dayjs: Dayjs
-}
-export default Vue.extend({
-    name: "diff",
-    mixins: [mixins],
-    data () {
-        return {
-            diffEditor: null,
-            problem_id: 0,
-            leftUserID: "",
-            rightUserID: "",
-            leftSolutionID: this.$route.params.left,
-            rightSolutionID: this.$route.params.right,
-            left: {
-                code: {
-                    in_date: dayjs()
-                }
-            },
-            right: {
-                code: {
-                    in_date: dayjs()
-                }
-            },
-            dayjs
-        } as unknown as IData;
-    },
+
+@Component
+export default class CodeDiff extends Mixins(mixins) {
+    diffEditor?: IDiffEditor;
+    problem_id = 0;
+    leftUserID = "";
+    rightUserID = "";
+    leftSolutionID = "";
+    rightSolutionID = "";
+    created () {
+        this.leftSolutionID = this.$route.params.left;
+        this.rightSolutionID = this.$route.params.right;
+    }
+    left: ICode = {
+        code: {
+            in_date: dayjs()
+        }
+    };
+    right: ICode = {
+        code: {
+            in_date: dayjs()
+        }
+    };
+    dayjs = dayjs;
     async mounted () {
         document.title = `Code compare -- ${document.title}`;
         let leftPromise = this.axios.get(`/api/source/local/${this.$route.params.left}?raw=1`).then(({ data }) => data);
@@ -121,13 +110,14 @@ export default Vue.extend({
                 modified: modifiedModel
             });
         });
-    },
+    }
+
     beforeDestroy () {
         if (this.diffEditor) {
             this.diffEditor.dispose();
         }
     }
-});
+}
 </script>
 
 <style scoped>

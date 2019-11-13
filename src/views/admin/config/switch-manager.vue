@@ -4,19 +4,18 @@
 
 <script>
 
-import baseManager from "../../../components/admin/config/base-manager";
-export default {
-    name: "switch-manager",
-    data () {
-        return {
-            prefix: "switch",
-            range: "(范围:0-100)"
-        };
-    },
+import baseManager from "../../../components/admin/config/base-manager.vue";
+import { Component, Mixins } from "vue-property-decorator";
+import InitMixin from "../../../mixin/init";
+@Component({
     components: {
-        baseManager
+        baseManager: baseManager
     }
-};
+})
+export default class SwitchManager extends Mixins(InitMixin) {
+    prefix = "switch";
+    range = "(范围:0-100)";
+}
 </script>
 
 <style scoped>

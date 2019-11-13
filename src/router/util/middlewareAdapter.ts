@@ -1,21 +1,37 @@
 const nextFunctionError = new Error("Last argument must be a function");
 const argumentNotFunctionError = new Error("arguments must be function");
-export default function () {
-    let _next;
-    let _middlewares = [];
-    let _from;
-    let _to;
-    this.setNext = function (fn) {
+export default class MiddlewareAdapter {
+    _next: any;
+    _middlewares: any = [];
+    _from: any;
+    _to: any;
+
+    constructor () {
+        this._next = null;
+        this._from = null;
+        this._to = null;
+    }
+
+    setNext (fn: (...arg: any[]) => any) {
         if (typeof fn === "function") {
-            _next = fn;
+            this._next = fn;
         }
         else {
             throw nextFunctionError;
         }
-    };
+    }
 
-    this.next = function (config) {
-        const length = _middlewares.length;
+    getNextFn (config: any) {
+        return () => this.next(config);
+    }
+
+    next (config: any) {
+        console.log("this", this);
+        const _next = this._next;
+        const _middlewares = this._middlewares;
+        const _to = this._to;
+        const _from = this._from;
+        const length = this._middlewares.length;
         if (typeof config !== "undefined") {
             if (typeof _next === "undefined") {
                 throw new Error("next function has not set");
@@ -31,22 +47,22 @@ export default function () {
             }
             _next();
         }
-    };
+    }
 
-    this.setFrom = function (config) {
-        _from = config;
-    };
+    setFrom (config: any) {
+        this._from = config;
+    }
 
-    this.add = function () {
+    add () {
         for (let i of arguments) {
             if (typeof i !== "function") {
                 throw argumentNotFunctionError;
             }
-            _middlewares.push(i);
+            this._middlewares.push(i);
         }
-    };
+    }
 
-    this.setTo = function (config) {
-        _to = config;
-    };
+    setTo (config: any) {
+        this._to = config;
+    }
 }

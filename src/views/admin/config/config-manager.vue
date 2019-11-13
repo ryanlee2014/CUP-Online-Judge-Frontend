@@ -2,20 +2,19 @@
     <base-manager :prefix="prefix"></base-manager>
 </template>
 
-<script>
+<script lang="ts">
 
-import baseManager from "../../../components/admin/config/base-manager";
-export default {
-    name: "config-manager",
-    data () {
-        return {
-            prefix: "config"
-        };
-    },
+import baseManager from "../../../components/admin/config/base-manager.vue";
+import InitMixin from "../../../mixin/init";
+import { Component, Mixins } from "vue-property-decorator";
+@Component({
     components: {
-        baseManager
+        baseManager: baseManager
     }
-};
+})
+export default class ConfigManager extends Mixins(InitMixin) {
+    prefix = "config";
+}
 </script>
 
 <style scoped>

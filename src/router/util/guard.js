@@ -78,7 +78,7 @@ const Guard = function (to, from, next) {
     middlewareAdapter.setTo(to);
     middlewareAdapter.setNext(next);
     middlewareAdapter.add(platfrom);
-    next = middlewareAdapter.next;
+    next = middlewareAdapter.getNextFn();
     this.addMiddleware = middlewareAdapter.add;
     if (to.meta.auth) {
         if (store.getters.logined) {
