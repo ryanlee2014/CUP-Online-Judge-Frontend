@@ -9,8 +9,7 @@
                     <div class="five wide column">
                         <div class="ui card" id="user_card" style="width: 100%; ">
                             <div class="blurring dimmable image" id="avatar_container">
-                                <img :src="avatar"
-                                     style=" " v-cloak>
+                                <img :src="avatar" v-cloak>
                                 <div class="ui placeholder" v-cloak>
                                     <div class="square image"></div>
                                 </div>
@@ -466,646 +465,627 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 import * as d3 from "d3";
 import markdownIt from "../../lib/markdownIt/markdownIt";
 import calendarHeatmap from "../../lib/calendar-heapmap";
 import avatarMixin from "../../mixin/avatarMixin";
-const dayjs = require("dayjs");
-const $ = require("jquery");
-const _ = require("lodash");
-const Chart = require("chart.js");
-window.$ = window.jQuery = $;
-export default {
-    name: "UserContainer",
-    props: {
-        userId: {
-            type: String,
-            default: ""
-        }
-    },
-    mixins: [avatarMixin],
-    data: function () {
-        return {
-            award: [],
-            dayjs,
-            markdownIt,
-            admin: false,
-            biography: "",
-            error: false,
-            const_variable: {},
-            article_publish: [],
-            nick: "",
-            accepted_details: {},
-            reg_time: 0,
-            school: "",
-            github: "",
-            email: "",
-            statement: "",
-            vjudge_solved: 0,
-            os: "",
-            browser: "",
-            blog: "",
-            recent_submission: {
-                submission: 0,
-                accept: 0
-            },
-            avatar: "",
-            acm_user: false,
-            privilege: false,
-            submission: {
-                local: 0,
-                hdu: 0,
-                poj: 0,
-                uva: 0,
-                other: 0
-            },
-            accept: {
-                hdu: 0,
-                poj: 0,
-                uva: 0,
-                local: 0,
-                other: 0
-            },
-            rank: "",
-            vjudge_rank: 0,
-            last_login: 0,
-            local_accepted: 0,
-            other_accepted: 0,
-            same_percentage_aver: 0,
-            submission_count: [],
-            same_problem_time: 0,
-            same_aver_length: 0,
-            total_same: 0,
-            finished: false,
-            user_id: ""
-        };
-    },
-    watch: {
-        userId (newUserId) {
-            if (newUserId && newUserId.length && newUserId.length > 0) {
-                this.initData(newUserId);
-                document.title = `User ${this.user_id} -- ${document.title}`;
-            }
-        }
-    },
-    methods: {
-        initData: function (userId) {
-            this.userId = userId;
-            const that = this;
-            this.axios.get(`/api/user/${userId}`)
-                .then(({ data }) => {
-                    if (!Object.prototype.hasOwnProperty.call(data.data, "information")) {
-                        this.statement = `The user "${userId}" is not exist.`;
-                        this.error = true;
-                        return;
-                    }
-                    let d = data;
-                    let submission = d.data.submission;
-                    let local = [];
-                    let localAccept;
-                    let hdu = [];
-                    let hduAccept;
-                    let poj = [];
-                    let pojAccept;
-                    let uva = [];
-                    let uvaAccept;
-                    let other = [];
-                    let otherAccept;
-                    const pick_ac = function (arr) {
-                        let res = [];
-                        _.forEach(arr, function (val) {
-                            if (val.result === 4 && val.problem_id != 0) {
-                                res.push(val);
-                            }
-                        });
-                        res = _.uniqBy(res, "problem_id");
-                        res.sort(function (a, b) {
-                            if (!isNaN(a.problem_id) && !isNaN(b.problem_id)) {
-                                return parseInt(a.problem_id) - parseInt(b.problem_id);
-                            }
-                            else {
-                                if (a.problem_id < b.problem_id) {
-                                    return 1;
-                                }
-                                else if (a.problem_id === b.problem_id) {
-                                    return 0;
-                                }
-                                else {
-                                    return -1;
-                                }
-                            }
-                        });
-                        return res;
-                    };
-                    let analsubmission = [];
-                    let now = dayjs();
-                    let otherSideSubmission = {};
-                    _.forEach(submission, function (val) {
-                        if ((val.time = dayjs(val.time)).add(3, "month").isAfter(now)) {
-                            analsubmission.push(val);
-                        }
-                        if (val.oj_name === "LOCAL") {
-                            local.push(val);
-                        }
-                        else if (val.oj_name === "HDU") {
-                            hdu.push(val);
-                        }
-                        else if (val.oj_name === "POJ") {
-                            poj.push(val);
-                        }
-                        else if (val.oj_name === "UVA") {
-                            uva.push(val);
-                        }
-                        else {
-                            other.push(val);
-                        }
-                        if (otherSideSubmission[val.oj_name] && otherSideSubmission[val.oj_name].length > 0) {
-                            otherSideSubmission[val.oj_name].push(val);
-                        }
-                        else {
-                            otherSideSubmission[val.oj_name] = [val];
-                        }
-                    });
-                    analsubmission.sort(function (a, b) {
-                        if (a.time.isBefore(b.time)) {
-                            return -1;
-                        }
-                        else {
-                            return 1;
-                        }
-                    });
-                    let timeobj = {};
-                    let acobj = {};
-                    _.forEach(analsubmission, function (val) {
-                        let daystr = val.time.format("YYYY-MM-DD");
-                        if (!timeobj[daystr]) {
-                            timeobj[daystr] = 1;
-                            acobj[daystr] = 0;
-                            if (parseInt(val.result) === 4) {
-                                acobj[daystr] = 1;
-                            }
-                        }
-                        else {
-                            ++timeobj[daystr];
-                            if (parseInt(val.result) === 4) {
-                                ++acobj[daystr];
-                            }
-                        }
-                    });
-
-                    hduAccept = pick_ac(hdu);
-                    localAccept = pick_ac(local);
-                    pojAccept = pick_ac(poj);
-                    uvaAccept = pick_ac(uva);
-                    otherAccept = pick_ac(other);
-                    if (otherSideSubmission["LOCAL"]) {
-                        delete otherSideSubmission["LOCAL"];
-                    }
-                    for (let idx in otherSideSubmission) {
-                        if (Object.prototype.hasOwnProperty.call(otherSideSubmission, idx)) {
-                            otherSideSubmission[idx] = pick_ac(otherSideSubmission[idx]);
-                        }
-                    }
-                    let privilege = d.data.privilege;
-                    if (privilege && privilege.length > 0) {
-                        for (let i = 0; i < privilege.length; ++i) {
-                            if (privilege[i].rightstr === "administrator") {
-                                privilege = this.$t("administrator");
-                                break;
-                            }
-                            else if (privilege[i].rightstr === "source_browser") {
-                                privilege = this.$t("code editor");
-                                break;
-                            }
-                            else if (privilege[i].rightstr === "editor") {
-                                privilege = this.$t("problem editor");
-                                break;
-                            }
-                        }
-                    }
-                    if (typeof privilege !== "string") {
-                        privilege = this.$t("general user");
-                    }
-                    let dsort = function (a, b) {
-                        return b.cnt - a.cnt;
-                    };
-                    for (const key in otherSideSubmission) {
-                        if (!Object.prototype.hasOwnProperty.call(otherSideSubmission, key)) {
-                            continue;
-                        }
-                        if (typeof key !== "string" || key.length === 0) {
-                            delete otherSideSubmission[key];
-                        }
-                    }
-                    console.log(otherSideSubmission);
-                    d.data.os.sort(dsort);
-                    d.data.browser.sort(dsort);
-                    let github_info = d.data.information.github || "";
-                    if (github_info.lastIndexOf("/") === github_info.length - 1) {
-                        github_info = github_info.substring(0, github_info.length - 1);
-                    }
-                    if (github_info.indexOf("github.com") !== -1) {
-                        github_info = github_info.substring(github_info.lastIndexOf("/") + 1);
-                    }
-
-                    return {
-                        award: d.data.award,
-                        admin: d.isadmin,
-                        biography: d.data.information.biography,
-                        const_variable: d.data.const_variable,
-                        article_publish: d.data.article_publish,
-                        nick: d.data.information.nick,
-                        reg_time: d.data.information.reg_time,
-                        school: d.data.information.school,
-                        submission_count: d.data.submission_count,
-                        github: github_info,
-                        email: d.data.information.email,
-                        vjudge_solved: d.data.information.vjudge_accept,
-                        os: d.data.os,
-                        browser: d.data.browser,
-                        blog: d.data.information.blog,
-                        recent_submission: {
-                            submission: timeobj,
-                            accept: acobj
-                        },
-                        avatar: this.hasAvatarURL(d.data.information) ? this.getAvatarURL(Object.assign({ user_id: userId }, d.data.information)) : "/assets/images/wireframe/white-image.png",
-                        user_id: userId,
-                        acm_user: d.data.acm_user,
-                        privilege: privilege,
-                        submission: {
-                            local: local,
-                            hdu: hdu,
-                            poj: poj,
-                            uva: uva,
-                            other: other
-                        },
-                        accept: {
-                            hdu: hduAccept,
-                            poj: pojAccept,
-                            uva: uvaAccept,
-                            local: localAccept,
-                            other: otherAccept
-                        },
-                        rank: d.data.rank,
-                        vjudge_rank: d.data.vjudge_rank,
-                        last_login: d.data.login_time ? d.data.login_time[0] ? d.data.login_time[0].time : "" : "",
-                        local_accepted: localAccept.length,
-                        accepted_details: otherSideSubmission,
-                        other_accepted: hduAccept.length + pojAccept.length + uvaAccept.length + otherAccept.length,
-                        same_percentage_aver: parseInt(d.data.sim_average_percentage),
-                        same_problem_time: parseInt(d.data.sim_count),
-                        same_aver_length: parseInt(d.data.sim_average_length),
-                        total_same: d.data.total_sim_time
-                    };
-                })
-                .then(data => {
-                    Object.assign(this, data);
-                    this.finished = true;
-                })
-                .then(() => {
-                    $("#preload").hide();
-                    let $title = $("title").html();
-                    $(".placeholder").remove();
-                    this.$nextTick(() => {
-                        let now = dayjs().endOf("day").toDate();
-                        let yearAgo = dayjs().startOf("day").subtract(1, "year").toDate();
-                        let submission_cnt = this.submission_count;
-                        let countForDate = {};
-                        _.forEach(submission_cnt, function (row) {
-                            if (row.day < 10) row.day = "0" + row.day;
-                            if (row.month < 10) row.month = "0" + row.month;
-                            let date = row.year + "-" + row.month + "-" + row.day;
-                            if (!countForDate[date]) {
-                                countForDate[date] = row.cnt;
-                            }
-                            else {
-                                countForDate[date] += row.cnt;
-                            }
-                        });
-                        let chartData = d3.timeDays(yearAgo, now).map(function (dateElement) {
-                            return {
-                                date: dateElement,
-                                count: countForDate[dayjs(dateElement).format("YYYY-MM-DD")] || 0
-                            };
-                        });
-
-                        let heatmap = calendarHeatmap({ width: $(".heatmap").width() })
-                            .data(chartData)
-                            .selector(".heatmap")
-                            .tooltipEnabled(true)
-                            .colorRange(["#c6e48b", "#7bc96f", "#239a3b", "#196127"], "#dfdfdf")
-                            .onClick(function () {
-                            })
-                            .tooltipEnabled(true)
-                            .legendEnabled(true);
-                        heatmap();
-                        that.$nextTick(function () {
-                            let pie = new Chart(document.getElementById("pie_chart").getContext("2d"), {
-                                type: "pie",
-                                data: {
-                                    datasets: [
-                                        {
-                                            data: [
-                                                that.local_accepted,
-                                                _.reduce(that.submission.local, function (result, val) {
-                                                    val.result = parseInt(val.result);
-                                                    if (val.result === 6) {
-                                                        return result + 1;
-                                                    }
-                                                    else {
-                                                        return result;
-                                                    }
-                                                }, 0),
-                                                _.reduce(that.submission.local, function (result, val) {
-                                                    if (val.result === 10) {
-                                                        return result + 1;
-                                                    }
-                                                    else {
-                                                        return result;
-                                                    }
-                                                }, 0),
-                                                _.reduce(that.submission.local, function (result, val) {
-                                                    if (val.result === 7) {
-                                                        return result + 1;
-                                                    }
-                                                    else {
-                                                        return result;
-                                                    }
-                                                }, 0),
-                                                _.reduce(that.submission.local, function (result, val) {
-                                                    if (val.result === 8) {
-                                                        return result + 1;
-                                                    }
-                                                    else {
-                                                        return result;
-                                                    }
-                                                }, 0),
-                                                _.reduce(that.submission.local, function (result, val) {
-                                                    if (val.result === 9) {
-                                                        return result + 1;
-                                                    }
-                                                    else {
-                                                        return result;
-                                                    }
-                                                }, 0),
-                                                _.reduce(that.submission.local, function (result, val) {
-                                                    if (val.result === 11) {
-                                                        return result + 1;
-                                                    }
-                                                    else {
-                                                        return result;
-                                                    }
-                                                }, 0),
-                                                _.reduce(that.submission.local, function (result, val) {
-                                                    if (val.result === 5) {
-                                                        return result + 1;
-                                                    }
-                                                    else {
-                                                        return result;
-                                                    }
-                                                }, 0)
-                                            ],
-                                            backgroundColor: [
-                                                "#66dd66",
-                                                "#ff6384",
-                                                "darkorchid",
-                                                "#ffce56",
-                                                "#00b5ad",
-                                                "#35a0e8",
-                                                "#F7464A",
-                                                "#D4CCC5"
-                                            ]
-                                        }
-                                    ],
-                                    labels: [
-                                        "Accepted",
-                                        "Wrong Answer",
-                                        "Runtime Error",
-                                        "Time Limit Exceeded",
-                                        "Memory Limit Exceeded",
-                                        "Output Limit Exceeded",
-                                        "Compile Error",
-                                        "Presentation Error"
-                                    ]
-                                },
-                                options: {
-                                    responsive: true,
-                                    legend: {
-                                        display: false
-                                    },
-                                    legendCallback: function (chart) {
-                                        let text = [];
-                                        text.push("<ul style=\"list-style: none; padding-left: 20px; margin-top: 0; \" class=\"" + chart.id + "-legend\">");
-
-                                        let data = chart.data;
-                                        let datasets = data.datasets;
-                                        let labels = data.labels;
-
-                                        if (datasets.length) {
-                                            for (let i = 0; i < datasets[0].data.length; ++i) {
-                                                text.push("<li style=\"font-size: 12px; width: 50%; display: inline-block; color: #666; \"><span style=\"width: 10px; height: 10px; display: inline-block; border-radius: 50%; margin-right: 5px; background-color: " + datasets[0].backgroundColor[i] + "; \"></span>");
-                                                if (labels[i]) {
-                                                    text.push(labels[i]);
-                                                }
-                                                text.push("</li>");
-                                            }
-                                        }
-
-                                        text.push("</ul>");
-                                        return text.join("");
-                                    }
-                                }
-                            });
-
-                            document.getElementById("pie_chart_legend").innerHTML = pie.generateLegend();
-                            let lang = new Chart(document.getElementById("pie_chart_language").getContext("2d"), {
-                                type: "pie",
-                                data: {
-                                    datasets: [
-                                        {
-                                            data: [
-                                                _.reduce(that.submission.local, function (sum, val) {
-                                                    if (val.language === "0" || val.language === "21") {
-                                                        return sum + 1;
-                                                    }
-                                                    else {
-                                                        return sum;
-                                                    }
-                                                }, 0),
-                                                _.reduce(that.submission.local, function (sum, val) {
-                                                    if (val.language === "1" || val.language === "19" || val.language === "20") {
-                                                        return sum + 1;
-                                                    }
-                                                    else {
-                                                        return sum;
-                                                    }
-                                                }, 0),
-                                                _.reduce(that.submission.local, function (sum, val) {
-                                                    if (val.language === "3" || val.language === "23" || val.language === "24") {
-                                                        return sum + 1;
-                                                    }
-                                                    else {
-                                                        return sum;
-                                                    }
-                                                }, 0),
-                                                _.reduce(that.submission.local, function (sum, val) {
-                                                    if (val.language === "6") {
-                                                        return sum + 1;
-                                                    }
-                                                    else {
-                                                        return sum;
-                                                    }
-                                                }, 0),
-                                                _.reduce(that.submission.local, function (sum, val) {
-                                                    if (val.language === "13") {
-                                                        return sum + 1;
-                                                    }
-                                                    else {
-                                                        return sum;
-                                                    }
-                                                }, 0),
-                                                _.reduce(that.submission.local, function (sum, val) {
-                                                    if (val.language === "14") {
-                                                        return sum + 1;
-                                                    }
-                                                    else {
-                                                        return sum;
-                                                    }
-                                                }, 0),
-                                                _.reduce(that.submission.local, function (sum, val) {
-                                                    if (val.language === "2") {
-                                                        return sum + 1;
-                                                    }
-                                                    else {
-                                                        return sum;
-                                                    }
-                                                }, 0)
-                                            ],
-                                            backgroundColor: [
-                                                "#66dd66",
-                                                "#ff6384",
-                                                "darkorchid",
-                                                "#ffce56",
-                                                "#00b5ad",
-                                                "#35a0e8",
-                                                "#E2EAE9"
-                                            ]
-                                        }
-                                    ],
-                                    labels: [
-                                        "GCC",
-                                        "G++",
-                                        "Java",
-                                        "Python",
-                                        "Clang",
-                                        "Clang++",
-                                        "Pascal"
-                                    ]
-                                },
-                                options: {
-                                    responsive: true,
-                                    legend: {
-                                        display: false
-                                    },
-                                    legendCallback: function (chart) {
-                                        let text = [];
-                                        text.push("<ul style=\"list-style: none; padding-left: 20px; margin-top: 0; \" class=\"" + chart.id + "-legend\">");
-
-                                        let data = chart.data;
-                                        let datasets = data.datasets;
-                                        let labels = data.labels;
-
-                                        if (datasets.length) {
-                                            for (let i = 0; i < datasets[0].data.length; ++i) {
-                                                text.push("<li style=\"font-size: 12px; width: 50%; display: inline-block; color: #666; \"><span style=\"width: 10px; height: 10px; display: inline-block; border-radius: 50%; margin-right: 5px; background-color: " + datasets[0].backgroundColor[i] + "; \"></span>");
-                                                if (labels[i]) {
-                                                    text.push(labels[i]);
-                                                }
-                                                text.push("</li>");
-                                            }
-                                        }
-
-                                        text.push("</ul>");
-                                        return text.join("");
-                                    }
-                                }
-                            });
-
-                            document.getElementById("pie_chart_language_legend").innerHTML = lang.generateLegend();
-                            let config = {
-                                type: "line",
-                                data: {
-                                    labels: _.keys(that.recent_submission.submission),
-                                    datasets: [{
-                                        label: this.$t("total submission"),
-                                        backgroundColor: window.chartColors.red,
-                                        borderColor: window.chartColors.red,
-                                        data: _.values(that.recent_submission.submission),
-                                        fill: false
-                                    }, {
-                                        label: this.$t("accept"),
-                                        fill: false,
-                                        backgroundColor: window.chartColors.blue,
-                                        borderColor: window.chartColors.blue,
-                                        data: _.values(that.recent_submission.accept)
-                                    }]
-                                },
-                                options: {
-                                    responsive: true,
-                                    title: {
-                                        display: false,
-                                        text: this.$t("statistic information")
-                                    },
-                                    tooltips: {
-                                        mode: "index",
-                                        intersect: false
-                                    },
-                                    hover: {
-                                        mode: "nearest",
-                                        intersect: true
-                                    },
-                                    scales: {
-                                        xAxes: [{
-                                            display: true,
-                                            scaleLabel: {
-                                                display: false,
-                                                labelString: this.$t("month")
-                                            }
-                                        }],
-                                        yAxes: [{
-                                            display: true,
-                                            scaleLabel: {
-                                                display: false,
-                                                labelString: this.$t("submit")
-                                            }
-                                        }]
-                                    }
-                                }
-                            };
-                            let ctx = document.getElementById("canvas").getContext("2d");
-                            window.myLine = new Chart(ctx, config);
-                        });
-                    });
-                    $("title").html(that.user_id + " " + that.nick + " " + $title);
-                });
-        },
-        initLanguagePie (options, next) {
-
-        },
-        initResultPie (options, next) {
-
-        },
-        initLineGraph (options, next) {
-
-        }
-    },
-    computed: {
-        online: function () {
-            return this.$store.getters.onlineUser.some(el => el.user_id === this.user_id);
+import { Component, Mixins, Prop, Watch } from "vue-property-decorator";
+import jquery from "jquery";
+import _ from "lodash";
+import Chart from "chart.js";
+import dayjs from "dayjs";
+const $: any = jquery;
+@Component
+export default class UserContainer extends Mixins(avatarMixin) {
+    @Prop({ default: "" }) userId!: string;
+    award = [];
+    dayjs = dayjs;
+    admin = false;
+    biography = "";
+    error = false;
+    const_variable = {};
+    article_publish = [];
+    markdownIt = markdownIt;
+    nick = "";
+    accepted_details = {};
+    reg_time = 0;
+    school = "";
+    github = "";
+    email = "";
+    statement = "";
+    vjudge_solved = 0;
+    os = "";
+    browser = "";
+    blog = "";
+    recent_submission = { submission: 0,
+        accept: 0 };
+    avatar = "";
+    acm_user = false;
+    privilege = false;
+    submission = {
+        local: [],
+        hdu: [],
+        poj: [],
+        uva: [],
+        other: []
+    } as unknown as any;
+    accept = {
+        hdu: [],
+        poj: [],
+        uva: [],
+        local: [],
+        other: []
+    } as unknown as any;
+    rank = 0;
+    vjudge_rank = 0;
+    last_login= 0;
+    local_accepted= 0;
+    other_accepted= 0;
+    same_percentage_aver= 0;
+    submission_count= [];
+    same_problem_time= 0;
+    same_aver_length= 0;
+    total_same= 0;
+    finished= false;
+    user_id= "";
+    @Watch("userId")
+    onUserIdChange (newUserId: string) {
+        if (newUserId && newUserId.length && newUserId.length > 0) {
+            this.initData(newUserId);
+            document.title = `User ${this.user_id} -- ${document.title}`;
         }
     }
-};
+
+    initData (userId: string) {
+        this.userId = userId;
+        const that = this;
+        this.axios.get(`/api/user/${userId}`)
+            .then(({ data }) => {
+                if (!Object.prototype.hasOwnProperty.call(data.data, "information")) {
+                    this.statement = `The user "${userId}" is not exist.`;
+                    this.error = true;
+                    return;
+                }
+                let d = data;
+                let submission = d.data.submission;
+                let local: any = [];
+                let localAccept;
+                let hdu: any = [];
+                let hduAccept;
+                let poj:any = [];
+                let pojAccept;
+                let uva: any = [];
+                let uvaAccept;
+                let other:any = [];
+                let otherAccept;
+                const pick_ac = function (arr:any) {
+                    let res: any = [];
+                    _.forEach(arr, function (val: any) {
+                        if (val.result === 4 && val.problem_id != 0) {
+                            res.push(val);
+                        }
+                    });
+                    res = _.uniqBy(res, "problem_id");
+                    res.sort(function (a: any, b: any) {
+                        if (!isNaN(a.problem_id) && !isNaN(b.problem_id)) {
+                            return parseInt(a.problem_id) - parseInt(b.problem_id);
+                        }
+                        else {
+                            if (a.problem_id < b.problem_id) {
+                                return 1;
+                            }
+                            else if (a.problem_id === b.problem_id) {
+                                return 0;
+                            }
+                            else {
+                                return -1;
+                            }
+                        }
+                    });
+                    return res;
+                };
+                let analsubmission: any = [];
+                let now = dayjs();
+                let otherSideSubmission: any = {};
+                _.forEach(submission, function (val: any) {
+                    if ((val.time = dayjs(val.time)).add(3, "month").isAfter(now)) {
+                        analsubmission.push(val);
+                    }
+                    if (val.oj_name === "LOCAL") {
+                        local.push(val);
+                    }
+                    else if (val.oj_name === "HDU") {
+                        hdu.push(val);
+                    }
+                    else if (val.oj_name === "POJ") {
+                        poj.push(val);
+                    }
+                    else if (val.oj_name === "UVA") {
+                        uva.push(val);
+                    }
+                    else {
+                        other.push(val);
+                    }
+                    if (otherSideSubmission[val.oj_name] && otherSideSubmission[val.oj_name].length > 0) {
+                        otherSideSubmission[val.oj_name].push(val);
+                    }
+                    else {
+                        otherSideSubmission[val.oj_name] = [val];
+                    }
+                });
+                analsubmission.sort(function (a: any, b: any) {
+                    if (a.time.isBefore(b.time)) {
+                        return -1;
+                    }
+                    else {
+                        return 1;
+                    }
+                });
+                let timeobj: any = {};
+                let acobj: any = {};
+                _.forEach(analsubmission, function (val: any) {
+                    let daystr = val.time.format("YYYY-MM-DD");
+                    if (!timeobj[daystr]) {
+                        timeobj[daystr] = 1;
+                        acobj[daystr] = 0;
+                        if (parseInt(val.result) === 4) {
+                            acobj[daystr] = 1;
+                        }
+                    }
+                    else {
+                        ++timeobj[daystr];
+                        if (parseInt(val.result) === 4) {
+                            ++acobj[daystr];
+                        }
+                    }
+                });
+
+                hduAccept = pick_ac(hdu);
+                localAccept = pick_ac(local);
+                pojAccept = pick_ac(poj);
+                uvaAccept = pick_ac(uva);
+                otherAccept = pick_ac(other);
+                if (otherSideSubmission["LOCAL"]) {
+                    delete otherSideSubmission["LOCAL"];
+                }
+                for (let idx in otherSideSubmission) {
+                    if (Object.prototype.hasOwnProperty.call(otherSideSubmission, idx)) {
+                        otherSideSubmission[idx] = pick_ac(otherSideSubmission[idx]);
+                    }
+                }
+                let privilege = d.data.privilege;
+                if (privilege && privilege.length > 0) {
+                    for (let i = 0; i < privilege.length; ++i) {
+                        if (privilege[i].rightstr === "administrator") {
+                            privilege = this.$t("administrator");
+                            break;
+                        }
+                        else if (privilege[i].rightstr === "source_browser") {
+                            privilege = this.$t("code editor");
+                            break;
+                        }
+                        else if (privilege[i].rightstr === "editor") {
+                            privilege = this.$t("problem editor");
+                            break;
+                        }
+                    }
+                }
+                if (typeof privilege !== "string") {
+                    privilege = this.$t("general user");
+                }
+                let dsort = function (a: any, b: any) {
+                    return b.cnt - a.cnt;
+                };
+                for (const key in otherSideSubmission) {
+                    if (!Object.prototype.hasOwnProperty.call(otherSideSubmission, key)) {
+                        continue;
+                    }
+                    if (typeof key !== "string" || key.length === 0) {
+                        delete otherSideSubmission[key];
+                    }
+                }
+                console.log(otherSideSubmission);
+                d.data.os.sort(dsort);
+                d.data.browser.sort(dsort);
+                let github_info = d.data.information.github || "";
+                if (github_info.lastIndexOf("/") === github_info.length - 1) {
+                    github_info = github_info.substring(0, github_info.length - 1);
+                }
+                if (github_info.indexOf("github.com") !== -1) {
+                    github_info = github_info.substring(github_info.lastIndexOf("/") + 1);
+                }
+
+                return {
+                    award: d.data.award,
+                    admin: d.isadmin,
+                    biography: d.data.information.biography,
+                    const_variable: d.data.const_variable,
+                    article_publish: d.data.article_publish,
+                    nick: d.data.information.nick,
+                    reg_time: d.data.information.reg_time,
+                    school: d.data.information.school,
+                    submission_count: d.data.submission_count,
+                    github: github_info,
+                    email: d.data.information.email,
+                    vjudge_solved: d.data.information.vjudge_accept,
+                    os: d.data.os,
+                    browser: d.data.browser,
+                    blog: d.data.information.blog,
+                    recent_submission: {
+                        submission: timeobj,
+                        accept: acobj
+                    },
+                    avatar: this.hasAvatarURL(d.data.information) ? this.getAvatarURL(Object.assign({ user_id: userId }, d.data.information)) : "/assets/images/wireframe/white-image.png",
+                    user_id: userId,
+                    acm_user: d.data.acm_user,
+                    privilege: privilege,
+                    submission: {
+                        local: local,
+                        hdu: hdu,
+                        poj: poj,
+                        uva: uva,
+                        other: other
+                    },
+                    accept: {
+                        hdu: hduAccept,
+                        poj: pojAccept,
+                        uva: uvaAccept,
+                        local: localAccept,
+                        other: otherAccept
+                    },
+                    rank: d.data.rank,
+                    vjudge_rank: d.data.vjudge_rank,
+                    last_login: d.data.login_time ? d.data.login_time[0] ? d.data.login_time[0].time : "" : "",
+                    local_accepted: localAccept.length,
+                    accepted_details: otherSideSubmission,
+                    other_accepted: hduAccept.length + pojAccept.length + uvaAccept.length + otherAccept.length,
+                    same_percentage_aver: parseInt(d.data.sim_average_percentage),
+                    same_problem_time: parseInt(d.data.sim_count),
+                    same_aver_length: parseInt(d.data.sim_average_length),
+                    total_same: d.data.total_sim_time
+                };
+            })
+            .then(data => {
+                Object.assign(this, data);
+                this.finished = true;
+            })
+            .then(() => {
+                $("#preload").hide();
+                let $title = $("title").html();
+                $(".placeholder").remove();
+                this.$nextTick(() => {
+                    let now = dayjs().endOf("day").toDate();
+                    let yearAgo = dayjs().startOf("day").subtract(1, "year").toDate();
+                    let submission_cnt = this.submission_count;
+                    let countForDate: any = {};
+                    _.forEach(submission_cnt, function (row: any) {
+                        if (row.day < 10) row.day = "0" + row.day;
+                        if (row.month < 10) row.month = "0" + row.month;
+                        let date = row.year + "-" + row.month + "-" + row.day;
+                        if (!countForDate[date]) {
+                            countForDate[date] = row.cnt;
+                        }
+                        else {
+                            countForDate[date] += row.cnt;
+                        }
+                    });
+                    let chartData = d3.timeDays(yearAgo, now).map(function (dateElement: any) {
+                        return {
+                            date: dateElement,
+                            count: countForDate[dayjs(dateElement).format("YYYY-MM-DD")] || 0
+                        };
+                    });
+
+                    // @ts-ignore
+                    let heatmap = calendarHeatmap({ width: $(".heatmap").width() }).data(chartData).selector(".heatmap").tooltipEnabled(true).colorRange(["#c6e48b", "#7bc96f", "#239a3b", "#196127"], "#dfdfdf")
+                        .onClick(function () {
+                        })
+                        .tooltipEnabled(true)
+                        .legendEnabled(true);
+                    heatmap();
+                    that.$nextTick(function () {
+                        // @ts-ignore
+                        let pie = new Chart(document.getElementById("pie_chart")!.getContext("2d"), {
+                            type: "pie",
+                            data: {
+                                datasets: [
+                                    {
+                                        data: [
+                                            that.local_accepted,
+                                            _.reduce(that.submission.local, function (result: any, val: any) {
+                                                val.result = parseInt(val.result);
+                                                if (val.result === 6) {
+                                                    return result + 1;
+                                                }
+                                                else {
+                                                    return result;
+                                                }
+                                            }, 0),
+                                            _.reduce(that.submission.local, function (result: any, val: any) {
+                                                if (val.result === 10) {
+                                                    return result + 1;
+                                                }
+                                                else {
+                                                    return result;
+                                                }
+                                            }, 0),
+                                            _.reduce(that.submission.local, function (result: any, val: any) {
+                                                if (val.result === 7) {
+                                                    return result + 1;
+                                                }
+                                                else {
+                                                    return result;
+                                                }
+                                            }, 0),
+                                            _.reduce(that.submission.local, function (result: any, val: any) {
+                                                if (val.result === 8) {
+                                                    return result + 1;
+                                                }
+                                                else {
+                                                    return result;
+                                                }
+                                            }, 0),
+                                            _.reduce(that.submission.local, function (result: any, val: any) {
+                                                if (val.result === 9) {
+                                                    return result + 1;
+                                                }
+                                                else {
+                                                    return result;
+                                                }
+                                            }, 0),
+                                            _.reduce(that.submission.local, function (result: any, val: any) {
+                                                if (val.result === 11) {
+                                                    return result + 1;
+                                                }
+                                                else {
+                                                    return result;
+                                                }
+                                            }, 0),
+                                            _.reduce(that.submission.local, function (result: any, val: any) {
+                                                if (val.result === 5) {
+                                                    return result + 1;
+                                                }
+                                                else {
+                                                    return result;
+                                                }
+                                            }, 0)
+                                        ],
+                                        backgroundColor: [
+                                            "#66dd66",
+                                            "#ff6384",
+                                            "darkorchid",
+                                            "#ffce56",
+                                            "#00b5ad",
+                                            "#35a0e8",
+                                            "#F7464A",
+                                            "#D4CCC5"
+                                        ]
+                                    }
+                                ],
+                                labels: [
+                                    "Accepted",
+                                    "Wrong Answer",
+                                    "Runtime Error",
+                                    "Time Limit Exceeded",
+                                    "Memory Limit Exceeded",
+                                    "Output Limit Exceeded",
+                                    "Compile Error",
+                                    "Presentation Error"
+                                ]
+                            },
+                            options: {
+                                responsive: true,
+                                legend: {
+                                    display: false
+                                },
+                                legendCallback: function (chart: any) {
+                                    let text = [];
+                                    text.push("<ul style=\"list-style: none; padding-left: 20px; margin-top: 0; \" class=\"" + chart.id + "-legend\">");
+
+                                    let data = chart.data;
+                                    let datasets = data.datasets;
+                                    let labels = data.labels;
+
+                                    if (datasets.length) {
+                                        for (let i = 0; i < datasets[0].data.length; ++i) {
+                                            text.push("<li style=\"font-size: 12px; width: 50%; display: inline-block; color: #666; \"><span style=\"width: 10px; height: 10px; display: inline-block; border-radius: 50%; margin-right: 5px; background-color: " + datasets[0].backgroundColor[i] + "; \"></span>");
+                                            if (labels[i]) {
+                                                text.push(labels[i]);
+                                            }
+                                            text.push("</li>");
+                                        }
+                                    }
+
+                                    text.push("</ul>");
+                                    return text.join("");
+                                }
+                            }
+                        });
+                        // @ts-ignore
+                        document.getElementById("pie_chart_legend")!.innerHTML = pie.generateLegend();
+                        // @ts-ignore
+                        let lang = new Chart(document.getElementById("pie_chart_language")!.getContext("2d"), {
+                            type: "pie",
+                            data: {
+                                datasets: [
+                                    {
+                                        data: [
+                                            _.reduce(that.submission.local, function (sum: any, val: any) {
+                                                if (val.language === "0" || val.language === "21") {
+                                                    return sum + 1;
+                                                }
+                                                else {
+                                                    return sum;
+                                                }
+                                            }, 0),
+                                            _.reduce(that.submission.local, function (sum: any, val: any) {
+                                                if (val.language === "1" || val.language === "19" || val.language === "20") {
+                                                    return sum + 1;
+                                                }
+                                                else {
+                                                    return sum;
+                                                }
+                                            }, 0),
+                                            _.reduce(that.submission.local, function (sum: any, val: any) {
+                                                if (val.language === "3" || val.language === "23" || val.language === "24") {
+                                                    return sum + 1;
+                                                }
+                                                else {
+                                                    return sum;
+                                                }
+                                            }, 0),
+                                            _.reduce(that.submission.local, function (sum: any, val: any) {
+                                                if (val.language === "6") {
+                                                    return sum + 1;
+                                                }
+                                                else {
+                                                    return sum;
+                                                }
+                                            }, 0),
+                                            _.reduce(that.submission.local, function (sum: any, val: any) {
+                                                if (val.language === "13") {
+                                                    return sum + 1;
+                                                }
+                                                else {
+                                                    return sum;
+                                                }
+                                            }, 0),
+                                            _.reduce(that.submission.local, function (sum: any, val: any) {
+                                                if (val.language === "14") {
+                                                    return sum + 1;
+                                                }
+                                                else {
+                                                    return sum;
+                                                }
+                                            }, 0),
+                                            _.reduce(that.submission.local, function (sum: any, val: any) {
+                                                if (val.language === "2") {
+                                                    return sum + 1;
+                                                }
+                                                else {
+                                                    return sum;
+                                                }
+                                            }, 0)
+                                        ],
+                                        backgroundColor: [
+                                            "#66dd66",
+                                            "#ff6384",
+                                            "darkorchid",
+                                            "#ffce56",
+                                            "#00b5ad",
+                                            "#35a0e8",
+                                            "#E2EAE9"
+                                        ]
+                                    }
+                                ],
+                                labels: [
+                                    "GCC",
+                                    "G++",
+                                    "Java",
+                                    "Python",
+                                    "Clang",
+                                    "Clang++",
+                                    "Pascal"
+                                ]
+                            },
+                            options: {
+                                responsive: true,
+                                legend: {
+                                    display: false
+                                },
+                                legendCallback: function (chart: any) {
+                                    let text = [];
+                                    text.push("<ul style=\"list-style: none; padding-left: 20px; margin-top: 0; \" class=\"" + chart.id + "-legend\">");
+
+                                    let data = chart.data;
+                                    let datasets = data.datasets;
+                                    let labels = data.labels;
+
+                                    if (datasets.length) {
+                                        for (let i = 0; i < datasets[0].data.length; ++i) {
+                                            text.push("<li style=\"font-size: 12px; width: 50%; display: inline-block; color: #666; \"><span style=\"width: 10px; height: 10px; display: inline-block; border-radius: 50%; margin-right: 5px; background-color: " + datasets[0].backgroundColor[i] + "; \"></span>");
+                                            if (labels[i]) {
+                                                text.push(labels[i]);
+                                            }
+                                            text.push("</li>");
+                                        }
+                                    }
+
+                                    text.push("</ul>");
+                                    return text.join("");
+                                }
+                            }
+                        });
+                        // @ts-ignore
+                        document.getElementById("pie_chart_language_legend")!.innerHTML = lang.generateLegend();
+                        let config = {
+                            type: "line",
+                            data: {
+                                labels: _.keys(that.recent_submission.submission),
+                                datasets: [{
+                                    label: this.$t("total submission"),
+                                    // @ts-ignore
+                                    backgroundColor: window.chartColors.red,
+                                    // @ts-ignore
+                                    borderColor: window.chartColors.red,
+                                    data: _.values(that.recent_submission.submission),
+                                    fill: false
+                                }, {
+                                    label: this.$t("accept"),
+                                    fill: false,
+                                    // @ts-ignore
+                                    backgroundColor: window.chartColors.blue,
+                                    // @ts-ignore
+                                    borderColor: window.chartColors.blue,
+                                    data: _.values(that.recent_submission.accept)
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                title: {
+                                    display: false,
+                                    text: this.$t("statistic information")
+                                },
+                                tooltips: {
+                                    mode: "index",
+                                    intersect: false
+                                },
+                                hover: {
+                                    mode: "nearest",
+                                    intersect: true
+                                },
+                                scales: {
+                                    xAxes: [{
+                                        display: true,
+                                        scaleLabel: {
+                                            display: false,
+                                            labelString: this.$t("month")
+                                        }
+                                    }],
+                                    yAxes: [{
+                                        display: true,
+                                        scaleLabel: {
+                                            display: false,
+                                            labelString: this.$t("submit")
+                                        }
+                                    }]
+                                }
+                            }
+                        };
+                        // @ts-ignore
+                        let ctx = document.getElementById("canvas")!.getContext("2d");
+                        // @ts-ignore
+                        window.myLine = new Chart(ctx, config);
+                    });
+                });
+                $("title").html(that.user_id + " " + that.nick + " " + $title);
+            });
+    }
+    get online () {
+        return this.$store.getters.onlineUser.some((el: any) => el.user_id === this.user_id);
+    }
+}
 </script>
 
 <style scoped>

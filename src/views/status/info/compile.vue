@@ -6,18 +6,17 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 import mixins from "../../../mixin/init";
+import { Mixins, Component } from "vue-property-decorator";
 const doc = document.createElement("div");
-export default {
-    name: "compile",
-    mixins: [mixins],
-    data () {
-        return {
-            info: "",
-            solution_id: this.$route.params.solution_id
-        };
-    },
+@Component
+export default class CompileInfo extends Mixins(mixins) {
+    info = "";
+    solution_id = "";
+    created () {
+        this.solution_id = this.$route.params.solution_id;
+    }
     mounted () {
         document.title = `${this.solution_id} Compile Information -- ${document.title}`;
         this.axios.get(`/api/status/compile_info/${this.solution_id}`)
@@ -29,14 +28,12 @@ export default {
                     this.info = "您无权访问";
                 }
             });
-    },
-    methods: {
-        convertHTML (html) {
-            doc.innerText = html;
-            return doc.innerHTML;
-        }
     }
-};
+    convertHTML (html: string) {
+        doc.innerText = html;
+        return doc.innerHTML;
+    }
+}
 </script>
 
 <style scoped>

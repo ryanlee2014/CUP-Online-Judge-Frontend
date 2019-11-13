@@ -10,18 +10,14 @@
         </div>
 </template>
 
-<script>
+<script lang="ts">
 import mixins from "../../mixin/init";
-const dayjs = require("dayjs");
-export default {
-    name: "update",
-    mixins: [mixins],
-    data () {
-        return {
-            log: [],
-            dayjs
-        };
-    },
+import { Component, Mixins } from "vue-property-decorator";
+import dayjs from "dayjs";
+@Component
+export default class UpdateInfo extends Mixins(mixins) {
+    log = [];
+    dayjs = dayjs;
     mounted () {
         document.title = `Update log -- ${document.title}`;
         this.axios.get("/api/update_log")
@@ -29,7 +25,7 @@ export default {
                 this.log = data.data;
             });
     }
-};
+}
 </script>
 
 <style scoped>

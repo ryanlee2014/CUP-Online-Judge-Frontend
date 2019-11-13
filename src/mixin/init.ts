@@ -1,5 +1,6 @@
 import Vue from "vue";
-import Component from "vue-class-component";
+import { Component } from "vue-property-decorator";
+
 import util from "../lib/util";
 import config from "../../config/environment.json";
 

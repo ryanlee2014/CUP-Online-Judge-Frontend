@@ -1,6 +1,6 @@
 {
   "name": "CUP-Online-Judge-NG-Frontend",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "private": true,
   "scripts": {
     "serve": "npx --max_old_space_size=16000 vue-cli-service serve",
@@ -89,6 +89,7 @@
     "@kazupon/vue-i18n-loader": "^0.4.1",
     "@types/animejs": "^3.1.0",
     "@types/chart.js": "^2.8.11",
+    "@types/d3": "^5.7.2",
     "@types/jquery": "^3.3.31",
     "@types/lodash": "^4.14.146",
     "@vue/cli": "^4.0.5",

@@ -34,6 +34,8 @@ export default class App extends Vue {
     homepage?: boolean;
     contest?: boolean;
     adminView?: boolean;
+    $socket: any;
+    sockets: any;
     created () {
         this.homepage = this.$route.path === "/";
         this.contest = this.$route.fullPath.includes("contest");

@@ -29,7 +29,7 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 import InitMixin from "../mixin/init";
 import dayjs from "dayjs";
 import Component, { mixins } from "vue-class-component";

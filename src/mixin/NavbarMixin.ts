@@ -3,12 +3,6 @@ import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 const $ = require("jquery");
 
-declare module "vue/types/vue" {
-    interface Vue {
-        sockets: any,
-        $socket: any
-    }
-}
 @Component
 export default class NavbarMixin extends Vue {
     @Prop({ default: "" }) user_id!: string;
@@ -18,6 +12,9 @@ export default class NavbarMixin extends Vue {
     @Prop({ default: false }) logined!: boolean;
     @Prop({ default: false }) homepage!: boolean;
     @Prop({ default: false }) contest!: boolean;
+    sockets: any;
+    $socket: any;
+    $route: any;
     user = 1;
     judger = 0;
     socketConnected = true;

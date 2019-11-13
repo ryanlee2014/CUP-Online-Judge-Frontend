@@ -42,9 +42,12 @@ import IDiffEditor = editor.IDiffEditor;
 @Component
 export default class RuntimeInfo extends Mixins(mixins) {
     info = "";
-    solution_id = this.$route.params.solution_id;
+    solution_id?: string;
     diffEditor: IDiffEditor | null = null;
     diffmode = false;
+    created () {
+        this.solution_id = this.$route.params.solution_id;
+    }
     mounted () {
         document.title = `${this.solution_id} Runtime Information -- ${document.title}`;
         this.axios.get(`/api/status/runtime_info/${this.solution_id}`)

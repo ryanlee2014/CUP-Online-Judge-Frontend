@@ -6,13 +6,17 @@
 import InitMixin from "../mixin/init";
 import UserContainer from "../components/user/UserContainer.vue";
 import { Component, Mixins } from "vue-property-decorator";
+
 @Component({
     components: {
         UserContainer: UserContainer
     }
 })
 export default class User extends Mixins(InitMixin) {
-    userId = this.$route.params.user_id;
+    userId = "";
+    mounted () {
+        this.userId = this.$route.params.user_id;
+    }
 }
 </script>
 

@@ -55,56 +55,55 @@
     </div>
 </template>
 
-<script>
-import ContestMode from "../components/contestMode/block";
+<script lang="ts">
+import { Mixins, Component, Watch } from "vue-property-decorator";
+import ContestMode from "../components/contestMode/block.vue";
 import mixins from "../mixin/init";
-const $ = require("jquery");
-window.$ = window.jQuery = $;
-const dayjs = require("dayjs");
-require("../static/js/semantic.min");
-export default {
-    name: "discuss",
-    mixins: [mixins],
+import dayjs from "dayjs";
+
+@Component({
     components: {
         ContestMode
-    },
-    data: function () {
-        return {
-            page: parseInt(this.$route.hash.page) || 0,
-            table_val: [],
-            total: 0,
-            search: "",
-            contest_mode: false,
-            dayjs
-        };
-    },
-    watch: {
-        search: function (newVal) {
-            let that = this;
-            let page = this.page * 20;
-            let url = "/api/discuss/";
-            if (newVal && newVal.length > 0) {
-                url += "search/" + newVal;
-            }
-            url += "?page=" + page;
-            $.get(url, function (data) {
+    }
+})
+export default class Discuss extends Mixins(mixins) {
+    page = 0;
+    table_val = [];
+    total = 0;
+    search = "";
+    contest_mode = false;
+    dayjs = dayjs;
+
+    @Watch("search")
+    onSearchChanged (newVal: string) {
+        let that = this;
+        let page = this.page * 20;
+        let url = "/api/discuss/";
+        if (newVal && newVal.length > 0) {
+            url += "search/" + newVal;
+        }
+        url += "?page=" + page;
+        this.axios.get(url)
+            .then(({ data }) => {
                 if (data.contest_mode) {
                     that.contest_mode = true;
                     return;
                 }
                 if (data.discuss) {
-                    that.table = data;
+                    this.table = data;
                 }
                 else {
-                    that.table = {
+                    this.table = {
                         discuss: data.data
                     };
                 }
             });
-        }
-    },
-    mounted: function () {
+    }
+
+    mounted () {
         document.title = `Discuss -- ${document.title}`;
+        const $route: any = this.$route;
+        this.page = $route.hash.page;
         let page = this.page * 20;
         let that = this;
         this.axios.get("/api/discuss?page=" + page).then(({ data }) => {
@@ -121,22 +120,16 @@ export default {
             }
             that.table = data;
         });
-    },
-    methods: {
-
-    },
-    computed: {
-        table: {
-            get: function () {
-                return this.table_val;
-            },
-            set: function (data) {
-                this.total = parseInt(data.total);
-                this.table_val = data.discuss;
-            }
-        }
     }
-};
+    get table () {
+        return this.table_val;
+    }
+
+    set table (data: any) {
+        this.total = parseInt(data.total);
+        this.table_val = data.discuss;
+    }
+}
 </script>
 
 <style scoped>
