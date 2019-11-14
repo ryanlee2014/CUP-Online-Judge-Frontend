@@ -9,12 +9,14 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 import mixins from "../../mixin/init";
-export default {
-    name: "noprivilege",
-    mixins: [mixins]
-};
+import { Mixins, Component } from "vue-property-decorator";
+
+@Component
+export default class NoPrivilege extends Mixins(mixins) {
+
+}
 </script>
 
 <style scoped>

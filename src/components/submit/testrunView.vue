@@ -61,49 +61,28 @@
     </div>
 </template>
 
-<script>
-export default {
-    name: "testrunView",
-    props: {
-        value: {
-            type: String,
-            default: ""
-        },
-        sampleinput: {
-            type: String,
-            default: ""
-        },
-        hide_warning: {
-            type: Boolean,
-            default: true
-        },
-        test_run: {
-            type: Function,
-            default: () => {}
-        },
-        submitDisabled: {
-            type: Boolean,
-            default: false
-        },
-        sampleoutput: {
-            type: String,
-            default: ""
-        }
-    },
-    data () {
-        return {
-            test_run_sampleinput: ""
-        };
-    },
-    watch: {
-        test_run_sampleinput: function (val) {
-            this.$emit("input", val);
-        },
-        value: function (val) {
-            this.test_run_sampleinput = val;
-        }
+<script lang="ts">
+import { Component, Prop, Watch } from "vue-property-decorator";
+import Vue from "vue";
+@Component
+export default class TestRunView extends Vue {
+    test_run_sampleinput = "";
+    @Prop({ default: "" }) value!: string;
+    @Prop({ default: "" }) sampleinput!: string;
+    @Prop({ default: "" }) sampleoutput!: string;
+    @Prop({ default: true }) hide_warning!: boolean;
+    @Prop({ default: () => {} }) test_run!: (...arg: any[]) => any;
+    @Prop({ default: false }) submitDisabled!: boolean;
+    @Watch("test_run_sampleinput")
+    onTestRunSampleInputChange (val: string) {
+        this.$emit("input", val);
     }
-};
+
+    @Watch("value")
+    onValueChange (val: string) {
+        this.test_run_sampleinput = val;
+    }
+}
 </script>
 
 <style scoped>

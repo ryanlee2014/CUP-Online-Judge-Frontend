@@ -9,13 +9,14 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 import mixins from "../../mixin/init";
+import { Mixins, Component } from "vue-property-decorator";
 
-export default {
-    name: "ban",
-    mixins: [mixins]
-};
+@Component
+export default class Ban extends Mixins(mixins) {
+
+}
 </script>
 
 <style scoped>

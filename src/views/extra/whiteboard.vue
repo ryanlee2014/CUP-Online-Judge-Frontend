@@ -47,12 +47,14 @@
     </div>
 </template>
 
-<script>
-import aceEditor from "../../components/submit/codeEditor/aceEditor";
-import aceThemeSelector from "../../components/submit/codeEditor/aceComponent/aceThemeSelector";
-import monacoEditor from "../../components/submit/codeEditor/monacoEditor";
-import monacoThemeSelector from "../../components/submit/codeEditor/monacoComponent/monacoThemeSelector";
+<script lang="ts">
+import aceEditor from "../../components/submit/codeEditor/aceEditor.vue";
+import aceThemeSelector from "../../components/submit/codeEditor/aceComponent/aceThemeSelector.vue";
+import monacoEditor from "../../components/submit/codeEditor/monacoEditor.vue";
+import monacoThemeSelector from "../../components/submit/codeEditor/monacoComponent/monacoThemeSelector.vue";
 import mixins from "../../mixin/init";
+import { Mixins, Component, Watch } from "vue-property-decorator";
+import _ from "lodash";
 const langMap = {
     "c11": 0,
     "cpp17": 1,
@@ -87,54 +89,51 @@ const langMap = {
 };
 
 const detectLang = require("../../lib/langDetector");
-export default {
-    name: "whiteboard",
-    mixins: [mixins],
+@Component({
     components: {
         aceEditor,
         aceThemeSelector,
         monacoEditor,
         monacoThemeSelector
-    },
-    data () {
-        return {
-            theme: "ace/theme/monokai",
-            code: "",
-            editorPackage: true,
-            fontSize: "16",
-            selected_language: 0
-        };
-    },
-    watch: {
-        editorPackage (val) {
-            if (val) {
-                this.theme = "vs-dark";
-            }
-            else {
-                this.theme = "ace/theme/monokai";
-            }
-        },
-        code (val) {
-            if (val) {
-                this.detectLanguageDebouncer();
-            }
+    }
+})
+export default class Whiteboard extends Mixins(mixins) {
+    theme = "ace/theme/monokai";
+    code = "";
+    editorPackage = true;
+    fontSize = "16";
+    selected_language = 0;
+    @Watch("editorPackage")
+    onEditorPackageChange (val?: string) {
+        if (val) {
+            this.theme = "vs-dark";
         }
-    },
-    mounted () {
-        document.title = `Whiteboard -- ${document.title}`;
-    },
-    methods: {
-        detectLanguageDebouncer () {
-            const that = this;
-            (_.debounce(() => {
-                const detected_lang = detectLang(that.code, Object.values(langMap));
-                if (that.selected_language != detected_lang) {
-                    that.selected_language = detected_lang;
-                }
-            }, 100))();
+        else {
+            this.theme = "ace/theme/monokai";
         }
     }
-};
+
+    @Watch("code")
+    onCodeChange (val?: string) {
+        if (val) {
+            this.detectLanguageDebouncer();
+        }
+    }
+
+    mounted () {
+        document.title = `Whiteboard -- ${document.title}`;
+    }
+
+    detectLanguageDebouncer () {
+        const that = this;
+        (_.debounce(() => {
+            const detectedLang = detectLang(that.code, Object.values(langMap));
+            if (that.selected_language !== detectedLang) {
+                that.selected_language = detectedLang;
+            }
+        }, 100))();
+    }
+}
 </script>
 
 <style scoped>

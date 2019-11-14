@@ -112,111 +112,40 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 import markdownIt from "../../lib/markdownIt/markdownIt";
-
-export default {
-    name: "singlePageProblemView",
-    props: {
-        bodyOnTop: {
-            type: Boolean,
-            default: true
-        },
-        time: {
-            type: Number,
-            default: 0
-        },
-        memory: {
-            type: Number,
-            default: 0
-        },
-        spj: {
-            type: Boolean,
-            default: false
-        },
-        title: {
-            type: String,
-            default: ""
-        },
-        problem_id: {
-            type: Number,
-            default: 0
-        },
-        submit: {
-            type: Number,
-            default: 0
-        },
-        accepted: {
-            type: Number,
-            default: 0
-        },
-        original_id: {
-            type: Number,
-            default: 0
-        },
-        switch_screen: {
-            type: Function,
-            default: () => {
-            }
-        },
-        normal_problem: {
-            type: Boolean,
-            default: true
-        },
-        iseditor: {
-            type: Boolean,
-            default: false
-        },
-        isadmin: {
-            type: Boolean,
-            default: false
-        },
-        description: {
-            type: String,
-            default: ""
-        },
-        input: {
-            type: String,
-            default: ""
-        },
-        output: {
-            type: String,
-            default: ""
-        },
-        sampleinput: {
-            type: String,
-            default: ""
-        },
-        sampleoutput: {
-            type: String,
-            default: ""
-        },
-        hint: {
-            type: String,
-            default: ""
-        },
-        source: {
-            type: String,
-            default: ""
-        },
-        uploader: {
-            type: String,
-            default: "Administrator"
-        }
-    },
-    data () {
-        return {
-            encodeURI,
-            markdownIt,
-            location
-        };
-    },
-    computed: {
-        temp_title: function () {
-            return this.problem_id + ": " + markdownIt.renderRaw(this.title);
-        }
+import Vue from "vue";
+import { Component, Prop } from "vue-property-decorator";
+@Component
+export default class SinglePageProblemView extends Vue {
+    @Prop({ default: true }) bodyOnTop!: boolean;
+    @Prop({ default: 0 }) time!: number;
+    @Prop({ default: 0 }) memory!: number;
+    @Prop({ default: false }) spj!: boolean;
+    @Prop({ default: "" }) title!: string;
+    @Prop({ default: 0 }) problem_id!: number;
+    @Prop({ default: 0 }) submit!: number;
+    @Prop({ default: 0 }) accepted!: number;
+    @Prop({ default: 0 }) original_id!: number;
+    @Prop({ default: () => {} }) switch_screen!: (...arg: any) => any;
+    @Prop({ default: true }) normal_problem!: boolean;
+    @Prop({ default: false }) iseditor!: boolean;
+    @Prop({ default: false }) isadmin!: boolean;
+    @Prop({ default: "" }) description!: string;
+    @Prop({ default: "" }) input!: string;
+    @Prop({ default: "" }) output!: string;
+    @Prop({ default: "" }) sampleinput!: string;
+    @Prop({ default: "" }) sampleoutput!: string;
+    @Prop({ default: "" }) hint!: string;
+    @Prop({ default: "" }) source!: string;
+    @Prop({ default: "Administrator" }) uploader!: string;
+    encodeURI = encodeURI;
+    markdownIt = markdownIt;
+    location = location;
+    get temp_title () {
+        return this.problem_id + ": " + markdownIt.renderRaw(this.title);
     }
-};
+}
 </script>
 
 <style scoped>

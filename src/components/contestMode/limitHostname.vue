@@ -6,16 +6,14 @@
     </div>
 </template>
 
-<script>
-export default {
-    name: "limitHostname",
-    props: {
-        address: {
-            type: String,
-            default: location.href
-        }
-    }
-};
+<script lang="ts">
+
+import Vue from "vue";
+import { Prop, Component } from "vue-property-decorator";
+@Component
+export default class LimitHostName extends Vue {
+    @Prop({ default: location.href }) address!: string;
+}
 </script>
 
 <style scoped>

@@ -11,13 +11,14 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 import mixins from "../../mixin/init";
+import { Mixins, Component } from "vue-property-decorator";
 
-export default {
-    name: "404",
-    mixins: [mixins]
-};
+@Component
+export default class PageNotFound extends Mixins(mixins) {
+
+}
 </script>
 
 <style scoped>

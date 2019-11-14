@@ -160,12 +160,15 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 import mixins from "../../mixin/init";
-const $ = require("jquery");
-export default {
-    name: "software",
-    mixins: [mixins],
+import jquery from "jquery";
+import { Mixins, Component } from "vue-property-decorator";
+
+const $: any = jquery;
+
+@Component
+export default class Software extends Mixins(mixins) {
     mounted () {
         document.title = `Software -- ${document.title}`;
         let userAgent = window.navigator.userAgent;
@@ -195,7 +198,7 @@ export default {
             $(".clion_content").html("适用于Linux 64位桌面为GNOME或KDE的系统");
         }
     }
-};
+}
 </script>
 
 <style scoped>

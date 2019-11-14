@@ -18,16 +18,14 @@
     </div>
 </template>
 
-<script>
-export default {
-    name: "confirms",
-    props: {
-        confirm_text: {
-            type: String,
-            default: ""
-        }
-    }
-};
+<script lang="ts">
+import Vue from "vue";
+import { Prop, Component } from "vue-property-decorator";
+
+@Component
+export default class Confirm extends Vue {
+    @Prop({ default: "" }) confirm_text!: string;
+}
 </script>
 
 <style scoped>
