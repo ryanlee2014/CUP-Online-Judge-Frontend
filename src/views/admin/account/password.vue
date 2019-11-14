@@ -27,32 +27,26 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 import mixins from "../../../mixin/init";
+import { Component, Mixins } from "vue-property-decorator";
 
-export default {
-    name: "password",
-    mixins: [mixins],
-    data () {
-        return {
-            user_id: "",
-            password: ""
-        };
-    },
-    methods: {
-        changePassword () {
-            this.axios.post("/api/admin/account/password/modify", this.$data)
-                .then(({ data }) => {
-                    if (data.status === "OK") {
-                        alert(this.$t("success"));
-                    }
-                    else {
-                        alert(data.statement);
-                    }
-                });
-        }
+@Component
+export default class ChangePassword extends Mixins(mixins) {
+    user_id = "";
+    password = "";
+    changePassword () {
+        this.axios.post("/api/admin/account/password/modify", this.$data)
+            .then(({ data }) => {
+                if (data.status === "OK") {
+                    alert(this.$t("success"));
+                }
+                else {
+                    alert(data.statement);
+                }
+            });
     }
-};
+}
 </script>
 
 <style scoped>

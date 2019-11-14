@@ -38,26 +38,20 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 import mixins from "../../../mixin/init";
+import { Component, Mixins } from "vue-property-decorator";
 
-export default {
-    name: "createmultiaccount",
-    mixins: [mixins],
-    data () {
-        return {
-            nameListText: "",
-            nickListText: "",
-            prefix: "",
-            generateNumber: 0
-        };
-    },
-    methods: {
-        generate () {
-            // TODO
-        }
+@Component
+export default class CreateMultiAccount extends Mixins(mixins) {
+    nameListText = "";
+    nickListText = "";
+    prefix = "";
+    generateNumber = 0;
+    generate () {
+        // TODO
     }
-};
+}
 </script>
 
 <style scoped>

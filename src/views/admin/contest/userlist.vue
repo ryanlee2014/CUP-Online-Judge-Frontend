@@ -32,32 +32,27 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 import mixins from "../../../mixin/init";
-const dayjs = require("dayjs");
-export default {
-    name: "userlist",
-    mixins: [mixins],
-    data () {
-        return {
-            contestAccountList: [],
-            dayjs
-        };
-    },
+import dayjs from "dayjs";
+import { Component, Mixins } from "vue-property-decorator";
+
+@Component
+export default class ContestUserList extends Mixins(mixins) {
+    contestAccountList = [];
+    dayjs = dayjs;
     mounted () {
         this.initList();
-    },
-    methods: {
-        initList () {
-            this.axios.get("/api/admin/account/teamlist")
-                .then(({ data }) => {
-                    if (data.status === "OK") {
-                        this.contestAccountList = data.data;
-                    }
-                });
-        }
     }
-};
+    initList () {
+        this.axios.get("/api/admin/account/teamlist")
+            .then(({ data }) => {
+                if (data.status === "OK") {
+                    this.contestAccountList = data.data;
+                }
+            });
+    }
+}
 </script>
 
 <style scoped>

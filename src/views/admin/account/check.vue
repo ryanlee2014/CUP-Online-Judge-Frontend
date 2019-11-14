@@ -35,58 +35,50 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 import mixins from "../../../mixin/init";
-export default {
-    name: "check",
-    mixins: [mixins],
-    data () {
-        return {
-            userListText: "",
-            passwordText: "",
-            resultUserListText: "",
-            resultPasswordText: ""
-        };
-    },
-    mounted () {
+import { Component, Mixins } from "vue-property-decorator";
 
-    },
-    methods: {
-        Check () {
-            let pairList = this.makePairList();
-            if (pairList.length > 0) {
-                this.axios.post("/api/admin/account/check", { pairList })
-                    .then(({ data }) => {
-                        this.resultUserListText = this.resultPasswordText = "";
-                        if (data.data.fail) {
-                            alert(this.$t("several user's accounts failed"));
-                            this.resultUserListText = data.data.failUserList.join("\n");
-                            this.resultPasswordText = data.data.failPasswordList.join("\n");
-                        }
-                        else {
-                            alert(this.$t("all correct"));
-                        }
-                    });
-            }
-        },
-        makePairList () {
-            let userList = this.userListText.split("\n").map(el => el.trim()).filter(el => el.length > 0);
-            let passwordList = this.passwordText.split("\n").map(el => el.trim()).filter(el => el.length > 0);
-            if (userList.length !== passwordList.length) {
-                alert(this.$t("user number mismatch password number"));
-                return [];
-            }
-            let newPairList = [];
-            userList.forEach(el => {
-                newPairList.push({
-                    user_id: el,
-                    password: passwordList.shift()
+@Component
+export default class Check extends Mixins(mixins) {
+    userListText = "";
+    passwordText = "";
+    resultUserListText = "";
+    resultPasswordText = "";
+    Check () {
+        let pairList = this.makePairList();
+        if (pairList.length > 0) {
+            this.axios.post("/api/admin/account/check", { pairList })
+                .then(({ data }) => {
+                    this.resultUserListText = this.resultPasswordText = "";
+                    if (data.data.fail) {
+                        alert(this.$t("several user's accounts failed"));
+                        this.resultUserListText = data.data.failUserList.join("\n");
+                        this.resultPasswordText = data.data.failPasswordList.join("\n");
+                    }
+                    else {
+                        alert(this.$t("all correct"));
+                    }
                 });
-            });
-            return newPairList;
         }
     }
-};
+    makePairList () {
+        let userList = this.userListText.split("\n").map(el => el.trim()).filter(el => el.length > 0);
+        let passwordList = this.passwordText.split("\n").map(el => el.trim()).filter(el => el.length > 0);
+        if (userList.length !== passwordList.length) {
+            alert(this.$t("user number mismatch password number"));
+            return [];
+        }
+        let newPairList: any = [];
+        userList.forEach(el => {
+            newPairList.push({
+                user_id: el,
+                password: passwordList.shift()
+            });
+        });
+        return newPairList;
+    }
+}
 </script>
 
 <style scoped>

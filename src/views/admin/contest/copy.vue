@@ -2,28 +2,21 @@
     <contest-editor :contestInfo="data" :externalUserListText="userListText" :externalProblemSelected="problemSelected" @postData="edit"></contest-editor>
 </template>
 
-<script>
+<script lang="ts">
 import mixins from "../../../mixin/init";
 import contestEditMixin from "../../../mixin/contestEditMixin";
-import ContestEditor from "../../../components/contest/manage/edit";
-export default {
-    name: "copy",
-    mixins: [mixins, contestEditMixin],
+import ContestEditor from "../../../components/contest/manage/edit.vue";
+import { Component, Mixins } from "vue-property-decorator";
+@Component({
     components: {
         ContestEditor
-    },
-    data () {
-        return {};
-    },
-    mounted () {
-
-    },
-    methods: {
-        edit (val) {
-            console.log("get", val);
-        }
     }
-};
+})
+export default class ContestCopy extends Mixins(mixins, contestEditMixin) {
+    edit (val: any) {
+        console.log("get", val);
+    }
+}
 </script>
 
 <style scoped>

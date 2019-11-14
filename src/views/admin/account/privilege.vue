@@ -57,59 +57,53 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 import mixins from "../../../mixin/init";
-export default {
-    name: "privilege",
-    mixins: [mixins],
-    data () {
-        return {
-            userList: [],
-            privilegeList: [],
-            user_id: "",
-            rightstr: ""
-        };
-    },
+import { Component, Mixins } from "vue-property-decorator";
+@Component
+export default class Privilege extends Mixins(mixins) {
+    userList = [];
+    privilegeList = [];
+    user_id = "";
+    rightstr = "";
     mounted () {
         this.initData();
         this.initjQuery();
-    },
-    methods: {
-        basePrivilege (url, userId, rightstr) {
-            this.axios.post(url, { user_id: userId, rightstr })
-                .then(({ data }) => {
-                    if (data.status === "OK") {
-                        alert(this.$t("success"));
-                    }
-                    else {
-                        alert(data.statement);
-                    }
-                    this.initData();
-                });
-        },
-        addPrivilege () {
-            this.basePrivilege("/api/admin/account/privilege/add", this.user_id, this.rightstr);
-        },
-        removePrivilege (userId, rightstr) {
-            this.basePrivilege("/api/admin/account/privilege/remove", userId, rightstr);
-        },
-        initData () {
-            this.axios.get("/api/admin/account/privilege")
-                .then(({ data }) => {
-                    if (data.status === "OK") {
-                        this.userList = data.data.userList;
-                        this.privilegeList = data.data.privilegeList;
-                    }
-                    else {
-                        alert(data.statement);
-                    }
-                });
-        },
-        initjQuery () {
-            $(".ui.dropdown").dropdown();
-        }
     }
-};
+    basePrivilege (url: string, userId: string, rightstr: string) {
+        this.axios.post(url, { user_id: userId, rightstr })
+            .then(({ data }) => {
+                if (data.status === "OK") {
+                    alert(this.$t("success"));
+                }
+                else {
+                    alert(data.statement);
+                }
+                this.initData();
+            });
+    }
+    addPrivilege () {
+        this.basePrivilege("/api/admin/account/privilege/add", this.user_id, this.rightstr);
+    }
+    removePrivilege (userId: string, rightstr: string) {
+        this.basePrivilege("/api/admin/account/privilege/remove", userId, rightstr);
+    }
+    initData () {
+        this.axios.get("/api/admin/account/privilege")
+            .then(({ data }) => {
+                if (data.status === "OK") {
+                    this.userList = data.data.userList;
+                    this.privilegeList = data.data.privilegeList;
+                }
+                else {
+                    alert(data.statement);
+                }
+            });
+    }
+    initjQuery () {
+        $(".ui.dropdown").dropdown();
+    }
+}
 </script>
 
 <style scoped>
