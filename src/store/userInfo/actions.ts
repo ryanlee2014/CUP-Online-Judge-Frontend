@@ -1,5 +1,8 @@
-import axios from "axios/index";
-function getInfo (commit, tryTime) {
+import axios from "axios";
+import { IUserInfoState } from "@/store/userInfo/userInfo";
+import { ActionTree, Commit } from "vuex";
+import { IRootState } from "@/store/root";
+function getInfo (commit: Commit, tryTime: number) {
     if (tryTime <= 0) {
         return;
     }
@@ -15,8 +18,11 @@ function getInfo (commit, tryTime) {
             }
         });
 }
-export default {
+
+const actions: ActionTree<IUserInfoState, IRootState> = {
     NavStatus ({ commit }) {
         getInfo(commit, 3);
     }
 };
+
+export default actions;

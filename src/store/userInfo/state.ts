@@ -1,4 +1,6 @@
-export default {
+import { IUserInfoState } from "@/store/userInfo/userInfo";
+
+const states: IUserInfoState = {
     logined: false,
     userInfo: {
         user_id: "",
@@ -14,3 +16,5 @@ export default {
     },
     token: ""
 };
+
+export default states;

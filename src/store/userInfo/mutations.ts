@@ -1,6 +1,8 @@
 import { isObject, notUndefinedOrNull } from "../util/index";
+import { MutationTree } from "vuex";
+import { IKVStruct, IUserInfoState } from "@/store/userInfo/userInfo";
 
-function addContestPrivilege (state, contest) {
+function addContestPrivilege (state:IUserInfoState, contest: IKVStruct) {
     if (isObject(contest)) {
         for (let property in contest) {
             if (Object.prototype.hasOwnProperty.call(contest, property)) {
@@ -10,7 +12,7 @@ function addContestPrivilege (state, contest) {
     }
 }
 
-function addProblemMakerPrivilege (state, problemMaker) {
+function addProblemMakerPrivilege (state:IUserInfoState, problemMaker: IKVStruct) {
     if (isObject(problemMaker)) {
         for (let property in problemMaker) {
             if (Object.prototype.hasOwnProperty.call(problemMaker, property)) {
@@ -20,7 +22,7 @@ function addProblemMakerPrivilege (state, problemMaker) {
     }
 }
 
-function addContestMakerPrivilege (state, contestMaker) {
+function addContestMakerPrivilege (state:IUserInfoState, contestMaker: IKVStruct) {
     if (isObject(contestMaker)) {
         for (let property in contestMaker) {
             if (Object.prototype.hasOwnProperty.call(contestMaker, property)) {
@@ -30,7 +32,7 @@ function addContestMakerPrivilege (state, contestMaker) {
     }
 }
 
-export default {
+const mutations: MutationTree<IUserInfoState> = {
     loginMutate (state, { login }) {
         state.logined = login;
     },
@@ -46,3 +48,5 @@ export default {
         addContestMakerPrivilege(state, payload.privilege.contest_maker);
     }
 };
+
+export default mutations;
