@@ -489,6 +489,11 @@ const router = new Router({
             }
         },
         {
+            path: "/system/version_control",
+            name: "Version Control",
+            component: () => import("./views/system/github_repo_info.vue")
+        },
+        {
             path: "/forbidden/privilege",
             name: "No privilege",
             component: () => import("./views/error/noprivilege.vue")
