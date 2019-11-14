@@ -60,6 +60,8 @@
 <script lang="ts">
 import mixins from "../../../mixin/init";
 import { Component, Mixins } from "vue-property-decorator";
+import jquery from "jquery";
+const $: any = jquery;
 @Component
 export default class Privilege extends Mixins(mixins) {
     userList = [];
