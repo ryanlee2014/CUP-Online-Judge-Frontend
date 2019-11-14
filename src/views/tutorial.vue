@@ -100,31 +100,32 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 import mixins from "../mixin/init";
 import avatarMixin from "../mixin/avatarMixin";
 import mermaidMixin from "../mixin/mermaidMixin";
+import { Component, Mixins } from "vue-property-decorator";
 import markdownIt from "../lib/markdownIt/markdownIt";
-const $ = window.$ = window.jQuery = require("jquery");
+import jquery from "jquery";
+const $: any = jquery;
 const Clipboard = require("clipboard");
-require("../static/js/semantic.min");
-export default {
-    name: "tutorial",
-    mixins: [mixins, avatarMixin, mermaidMixin],
-    data: function () {
-        return {
-            content: "",
-            id: this.$route.params.problem_id,
-            source: this.$route.query.from || "local",
-            judge_color: [],
-            language_name: [],
-            icon_list: [],
-            result_name: [],
-            owner: "",
-            language_markdown: [],
-            markdownIt
-        };
-    },
+@Component
+export default class Tutorial extends Mixins(mixins, avatarMixin, mermaidMixin) {
+    $route: any;
+    content = "";
+    id = "";
+    source = "local";
+    judge_color = [];
+    language_name = [];
+    icon_list = [];
+    result_name = [];
+    owner = "";
+    language_markdown = [];
+    markdownIt = markdownIt;
+    created () {
+        this.id = this.$route.params.problem_id;
+        this.source = this.$route.query.from || "local";
+    }
     updated () {
         this.$nextTick(function () {
             $(".ui.accordion")
@@ -132,11 +133,11 @@ export default {
                     "exclusive": false
                 });
             let copyContent = new Clipboard(".copy.context", {
-                text: function (trigger) {
+                text: function (trigger: any) {
                     return $(trigger).parent().next().text();
                 }
             });
-            copyContent.on("success", function (e) {
+            copyContent.on("success", function (e: any) {
                 $(e.trigger)
                     .popup({
                         title: "Finished",
@@ -146,8 +147,8 @@ export default {
                     .popup("show");
             });
         });
-    },
-    mounted: function () {
+    }
+    mounted () {
         document.title = `Tutorial -- ${document.title}`;
         this.axios.get(`/api/tutorial/${this.source}/${this.id}`)
             .then(({ data }) => {
@@ -173,7 +174,7 @@ export default {
         const $title = document.title;
         $("title").html("Tutorial " + this.id + " -- " + $title);
     }
-};
+}
 </script>
 
 <style scoped>

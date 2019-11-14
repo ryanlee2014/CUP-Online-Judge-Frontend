@@ -109,31 +109,37 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 import { mapGetters } from "vuex";
 import util from "../../lib/util";
 import mixins from "../../mixin/init";
-export default {
-    name: "modify",
-    mixins: [mixins],
-    data () {
-        return {
-            blog: "",
-            github: "",
-            biography: "",
-            confirmquestion: "",
-            confirmanswer: "",
-            password: "",
-            newpassword: "",
-            repeatpassword: "",
-            dirty: false,
-            email: "",
-            school: "",
-            nick: this.$store.getters.nick,
-            avatar: this.$store.getters.avatar,
-            avatarUrl: util.stringify(this.$store.getters.avatarUrl || "")
-        };
-    },
+import { Component, Mixins, Watch } from "vue-property-decorator";
+@Component({
+    computed: {
+        ...mapGetters(["user_id"])
+    }
+})
+export default class UserInfoModify extends Mixins(mixins) {
+    user_id?: string;
+    blog= "";
+    github= "";
+    biography= "";
+    confirmquestion= "";
+    confirmanswer= "";
+    password= "";
+    newpassword= "";
+    repeatpassword= "";
+    dirty= false;
+    email= "";
+    school= "";
+    nick= "";
+    avatar= false;
+    avatarUrl= "";
+    created () {
+        this.nick = this.$store.getters.nick;
+        this.avatar = this.$store.getters.avatar;
+        this.avatarUrl = util.stringify(this.$store.getters.avatarUrl || "");
+    }
     mounted () {
         this.axios.get(`/api/user/${this.user_id}`)
             .then(({ data }) => {
@@ -145,67 +151,64 @@ export default {
                     this.confirmquestion = data.data;
                 }
             });
-    },
-    methods: {
-        updateInformation () {
-            this.axios.post("/api/user/update/profile", this.$data)
-                .then(({ data }) => {
-                    if (data.status === "OK") {
-                        this.$store.dispatch("NavStatus");
-                        alert("更改成功");
-                    }
-                    else {
-                        alert("服务器遇到错误: \n" + data.statement);
-                    }
-                });
-        },
-        reset () {
-            location.reload();
-        },
-        refreshImage () {
-            if (this.dirty) {
-                this.dirty = false;
-                this.$nextTick(() => {
-                    setTimeout(() => {
-                        this.$Lazyload.lazyLoadHandler();
-                        this.$forceUpdate();
-                    }, 0);
-                });
-            }
-        }
-    },
-    watch: {
-        avatarUrl () {
-            this.refreshImage();
-        },
-        img_src () {
-            this.refreshImage();
-        }
-    },
-    computed: {
-        ...mapGetters(["user_id"]),
-        img_src: {
-            get () {
-                const avatarUrl = util.stringify(this.avatarUrl);
-                if (this.avatar && !avatarUrl.length > 0) {
-                    return `/avatar/${this.user_id}.jpg`;
-                }
-                else if (avatarUrl.length > 0) {
-                    return avatarUrl;
+    }
+
+    updateInformation () {
+        this.axios.post("/api/user/update/profile", this.$data)
+            .then(({ data }) => {
+                if (data.status === "OK") {
+                    this.$store.dispatch("NavStatus");
+                    alert("更改成功");
                 }
                 else {
-                    return "https://semantic-ui.com/images/wireframe/square-image.png";
+                    alert("服务器遇到错误: \n" + data.statement);
                 }
-            },
-            set (val) {
-                if (val !== this.avatarUrl) {
-                    this.dirty = true;
-                    this.avatarUrl = val.trim();
-                }
-            }
+            });
+    }
+    reset () {
+        location.reload();
+    }
+    refreshImage () {
+        if (this.dirty) {
+            this.dirty = false;
+            this.$nextTick(() => {
+                setTimeout(() => {
+                    this.$Lazyload.lazyLoadHandler();
+                    this.$forceUpdate();
+                }, 0);
+            });
         }
     }
-};
+    @Watch("avatarUrl")
+    onAvatarUrlChanged () {
+        this.refreshImage();
+    }
+
+    @Watch("img_src")
+    onImageSrcChanged () {
+        this.refreshImage();
+    }
+
+    get img_src () {
+        const avatarUrl = util.stringify(this.avatarUrl);
+        if (this.avatar && !(avatarUrl.length > 0)) {
+            return `/avatar/${this.user_id}.jpg`;
+        }
+        else if (avatarUrl.length > 0) {
+            return avatarUrl;
+        }
+        else {
+            return "https://semantic-ui.com/images/wireframe/square-image.png";
+        }
+    }
+
+    set img_src (val: string) {
+        if (val !== this.avatarUrl) {
+            this.dirty = true;
+            this.avatarUrl = val.trim();
+        }
+    }
+}
 </script>
 
 <style scoped>

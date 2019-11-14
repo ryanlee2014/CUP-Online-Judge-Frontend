@@ -23,29 +23,23 @@
     </div>
 </template>
 <i18n src="../locales/online.json"></i18n>
-<script>
+<script lang="ts">
 import mixins from "../mixin/init";
-import addressList from "../components/online/addressList";
-import userList from "../components/online/userList";
-export default {
-    name: "online",
-    mixins: [mixins],
-    data: () => {
-        return {
-            refresh: localStorage.getItem("refresh") === "true"
-        };
-    },
+import addressList from "../components/online/addressList.vue";
+import userList from "../components/online/userList.vue";
+import { Component, Mixins } from "vue-property-decorator";
+@Component({
     components: {
         addressList,
         userList
-    },
+    }
+})
+export default class Online extends Mixins(mixins) {
+    refresh = localStorage.getItem("refresh") === "true";
     mounted () {
         document.title = `Online user -- ${document.title}`;
-    },
-    updated () {
-
     }
-};
+}
 </script>
 
 <style scoped>

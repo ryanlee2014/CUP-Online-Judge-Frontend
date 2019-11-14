@@ -11,17 +11,8 @@ import mixins from "../mixin/init";
 import { Mixins, Component } from "vue-property-decorator";
 import VueI18n from "vue-i18n";
 
-@Component
-export default class FAQ extends Mixins(mixins) {
-    locales?: VueI18n.Locale;
-    created () {
-        this.locales = this.$i18n.locale;
-    }
-    mounted () {
-        document.title = `FAQ -- ${document.title}`;
-    }
-
-    i18n = (() => {
+@Component({
+    i18n: (() => {
         const locales = require.context("../static/help/faq", true, /[A-Za-z0-9-_,\s]+\.md$/i);
         const messages:{
             [id: string]: any
@@ -38,6 +29,15 @@ export default class FAQ extends Mixins(mixins) {
             messages
         };
     })()
+})
+export default class FAQ extends Mixins(mixins) {
+    locales?: VueI18n.Locale;
+    created () {
+        this.locales = this.$i18n.locale;
+    }
+    mounted () {
+        document.title = `FAQ -- ${document.title}`;
+    }
 }
 </script>
 
