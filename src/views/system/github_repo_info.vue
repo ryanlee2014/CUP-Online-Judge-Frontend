@@ -90,7 +90,7 @@ export default class GithubRepoInfo extends Mixins(InitMixin) {
     }
 
     buildBranchAPIUrl (repo: string) {
-        return `https://api.github.com/repos/${repo}/branches`;
+        return `https://api.github.com/repos/${repo}/branches?timestamp=${Date.now()}`;
     }
 
     buildVersion (repo: string, githubData: any[]) {
@@ -131,7 +131,7 @@ export default class GithubRepoInfo extends Mixins(InitMixin) {
     }
 
     buildJsDelivrLink (repo: string, branch: string) {
-        return `https://cdn.jsdelivr.net/gh/${repo}@${branch}/package.json`;
+        return `https://cdn.jsdelivr.net/gh/${repo}@${branch}/package.json?timestamp=${Date.now()}`;
     }
 }
 </script>
