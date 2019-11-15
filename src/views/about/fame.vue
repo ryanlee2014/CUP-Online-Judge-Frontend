@@ -1,6 +1,6 @@
 <template>
     <div class="ui text container" v-lazy-container="{ selector: 'img' }">
-        <div class="ui basic segment" id="mainContent">
+        <div class="ui basic segment" id="mainContent" ref="main">
             <h2 class="ui dividing header">
                 Hall of Fame
                 <div class="sub header">姓名不分先后</div>
@@ -310,10 +310,14 @@ export default class Fame extends Mixins(mixins) {
     mounted () {
         document.title = `Hall of fame -- ${document.title}`;
         this.$Lazyload.$on("loaded", (el) => {
-            const $parent = $(el.el).parent();
-            $parent.find(".sticky").sticky({
-                context: `#${$parent.attr("id")}`,
-                offset: 50
+            const $segment = $(this.$refs.main).find(".ui.segment");
+            $segment.each(function (this: any) {
+                const $this = $(this);
+                console.log($this);
+                $this.find(".sticky").sticky({
+                    context: `#${$this.attr("id")}`,
+                    offset: 50
+                });
             });
         });
         const $headers = $(".ui.header.contents");
