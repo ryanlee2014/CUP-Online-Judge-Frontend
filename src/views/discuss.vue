@@ -103,7 +103,7 @@ export default class Discuss extends Mixins(mixins) {
     mounted () {
         document.title = `Discuss -- ${document.title}`;
         const $route: any = this.$route;
-        this.page = $route.hash.page;
+        this.page = isNaN($route.hash.page) ? 0 : $route.hash.page;
         let page = this.page * 20;
         let that = this;
         this.axios.get("/api/discuss?page=" + page).then(({ data }) => {
