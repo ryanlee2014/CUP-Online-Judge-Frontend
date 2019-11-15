@@ -5,16 +5,13 @@
     </div>
 </template>
 
-<script>
-export default {
-    name: "LimitHostname",
-    props: {
-        content: {
-            type: String,
-            default: ""
-        }
-    }
-};
+<script lang="ts">
+import Vue from "vue";
+import { Prop, Component } from "vue-property-decorator";
+@Component
+export default class LimitHostname extends Vue {
+    @Prop({ default: "" }) content!: string;
+}
 </script>
 
 <style scoped>

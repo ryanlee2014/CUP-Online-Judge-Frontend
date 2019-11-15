@@ -18,9 +18,6 @@ import Nano from "./size/nano/nano.vue";
 import ProfileCard from "./components/ProfileCard.vue";
 import NavbarMixin from "../../mixin/NavbarMixin";
 import { Component, Mixins } from "vue-property-decorator";
-const Promise = require("bluebird");
-
-const $ = require("jquery");
 @Component({
     components: {
         Large: Large,

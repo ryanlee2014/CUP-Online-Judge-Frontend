@@ -194,8 +194,6 @@ import StatusTable from "../../components/status/contest/StatusTable";
 const Chart = require("chart.js");
 const $ = window.$ = window.jQuery = require("jquery");
 const _ = require("lodash");
-const Cookies = require("js-cookie");
-require("../../static/js/semantic.min");
 
 function draw (_result) {
     let result = _result.result;

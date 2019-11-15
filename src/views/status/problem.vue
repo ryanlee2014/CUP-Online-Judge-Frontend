@@ -152,7 +152,6 @@ const _ = require("lodash");
 const $ = require("jquery");
 window.$ = window.jQuery = $;
 const Chart = require("chart.js");
-require("../../static/js/semantic.min");
 let hasDrawLineChart = {};
 let hasRendered = {};
 

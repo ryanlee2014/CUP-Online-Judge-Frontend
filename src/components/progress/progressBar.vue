@@ -4,86 +4,86 @@
     </div>
 </template>
 
-<script>
-const $ = require("jquery");
-require("../../static/js/semantic.min");
-function forceUpdate () {
-    if (this.prevPercentage !== this.percentage) {
-        this.$nextTick(this.$forceUpdate);
+<script lang="ts">
+import Vue from "vue";
+import SemanticEnvMixin from "@/mixin/SemanticEnvMixin";
+import { Component, Mixins, Prop, Watch } from "vue-property-decorator";
+import jquery from "jquery";
+const $: any = jquery;
+@Component
+export default class ProgressBar extends Mixins(SemanticEnvMixin) {
+    prevPercentage = 0;
+    element:any = null;
+    visibilityChanged (isVisible: boolean, entry: any) {
+        if (isVisible && this.active) {
+            this.element!.progress("set active");
+        }
+        else {
+            this.element!.progress("remove active");
+        }
+    }
+    @Prop({ default: "" }) size!: string;
+    @Prop({ default: "" }) color!: string;
+    @Prop({ default: false }) active!: boolean;
+    @Prop({ default: 0 }) percentage!: number;
+    updated () {
+        this.mountFunc();
+    }
+    mounted () {
+        this.mountFunc();
+    }
+    mountFunc () {
+        if (this.element === null) {
+            this.element = $(this.$refs.progressBarElement);
+        }
+        if (this.prevPercentage !== this.percentage) {
+            this.element.progress({
+                percent: this.percentage,
+                autoSuccess: false
+            });
+            this.prevPercentage = this.percentage;
+        }
+    }
+    get progressBarClass () {
+        let classArray = ["ui", "progress"];
+        if (this.size.length > 0) {
+            classArray.push(this.size);
+        }
+        if (this.color.length > 0) {
+            classArray.push(this.color);
+        }
+        if (this.active) {
+            classArray.push("active");
+        }
+        return classArray;
+    }
+
+    forceUpdate () {
+        if (this.prevPercentage !== this.percentage) {
+            this.$nextTick(this.$forceUpdate);
+        }
+    }
+
+    @Watch("size")
+    onSizeChange () {
+        this.forceUpdate();
+    }
+
+    @Watch("color")
+    onColorChange () {
+        this.forceUpdate();
+    }
+
+    @Watch("active")
+    onActiveChange () {
+        this.forceUpdate();
+    }
+
+    @Watch("percentage")
+    onPercentageChange () {
+        this.forceUpdate();
     }
 }
-function mountFunc () {
-    if (this.element === null) {
-        this.element = $(this.$refs.progressBarElement);
-    }
-    if (this.prevPercentage !== this.percentage) {
-        this.element.progress({
-            percent: this.percentage,
-            autoSuccess: false
-        });
-        this.prevPercentage = this.percentage;
-    }
-}
-export default {
-    name: "progressBar",
-    data () {
-        return {
-            prevPercentage: 0,
-            element: null
-        };
-    },
-    methods: {
-        visibilityChanged (isVisible, entry) {
-            if (isVisible && this.active) {
-                this.element.progress("set active");
-            }
-            else {
-                this.element.progress("remove active");
-            }
-        }
-    },
-    props: {
-        size: {
-            type: String,
-            default: ""
-        },
-        color: {
-            type: String,
-            default: ""
-        },
-        active: {
-            type: Boolean,
-            default: false
-        },
-        percentage: {
-            type: Number,
-            default: 0
-        }
-    },
-    updated: mountFunc,
-    mounted: mountFunc,
-    computed: {
-        progressBarClass () {
-            let classArray = ["ui", "progress"];
-            if (this.size.length > 0) {
-                classArray.push(this.size);
-            }
-            if (this.color.length > 0) {
-                classArray.push(this.color);
-            }
-            if (this.active) {
-                classArray.push("active");
-            }
-            return classArray;
-        }
-    },
-    watch: {
-        size: forceUpdate,
-        color: forceUpdate,
-        active: forceUpdate,
-        percentage: forceUpdate
-    }
-};
 </script>
 
 <style scoped>

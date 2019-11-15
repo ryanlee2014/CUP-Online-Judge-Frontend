@@ -57,10 +57,12 @@
     </div>
 </template>
 
-<script>
-export default {
-    name: "Bottom"
-};
+<script lang="ts">
+import Vue from "vue";
+import { Component } from "vue-property-decorator";
+@Component
+export default class Bottom extends Vue {
+}
 </script>
 
 <style scoped>

@@ -9,10 +9,12 @@
     </div>
 </template>
 
-<script>
-export default {
-    name: "ContestNotStart"
-};
+<script lang="ts">
+import Vue from "vue";
+import { Component } from "vue-property-decorator";
+
+export default class ContestNotStart extends Vue {
+}
 </script>
 
 <style scoped>

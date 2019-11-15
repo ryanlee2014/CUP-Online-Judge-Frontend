@@ -7,18 +7,20 @@
     </div>
 </template>
 
-<script>
-import ProfileCard from "./components/ProfileCard";
+<script lang="ts">
+import Vue from "vue";
+import { Component, Mixins } from "vue-property-decorator";
+import ProfileCard from "./components/ProfileCard.vue";
 import NavbarMixin from "../../mixin/NavbarMixin";
-import Menu from "./admin/Menu";
-export default {
-    name: "AdminNavbar",
-    mixins: [NavbarMixin],
+import Menu from "./admin/Menu.vue";
+@Component({
     components: {
-        ProfileCard,
-        Menu
+        ProfileCard: ProfileCard,
+        Menu: Menu
     }
-};
+})
+export default class AdminNavbar extends Mixins(NavbarMixin) {
+}
 </script>
 
 <style scoped>

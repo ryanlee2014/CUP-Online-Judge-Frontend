@@ -20,21 +20,15 @@
     </div>
 </template>
 
-<script>
-export default {
-    name: "errorView",
-    props: {
-        errormsg: {
-            type: String,
-            default: ""
-        }
-    },
-    data () {
-        return {
-            location
-        };
-    }
-};
+<script lang="ts">
+import Vue from "vue";
+import { Component, Prop } from "vue-property-decorator";
+
+@Component
+export default class ErrorView extends Vue {
+    @Prop({ default: "" }) errormsg!: string;
+    location = location;
+}
 </script>
 
 <style scoped>

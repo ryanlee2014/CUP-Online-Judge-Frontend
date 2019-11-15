@@ -41,54 +41,34 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 import store from "../../../store";
 import util from "../../../lib/util";
-
-export default {
-    name: "ProfileCard",
-    props: {
-        user_id: {
-            type: String,
-            default: ""
-        },
-        nick: {
-            type: String,
-            default: ""
-        },
-        avatar: {
-            type: Boolean,
-            default: false
-        },
-        admin: {
-            type: Boolean,
-            default: false
-        }
-    },
-    data: function () {
-        return {};
-    },
-    computed: {
-        img_url: function () {
-            return util.getAvatarURL({ user_id: this.user_id, avatar: this.avatar, avatarUrl: this.$store.getters.avatarUrl });
-        }
-    },
-    methods: {
-        logout: function () {
-            this.axios.get("/api/logout")
-                .then(response => {
-                    if (response.data.status === "OK") {
-                        sessionStorage.isLogined = false;
-                        store.commit("loginMutate", { login: false });
-                        location.reload();
-                    }
-                });
-        }
-    },
+import { Prop, Component } from "vue-property-decorator";
+import Vue from "vue";
+@Component
+export default class ProfileCard extends Vue {
+    @Prop({ default: "" }) user_id!: string;
+    @Prop({ default: "" }) nick!: string;
+    @Prop({ default: false }) avatar!: boolean;
+    @Prop({ default: false }) admin!: boolean;
+    img_url () {
+        return util.getAvatarURL({ user_id: this.user_id, avatar: this.avatar, avatarUrl: this.$store.getters.avatarUrl });
+    }
+    logout () {
+        this.axios.get("/api/logout")
+            .then(response => {
+                if (response.data.status === "OK") {
+                    sessionStorage.isLogined = false;
+                    store.commit("loginMutate", { login: false });
+                    location.reload();
+                }
+            });
+    }
     updated () {
         util.bindDropdown();
     }
-};
+}
 </script>
 
 <style scoped>

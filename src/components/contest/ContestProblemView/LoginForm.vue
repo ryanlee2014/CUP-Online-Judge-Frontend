@@ -13,30 +13,32 @@
     </div>
 </template>
 
-<script>
-const $ = require("jquery");
-export default {
-    name: "LoginForm",
-    data: function () {
-        return {};
-    },
-    mounted: function () {
-        var that = this;
+<script lang="ts">
+import jquery from "jquery";
+import Vue from "vue";
+import { Component } from "vue-property-decorator";
+const $: any = jquery;
+@Component
+export default class LoginForm extends Vue {
+    $parent: any;
+    mounted () {
         $("#contest_form").submit(() => {
-            $.post("/api/contest/password/" + this.$route.params.contest_id, {
+            this.axios.post(`/api/contest/password/${this.$route.params.contest_id}`, {
                 password: $("#contest_pass").val()
-            }, function (data) {
-                if (data.status == "OK") {
-                    that.$parent.mode = 0;
-                }
-                else {
-                    alert(data.statement);
-                }
-            });
+            })
+                .then(({ data }) => {
+                    if (data.status === "OK") {
+                        // FixMe: don't use this shit code
+                        this.$parent.mode = 0;
+                    }
+                    else {
+                        alert(data.statement);
+                    }
+                });
             return false;
         });
     }
-};
+}
 </script>
 
 <style scoped>

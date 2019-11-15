@@ -36,35 +36,21 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 import markdownIt from "../../../lib/markdownIt/markdownIt";
 import avatarMixin from "../../../mixin/avatarMixin";
-export default {
-    name: "tableCard",
-    mixins: [avatarMixin],
-    props: {
-        content: {
-            type: Array,
-            default: () => []
-        },
-        page: {
-            type: Number,
-            default: 0
-        }
-    },
-    data () {
-        return {
-            markdownIt
-        };
-    },
-    methods: {
-        convertHTML: function (str) {
-            const doc = document.createElement("div");
-            doc.innerHTML = str;
-            return doc.innerText;
-        }
+import { Component, Mixins, Prop } from "vue-property-decorator";
+@Component
+export default class TableCard extends Mixins(avatarMixin) {
+    @Prop({ default: () => [] }) content!: any[];
+    @Prop({ default: 0 }) page!: number;
+    markdownIt = markdownIt;
+    convertHTML (str: string) {
+        const doc = document.createElement("div");
+        doc.innerHTML = str;
+        return doc.innerText;
     }
-};
+}
 </script>
 
 <style scoped>

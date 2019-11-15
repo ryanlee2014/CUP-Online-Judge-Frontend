@@ -27,52 +27,27 @@
     </div>
 </template>
 
-<script>
-const dayjs = require("dayjs");
-export default {
-    name: "ProblemView",
-    props: {
-        start_time: {
-            type: Object,
-            default: dayjs()
-        },
-        end_time: {
-            type: Object,
-            default: dayjs()
-        },
-        description: {
-            type: String,
-            default: ""
-        },
-        title: {
-            type: String,
-            default: ""
-        },
-        admin: {
-            type: Boolean,
-            default: false
-        },
-        private_contest: {
-            type: Boolean,
-            default: false
-        },
-        cid: {
-            type: Number,
-            default: 0
-        }
-    },
-    data: function () {
-        return {
-            now: dayjs()
-        };
-    },
-    mounted: function () {
+<script lang="ts">
+import dayjs, { Dayjs } from "dayjs";
+import Vue from "vue";
+import { Prop, Component } from "vue-property-decorator";
+
+@Component
+export default class ContestInfo extends Vue {
+    @Prop({ default: dayjs() }) start_time!: Dayjs;
+    @Prop({ default: dayjs() }) end_time!: Dayjs;
+    @Prop({ default: "" }) description!: string;
+    @Prop({ default: "" }) title!: string;
+    @Prop({ default: false }) admin!: boolean;
+    @Prop({ default: false }) private_contest!: boolean;
+    @Prop({ default: 0 }) cid!: number;
+    now = dayjs();
+    mounted () {
         setInterval(() => {
             this.now = dayjs();
         }, 1000);
-    },
-    methods: {}
-};
+    }
+}
 </script>
 
 <style scoped>
