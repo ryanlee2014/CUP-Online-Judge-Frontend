@@ -2,7 +2,18 @@ import Vue from "vue";
 import Router from "vue-router";
 import adminAuth from "./lib/router";
 import Guard from "./router/util/guard";
-import store from "./store";
+
+// eslint-disable-next-line no-unused-vars
+const emptyFunc = (...arg: any[]) => {};
+// warn if in developing env
+const warn = process.env.NODE_ENV !== "production" ? ((console && console.warn) || emptyFunc) : emptyFunc;
+const originalPush: (...arg: any[]) => any = Router.prototype.push;
+// @ts-ignore
+Router.prototype.push = function push (location: any, onResolve: any, onReject: any) {
+    if (onResolve || onReject) return originalPush.call(this, location, onResolve, onReject);
+    // @ts-ignore
+    return originalPush.call(this, location).catch(warn);
+};
 
 Vue.use(Router);
 
