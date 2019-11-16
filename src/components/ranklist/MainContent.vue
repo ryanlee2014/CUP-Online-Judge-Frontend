@@ -136,6 +136,7 @@ import markdownIt from "../../lib/markdownIt/markdownIt";
 import tableCard from "./components/tableCard.vue";
 import avatarMixin from "../../mixin/avatarMixin";
 import SemanticEnvMixin from "@/mixin/SemanticEnvMixin";
+import InitMixin from "@/mixin/init";
 
 interface IRanklistData {
     ranklist: any
@@ -150,14 +151,14 @@ interface IMember {
         tableCard
     }
 })
-export default class RanklistMainContent extends Mixins(SemanticEnvMixin, avatarMixin) {
+export default class RanklistMainContent extends Mixins(SemanticEnvMixin, avatarMixin, InitMixin) {
     $route: any;
-    @Prop({ default: null }) rank!: object;
+    @Prop({ default: null }) rank!: any;
     registed_user = 0;
     acm_user = 0;
-    mode = this.$route.query.acm ? 2 : 1;
+    mode: number = 1;
     page = 0;
-    search = this.$route.query.search || "";
+    search = "";
     time_stamp = "";
     acmmember: IMember = { ranklist: [] };
     retiremember: IMember = { ranklist: [] };
@@ -167,6 +168,8 @@ export default class RanklistMainContent extends Mixins(SemanticEnvMixin, avatar
 
     created () {
         this.page = parseInt(this.$route.query.page) || this.page;
+        this.mode = this.$route.query.acm ? 2 : 1;
+        this.search = this.$route.query.search || "";
     }
 
     @Watch("rank")
@@ -175,7 +178,13 @@ export default class RanklistMainContent extends Mixins(SemanticEnvMixin, avatar
     }
 
     get ranklist () {
-        return this.ranklistData!.ranklist;
+        if (this.ranklistData && this.ranklistData.ranklist) {
+            return this.ranklistData!.ranklist;
+        }
+        else if (this.rank && this.rank.ranklist) {
+            return this.rank.ranklist;
+        }
+        return [];
     }
 
     get acmmem () {
