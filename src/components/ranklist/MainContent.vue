@@ -164,7 +164,7 @@ export default class RanklistMainContent extends Mixins(SemanticEnvMixin, avatar
     retiremember: IMember = { ranklist: [] };
     recent_register = [];
     markdownIt = markdownIt;
-    ranklistData?: IRanklistData;
+    ranklistData: IRanklistData | null = null;
 
     created () {
         this.page = parseInt(this.$route.query.page) || this.page;
