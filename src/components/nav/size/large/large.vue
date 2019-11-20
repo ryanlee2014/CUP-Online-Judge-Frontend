@@ -18,6 +18,7 @@
                     <router-link class="item" exact-active-class="active" to="/extra/whiteboard"><i class="calendar outline icon"></i>{{$t("whiteboard")}}</router-link>
                     <router-link class="item" exact-active-class="active" to="/about/fame"><i class="chess queen icon"></i>{{$t("hall of fame")}}</router-link>
                     <a href="https://docs.cupacm.com" class="item" target="_blank"><i class="book icon"></i>{{$t("cupacm docs")}}</a>
+                    <router-link class="item" exact-active-class="active" to="/system/version_control"><i class="node js icon"></i>{{$t("version control")}}</router-link>
                 </div>
             </div>
             <SocketMenu :nick="nick" :logined="logined" :user="user" :judger="judger" :connected="connected"

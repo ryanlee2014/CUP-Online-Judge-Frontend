@@ -13,8 +13,9 @@
                     </div>
                 </div>
                 <div class="column" style="z-index: 1700;">
-                    <select multiple class="ui search dropdown label selection"  @change="label = select('.label.selection.ui.dropdown').dropdown('get value')">
-                        <option :key="lb" v-for="lb in all_label" :value="lb" v-text="lb"></option>
+                    <select @change="label = select('.label.selection.ui.dropdown').dropdown('get value')" class="ui search dropdown label selection"
+                            multiple>
+                        <option :key="lb" :value="lb" v-for="lb in all_label" v-text="lb"></option>
                     </select>
                 </div>
 
@@ -36,9 +37,9 @@
                         <input type="text" v-model="memory">
                     </div>
                 </div>
-                <div class="column"  style="margin: auto">
+                <div class="column" style="margin: auto">
                     <div class="ui toggle checkbox">
-                        <input type="checkbox" :checked="spj" v-model="spj">
+                        <input :checked="spj" type="checkbox" v-model="spj">
                         <label>Special Judge</label>
                     </div>
 
@@ -50,7 +51,7 @@
                 </h2>
             </div>
             <div class="row">
-                <mavon-editor v-model="description" :markInstance="descriptionInstance"></mavon-editor>
+                <mavon-editor :markInstance="descriptionInstance" v-model="description"></mavon-editor>
             </div>
             <br>
             <div class="row">
@@ -59,7 +60,7 @@
                 </h2>
             </div>
             <div class="row">
-                <mavon-editor v-model="input" :markInstance="inputInstance"></mavon-editor>
+                <mavon-editor :markInstance="inputInstance" v-model="input"></mavon-editor>
             </div>
             <br>
             <div class="row">
@@ -68,7 +69,7 @@
                 </h2>
             </div>
             <div class="row">
-                <mavon-editor v-model="output" :markInstance="outputInstance"></mavon-editor>
+                <mavon-editor :markInstance="outputInstance" v-model="output"></mavon-editor>
             </div>
             <br>
             <div class="row">
@@ -100,7 +101,7 @@
                 <h2 class="ui header">Files</h2>
             </div>
             <div class="row">
-                <a :key="file_name" class="ui label" v-for="file_name in files" :href="makeHref(file_name)">{{file_name}}</a>
+                <a :href="makeHref(file_name)" :key="file_name" class="ui label" v-for="file_name in files">{{file_name}}</a>
             </div>
             <div class="row">
                 <h2 class="ui header">
@@ -109,27 +110,42 @@
             </div>
             <div class="row">
                 <div class="four wide column">
-                    <div class="ui attached vertical fluid pointing menu" style="height: 370px; overflow-y: scroll; overflow-x: hidden;">
+                    <div class="ui attached vertical fluid pointing menu"
+                         style="height: 370px; overflow-y: scroll; overflow-x: hidden;">
                         <a class="item">C
-                            <div class="ui right floated" style="opacity: 0.4; margin-top: 8px; font-size: 0.7em; ">GNU C99/C11 LLVM Clang</div>
+                            <div class="ui right floated" style="opacity: 0.4; margin-top: 8px; font-size: 0.7em; ">GNU
+                                C99/C11 LLVM Clang
+                            </div>
                         </a>
                         <a class="item">C++
-                            <div class="ui right floated" style="opacity: 0.4; margin-top: 8px; font-size: 0.7em; ">GNU C++11/C++89/C++17 LLVM Clang++</div>
+                            <div class="ui right floated" style="opacity: 0.4; margin-top: 8px; font-size: 0.7em; ">GNU
+                                C++11/C++89/C++17 LLVM Clang++
+                            </div>
                         </a>
                         <a class="item">Pascal
-                            <div class="ui right floated" style="opacity: 0.4; margin-top: 8px; font-size: 0.7em; ">fpc Pascal</div>
+                            <div class="ui right floated" style="opacity: 0.4; margin-top: 8px; font-size: 0.7em; ">fpc
+                                Pascal
+                            </div>
                         </a>
                         <a class="item">Java
-                            <div class="ui right floated" style="opacity: 0.4; margin-top: 8px; font-size: 0.7em; ">openJDK 1.6/1.7/1.8/1.10</div>
+                            <div class="ui right floated" style="opacity: 0.4; margin-top: 8px; font-size: 0.7em; ">
+                                openJDK 1.6/1.7/1.8/1.10
+                            </div>
                         </a>
                         <a class="item">JavaScript
-                            <div class="ui right floated" style="opacity: 0.4; margin-top: 8px; font-size: 0.7em; ">NodeJS 10.13.0</div>
+                            <div class="ui right floated" style="opacity: 0.4; margin-top: 8px; font-size: 0.7em; ">
+                                NodeJS 10.13.0
+                            </div>
                         </a>
                         <a class="item">Python
-                            <div class="ui right floated" style="opacity: 0.4; margin-top: 8px; font-size: 0.7em; ">Python 2.7/3.6 PyPy2/3</div>
+                            <div class="ui right floated" style="opacity: 0.4; margin-top: 8px; font-size: 0.7em; ">
+                                Python 2.7/3.6 PyPy2/3
+                            </div>
                         </a>
                         <a class="item">C#
-                            <div class="ui right floated" style="opacity: 0.4; margin-top: 8px; font-size: 0.7em; ">Mono</div>
+                            <div class="ui right floated" style="opacity: 0.4; margin-top: 8px; font-size: 0.7em; ">
+                                Mono
+                            </div>
                         </a>
                     </div>
                 </div>
@@ -142,89 +158,126 @@
             </div>
             <div class="row">
                 <div class="four wide column">
-                    <div class="ui attached vertical fluid pointing menu" style="height: 370px; overflow-y: scroll; overflow-x: hidden;">
+                    <div class="ui attached vertical fluid pointing menu"
+                         style="height: 370px; overflow-y: scroll; overflow-x: hidden;">
                         <a class="item">C
-                            <div class="ui right floated" style="opacity: 0.4; margin-top: 8px; font-size: 0.7em; ">GNU C99/C11 LLVM Clang</div>
+                            <div class="ui right floated" style="opacity: 0.4; margin-top: 8px; font-size: 0.7em; ">GNU
+                                C99/C11 LLVM Clang
+                            </div>
                         </a>
                         <a class="item">C++
-                            <div class="ui right floated" style="opacity: 0.4; margin-top: 8px; font-size: 0.7em; ">GNU C++11/C++89/C++17 LLVM Clang++</div>
+                            <div class="ui right floated" style="opacity: 0.4; margin-top: 8px; font-size: 0.7em; ">GNU
+                                C++11/C++89/C++17 LLVM Clang++
+                            </div>
                         </a>
                         <a class="item">Pascal
-                            <div class="ui right floated" style="opacity: 0.4; margin-top: 8px; font-size: 0.7em; ">fpc Pascal</div>
+                            <div class="ui right floated" style="opacity: 0.4; margin-top: 8px; font-size: 0.7em; ">fpc
+                                Pascal
+                            </div>
                         </a>
                         <a class="item">Java
-                            <div class="ui right floated" style="opacity: 0.4; margin-top: 8px; font-size: 0.7em; ">openJDK 1.6/1.7/1.8/1.10</div>
+                            <div class="ui right floated" style="opacity: 0.4; margin-top: 8px; font-size: 0.7em; ">
+                                openJDK 1.6/1.7/1.8/1.10
+                            </div>
                         </a>
                         <a class="item">JavaScript
-                            <div class="ui right floated" style="opacity: 0.4; margin-top: 8px; font-size: 0.7em; ">NodeJS 10.13.0</div>
+                            <div class="ui right floated" style="opacity: 0.4; margin-top: 8px; font-size: 0.7em; ">
+                                NodeJS 10.13.0
+                            </div>
                         </a>
                         <a class="item">Python
-                            <div class="ui right floated" style="opacity: 0.4; margin-top: 8px; font-size: 0.7em; ">Python 2.7/3.6 PyPy2/3</div>
+                            <div class="ui right floated" style="opacity: 0.4; margin-top: 8px; font-size: 0.7em; ">
+                                Python 2.7/3.6 PyPy2/3
+                            </div>
                         </a>
                         <a class="item">C#
-                            <div class="ui right floated" style="opacity: 0.4; margin-top: 8px; font-size: 0.7em; ">Mono</div>
+                            <div class="ui right floated" style="opacity: 0.4; margin-top: 8px; font-size: 0.7em; ">
+                                Mono
+                            </div>
                         </a>
                     </div>
                 </div>
                 <div class="ten wide column"></div>
             </div>
-            <div class="row"  v-if="from === 'local'">
+            <div class="row" v-if="from === 'local'">
                 <h2 class="ui header">
                     Hint
                 </h2>
             </div>
             <div class="row" v-if="from === 'local'">
-                <mavon-editor v-model="hint" :markInstance="hintInstance" :test="'1'"></mavon-editor>
+                <mavon-editor :markInstance="hintInstance" :test="'1'" v-model="hint"></mavon-editor>
             </div>
-            <a class="ui button" @click="submit">提交</a>
+            <a @click="submit" class="ui button">提交</a>
         </div>
 
     </div>
 </template>
 
-<script>
+<script lang="ts">
 import mixins from "../../mixin/init";
 import markdownIt from "../../lib/markdownIt/markdownIt";
-const $ = require("jquery");
-const _ = require("lodash");
-window.$ = window.jQuery = $;
-export default {
-    name: "edit",
-    mixins: [mixins],
-    data: function () {
-        const d = {};
-        return {
-            title: "",
-            description: "",
-            time: "",
-            memory: "",
-            input: "",
-            output: "",
-            spj: false,
-            sampleinput: d.sample_input,
-            sampleoutput: d.sample_output,
-            descriptionInstance: markdownIt.newInstance(),
-            inputInstance: markdownIt.newInstance(),
-            outputInstance: markdownIt.newInstance(),
-            hintInstance: markdownIt.newInstance(),
-            hint: d.hint,
-            source: "",
-            from: "local",
-            label: d.label ? d.label.split(" ") : [],
-            all_label: [],
-            files: [],
-            id: this.$route.params.problem_id,
-            select: $
+import { Component, Mixins } from "vue-property-decorator";
+import jquery from "jquery";
+import * as _ from "lodash";
+
+const $: any = jquery;
+
+interface ICodeSet {
+    [id: string]: string
+}
+
+function unique (array: any[]) {
+    return array.filter(function (item, index, array) {
+        return array.indexOf(item) === index;
+    });
+}
+
+@Component
+export default class ProblemEdit extends Mixins(mixins) {
+        title = "";
+        description = "";
+        time = "";
+        memory = "";
+        input = "";
+        output = "";
+        spj = false;
+        sampleinput = undefined;
+        sampleoutput = undefined;
+        descriptionInstance = markdownIt.newInstance();
+        inputInstance = markdownIt.newInstance();
+        outputInstance = markdownIt.newInstance();
+        hintInstance = markdownIt.newInstance();
+        hint = undefined;
+        source = "";
+        from = "local";
+        label = [];
+        all_label = [];
+        prepend: ICodeSet = {
         };
-    },
-    methods: {
-        makeHref (fileName) {
+        append: ICodeSet = {
+        };
+        files = [];
+        id = "0";
+        select = $;
+        $children: any;
+
+        created () {
+            this.id = this.$route.params.problem_id;
+        }
+
+        mounted () {
+            document.title = `Problem ${this.id} Edit -- ${document.title}`;
+            this.initData();
+        }
+
+        makeHref (fileName: string) {
             return `/api/admin/problem/download/data/${this.id}/${fileName}`;
-        },
-        submit: function () {
+        }
+
+        submit () {
             let from = "local";
             const id = this.id;
-            const sendObj = { imageData: {} };
+            const sendObj: any = { imageData: {} };
             for (const i of this.$children) {
                 const target = i.$vnode.data.model;
                 sendObj[target.expression] = target.value;
@@ -236,13 +289,10 @@ export default {
             sendObj["title"] = this.title;
             sendObj["sampleinput"] = this.sampleinput;
             sendObj["sampleoutput"] = this.sampleoutput;
+            sendObj["prepend"] = this.prepend;
+            sendObj["append"] = this.append;
             sendObj["spj"] = Number(this.spj);
             const labels = this.label;
-            function unique (array) {
-                return array.filter(function (item, index, array) {
-                    return array.indexOf(item) === index;
-                });
-            }
 
             sendObj["label"] = unique(labels).join(" ");
             this.axios.post(`/api/problem/${this.source}/${id}`, { json: sendObj })
@@ -252,8 +302,9 @@ export default {
                         alert("提交成功");
                     }
                 });
-        },
-        imageHandler: function (key, data) {
+        }
+
+        imageHandler (key: number | string, data: any) {
             let mx = -1;
             const that = this;
             _.forEach(data.data, function (val, idx) {
@@ -262,8 +313,9 @@ export default {
             });
             this.$children[key].$children[0].num = mx + 1;
             this.$children[key].iRender();
-        },
-        initData: function () {
+        }
+
+        initData () {
             const that = this;
             const id = this.id;
             this.axios.get("/api/problem/local", { params: { id: this.id, raw: "" } })
@@ -313,8 +365,9 @@ export default {
                             }
                         });
                 });
-        },
-        initMarkdown (path, id, code) {
+        }
+
+        initMarkdown (path: string, id: string, code: number | string) {
             this.axios.get(`/api/photo/${path}/${id}`)
                 .then(({ data }) => {
                     if (data.status === "OK") {
@@ -322,12 +375,7 @@ export default {
                     }
                 });
         }
-    },
-    mounted: function () {
-        document.title = `Problem ${this.id} Edit -- ${document.title}`;
-        this.initData();
-    }
-};
+}
 </script>
 
 <style scoped>

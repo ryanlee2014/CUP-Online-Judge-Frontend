@@ -196,5 +196,6 @@
   "cupacm docs": "Document Library",
   "export": "Export Excel",
   "export problem": "Export Problem by Label",
-  "global setting": "Global Setting"
+  "global setting": "Global Setting",
+  "version control": "Version Control"
 }

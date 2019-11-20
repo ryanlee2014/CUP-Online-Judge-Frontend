@@ -196,5 +196,6 @@
   "cupacm docs": "ドキュメントライブラリー",
   "export": "エクスポートリスト",
   "export problem": "問題エクスポート",
-  "global setting": "システム設置"
+  "global setting": "システム設置",
+  "version control": "システムコントロール"
 }
