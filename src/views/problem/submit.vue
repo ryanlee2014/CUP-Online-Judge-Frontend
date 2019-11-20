@@ -540,7 +540,7 @@ export default {
                 })
                 .modal("show");
         },
-        test_run: function () {
+        test_run () {
             const that = this;
             $("#out").html("样例输出为:\n" + this.sampleoutput);
             if (that.test_run_sampleinput && that.test_run_sampleinput.length > 1000) {

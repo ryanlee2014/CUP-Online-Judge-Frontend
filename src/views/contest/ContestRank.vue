@@ -2,7 +2,7 @@
     <ErrorView :errormsg="errormsg" v-if="!state"></ErrorView>
     <div class="contestrank scoreboard padding" v-else>
         <h2 class="ui dividing header">
-            {{total === -1?"计算中,请稍后":"Contest Rank"}}
+            {{total === -1 || !finished ?"计算中,请稍后":"Contest Rank"}}
             <div class="sub header">
                 {{title}}
             </div>
@@ -158,6 +158,7 @@ export default {
             total: -1,
             start_time: dayjs(),
             title: "",
+            finished: false,
             users: [],
             add_name: false,
             auto_update: true,
@@ -532,9 +533,8 @@ export default {
             let cnt = 0;
             let dataSet = [];
             let users = new Set();
-            let finished = false;
 
-            function work () {
+            const work = () => {
                 cid = cidArr.shift();
                 this.axios.get(`/api/scoreboard/${cid}`)
                     .then(() => {
@@ -575,14 +575,14 @@ export default {
                                     work();
                                 }
                                 else {
-                                    finished = true;
-                                    that.total = cnt;
-                                    that.users = Array.from(users);
-                                    that.scoreboard = dataSet;
+                                    this.finished = true;
                                 }
+                                that.total = cnt;
+                                that.users = Array.from(users);
+                                that.scoreboard = dataSet;
                             });
                     });
-            }
+            };
 
             if (cidArr.length > 1) {
                 that.title = cidArr.join(",");
@@ -608,7 +608,7 @@ export default {
                                     }
                                     return;
                                 }
-                                finished = true;
+                                this.finished = true;
                                 that.total = data.total;
                                 that.users = data.users;
                                 that.start_time = window.start_time = dayjs(data.start_time);
