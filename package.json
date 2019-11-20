@@ -1,6 +1,6 @@
 {
   "name": "CUP-Online-Judge-NG-Frontend",
-  "version": "1.0.11-hotfix-3",
+  "version": "1.0.11-hotfix-4",
   "private": false,
   "repository": {
     "type": "git",
@@ -17,9 +17,9 @@
     "ui": "vue ui"
   },
   "dependencies": {
-    "@amcharts/amcharts4": "^4.7.8",
+    "@amcharts/amcharts4": "^4.7.10",
     "@antv/data-set": "^0.10.2",
-    "@antv/g2": "^3.5.9",
+    "@antv/g2": "^3.5.10",
     "@ryanlee2014/markdown-it-katex": "^1.0.4",
     "@ryanlee2014/mavon-editor": "^1.0.2",
     "@types/mermaid": "^8.2.1",
@@ -30,15 +30,15 @@
     "bluebird": "^3.7.1",
     "brace": "^0.11.1",
     "browser-update": "^3.3.8",
-    "chart.js": "^2.9.2",
+    "chart.js": "^2.9.3",
     "clipboard": "^2.0.4",
     "core-js": "^3.4.1",
-    "d3": "^5.12.0",
+    "d3": "^5.14.1",
     "dayjs": "^1.8.17",
     "dragscroll": "0.0.8",
     "file-saver": "^2.0.2",
     "fingerprintjs2": "^2.1.0",
-    "fomantic-ui": "^2.7.8",
+    "fomantic-ui": "^2.8.2",
     "github-markdown-css": "^3.0.1",
     "highlight.js": "^9.16.2",
     "highlight.js-async-webpack": "^1.0.4",
@@ -84,16 +84,16 @@
     "vue-worker": "^1.2.1",
     "vuex": "^3.1.2",
     "webpack-bundle-analyzer": "latest",
-    "xlsx": "^0.15.1"
+    "xlsx": "^0.15.2"
   },
   "devDependencies": {
     "@cnamts/vue-cli-plugin-proxy": "^2.2.1",
     "@kazupon/vue-i18n-loader": "^0.4.1",
     "@types/animejs": "^3.1.0",
-    "@types/chart.js": "^2.9.0",
+    "@types/chart.js": "^2.9.2",
     "@types/d3": "^5.7.2",
     "@types/jquery": "^3.3.31",
-    "@types/lodash": "^4.14.147",
+    "@types/lodash": "^4.14.149",
     "@vue/cli": "^4.0.5",
     "@vue/cli-plugin-babel": "^4.0.5",
     "@vue/cli-plugin-eslint": "^4.0.5",
