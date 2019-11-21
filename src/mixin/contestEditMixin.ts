@@ -1,14 +1,18 @@
 import Vue from "vue";
 import _ from "lodash";
+import { Component } from "vue-property-decorator";
+@Component
 export default class ContestEditMixin extends Vue {
-    contest_id = this.$route.params.contest_id;
+    contest_id = "0";
     data = {};
     userListText = "";
     problemSelected = "";
     mounted () {
         this.initData();
     }
-
+    created () {
+        this.contest_id = this.$route.params.contest_id;
+    }
     initData () {
         this.axios.get(`/api/admin/contest/edit/${this.contest_id}`)
             .then(({ data }) => {
