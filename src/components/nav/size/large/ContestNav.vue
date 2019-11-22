@@ -67,50 +67,40 @@
         }
     }
 </i18n>
-<script>
-import SocketMenu from "../../components/SocketMenu";
+<script lang="ts">
+import SocketMenu from "../../components/SocketMenu.vue";
 import { mapGetters } from "vuex";
+import { Component, Prop } from "vue-property-decorator";
+import Vue from "vue";
 
-export default {
-    name: "ContestNav",
+@Component({
     components: {
-        SocketMenu
+        SocketMenu: SocketMenu
     },
     computed: {
-        hasPrivilege () {
-            const contestId = this.contest_id;
-            return !!(this.contest_maker[`m${contestId}`] || this.contest_manager || this.admin);
-        },
         ...mapGetters(["contest_maker", "contest_manager", "admin"])
-    },
-    props: {
-        nick: {
-            type: String,
-            default: ""
-        },
-        logined: {
-            type: Boolean,
-            default: false
-        },
-        user: {
-            type: Number,
-            default: 0
-        },
-        judger: {
-            type: Number,
-            default: 0
-        },
-        connected: {
-            type: Boolean,
-            default: false
-        }
-    },
-    data () {
-        return {
-            contest_id: this.$route.params.contest_id
-        };
     }
-};
+})
+export default class ContestNav extends Vue {
+    get hasPrivilege () {
+        const contestId = this.contest_id;
+        return !!(this.contest_maker[`m${contestId}`] || this.contest_manager || this.admin);
+    }
+
+    contest_maker: any;
+    contest_manager: any;
+    admin: any;
+
+    @Prop({ default: "" }) nick!: string;
+    @Prop({ default: false }) logined!: boolean;
+    @Prop({ default: 0 }) user!:number;
+    @Prop({ default: 0 }) judger!: number;
+    @Prop({ default: false }) connected!: boolean;
+    contest_id = "";
+    created () {
+        this.contest_id = this.$route.params.contest_id;
+    }
+}
 </script>
 
 <style scoped>

@@ -39,30 +39,27 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 import mixins from "../../mixin/init";
+import { Mixins, Component } from "vue-property-decorator";
+import jquery from "jquery";
+const $: any = jquery;
+@Component
+export default class DiscussAdd extends Mixins(mixins) {
+    content = "";
+    title = "";
+    captcha = "";
 
-const $ = require("jquery");
-export default {
-    name: "add",
-    mixins: [mixins],
-    data: function () {
-        return {
-            content: "",
-            title: "",
-            captcha: ""
+    create_post () {
+        const that = this;
+        const send = {
+            title: this.title,
+            content: this.content,
+            captcha: this.captcha
         };
-    },
-    methods: {
-        create_post: function () {
-            const that = this;
-            const send = {
-                title: this.title,
-                content: this.content,
-                captcha: this.captcha
-            };
-            $.post("/api/discuss/newpost", send, function (data) {
-                if (data.status == "OK") {
+        this.axios.post("/api/discuss/newpost", send)
+            .then(({ data }) => {
+                if (data.status === "OK") {
                     alert("添加成功!");
                     that.$router.push({
                         path: "/discuss"
@@ -72,12 +69,11 @@ export default {
                     alert("服务器遇到错误\n" + data.statement);
                 }
             });
-        }
-    },
+    }
     mounted () {
         document.title = `Add Thread -- ${document.title}`;
     }
-};
+}
 </script>
 
 <style scoped>

@@ -42,48 +42,45 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 import mixins from "../../../mixin/init";
-const idType = {
+import { Component, Mixins } from "vue-property-decorator";
+interface IType {
+    [id: string]: string
+}
+const idType: IType = {
     1: "solution_id",
     2: "contest_id",
     3: "problem_id"
 };
 
-const postType = {
+const postType: IType = {
     1: "solution",
     2: "contest",
     3: "problem"
 };
 
-export default {
-    name: "rejudge",
-    mixins: [mixins],
-    data () {
-        return {
-            rejudgeType: 1,
-            id: 0
-        };
-    },
-    methods: {
-        makeSendData () {
-            const data = {};
-            data[idType[this.rejudgeType]] = this.id;
-            return data;
-        },
-        rejudge () {
-            this.axios.post(`/api/admin/problem/rejudge/${postType[this.rejudgeType]}`, this.makeSendData())
-                .then(({ data }) => {
-                    if (data.status === "OK") {
-                        alert(this.$t("success"));
-                    }
-                    else {
-                        alert(data.statement);
-                    }
-                });
-        }
+@Component
+export default class Rejudge extends Mixins(mixins) {
+    rejudgeType: number = 1;
+    id = 0;
+    makeSendData () {
+        const data: any = {};
+        data[idType[this.rejudgeType]] = this.id;
+        return data;
     }
-};
+    rejudge () {
+        this.axios.post(`/api/admin/problem/rejudge/${postType[this.rejudgeType]}`, this.makeSendData())
+            .then(({ data }) => {
+                if (data.status === "OK") {
+                    alert(this.$t("success"));
+                }
+                else {
+                    alert(data.statement);
+                }
+            });
+    }
+}
 </script>
 
 <style scoped>

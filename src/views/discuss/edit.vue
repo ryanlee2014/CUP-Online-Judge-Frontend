@@ -38,77 +38,76 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 import mixins from "../../mixin/init";
+import jquery from "jquery";
+import { Mixins, Component } from "vue-property-decorator";
+const $: any = jquery;
 
-const $ = require("jquery");
-export default {
-    name: "edit",
-    mixins: [mixins],
-    data: function () {
-        return {
-            content: "",
-            title: "",
-            captcha: "",
-            reply: !!this.$route.params.comment_id,
-            article_id: this.$route.params.article_id,
-            comment_id: this.$route.params.comment_id
-        };
-    },
-    mounted: function () {
+@Component
+export default class DiscussEdit extends Mixins(mixins) {
+    content = "";
+    title = "";
+    captcha = "";
+    reply = false;
+    article_id = "";
+    comment_id = "";
+    created () {
+        this.reply = !!this.$route.params.comment_id;
+        this.article_id = this.$route.params.article_id;
+        this.comment_id = this.$route.params.comment_id;
+    }
+    mounted () {
         document.title = `Edit Thread -- ${document.title}`;
         const isMainContent = !this.reply;
         const that = this;
         if (isMainContent) {
-            $.get("/api/discuss/update/main/" + this.article_id, function (data) {
-                that.content = data.data.content;
-                that.title = data.data.title;
+            this.axios.get(`/api/discuss/update/main/${this.article_id}`)
+                .then(({ data }) => {
+                    this.content = data.data.content;
+                    this.title = data.data.title;
+                });
+        }
+        else {
+            this.axios.get(`/api/discuss/update/reply/${this.article_id}/${this.comment_id}`)
+                .then(({ data }) => {
+                    this.content = data.data.content;
+                });
+        }
+    }
+
+    editPostCallback (data: any) {
+        if (data.status === "OK") {
+            alert("更改成功");
+            this.$router.push({
+                path: `/discuss/thread/${this.article_id}`
             });
         }
         else {
-            $.get("/api/discuss/update/reply/" + this.article_id + "/" + this.comment_id, function (data) {
-                that.content = data.data.content;
-            });
-        }
-    },
-    methods: {
-        edit_post: function () {
-            const send = {
-                title: this.title,
-                content: this.content,
-                captcha: this.captcha
-            };
-            const isMainContent = !this.reply;
-            const that = this;
-            if (isMainContent) {
-                $.post("/api/discuss/update/main/" + this.article_id, send, function (data) {
-                    if (data.status === "OK") {
-                        alert("更改成功");
-                        that.$router.push({
-                            path: `/discuss/thread/${that.article_id}`
-                        });
-                    }
-                    else {
-                        alert("Error!\n" + data.statement);
-                    }
-                });
-            }
-            else {
-                $.post("/api/discuss/update/reply/" + this.article_id + "/" + this.comment_id, send, function (data) {
-                    if (data.status === "OK") {
-                        alert("更改成功");
-                        that.$router.push({
-                            path: `/discuss/thread/${that.article_id}`
-                        });
-                    }
-                    else {
-                        alert("Error!\n" + data.statement);
-                    }
-                });
-            }
+            alert("Error!\n" + data.statement);
         }
     }
-};
+
+    get editUrl () {
+        const isMainContent = !this.reply;
+        if (isMainContent) {
+            return `/api/discuss/update/main/${this.article_id}`;
+        }
+        else {
+            return `/api/discuss/update/reply/${this.article_id}/${this.comment_id}`;
+        }
+    }
+
+    edit_post () {
+        this.axios.post(this.editUrl, {
+            title: this.title,
+            content: this.content,
+            captcha: this.captcha
+        }).then(({ data }) => {
+            this.editPostCallback(data);
+        });
+    }
+}
 </script>
 
 <style scoped>
