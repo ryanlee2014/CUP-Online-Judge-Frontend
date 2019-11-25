@@ -2,11 +2,14 @@ import store from "../../store";
 import Vue from "vue";
 import MiddlewareAdapter from "./middlewareAdapter";
 import platfrom from "../middleware/environmentCollector";
+import { NavigationGuard, Route } from "vue-router/types/router";
 function getSelfInfo () {
     return Vue.axios.get("/api/user/self");
 }
 
-function checkAdmin (to, admin, next) {
+type NextFunction = (...arg: any[]) => any;
+
+function checkAdmin (to: Route, admin: boolean, next: NextFunction) {
     const meta = to.meta;
     if (meta.admin && admin) {
         next();
@@ -31,7 +34,7 @@ function checkAdmin (to, admin, next) {
                 if (!Object.prototype.hasOwnProperty.call(meta, key)) {
                     continue;
                 }
-                needPrivilege = !!(needPrivilege || key !== "auth");
+                needPrivilege = (needPrivilege || key !== "auth");
 
                 if (meta[key] && store.getters[key]) {
                     needPrivilege = false;
@@ -53,7 +56,7 @@ function checkAdmin (to, admin, next) {
     }
 }
 
-function getLoginInfo (to, next) {
+function getLoginInfo (to: Route, next: NextFunction) {
     getSelfInfo().then(response => {
         if (response.data.data && response.data.data.user_id) {
             store.commit("loginMutate", { login: true });
@@ -72,14 +75,13 @@ function getLoginInfo (to, next) {
     });
 }
 
-const Guard = function (to, from, next) {
+const Guard = function (to: Route, from: Route, next: NextFunction) {
     const middlewareAdapter = new MiddlewareAdapter();
     middlewareAdapter.setFrom(from);
     middlewareAdapter.setTo(to);
     middlewareAdapter.setNext(next);
     middlewareAdapter.add(platfrom);
     next = middlewareAdapter.getNextFn();
-    this.addMiddleware = middlewareAdapter.add;
     if (to.meta.auth) {
         if (store.getters.logined) {
             checkAdmin(to, store.getters.admin, next);
@@ -107,6 +109,8 @@ const Guard = function (to, from, next) {
     }
 };
 
-export default function (to, from, next) {
-    return new Guard(to, from, next);
-}
+const navigationGuard: NavigationGuard = function (to, from, next) {
+    return Guard(to, from, next);
+};
+
+export default navigationGuard;

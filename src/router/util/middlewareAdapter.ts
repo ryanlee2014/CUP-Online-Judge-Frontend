@@ -21,12 +21,11 @@ export default class MiddlewareAdapter {
         }
     }
 
-    getNextFn (config: any) {
-        return () => this.next(config);
+    getNextFn () {
+        return (config: any) => this.next(config);
     }
 
     next (config: any) {
-        console.log("this", this);
         const _next = this._next;
         const _middlewares = this._middlewares;
         const _to = this._to;
@@ -53,7 +52,7 @@ export default class MiddlewareAdapter {
         this._from = config;
     }
 
-    add () {
+    add (...argument:any[]) {
         for (let i of arguments) {
             if (typeof i !== "function") {
                 throw argumentNotFunctionError;
