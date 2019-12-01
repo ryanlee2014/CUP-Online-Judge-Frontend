@@ -5614,7 +5614,7 @@
                     }, hr.curryRight = function t(e, n, r) {
                         var i = Ma(e, x, a, a, a, a, a, n = r ? a : n);
                         return i.placeholder = t.placeholder, i
-                    }, hr.debounce = is, hr.defaults = Zs, hr.defaultsDeep = Xs, hr.defer = as, hr.delay = os, hr.difference = ho, hr.differenceBy = po, hr.differenceWith = mo, hr.drop = function (t, e, n) {
+                    }, hr.methodDecorator = is, hr.defaults = Zs, hr.defaultsDeep = Xs, hr.defer = as, hr.delay = os, hr.difference = ho, hr.differenceBy = po, hr.differenceWith = mo, hr.drop = function (t, e, n) {
                         var r = null == t ? 0 : t.length;
                         return r ? Si(t, (e = n || e === a ? 1 : Rs(e)) < 0 ? 0 : e, r) : []
                     }, hr.dropRight = function (t, e, n) {

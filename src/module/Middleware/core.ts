@@ -24,7 +24,7 @@ class Middleware {
         }
     }
 
-    commit (options: any) {
+    commit (options?: any) {
         this.middlewares = this.cache.map(el => el);
         this.options = options;
         this.next();

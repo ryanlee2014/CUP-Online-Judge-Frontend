@@ -27,16 +27,20 @@
 
             </div>
         </div>
-        <ace-static :content="current_prepend" :fontSize="fontSize + ''" :selected_language="selected_language" :static_theme="static_theme" v-if="!editorPackage && prepend"></ace-static>
-        <monaco-static :content="current_prepend" :fontSize="fontSize + ''" :selected_language="selected_language" :static_theme="static_theme" v-if="editorPackage && prepend"></monaco-static>
+        <ace-static :content="current_prepend" :fontSize="fontSize + ''" :selected_language="selected_language"
+                    :static_theme="static_theme" v-if="!editorPackage && prepend"></ace-static>
+        <monaco-static :content="current_prepend" :fontSize="fontSize + ''" :selected_language="selected_language"
+                       :static_theme="static_theme" v-if="editorPackage && prepend"></monaco-static>
         <ace-editor :fontSize="fontSize + ''" :selected_language="selected_language" :theme="theme"
                     v-if="!editorPackage" v-model="code"></ace-editor>
         <monaco-editor :fontSize="fontSize + ''" :selected_language="selected_language" :theme="theme"
                        v-else v-model="code">
 
         </monaco-editor>
-        <ace-static :content="current_append" :fontSize="fontSize + ''" :selected_language="selected_language" :static_theme="static_theme" v-if="!editorPackage && append"></ace-static>
-        <monaco-static :content="current_append" :fontSize="fontSize + ''" :selected_language="selected_language" :static_theme="static_theme" v-if="editorPackage && append"></monaco-static>
+        <ace-static :content="current_append" :fontSize="fontSize + ''" :selected_language="selected_language"
+                    :static_theme="static_theme" v-if="!editorPackage && append"></ace-static>
+        <monaco-static :content="current_append" :fontSize="fontSize + ''" :selected_language="selected_language"
+                       :static_theme="static_theme" v-if="editorPackage && append"></monaco-static>
         <div class="ui menu borderless" id="statusBar" style="margin: 0;
         padding: 0;
         position: relative;
@@ -90,115 +94,93 @@
     </div>
 </template>
 <i18n src="../../../locales/rightPanel.json"></i18n>
-<script>
-import aceEditor from "../../../components/submit/codeEditor/aceEditor";
-import aceThemeSelector from "../../../components/submit/codeEditor/aceComponent/aceThemeSelector";
-import aceStatic from "../../../components/submit/codeEditor/aceComponent/aceStatic";
-import monacoEditor from "../../../components/submit/codeEditor/monacoEditor";
-import monacoThemeSelector from "../../../components/submit/codeEditor/monacoComponent/monacoThemeSelector";
-import monacoStatic from "../../../components/submit/codeEditor/monacoComponent/monacoStatic";
-import envConfig from "../../../../config/environment";
-const ace = require("brace");
-const Clipboard = require("clipboard");
+<script lang="ts">
+import aceEditor from "../../../components/submit/codeEditor/aceEditor.vue";
+import aceThemeSelector from "../../../components/submit/codeEditor/aceComponent/aceThemeSelector.vue";
+import aceStatic from "../../../components/submit/codeEditor/aceComponent/aceStatic.vue";
+import monacoEditor from "../../../components/submit/codeEditor/monacoEditor.vue";
+import monacoThemeSelector from "../../../components/submit/codeEditor/monacoComponent/monacoThemeSelector.vue";
+import monacoStatic from "../../../components/submit/codeEditor/monacoComponent/monacoStatic.vue";
+import envConfig from "../../../../config/environment.json";
+import Clipboard from "clipboard";
+import jquery from "jquery";
+import "@/lib/brace/braceMode";
+import "@/lib/brace/braceTheme";
+import { Prop, Watch, Component } from "vue-property-decorator";
+import Vue from "vue";
+import { methodDecorator } from "@/lib/decorator/method-decorator";
+
+const $: any = jquery;
 const detectLang = require("../../../lib/langDetector");
-const _ = require("lodash");
-const $ = require("jquery");
-window.ace = ace;
-require("../../../lib/brace/braceMode");
-require("../../../lib/brace/braceTheme");
-const language = ["c_cpp", "c_cpp", "pascal", "java", "ruby", "bash", "python", "php", "perl", "csharp", "objectivec", "text", "scheme", "c_cpp", "c_cpp", "lua", "javascript", "go", "python", "c_cpp", "c_cpp", "c_cpp", "text", "java", "java", "python", "python", "java", "c_cpp", "c_cpp"];
 const language_ext = ["c", "cc", "pas", "java", "rb", "sh", "py", "php", "pl", "cs", "m", "bas", "scm", "c", "cc", "lua", "js", "go", "py", "cpp", "cpp", "c", "kt", "java", "java", "python", "python", "java", "c", "cc"];
-export default {
-    name: "rightPanel",
-    components: {
-        aceEditor,
-        aceThemeSelector,
-        monacoEditor,
-        monacoThemeSelector,
-        aceStatic,
-        monacoStatic
-    },
-    data () {
-        let _baseData = {
-            selected_language: 0,
-            auto_detect: false,
-            share: false,
-            fontSize: "16",
-            theme: "ace/theme/monokai",
-            static_theme: "ace/theme/monokai",
-            prependView: null,
-            config: {},
-            appendView: null,
-            editorPackage: false,
-            code: "",
-            language,
-            title: envConfig.title,
-            current_prepend: "",
-            current_append: "",
-            dirty: false
-        };
-        const config = this.initConfig();
-        Object.assign(_baseData, config);
-        Object.assign(_baseData.config, config);
-        return _baseData;
-    },
-    props: {
-        prepend: {
-            type: Object,
-            default: () => {
-                return {};
-            }
-        },
-        append: {
-            type: Object,
-            default: () => {
-                return {};
-            }
-        },
-        iscontest: {
-            type: Boolean,
-            default: false
-        },
-        lang_list: {
-            type: Array,
-            default: () => []
-        },
-        language_template: {
-            type: Array,
-            default: () => []
-        },
-        do_submit: {
-            type: Function,
-            default: () => {
-            }
-        },
-        pre_test_run: {
-            type: Function,
-            default: () => {
-            }
-        },
-        submitDisabled: {
-            type: Boolean,
-            default: false
-        },
-        hide_warning: {
-            type: Boolean,
-            default: false
-        },
-        source_code: {
-            type: String,
-            default: ""
+    @Component({
+        components: {
+            aceEditor,
+            aceThemeSelector,
+            monacoEditor,
+            monacoThemeSelector,
+            aceStatic,
+            monacoStatic
         }
-    },
-    watch: {
-        selected_language: function (val) {
+    })
+export default class RightPanel extends Vue {
+        selected_language = 0;
+        auto_detect = false;
+        share = false;
+        fontSize = "16";
+        theme = "ace/theme/monokai";
+        static_theme = "ace/theme/monokai";
+        prependView: any = null;
+        config: any = {};
+        appendView: any = null;
+        editorPackage = false;
+        code = "";
+        language = ["c_cpp", "c_cpp", "pascal", "java", "ruby", "bash", "python", "php", "perl", "csharp", "objectivec", "text", "scheme", "c_cpp", "c_cpp", "lua", "javascript", "go", "python", "c_cpp", "c_cpp", "c_cpp", "text", "java", "java", "python", "python", "java", "c_cpp", "c_cpp"];
+        title = envConfig.title;
+        current_prepend = "";
+        current_append = "";
+        dirty = false;
+
+        created () {
+            const config = this.initConfig();
+            Object.assign(this, config);
+            Object.assign(this.config, config);
+        }
+
+        @Prop({
+            default: () => {
+                return {};
+            }
+        }) prepend!: any;
+        @Prop({
+            default: () => {
+                return {};
+            }
+        }) append!: any;
+        @Prop({ default: false }) iscontest!: boolean;
+        @Prop({ default: () => [] }) lang_list!: any[];
+        @Prop({ default: () => [] }) language_template!: any[];
+        @Prop({
+            default: () => {
+            }
+        }) do_submit!: (...arg: any[]) => any;
+        @Prop({
+            default: () => {
+            }
+        }) pre_test_run!: (...arg: any[]) => any;
+        @Prop({ default: false }) submitDisabled!: boolean;
+        @Prop({ default: false }) hide_warning!: boolean;
+        @Prop({ default: "" }) source_code!: string;
+
+        @Watch("selected_language")
+        onSelectedLanguageChanged (val: any) {
             this.$store.commit("setCodeInfo", {
                 language: val
             });
-            require(`brace/mode/${language[val]}`);
+            require(`brace/mode/${this.language[val]}`);
             $("#language").dropdown("set selected", val.toString());
-            let prepend = this.prepend;
-            let append = this.append;
+            let prepend: any = this.prepend;
+            let append: any = this.append;
             if (prepend && prepend[val] !== this.current_prepend) {
                 this.current_prepend = prepend[val];
                 if (this.prependView) {
@@ -211,8 +193,10 @@ export default {
                     this.appendView.getSession().setValue(this.current_append);
                 }
             }
-        },
-        editorPackage (val, oldVal) {
+        }
+
+        @Watch("editorPackage")
+        onEditorPackageChanged (val: any) {
             this.config.editorPackage = val;
             localStorage.submitConfig = JSON.stringify(this.config);
             if (val) {
@@ -221,12 +205,16 @@ export default {
             else {
                 this.theme = "ace/theme/monokai";
             }
-        },
-        static_theme (val) {
+        }
+
+        @Watch("static_theme")
+        onStaticThemeChanged (val: any) {
             this.config.static_theme = val;
             localStorage.submitConfig = JSON.stringify(this.config);
-        },
-        theme: function (val) {
+        }
+
+        @Watch("theme")
+        onThemeChanged (val: any) {
             if (val === "") {
                 return;
             }
@@ -252,13 +240,17 @@ export default {
                     });
                 });
             }
-        },
-        auto_detect: function (val) {
+        }
+
+        @Watch("auto_detect")
+        onAutoDetectChanged (val: any) {
             if (val) {
                 this.detectLanguageDebouncer();
             }
-        },
-        prepend: function (val) {
+        }
+
+        @Watch("prepend")
+        onPrependChanged (val: any) {
             if (!val) {
                 return;
             }
@@ -266,8 +258,10 @@ export default {
                 this.selected_language = parseInt(Object.keys(val)[0]);
             }
             this.current_prepend = val[this.selected_language];
-        },
-        append: function (val) {
+        }
+
+        @Watch("append")
+        onAppendChanged (val: any) {
             if (!val) {
                 return;
             }
@@ -275,31 +269,39 @@ export default {
                 this.selected_language = parseInt(Object.keys(val)[0]);
             }
             this.current_append = val[this.selected_language];
-        },
-        share: function (val) {
+        }
+
+        @Watch("share")
+        onShareChanged (val: any) {
             this.$store.commit("setCodeInfo", {
                 share: !!val
             });
-        },
-        source_code: function (val) {
+        }
+
+        @Watch("source_code")
+        onSourceCodeChanged (val: any) {
             this.code = val;
-        },
-        code: function (val) {
+        }
+
+        @Watch("code")
+        onCodeChanged (val: any) {
             if (val && this.auto_detect) {
                 this.detectLanguageDebouncer();
             }
-        },
-        fontSize (val) {
+        }
+
+        @Watch("fontSize")
+        onFontSizeChanged (val: any) {
             this.config.fontSize = val;
             localStorage.submitConfig = JSON.stringify(this.config);
         }
-    },
-    mounted () {
-        this.initConfig();
-        this.initClipboard();
-        this.initSolutionCode();
-    },
-    methods: {
+
+        mounted () {
+            this.initConfig();
+            this.initClipboard();
+            this.initSolutionCode();
+        }
+
         initConfig () {
             this.iscontest = this.$route.fullPath.includes("contest");
             const defaultConfig = {
@@ -321,7 +323,8 @@ export default {
                 }
             }
             return config;
-        },
+        }
+
         initClipboard () {
             let obj = document.getElementById("clipbtn");
             const that = this;
@@ -350,7 +353,8 @@ export default {
                     console.log("复制失败！请手动复制代码");
                 });
             }
-        },
+        }
+
         initSolutionCode () {
             if (this.$route.params.solution_id) {
                 this.axios.get("/api/status/solution", { params: { sid: this.$route.params.solution_id } })
@@ -358,20 +362,18 @@ export default {
                         this.selected_language = parseInt(data.data.language);
                     });
             }
-        },
-        detectLanguageDebouncer () {
-            const that = this;
-            (_.debounce(() => {
-                const detected_lang = detectLang(that.code, that.lang_list.map(function (e) {
-                    return e.num;
-                }));
-                if (that.selected_language !== detected_lang) {
-                    that.selected_language = detected_lang;
-                }
-            }, 100))();
         }
-    }
-};
+
+        @methodDecorator(100)
+        detectLanguageDebouncer () {
+            const detectedLang = detectLang(this.code, this.lang_list.map(function (e) {
+                return e.num;
+            }));
+            if (this.selected_language !== detectedLang) {
+                this.selected_language = detectedLang;
+            }
+        }
+}
 </script>
 
 <style scoped>

@@ -148,12 +148,11 @@
 <script lang="ts">
 // @ is an alias to /src
 import anime from "animejs";
-import { Mixins } from "vue-property-decorator";
+import { Mixins, Component } from "vue-property-decorator";
 import util from "../lib/util";
 import InitMixin from "../mixin/init";
 import dayjs from "dayjs";
 import jQuery from "jquery";
-import Component, { mixins } from "vue-class-component";
 const $: any = jQuery;
 declare global {
     interface Window {
@@ -221,66 +220,64 @@ export default class Home extends Mixins(InitMixin) {
 
         // document.getElementById('myVideo').addEventListener('ended',false);
 
-        (function () {
-            window.picid = 5;
-            $.get("/api/login/", function (data: any) {
-                let logined = data.logined;
-                setTimeout(function () {
-                    $("#main_container").removeClass("unvisible");
-                    let maintainTime = anime.timeline({ loop: false })
-                        .add({
-                            targets: ".ml14 .line",
-                            scaleX: [0, 1],
-                            opacity: [0.5, 1],
-                            easing: "easeInOutExpo",
-                            duration: 900
-                        }).add({
-                            targets: ".ml14 .letter",
-                            opacity: [0, 1],
-                            translateX: [40, 0],
-                            translateZ: 0,
-                            scaleX: [0.3, 1],
-                            textShadow: "3px 3px 3px #555555",
-                            easing: "easeOutExpo",
-                            duration: 800,
-                            offset: "-=600",
-                            delay: function (el: any, i: any) {
-                                return 25 * +i;
-                            }
-                        });
-                    // eslint-disable-next-line no-constant-condition
-                    if (logined && false) {
-                        maintainTime.add({
-                            targets: "#main_masthead",
-                            translateX: ["25%", 0],
-                            easing: "easeInOutQuart",
-                            duration: 1000,
-                            offset: "-=300",
-                            complete: function () {
-                            }
-                        }).add({
-                            targets: "#right",
-                            opacity: [0, 1],
-                            easing: "easeInOutQuart",
-                            duration: 1000,
-                            offset: "-=300"
-                        }).add({
-                            targets: "#divider",
-                            opacity: [0, 1],
-                            easing: "easeInOutQuart",
-                            duration: 500,
-                            offset: "-=300",
-                            complete: function () {
-                                let $style = $("style");
-                                let $html = $style.eq($style.length - 1).html();
-                                $html += "\n.gr5::after{\nopacity:0.5;\n}\n";
-                                $style.eq($style.length - 1).html($html);
-                            }
-                        });
-                    }
-                }, 300);
-            });
-        })();
+        window.picid = 5;
+        this.axios.get("/api/login/").then(({ data }) => {
+            let logined = data.logined;
+            setTimeout(function () {
+                $("#main_container").removeClass("unvisible");
+                let maintainTime = anime.timeline({ loop: false })
+                    .add({
+                        targets: ".ml14 .line",
+                        scaleX: [0, 1],
+                        opacity: [0.5, 1],
+                        easing: "easeInOutExpo",
+                        duration: 900
+                    }).add({
+                        targets: ".ml14 .letter",
+                        opacity: [0, 1],
+                        translateX: [40, 0],
+                        translateZ: 0,
+                        scaleX: [0.3, 1],
+                        textShadow: "3px 3px 3px #555555",
+                        easing: "easeOutExpo",
+                        duration: 800,
+                        offset: "-=600",
+                        delay: function (el: any, i: any) {
+                            return 25 * +i;
+                        }
+                    });
+                // eslint-disable-next-line no-constant-condition
+                if (logined && false) {
+                    maintainTime.add({
+                        targets: "#main_masthead",
+                        translateX: ["25%", 0],
+                        easing: "easeInOutQuart",
+                        duration: 1000,
+                        offset: "-=300",
+                        complete: function () {
+                        }
+                    }).add({
+                        targets: "#right",
+                        opacity: [0, 1],
+                        easing: "easeInOutQuart",
+                        duration: 1000,
+                        offset: "-=300"
+                    }).add({
+                        targets: "#divider",
+                        opacity: [0, 1],
+                        easing: "easeInOutQuart",
+                        duration: 500,
+                        offset: "-=300",
+                        complete: function () {
+                            let $style = $("style");
+                            let $html = $style.eq($style.length - 1).html();
+                            $html += "\n.gr5::after{\nopacity:0.5;\n}\n";
+                            $style.eq($style.length - 1).html($html);
+                        }
+                    });
+                }
+            }, 300);
+        });
     }
 }
 </script>

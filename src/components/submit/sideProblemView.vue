@@ -18,133 +18,46 @@
     </div>
 </template>
 
-<script>
-import leftPanel from "./sidePage/leftPanel";
-import rightPanel from "./sidePage/rightPanel";
-
-export default {
-    name: "sideProblemView",
+<script lang="ts">
+import leftPanel from "./sidePage/leftPanel.vue";
+import rightPanel from "./sidePage/rightPanel.vue";
+import { Component, Prop } from "vue-property-decorator";
+import Vue from "vue";
+@Component({
     components: {
         leftPanel,
         rightPanel
-    },
-    props: {
-        title: {
-            type: String,
-            default: ""
-        },
-        submitDisabled: {
-            type: Boolean,
-            default: false
-        },
-        source_code: {
-            type: String,
-            default: ""
-        },
-        time: {
-            type: Number,
-            default: 0
-        },
-        memory: {
-            type: Number,
-            default: 0
-        },
-        spj: {
-            type: Boolean,
-            default: false
-        },
-        submit: {
-            type: Number,
-            default: 0
-        },
-        accepted: {
-            type: Number,
-            default: 0
-        },
-        original_id: {
-            type: Number,
-            default: 0
-        },
-        iseditor: {
-            type: Boolean,
-            default: false
-        },
-        isadmin: {
-            type: Boolean,
-            default: false
-        },
-        description: {
-            type: String,
-            default: ""
-        },
-        input: {
-            type: String,
-            default: ""
-        },
-        output: {
-            type: String,
-            default: ""
-        },
-        sampleinput: {
-            type: String,
-            default: ""
-        },
-        sampleoutput: {
-            type: String,
-            default: ""
-        },
-        hint: {
-            type: String,
-            default: ""
-        },
-        uploader: {
-            type: String,
-            default: "Administrator"
-        },
-        switch_screen: {
-            type: Function,
-            default: () => () => undefined
-        },
-        normal_problem: {
-            type: Boolean,
-            default: true
-        },
-        source: {
-            type: String,
-            default: ""
-        },
-        problem_id: {
-            type: Number,
-            default: 0
-        },
-        lang_list: {
-            type: Array,
-            default: () => []
-        },
-        do_submit: {
-            type: Function,
-            default: () => {
-            }
-        },
-        pre_test_run: {
-            type: Function,
-            default: () => {
-            }
-        },
-        prepend: {
-            type: Object,
-            default: () => {
-                return {};
-            }
-        },
-        append: {
-            type: Object,
-            default: () => {
-                return {};
-            }
-        }
     }
-};
+})
+export default class SideProblemView extends Vue {
+    @Prop({ default: "" }) title!: string;
+    @Prop({ default: false }) submitDisabled!: boolean;
+    @Prop({ default: "" }) source_code!: string;
+    @Prop({ default: 0 }) time!:number;
+    @Prop({ default: 0 }) memory!: number;
+    @Prop({ default: false }) spj!: boolean;
+    @Prop({ default: 0 }) submit!: number;
+    @Prop({ default: 0 }) accepted!: number;
+    @Prop({ default: 0 }) original_id!: number;
+    @Prop({ default: false }) iseditor!: boolean;
+    @Prop({ default: false }) isadmin!: boolean;
+    @Prop({ default: "" }) description!: string;
+    @Prop({ default: "" }) input!: string;
+    @Prop({ default: "" }) output!: string;
+    @Prop({ default: "" }) sampleinput!: string;
+    @Prop({ default: "" }) sampleoutput!: string;
+    @Prop({ default: "" }) hint!: string;
+    @Prop({ default: "Administrator" }) uploader!: string;
+    @Prop({ default: () => () => undefined }) switch_screen!: (...arg: any[]) => any;
+    @Prop({ default: true }) normal_problem!: boolean;
+    @Prop({ default: "" }) source!: string;
+    @Prop({ default: 0 }) problem_id!: number;
+    @Prop({ default: () => [] }) lang_list!: any[];
+    @Prop({ default: () => {} }) do_submit!: (...arg: any[]) => any;
+    @Prop({ default: () => {} }) pre_test_run!: (...arg: any[]) => any;
+    @Prop({ default: () => { return {}; } }) prepend!: any;
+    @Prop({ default: () => { return {}; } }) append!: any;
+}
 </script>
 
 <style scoped>

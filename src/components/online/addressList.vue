@@ -30,71 +30,59 @@
         </table>
     </div>
 </template>
-<script>
+<script lang="ts">
 import utils from "../../lib/util";
 import { mapGetters } from "vuex";
-export default {
-    name: "addressList",
-    watch: {
-        onlineList: function (newVal) {
-            this.temp_userList = newVal;
-        }
-    },
-    data: function () {
-        return {
-            temp_userlist: [],
-            location: window.location,
-            window: window
-        };
-    },
-    mounted () {
-    },
+import { Component, Watch } from "vue-property-decorator";
+import Vue from "vue";
+@Component({
     computed: {
         ...mapGetters({
             userlist: "onlineUser"
-        }),
-        user: {
-            get: function () {
-                let newlist = [];
-                let doc = document.createElement("div");
-                if (!this.userlist) return [];
-                for (let i = 0; i < this.userlist.length; ++i) {
-                    let tat = this.userlist[i];
-                    for (let j = 0; j < this.userlist[i].url.length; ++j) {
-                        let tmp = JSON.parse(JSON.stringify(tat));
-                        tmp.url = tmp.url[j];
-                        doc.innerHTML = tmp.nick;
-                        tmp.nick = doc.innerText;
-                        utils.detectIP(tmp);
-                        newlist.push(tmp);
-                    }
-                }
-                if (localStorage.getItem("sort") === "true") {
-                    newlist.sort(function (a, b) {
-                        let a1 = a["user_id"];
-                        let b1 = b["user_id"];
-                        // if (!isNaN(parseInt(a1)) && !isNaN(parseInt(b1))) {
-                        //   return parseInt(a1) - parseInt(b1);
-                        // }
-                        // else {
-                        //    return isNaN(parseInt(b1)) ? 1 : -1;
-                        // }
-                        return a1 < b1 ? -1 : a1 === b1 ? 0 : 1;
-                    });
-                }
-                return newlist;
-            },
-            set: function (newval) {
-                if (!this.userlist) {
-                    this.userlist = newval;
-                }
-                else {
-                    this.tmp_userlist = newval;
-                }
+        })
+    }
+})
+export default class AddressList extends Vue {
+    temp_userlist = [];
+    location = window.location;
+    window = window;
+    userlist: any;
+    @Watch("onlineList")
+    onOnlineListChanged (newVal: any) {
+        this.temp_userlist = newVal;
+    }
+
+    get user () {
+        let newlist = [];
+        let doc = document.createElement("div");
+        if (!this.userlist) return [];
+        for (let i = 0; i < this.userlist.length; ++i) {
+            let tat = this.userlist[i];
+            for (let j = 0; j < this.userlist[i].url.length; ++j) {
+                let tmp = JSON.parse(JSON.stringify(tat));
+                tmp.url = tmp.url[j];
+                doc.innerHTML = tmp.nick;
+                tmp.nick = doc.innerText;
+                utils.detectIP(tmp);
+                newlist.push(tmp);
             }
         }
+        if (localStorage.getItem("sort") === "true") {
+            newlist.sort(function (a, b) {
+                let a1 = a["user_id"];
+                let b1 = b["user_id"];
+                // if (!isNaN(parseInt(a1)) && !isNaN(parseInt(b1))) {
+                //   return parseInt(a1) - parseInt(b1);
+                // }
+                // else {
+                //    return isNaN(parseInt(b1)) ? 1 : -1;
+                // }
+                return a1 < b1 ? -1 : a1 === b1 ? 0 : 1;
+            });
+        }
+        return newlist;
     }
-};
+}
 </script>
 
 <style scoped>
