@@ -63,13 +63,12 @@ import ConfirmModal from "../../components/submit/modal/confirms.vue";
 import Fingerprint2 from "fingerprintjs2";
 import dayjs from "dayjs";
 import Clipboard from "clipboard";
-import { methodDecorator } from "@/lib/decorator/method-decorator";
+import { Debounce, WebSocketRequest } from "@/module/Decorator/method";
 import { Mixins, Component } from "vue-property-decorator";
 import jquery from "jquery";
 import _ from "lodash";
 const $: any = jquery;
 const doc = document.createElement("div");
-// const Clipboard = require("clipboard");
 let $modal: any;
 let handlerInterval: any;
 @Component({
@@ -434,7 +433,8 @@ export default class Submit extends Mixins(mixins) {
         }
     }
 
-    @methodDecorator()
+    @WebSocketRequest
+    @Debounce()
     do_submit () {
         if (!this.$socket.connected) {
             alert("WebSocket服务未启动，请等待服务启动后提交\nWebSocket服务启动标志未:\n右上角显示在线人数");
@@ -521,7 +521,7 @@ export default class Submit extends Mixins(mixins) {
         }
     }
 
-    @methodDecorator()
+    @Debounce()
     pre_test_run () {
         if (!this.$socket || (this.$socket && !this.$socket.connected)) {
             alert("WebSocket服务未启动，请等待服务启动后提交\nWebSocket服务启动标识:\n右上角显示在线人数");

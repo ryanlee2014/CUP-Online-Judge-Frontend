@@ -108,7 +108,7 @@ import "@/lib/brace/braceMode";
 import "@/lib/brace/braceTheme";
 import { Prop, Watch, Component } from "vue-property-decorator";
 import Vue from "vue";
-import { methodDecorator } from "@/lib/decorator/method-decorator";
+import { Debounce } from "../../../module/Decorator/method";
 
 const $: any = jquery;
 const detectLang = require("../../../lib/langDetector");
@@ -364,7 +364,7 @@ export default class RightPanel extends Vue {
             }
         }
 
-        @methodDecorator(100)
+        @Debounce(100)
         detectLanguageDebouncer () {
             const detectedLang = detectLang(this.code, this.lang_list.map(function (e) {
                 return e.num;

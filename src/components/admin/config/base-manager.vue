@@ -43,75 +43,63 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 
 import mixins from "../../../mixin/init";
-import modifyModal from "./modify-modal";
-export default {
-    name: "base-manager",
-    props: {
-        prefix: {
-            type: String,
-            default: "config"
-        },
-        range: {
-            type: String,
-            default: ""
-        }
-    },
-    mixins: [mixins],
+import modifyModal from "./modify-modal.vue";
+import { Prop, Mixins, Component } from "vue-property-decorator";
+@Component({
     components: {
         modifyModal
-    },
-    data () {
-        return {
-            configList: []
-        };
-    },
+    }
+})
+export default class BaseManager extends Mixins(mixins) {
+    @Prop({ default: "config" }) prefix!: string;
+    @Prop({ default: "" }) range!: string;
+    configList = [];
+    $refs: any;
     mounted () {
         this.init();
-    },
-    methods: {
-        init () {
-            this.axios.get(`/api/setting/devconfig/${this.prefix}`)
-                .then(({ data }) => {
-                    const configList = [];
-                    const baseObject = Object.assign(data.data, {});
-                    Object.keys(baseObject).forEach(key => configList.push({ key, value: baseObject[key].value, comment: baseObject[key].comment }));
-                    this.configList = configList;
-                });
-        },
-        activateModal (act, payload) {
-            console.log(act);
-            if (act === "add") {
-                this.$refs.modal.activate();
-            }
-            else if (act === "edit") {
-                this.$refs.modal.activate(payload);
-            }
-        },
-        updateConfig (payload) {
-            this.axios.post(`/api/setting/devconfig/${this.prefix}/update`, payload)
-                .then(({ data }) => {
-                    this.$refs.modal.deactivate();
-                    if (data.status === "OK") {
-                        alert("更新成功");
-                        setTimeout(() => { this.init(); }, 1000);
-                    }
-                    else {
-                        alert("更新失败");
-                    }
-                });
-        },
-        removeConfig (key) {
-            this.axios.post(`/api/setting/devconfig/${this.prefix}/delete`, { key })
-                .then(({ data }) => {
-                    alert(data.status === "OK" ? "删除成功" : "删除失败");
-                    setTimeout(() => { this.init(); }, 1000);
-                });
+    }
+
+    init () {
+        this.axios.get(`/api/setting/devconfig/${this.prefix}`)
+            .then(({ data }) => {
+                const configList: any = [];
+                const baseObject = Object.assign(data.data, {});
+                Object.keys(baseObject).forEach(key => configList.push({ key, value: baseObject[key].value, comment: baseObject[key].comment }));
+                this.configList = configList;
+            });
+    }
+    activateModal (act: string, payload: any) {
+        if (act === "add") {
+            this.$refs.modal.activate();
+        }
+        else if (act === "edit") {
+            this.$refs.modal.activate(payload);
         }
     }
-};
+    updateConfig (payload: any) {
+        this.axios.post(`/api/setting/devconfig/${this.prefix}/update`, payload)
+            .then(({ data }) => {
+                this.$refs.modal.deactivate();
+                if (data.status === "OK") {
+                    alert("更新成功");
+                    setTimeout(() => { this.init(); }, 1000);
+                }
+                else {
+                    alert("更新失败");
+                }
+            });
+    }
+    removeConfig (key: any) {
+        this.axios.post(`/api/setting/devconfig/${this.prefix}/delete`, { key })
+            .then(({ data }) => {
+                alert(data.status === "OK" ? "删除成功" : "删除失败");
+                setTimeout(() => { this.init(); }, 1000);
+            });
+    }
+}
 </script>
 
 <style scoped>

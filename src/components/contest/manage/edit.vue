@@ -182,163 +182,154 @@
     </div>
 </template>
 
-<script>
-import Type from "../../../type";
-import Middleware from "../../../module/Middleware/core";
-import util from "../../../lib/util";
+<script lang="ts">
+import Type from "../../../type/index.json";
+import dayjs from "dayjs";
+import _ from "lodash";
+import jquery from "jquery";
+import { Prop, Component, Watch } from "vue-property-decorator";
+import Vue from "vue";
+const $: any = jquery;
 
-const dayjs = require("dayjs");
-const _ = require("lodash");
-const $ = require("jquery");
-export default {
-    name: "baseManage",
-    props: {
-        contestInfo: {
-            type: Object,
-            default: () => { return {}; }
-        },
-        externalUserListText: {
-            type: String,
-            default: ""
-        },
-        externalProblemSelected: {
-            type: String,
-            default: ""
-        }
-    },
-    data () {
-        return {
-            contest_id: this.$route.params.contest_id,
-            title: "",
-            defunct: false,
-            Private: true,
-            ContestMode: false,
-            startTime: "",
-            endTime: "",
-            password: "",
-            description: "",
-            languageSelected: "",
-            classroomSelected: "",
-            problemSelected: "",
-            languageSet: Type.language_name.local,
-            hostname: "",
-            userListText: "",
-            userList: []
-        };
-    },
-    methods: {
-        debug (name, value) {
-            console.log(name);
-            if (typeof value !== "undefined") {
-                console.log(value);
-            }
-        },
-        /**
-         * @return {number}
-         */
-        LanguageSelectedToLangmask () {
-            const byteLength = this.languageSet.length;
-            let target = (1 << byteLength) - 1;
-            let languageSet = this.languageSelected.split(",").map(el => parseInt(el));
-            languageSet.forEach(el => {
-                target ^= (1 << el);
-            });
-            return target;
-        },
-        LangmaskToLanguageSelected (langmask) {
-            let cnt = 0;
-            let languageSet = Array.from(Array(this.languageSet.length).keys());
-            while (langmask > 0) {
-                if ((langmask & 1) === 1) {
-                    languageSet.splice(languageSet.indexOf(cnt), 1);
-                }
-                langmask >>= 1;
-                ++cnt;
-            }
-            this.languageSelected = languageSet.join(",");
-        },
-        emitData () {
-            const tempData = _.cloneDeep(this.$data);
-            tempData.langmask = this.LanguageSelectedToLangmask();
-            tempData.Public = !tempData.Private;
-            this.$emit("postData", tempData);
-        },
-        initjQuery () {
-            const that = this;
-            const $rangeStart = $("#rangestart");
-            const $rangeEnd = $("#rangeend");
-            $rangeStart.calendar({
-                initialDate: this.startTime ? this.startTime : null,
-                endCalendar: $rangeEnd,
-                onChange (value) {
-                    that.startTime = dayjs(value);
-                }
-            });
-            $rangeEnd.calendar({
-                initialDate: this.endTime ? this.endTime : null,
-                startCalendar: $rangeStart,
-                onChange (value) {
-                    that.endTime = dayjs(value);
-                }
-            });
-            $(".ui.dropdown").dropdown();
-            $("#limitClassroom").dropdown("set selected", this.classroomSelected.split(","));
-            $("#limitHostname").dropdown("set selected", this.hostname.split(","));
-            $("#selectedLanguage").dropdown("set selected", this.languageSelected.split(","));
-            $(this.$refs.public).checkbox((!this.Private) ? "checked" : "unchecked");
-            $(this.$refs.contest).checkbox(this.ContestMode ? "checked" : "unchecked");
-            $(this.$refs.defunct).checkbox(this.defunct ? "chekced" : "unchecked");
-        }
-    },
-    mounted () {
-        this.initjQuery();
-    },
-    updated () {
+@Component
+export default class BaseManage extends Vue {
+    @Prop({ default: () => { return {}; } }) contestInfo!: any;
+    @Prop({ default: "" }) externalUserListText!: string;
+    @Prop({ default: "" }) externalProblemSelected!: string;
+    created () {
+        this.contest_id = this.$route.params.contest_id;
+    }
+    contest_id = "";
+    title = "";
+    defunct = false;
+    Private = true;
+    ContestMode = false;
+    startTime: any = "";
+    endTime: any = "";
+    password = "";
+    description = "";
+    languageSelected = "";
+    classroomSelected = "";
+    problemSelected = "";
+    languageSet = Type.language_name.local;
+    hostname = "";
+    userListText = "";
+    userList: any[] = [];
 
-    },
-    watch: {
-        userListText (newVal, oldVal) {
-            if (oldVal === newVal) {
-                return;
-            }
-            if (newVal.trim().length === 0) {
-                this.userList = [];
-            }
-            else {
-                this.userList = newVal.split("\n").map(el => el.trim()).filter(el => el.length > 0);
-            }
-            this.$nextTick(() => {
-                this.$Lazyload.lazyLoadHandler();
-                this.$forceUpdate();
-            });
-        },
-        externalUserListText (val) {
-            this.userListText = val;
-        },
-        externalProblemSelected (val) {
-            this.problemSelected = val;
-        },
-        contestInfo (data) {
-            if (data.data.length > 0) {
-                const res = data.data[0];
-                this.title = res.title;
-                this.startTime = new Date(res.start_time);
-                this.endTime = new Date(res.end_time);
-                this.description = res.description;
-                this.defunct = res.defunct === "Y";
-                this.Private = !!this.private;
-                this.ContestMode = !!res.cmod_visible;
-                this.LangmaskToLanguageSelected(res.langmask);
-                this.password = res.password;
-                this.classroomSelected = res.ip_policy;
-                this.hostname = res.limit_hostname ? res.limit_hostname : "";
-                this.$nextTick(() => {
-                    this.initjQuery();
-                });
-            }
+    debug (name: string, value?: any) {
+        console.log(name);
+        if (typeof value !== "undefined") {
+            console.log(value);
         }
     }
-};
+    /**
+     * @return {number}
+     */
+    LanguageSelectedToLangmask () {
+        const byteLength = this.languageSet.length;
+        let target = (1 << byteLength) - 1;
+        let languageSet = this.languageSelected.split(",").map(el => parseInt(el));
+        languageSet.forEach(el => {
+            target ^= (1 << el);
+        });
+        return target;
+    }
+    LangmaskToLanguageSelected (langmask: number) {
+        let cnt = 0;
+        let languageSet = Array.from(Array(this.languageSet.length).keys());
+        while (langmask > 0) {
+            if ((langmask & 1) === 1) {
+                languageSet.splice(languageSet.indexOf(cnt), 1);
+            }
+            langmask >>= 1;
+            ++cnt;
+        }
+        this.languageSelected = languageSet.join(",");
+    }
+    emitData () {
+        const tempData = _.cloneDeep(this.$data);
+        tempData.langmask = this.LanguageSelectedToLangmask();
+        tempData.Public = !tempData.Private;
+        this.$emit("postData", tempData);
+    }
+    initjQuery () {
+        const that: any = this;
+        const $rangeStart = $("#rangestart");
+        const $rangeEnd = $("#rangeend");
+        $rangeStart.calendar({
+            initialDate: this.startTime ? this.startTime : null,
+            endCalendar: $rangeEnd,
+            onChange (value: any) {
+                that.startTime = dayjs(value);
+            }
+        });
+        $rangeEnd.calendar({
+            initialDate: this.endTime ? this.endTime : null,
+            startCalendar: $rangeStart,
+            onChange (value: any) {
+                that.endTime = dayjs(value);
+            }
+        });
+        $(".ui.dropdown").dropdown();
+        $("#limitClassroom").dropdown("set selected", this.classroomSelected.split(","));
+        $("#limitHostname").dropdown("set selected", this.hostname.split(","));
+        $("#selectedLanguage").dropdown("set selected", this.languageSelected.split(","));
+        $(this.$refs.public).checkbox((!this.Private) ? "checked" : "unchecked");
+        $(this.$refs.contest).checkbox(this.ContestMode ? "checked" : "unchecked");
+        $(this.$refs.defunct).checkbox(this.defunct ? "chekced" : "unchecked");
+    }
+    mounted () {
+        this.initjQuery();
+    }
+
+    @Watch("userListText")
+    onUserListTextChanged (newVal: string, oldVal: string) {
+        if (oldVal === newVal) {
+            return;
+        }
+        if (newVal.trim().length === 0) {
+            this.userList = [];
+        }
+        else {
+            this.userList = newVal.split("\n").map(el => el.trim()).filter(el => el.length > 0);
+        }
+        this.$nextTick(() => {
+            this.$Lazyload.lazyLoadHandler();
+            this.$forceUpdate();
+        });
+    }
+
+    @Watch("externalUserListText")
+    onExternalUserListTextChanged (val: string) {
+        this.userListText = val;
+    }
+
+    @Watch("externalProblemSelected")
+    onExternalProblemSelected (val: string) {
+        this.problemSelected = val;
+    }
+
+    @Watch("contestInfo")
+    onContestInfoChanged (data: any) {
+        if (data.data.length > 0) {
+            const res = data.data[0];
+            this.title = res.title;
+            this.startTime = new Date(res.start_time);
+            this.endTime = new Date(res.end_time);
+            this.description = res.description;
+            this.defunct = res.defunct === "Y";
+            this.Private = !!res.private;
+            this.ContestMode = !!res.cmod_visible;
+            this.LangmaskToLanguageSelected(res.langmask);
+            this.password = res.password;
+            this.classroomSelected = res.ip_policy;
+            this.hostname = res.limit_hostname ? res.limit_hostname : "";
+            this.$nextTick(() => {
+                this.initjQuery();
+            });
+        }
+    }
+}
 </script>
 
 <style scoped>

@@ -67,45 +67,26 @@ Solved {{thread_head.solved}}
     }
     }
 </i18n>
-<script>
+<script lang="ts">
 import markdownIt from "../../lib/markdownIt/markdownIt";
 import avatarMixin from "../../mixin/avatarMixin";
-export default {
-    name: "MainContent",
-    mixins: [avatarMixin],
-    props: {
-        thread_head: {
-            type: Object,
-            default: () => {
-                return {};
-            }
-        },
-        content: {
-            type: Boolean,
-            default: false
-        },
-        owner: {
-            type: String,
-            default: ""
-        },
-        id: {
-            type: String,
-            default: ""
-        }
-    },
-    data () {
-        return {
-            markdownIt
-        };
-    },
-    methods: {
-        readTime: function (content) {
-            const doc = document.createElement("div");
-            doc.innerHTML = content;
-            return parseInt(Math.ceil(doc.innerText.length / 300) ** 1.41428579532);
-        }
+import { Mixins, Component, Prop } from "vue-property-decorator";
+
+@Component
+export default class DiscussContent extends Mixins(avatarMixin) {
+    @Prop({ default: () => { return {}; } }) thread_head!: any;
+    @Prop({ default: false }) content!: boolean;
+    @Prop({ default: "" }) owner!: string;
+    @Prop({ default: "" }) id!: string;
+
+    markdownIt = markdownIt;
+
+    readTime (content: string) {
+        const doc = document.createElement("div");
+        doc.innerHTML = content;
+        return Math.ceil(doc.innerText.length / 300) ** 1.41428579532;
     }
-};
+}
 </script>
 
 <style scoped>

@@ -35,36 +35,32 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 import mixins from "../../../mixin/init";
+import { Component, Mixins } from "vue-property-decorator";
+import jquery from "jquery";
+import Vue from "vue";
+const $: any = jquery;
+@Component
+export default class ModifyModal extends Vue {
+    key = "";
+    value = "";
+    comment = "";
 
-const $ = require("jquery");
-export default {
-    name: "modify-modal",
-    mixins: [mixins],
-    data () {
-        return {
-            key: "",
-            value: "",
-            comment: ""
-        };
-    },
-    methods: {
-        activate (payload) {
-            if (typeof payload === "undefined" || typeof payload.key !== "string") {
-                payload = { key: "", value: "", comment: "" };
-            }
-            Object.assign(this, payload);
-            $(this.$refs.modal).modal("show");
-        },
-        deactivate () {
-            $(this.$refs.modal).modal("hide");
-        },
-        submit () {
-            this.$emit("callback", this.$data);
+    activate (payload: any) {
+        if (typeof payload === "undefined" || typeof payload.key !== "string") {
+            payload = { key: "", value: "", comment: "" };
         }
+        Object.assign(this, payload);
+        $(this.$refs.modal).modal("show");
     }
-};
+    deactivate () {
+        $(this.$refs.modal).modal("hide");
+    }
+    submit () {
+        this.$emit("callback", this.$data);
+    }
+}
 </script>
 
 <style scoped>
