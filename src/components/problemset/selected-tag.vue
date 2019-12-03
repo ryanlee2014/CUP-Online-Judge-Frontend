@@ -9,50 +9,47 @@
     </div>
 </template>
 
-<script>
-export default {
-    name: "selected-tag",
-    props: {
-        data: String,
-        color: Object,
-        show_tag: Boolean,
-        dim: Boolean,
-        label: String
-    },
-    data: function () {
-        return {};
-    },
-    computed: {
-        datas: function () {
-            var color = this.color;
-            var search = this.data;
-            var label = this.label;
-            if (label === search && label.length > 0) {
-                search = search + "(搜索结果)";
-                label = label + "(标签)";
-            }
-            return {
-                search: search ? [search] : [],
-                color: color,
-                label: label ? [label] : []
-            };
+<script lang="ts">
+import Vue from "vue";
+import { Component, Prop } from "vue-property-decorator";
+
+@Component
+export default class SelectedTag extends Vue {
+    @Prop() data!: string;
+    @Prop() color!: any;
+    @Prop() show_tag!: boolean;
+    @Prop() dim!: boolean;
+    @Prop() label!: string;
+
+    $parent: any;
+
+    datas () {
+        const color = this.color;
+        let search = this.data;
+        let label = this.label;
+        if (label === search && label.length > 0) {
+            search = search + "(搜索结果)";
+            label = label + "(标签)";
         }
-    },
-    methods: {
-        remove: function () {
-            this.$parent.remove(...arguments);
-        },
-        labelColor: function (label) {
-            var datas = this.datas;
-            if (datas && datas.color && datas.color[label]) {
-                return datas.color[label];
-            }
-            else {
-                return "";
-            }
+        return {
+            search: search ? [search] : [],
+            color: color,
+            label: label ? [label] : []
+        };
+    }
+    remove () {
+        this.$parent.remove(...arguments);
+    }
+    labelColor (label: any) {
+        const datas: any = this.datas;
+        if (datas && datas.color && datas.color[label]) {
+            return datas.color[label];
+        }
+        else {
+            return "";
         }
     }
-};
+}
 </script>
 
 <style scoped>

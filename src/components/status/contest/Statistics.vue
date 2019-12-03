@@ -71,28 +71,17 @@
     </div>
 </template>
 
-<script>
-export default {
-    name: "Statistics",
-    props: {
-        statistics: {
-            type: Object,
-            default: () => { return {}; }
-        },
-        cid: {
-            type: Number,
-            default: 0
-        },
-        finish: {
-            type: Boolean,
-            default: false
-        },
-        language_name: {
-            type: Object,
-            default: () => { return {}; }
-        }
-    }
-};
+<script lang="ts">
+import Vue from "vue";
+import { Prop, Component } from "vue-property-decorator";
+
+@Component
+export default class Statistics extends Vue {
+    @Prop({ default: () => { return {}; } }) statistics!: any;
+    @Prop({ default: 0 }) cid!: number;
+    @Prop({ default: false }) finish!: boolean;
+    @Prop({ default: () => { return {}; } }) language_name!: any;
+}
 </script>
 
 <style scoped>

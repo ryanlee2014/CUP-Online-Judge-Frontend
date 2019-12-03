@@ -71,6 +71,7 @@ Solved {{thread_head.solved}}
 import markdownIt from "../../lib/markdownIt/markdownIt";
 import avatarMixin from "../../mixin/avatarMixin";
 import { Mixins, Component, Prop } from "vue-property-decorator";
+const doc = document.createElement("div");
 
 @Component
 export default class DiscussContent extends Mixins(avatarMixin) {
@@ -82,9 +83,8 @@ export default class DiscussContent extends Mixins(avatarMixin) {
     markdownIt = markdownIt;
 
     readTime (content: string) {
-        const doc = document.createElement("div");
         doc.innerHTML = content;
-        return Math.ceil(doc.innerText.length / 300) ** 1.41428579532;
+        return Math.trunc(Math.ceil(doc.innerText.length / 300) ** 1.41428579532);
     }
 }
 </script>

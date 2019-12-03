@@ -294,13 +294,15 @@ export function firstBloodFactory () {
     return firstBloodInfo;
 }
 
-export function firstBloodListFactory (total: number) {
+export function firstBloodListFactory (total?: number) {
     let firstBlood: FirstBloodList = {
         get: emptyFunction,
         newInstance: emptyFunction
     };
-    for (let i = 0; i < total; ++i) {
-        firstBlood[i] = firstBloodFactory();
+    if (typeof total === "number") {
+        for (let i = 0; i < total; ++i) {
+            firstBlood[i] = firstBloodFactory();
+        }
     }
     firstBlood.get = function (i: number) {
         if (typeof this[i] !== "undefined") {

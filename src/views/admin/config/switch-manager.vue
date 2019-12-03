@@ -2,7 +2,7 @@
     <base-manager :prefix="prefix" :range="range"></base-manager>
 </template>
 
-<script>
+<script lang="ts">
 
 import baseManager from "../../../components/admin/config/base-manager.vue";
 import { Component, Mixins } from "vue-property-decorator";

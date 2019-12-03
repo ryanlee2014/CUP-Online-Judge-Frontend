@@ -9,40 +9,34 @@
     </div>
 </template>
 
-<script>
-import mixins from "../../../../mixin/init";
-export default {
-    name: "monacoThemeSelector",
-    mixins: [mixins],
-    props: {
-        value: {
-            type: String,
-            default: "vs-dark"
-        }
-    },
-    data () {
-        return {
-            theme: "vs-dark"
-        };
-    },
-    watch: {
-        value (val) {
-            if (this.theme !== val) {
-                if (val.includes("vs") || val.includes("hc-black")) {
-                    this.theme = val;
-                }
+<script lang="ts">
+import { Prop, Component, Watch, Mixins } from "vue-property-decorator";
+import InitMixin from "@/mixin/init";
+
+@Component
+export default class MonacoThemeSelector extends Mixins(InitMixin) {
+    @Prop({ default: "vs-dark" }) value!: string;
+    theme = "vs-dark";
+    @Watch("value")
+    onValueChanged (val: string) {
+        if (this.theme !== val) {
+            if (val.includes("vs") || val.includes("hc-black")) {
+                this.theme = val;
             }
-        },
-        theme (val) {
-            this.$emit("input", val);
         }
-    },
+    }
+
+    @Watch("theme")
+    onThemeChanged (val: string) {
+        this.$emit("input", val);
+    }
+
     mounted () {
         if (this.value.includes("vs") || this.value.includes("hc-black")) {
             this.theme = this.value;
         }
     }
-};
+}
 </script>
 
 <style scoped>

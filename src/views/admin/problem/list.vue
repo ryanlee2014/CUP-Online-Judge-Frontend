@@ -46,79 +46,77 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 import mixins from "../../../mixin/init";
-import Pagination from "../../../components/problemset/pagination";
+import Pagination from "../../../components/problemset/pagination.vue";
+import dayjs from "dayjs";
+import { Mixins, Component, Watch } from "vue-property-decorator";
 
-const dayjs = require("dayjs");
-export default {
-    name: "privilege.vue",
-    mixins: [mixins],
+@Component({
     components: {
         Pagination
-    },
-    data () {
-        let _data = {
-            current_page: 0,
-            list: [],
-            dayjs,
-            total_number: 0,
-            page_cnt: 50
-        };
+    }
+})
+export default class ProblemList extends Mixins(mixins) {
+    current_page = 0;
+    list: any[] = [];
+    dayjs = dayjs;
+    total_number = 0;
+    page_cnt = 50;
+    created () {
         const query = this.$route.query;
-        let currentPage;
+        let currentPage: number = 0;
         if (Object.prototype.hasOwnProperty.call(query, "page")) {
-            currentPage = parseInt(query.page);
+            currentPage = parseInt(query.page as string);
         }
-        if (!isNaN(currentPage)) {
-            _data.current_page = currentPage;
-        }
-        return _data;
-    },
-    watch: {
-        current_page (val) {
-            this.setQuery();
-            this.flushData(val);
-        }
-    },
-    mounted () {
-        this.flushData(this.current_page);
-    },
-    methods: {
-        defunctToBoolean (defunct) {
-            return defunct === "N";
-        },
-        flushData (page) {
-            this.axios.get(`/api/admin/problem/list/${page}`)
-                .then(({ data }) => {
-                    this.list = data.data.data;
-                    this.total_number = data.data.count;
-                });
-        },
-        setQuery () {
-            let queryString = {};
-            queryString.page = this.current_page;
-            this.$router.push({ path: this.$route.path, query: queryString });
-        },
-        remove (problemID) {
-            // TODO
-        },
-        page (num, arrow) {
-            this.current_page = arrow ? this.current_page + arrow : num;
-        },
-        defunct (problemID) {
-            this.axios.post("/api/admin/problem/defunct", { id: problemID })
-                .then(({ data }) => {
-                    if (data.status === "OK") {
-                        this.flushData(this.current_page);
-                    }
-                    else {
-                        alert(data.statement);
-                    }
-                });
+        if (!isNaN(currentPage!)) {
+            this.current_page = currentPage;
         }
     }
-};
+
+    @Watch("current_page")
+    onCurrentPageChanged (val: string) {
+        this.setQuery();
+        this.flushData(val);
+    }
+
+    mounted () {
+        this.flushData(this.current_page);
+    }
+
+    defunctToBoolean (defunct: string) {
+        return defunct === "N";
+    }
+    flushData (page: any) {
+        this.axios.get(`/api/admin/problem/list/${page}`)
+            .then(({ data }) => {
+                this.list = data.data.data;
+                this.total_number = data.data.count;
+            });
+    }
+    setQuery () {
+        let queryString: any = {};
+        queryString.page = this.current_page;
+        this.$router.push({ path: this.$route.path, query: queryString });
+    }
+    remove (problemID: any) {
+        // TODO
+    }
+    page (num: any, arrow: any) {
+        this.current_page = arrow ? this.current_page + arrow : num;
+    }
+    defunct (problemID: any) {
+        this.axios.post("/api/admin/problem/defunct", { id: problemID })
+            .then(({ data }) => {
+                if (data.status === "OK") {
+                    this.flushData(this.current_page);
+                }
+                else {
+                    alert(data.statement);
+                }
+            });
+    }
+}
 </script>
 
 <style scoped>

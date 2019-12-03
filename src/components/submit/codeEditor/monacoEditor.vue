@@ -4,144 +4,132 @@
          style="width:100%;height:460px"></div>
 </template>
 
-<script>
+<script lang="ts">
 import * as monaco from "monaco-editor";
 import languageMap from "../../../lib/constants/monaco-editor/language-map";
+import Vue from "vue";
+import { Prop, Component, Watch } from "vue-property-decorator";
 
-export default {
-    name: "monacoEditor",
-    props: {
-        fontSize: {
-            type: String,
-            default: "18"
-        },
-        selected_language: {
-            type: Number,
-            default: 0
-        },
-        theme: {
-            type: String,
-            default: "vs-dark"
-        },
-        value: {
-            type: String,
-            default: ""
-        },
-        readOnly: {
-            type: Boolean,
-            default: false
-        },
-        height: {
-            type: Number,
-            default: 460
-        },
-        minimap: {
-            type: Boolean,
-            default: true
+@Component
+export default class MonacoEditor extends Vue {
+    @Prop({ default: "18" }) fontSize!: string;
+    @Prop({ default: 0 }) selected_language!: number;
+    @Prop({ default: "vs-dark" }) theme!: string;
+    @Prop({ default: "" }) value!: string;
+    @Prop({ default: 460 }) height!: number;
+    @Prop({ default: false }) readOnly!: boolean;
+    @Prop({ default: true }) minimap!: boolean;
+
+    $refs: any;
+
+    editor: any = null;
+    source_code = "";
+
+    @Watch("source_code")
+    onSourceCodeChanged (val: string) {
+        this.$emit("input", val);
+    }
+
+    @Watch("value")
+    onValueChanged (val: string) {
+        if (val !== this.source_code) {
+            this.source_code = val;
+            this.editor.getModel().setValue(val);
         }
-    },
-    data () {
-        return {
-            editor: null,
-            source_code: ""
-        };
-    },
-    watch: {
-        source_code (val) {
-            this.$emit("input", val);
-        },
-        selected_language (val) {
-            if (this.editor) {
-                const oldModel = this.editor.getModel();
-                const newModel = monaco.editor.createModel(oldModel.getValue(), languageMap[val]);
-                this.editor.setModel(newModel);
-                if (oldModel) {
-                    oldModel.dispose();
-                }
-                this.modelEventRegistry();
+    }
+
+    @Watch("selected_language")
+    onSelectedLanguageChanged (val: string) {
+        if (this.editor) {
+            const oldModel = this.editor.getModel();
+            const newModel = monaco.editor.createModel(oldModel.getValue(), languageMap[parseInt(val)]);
+            this.editor.setModel(newModel);
+            if (oldModel) {
+                oldModel.dispose();
             }
-        },
-        value (val) {
-            if (val !== this.source_code) {
-                this.source_code = val;
-                this.editor.getModel().setValue(val);
+            this.modelEventRegistry();
+        }
+    }
+
+    @Watch("theme")
+    onThemeChanged (val: string) {
+        if (this.editor) {
+            if (val.includes("vs") || val.includes("hc-black")) {
+                monaco.editor.setTheme(val);
             }
-        },
-        theme (val) {
-            if (this.editor) {
-                if (val.includes("vs") || val.includes("hc-black")) {
-                    monaco.editor.setTheme(val);
-                }
-                else {
-                    monaco.editor.setTheme("vs-dark");
-                }
-            }
-        },
-        fontSize (val) {
-            if (this.editor && !isNaN(val)) {
-                this.editor.updateOptions({
-                    fontSize: parseInt(val)
-                });
-            }
-        },
-        height () {
-            if (this.editor) {
-                this.$nextTick(() => {
-                    this.editor.layout();
-                });
+            else {
+                monaco.editor.setTheme("vs-dark");
             }
         }
-    },
+    }
+
+    @Watch("fontSize")
+    onFontSizeChanged (val: string) {
+        if (this.editor && !isNaN(parseInt(val))) {
+            this.editor.updateOptions({
+                fontSize: parseInt(val)
+            });
+        }
+    }
+
+    @Watch("height")
+    onHeightChanged (val: string) {
+        if (this.editor) {
+            this.$nextTick(() => {
+                this.editor.layout();
+            });
+        }
+    }
+
     mounted () {
         this.$nextTick(() => {
             this.initEditor();
         });
-    },
-    methods: {
-        initEditor () {
-            this.editor = monaco.editor.create(this.$refs.source, {
-                value: this.value,
-                language: languageMap[this.selected_language],
-                minimap: {
-                    enabled: this.minimap
-                },
-                fontLigatures: true,
-                scrollBeyondLastLine: false,
-                readOnly: this.readOnly
-            });
-            this.editor.updateOptions({
-                fontSize: this.getFontSizeFromStorage()
-            });
-            monaco.editor.setTheme(this.getThemeFromStorage());
-            this.modelEventRegistry();
-        },
-        modelEventRegistry () {
-            const currentModel = this.editor.getModel();
-            currentModel.onDidChangeContent(() => {
-                this.source_code = this.editor.getModel().getValue();
-                this.$store.commit("setCodeInfo", {
-                    code: this.source_code
-                });
-            });
-        },
-        getDataFromStorage (defaultValue, key) {
-            let data;
-            try {
-                data = JSON.parse(localStorage.submitConfig)[key];
-            }
-            catch (e) {
-                data = defaultValue;
-            }
-            return data;
-        },
-        getThemeFromStorage () {
-            return this.getDataFromStorage("vs-dark", "theme");
-        },
-        getFontSizeFromStorage () {
-            return this.getDataFromStorage(16, "fontSize");
-        }
     }
-};
+
+    initEditor () {
+        this.editor = monaco.editor.create(this.$refs.source, {
+            value: this.value,
+            language: languageMap[this.selected_language],
+            minimap: {
+                enabled: this.minimap
+            },
+            fontLigatures: true,
+            scrollBeyondLastLine: false,
+            readOnly: this.readOnly
+        });
+        this.editor.updateOptions({
+            fontSize: this.getFontSizeFromStorage()
+        });
+        monaco.editor.setTheme(this.getThemeFromStorage());
+        this.modelEventRegistry();
+    }
+    modelEventRegistry () {
+        const currentModel = this.editor.getModel();
+        currentModel.onDidChangeContent(() => {
+            this.source_code = this.editor.getModel().getValue();
+            this.$store.commit("setCodeInfo", {
+                code: this.source_code
+            });
+        });
+    }
+    getDataFromStorage (defaultValue: any, key: string) {
+        let data;
+        try {
+            data = JSON.parse(localStorage.submitConfig)[key];
+        }
+        catch (e) {
+            data = defaultValue;
+        }
+        return data;
+    }
+    getThemeFromStorage () {
+        return this.getDataFromStorage("vs-dark", "theme");
+    }
+    getFontSizeFromStorage () {
+        return this.getDataFromStorage(16, "fontSize");
+    }
+}
 </script>
 
 <style scoped>

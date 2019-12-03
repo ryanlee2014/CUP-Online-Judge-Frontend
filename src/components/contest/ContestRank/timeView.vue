@@ -11,10 +11,12 @@
 <script lang="ts">
 import dayjs, { Dayjs } from "dayjs";
 import Vue from "vue";
-import { Prop, Component } from "vue-property-decorator";
+import { Prop, Component, Mixins } from "vue-property-decorator";
+import TimerMixin from "@/mixin/TimerMixin";
+import { Interval } from "@/module/Decorator/method";
 
 @Component
-export default class TimeView extends Vue {
+export default class TimeView extends Mixins(TimerMixin) {
     @Prop({ default: dayjs() }) start_time!: Dayjs;
     current_time: string = "";
     dayjs = dayjs;
@@ -26,11 +28,13 @@ export default class TimeView extends Vue {
         return dayjs().format("YYYY-MM-DD HH:mm:ss");
     }
 
+    @Interval(1000)
+    timeUpdater () {
+        this.current_time = this.currentTime();
+    }
+
     mounted () {
-        const that: any = this;
-        setInterval(() => {
-            this.current_time = this.currentTime();
-        }, 1000);
+        this.timeUpdater();
     }
 
     format_time (second: number) {
@@ -50,10 +54,10 @@ export default class TimeView extends Vue {
 
     format_date (second: number, mode = 0) {
         second = Math.abs(second);
-        let hour = String(second / 3600);
+        let hour = String(Math.trunc(second / 3600));
         hour = this.fillZero(hour);
 
-        let minute = String((second - parseInt(hour) * 3600) / 60);
+        let minute = String(Math.trunc((second - parseInt(hour) * 3600) / 60));
         minute = this.fillZero(minute);
         let sec = String(second % 60);
         sec = this.fillZero(sec);

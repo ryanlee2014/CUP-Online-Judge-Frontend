@@ -45,40 +45,33 @@
     </div>
 </template>
 
-<script>
-import mixins from "../../../../mixin/init";
-export default {
-    name: "aceThemeSelector",
-    mixins: [mixins],
-    props: {
-        value: {
-            type: String,
-            default: "ace/theme/monokai"
-        }
-    },
-    data () {
-        return {
-            theme: "ace/theme/monokai"
-        };
-    },
-    watch: {
-        value (val) {
-            if (this.theme !== val) {
-                if (val.includes("ace")) {
-                    this.theme = val;
-                }
+<script lang="ts">
+import InitMixin from "@/mixin/init";
+import { Prop, Component, Watch, Mixins } from "vue-property-decorator";
+@Component
+export default class AceThemeSelector extends Mixins(InitMixin) {
+    @Prop({ default: "ace/theme/monokai" }) value!: string;
+    theme = "ace/theme/monokai";
+    @Watch("value")
+    onValueChanged (val: string) {
+        if (this.theme !== val) {
+            if (val.includes("ace")) {
+                this.theme = val;
             }
-        },
-        theme (val) {
-            this.$emit("input", val);
         }
-    },
+    }
+
+    @Watch("theme")
+    onThemeChanged (val: string) {
+        this.$emit("input", val);
+    }
+
     mounted () {
         if (this.value.includes("ace")) {
             this.theme = this.value;
         }
     }
-};
+}
 </script>
 
 <style scoped>

@@ -119,378 +119,368 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 import mixins from "../../mixin/init";
 import { saveAs } from "file-saver";
 import utils from "../../lib/util";
-import TimeView from "../../components/contest/ContestRank/timeView";
-import ErrorView from "../../components/contest/ContestRank/errorView";
-import ResultGrid from "../../components/contest/ContestRank/ResultGrid";
+import TimeView from "../../components/contest/ContestRank/timeView.vue";
+import ErrorView from "../../components/contest/ContestRank/errorView.vue";
+import ResultGrid from "../../components/contest/ContestRank/ResultGrid.vue";
 import AwaitLock from "await-lock";
+import _ from "lodash";
+import dayjs from "dayjs";
+import * as XLSX from "xlsx";
+import { Mixins, Component, Watch } from "vue-property-decorator";
 import {
     SubmitterFactory,
     firstBloodListFactory,
-    SubmitterComparator,
-    Submitter,
-    FirstBloodList
+    SubmitterComparator
 } from "../../module/ContestRank/ContestRankFactories";
 
-const _ = require("lodash");
-const dayjs = require("dayjs");
-const XLSX = require("xlsx");
 const { reset: bindDragEvent } = require("dragscroll");
-let submissionCollection = [];
+let submissionCollection: any[] = [];
+// @ts-ignore
 window.submissionCollection = submissionCollection;
 let convertFlag = false;
 
-export default {
-    name: "ContestRank",
-    mixins: [mixins],
+@Component({
     components: {
         ErrorView,
         TimeView,
         ResultGrid
-    },
-    data: function () {
-        return {
-            cid: this.$route.params.contest_id,
-            submitter: {},
-            total: -1,
-            start_time: dayjs(),
-            title: "",
-            finished: false,
-            users: [],
-            add_name: false,
-            auto_update: true,
-            totalNumber: 0,
-            playingTime: dayjs(),
-            popupLock: new AwaitLock(),
-            waiting_queue: [],
-            state: true,
-            errormsg: "",
-            dayjs,
-            select: $,
-            console,
-            playing: false,
-            playInterval: 0,
-            backup_data: [],
-            firstRender: true,
-            userStructure: {},
-            firstBloodList: undefined,
-            worker: null
-        };
-    },
-    computed: {
-        scoreboard: {
-            get: () => undefined,
-            set: function (val) {
-                const that = this;
-                this.auto_update = false;
-                try {
-                    val = submissionCollection = submissionCollection.concat(this.toArray(val));
-                    let submitter;
-                    if (this.firstRender) {
-                        this.firstRender = false;
-                        this.firstBloodList = firstBloodListFactory();
-                        submitter = {};
-                        this.initUserTable(submitter);
-                        this.fillSubmitterList(submitter, val);
-                        this.userStructure = submitter;
-                        this.submitter = submitter = Object.values(submitter);
-                        submitter.forEach(this.updateSubmitter);
-                    }
-                    else {
-                        submitter = this.userStructure;
-                        let lazyUpdateSet = new Set();
-                        this.fillSubmitterList(submitter, val);
-                        val.forEach(el => typeof submitter[el.user_id.toLowerCase()] !== "undefined" ? lazyUpdateSet.add(submitter[el.user_id.toLowerCase()]) : "");
-                        lazyUpdateSet.forEach(this.updateSubmitter);
-                    }
-                    this.calculateRank();
-                    window.temp_data = submissionCollection;
-                    window.datas = this.submitter;
-                }
-                catch (e) {
-                    that.state = false;
-                    that.submitter = [];
-                    console.log(e);
-                    let str = e.stack;
-                    str = str.replace(/\n/g, "<br>");
-                    that.errormsg = str;
-                }
-                this.auto_update = true;
-            }
-        }
-    },
-    methods: {
-        toArray (val) {
-            if (!Array.isArray(val)) {
-                val = [val];
-            }
-            return val;
-        },
-        updateSubmitter (el) {
-            el.calculatePenaltyTime();
-            el.calculateAC();
-            el.calculateFirstBlood(this.firstBloodList);
-        },
-        fillSubmitterList (submitter, val) {
-            const len = val.length;
-            for (let i = 0; i < len; ++i) {
-                const privateContest = this.users.length > 0;
-                if (!submitter[val[i].user_id.toLowerCase()]) {
-                    if (privateContest) {
-                        continue;
-                    }
-                    submitter[val[i].user_id.toLowerCase()] = SubmitterFactory(val[i].nick, this.total, val[i].user_id);
-                }
-                if (val[i].num < this.total) {
-                    submitter[val[i].user_id.toLowerCase()].addData(val[i]);
-                }
-            }
-        },
-        initUserTable (submitter) {
-            _.forEach(this.users, (val) => {
-                if (!submitter[val.user_id.toLowerCase()]) {
-                    submitter[val.user_id.toLowerCase()] = SubmitterFactory(val.nick, this.total, val.user_id);
-                }
-            });
-        },
-        calculateRank () {
-            this.submitter.sort(SubmitterComparator("greater"));
-            let rnk = 1;
-            window.submitter = this.submitter;
-            this.totalNumber = 0;
-            _.forEach(this.submitter, val => (val.rank = val.ac > 0 ? (++this.totalNumber, rnk++) : rnk));
-        },
-        rankClass (rank) {
-            const total = this.totalNumber;
-            rank = parseInt(rank);
-            if (rank <= total * 0.1 + 1) {
-                return "ui yellow";
-            }
-            else if (rank <= total * 0.3 + 1) {
-                return "ui grey";
-            }
-            else if (rank <= total * 0.6 + 1) {
-                return "ui orange";
+    }
+})
+export default class ContestRank extends Mixins(mixins) {
+    cid: any = "";
+    sockets: any;
+    created () {
+        this.cid = this.$route.params.contest_id;
+        this.sockets.subscribe("submit", (data: any) => {
+            this.handleNewSubmit(data);
+        });
+        this.sockets.subscribe("result", (data: any) => {
+            this.handleNewSubmit(data);
+        });
+    }
+
+    beforeDestroy () {
+        this.sockets.unsubscribe("submit");
+        this.sockets.unsubscribe("result");
+    }
+    submitter: any = {};
+    total = -1;
+    start_time = dayjs();
+    title = "";
+    finished = false;
+    users: any[] = [];
+    add_name = false;
+    auto_update = true;
+    totalNumber = 0;
+    playingTime = dayjs().format("YYYY-MM-DD HH:mm:ss");
+    popupLock = new AwaitLock();
+    waiting_queue: any[] = [];
+    state = true;
+    errormsg = "";
+    dayjs = dayjs;
+    select = $;
+    console = console;
+    playing = false;
+    playInterval = 0;
+    backup_data: any[] = [];
+    firstRender = true;
+    userStructure = {};
+    firstBloodList: any = undefined;
+    worker: any = null;
+    get scoreboard () {
+        return null;
+    }
+    set scoreboard (val: any) {
+        const that = this;
+        this.auto_update = false;
+        try {
+            val = submissionCollection = submissionCollection.concat(this.toArray(val));
+            let submitter: any;
+            if (this.firstRender) {
+                this.firstRender = false;
+                this.firstBloodList = firstBloodListFactory();
+                submitter = {};
+                this.initUserTable(submitter);
+                this.fillSubmitterList(submitter, val);
+                this.userStructure = submitter;
+                this.submitter = submitter = Object.values(submitter);
+                submitter.forEach(this.updateSubmitter);
             }
             else {
-                return "ui white";
+                submitter = this.userStructure;
+                let lazyUpdateSet = new Set();
+                this.fillSubmitterList(submitter, val);
+                val.forEach((el: any) => typeof submitter[el.user_id.toLowerCase()] !== "undefined" ? lazyUpdateSet.add(submitter[el.user_id.toLowerCase()]) : "");
+                lazyUpdateSet.forEach(this.updateSubmitter);
             }
-        },
-        playRanklist () {
-            this.auto_update = false;
-            this.playing = true;
-            const backupTempData = this.backup_data = submissionCollection;
-            backupTempData.sort((a, b) => {
-                const atime = dayjs(a.in_date);
-                const btime = dayjs(b.in_date);
-                return atime.isAfter(btime) ? 1 : -1;
-            });
-            submissionCollection = [];
-            this.submitter = [];
-            this.firstRender = true;
-            this.startInterval();
-        },
-        startInterval () {
-            const backupTempData = this.backup_data;
-            this.playInterval = setInterval(() => {
-                if (backupTempData.length > 0) {
-                    let data = backupTempData.shift();
-                    while (backupTempData.length > 0 && data.result < 4 && data.result >= 11) {
-                        data = backupTempData.shift();
-                    }
-                    this.playingTime = dayjs(data.in_date).format("YYYY-MM-DD HH:mm:ss");
-                    this.scoreboard = data;
-                    if (backupTempData.length === 0) {
-                        this.endInterval();
-                    }
+            this.calculateRank();
+            // @ts-ignore
+            window.temp_data = submissionCollection;
+            // @ts-ignore
+            window.datas = this.submitter;
+        }
+        catch (e) {
+            that.state = false;
+            that.submitter = [];
+            console.log(e);
+            let str = e.stack;
+            str = str.replace(/\n/g, "<br>");
+            that.errormsg = str;
+        }
+        this.auto_update = true;
+    }
+
+    toArray (val: any) {
+        if (!Array.isArray(val)) {
+            val = [val];
+        }
+        return val;
+    }
+    updateSubmitter (el: any) {
+        el.calculatePenaltyTime();
+        el.calculateAC();
+        el.calculateFirstBlood(this.firstBloodList);
+    }
+    fillSubmitterList (submitter: any, val: any) {
+        const len = val.length;
+        for (let i = 0; i < len; ++i) {
+            const privateContest = this.users.length > 0;
+            if (!submitter[val[i].user_id.toLowerCase()]) {
+                if (privateContest) {
+                    continue;
                 }
-                else {
+                submitter[val[i].user_id.toLowerCase()] = SubmitterFactory(val[i].nick, this.total, val[i].user_id);
+            }
+            if (val[i].num < this.total) {
+                submitter[val[i].user_id.toLowerCase()].addData(val[i]);
+            }
+        }
+    }
+    initUserTable (submitter: any) {
+        _.forEach(this.users, (val: any) => {
+            if (!submitter[val.user_id.toLowerCase()]) {
+                submitter[val.user_id.toLowerCase()] = SubmitterFactory(val.nick, this.total, val.user_id);
+            }
+        });
+    }
+    calculateRank () {
+        this.submitter.sort(SubmitterComparator("greater"));
+        let rnk = 1;
+        // @ts-ignore
+        window.submitter = this.submitter;
+        this.totalNumber = 0;
+        _.forEach(this.submitter, val => (val.rank = val.ac > 0 ? (++this.totalNumber, rnk++) : rnk));
+    }
+    rankClass (rank: any) {
+        const total = this.totalNumber;
+        rank = parseInt(rank);
+        if (rank <= total * 0.1 + 1) {
+            return "ui yellow";
+        }
+        else if (rank <= total * 0.3 + 1) {
+            return "ui grey";
+        }
+        else if (rank <= total * 0.6 + 1) {
+            return "ui orange";
+        }
+        else {
+            return "ui white";
+        }
+    }
+    playRanklist () {
+        this.auto_update = false;
+        this.playing = true;
+        const backupTempData = this.backup_data = submissionCollection;
+        backupTempData.sort((a, b) => {
+            const atime = dayjs(a.in_date);
+            const btime = dayjs(b.in_date);
+            return atime.isAfter(btime) ? 1 : -1;
+        });
+        submissionCollection = [];
+        this.submitter = [];
+        this.firstRender = true;
+        this.startInterval();
+    }
+    startInterval () {
+        const backupTempData = this.backup_data;
+        this.playInterval = setInterval(() => {
+            if (backupTempData.length > 0) {
+                let data = backupTempData.shift();
+                while (backupTempData.length > 0 && data.result < 4 && data.result >= 11) {
+                    data = backupTempData.shift();
+                }
+                this.playingTime = dayjs(data.in_date).format("YYYY-MM-DD HH:mm:ss");
+                this.scoreboard = data;
+                if (backupTempData.length === 0) {
                     this.endInterval();
                 }
-            }, 30);
-        },
-        endInterval () {
-            clearInterval(this.playInterval);
-            this.playing = false;
-            this.auto_update = true;
-        },
-        pausePlayRanklist () {
-            if (this.playing) {
-                this.playing = false;
-                clearInterval(this.playInterval);
             }
             else {
-                this.playing = true;
-                this.startInterval();
+                this.endInterval();
             }
-        },
-        stopPlayRanklist () {
+        }, 30);
+    }
+    endInterval () {
+        clearInterval(this.playInterval);
+        this.playing = false;
+        this.auto_update = true;
+    }
+    pausePlayRanklist () {
+        if (this.playing) {
             this.playing = false;
             clearInterval(this.playInterval);
-            this.scoreboard = this.backup_data.filter(el => typeof el !== "undefined");
-            this.backup_data = [];
-            this.auto_update = true;
-        },
-        fillZero (str) {
-            if (str.length < 2) {
-                return "0" + str;
-            }
-            else {
-                return str;
-            }
-        },
-        format_date: function (second, mode = 0) {
-            const fillZero = this.fillZero;
-            const hour = fillZero(parseInt(second / 3600).toString());
-            const minute = fillZero(parseInt((second - hour * 3600) / 60).toString());
-            const sec = fillZero((second % 60).toString());
-            if (mode) {
-                return hour + "：" + minute + "：" + sec;
-            }
-            else {
-                return hour + ":" + minute + ":" + sec;
-            }
-        },
-        formatColor: function (num) {
-            let str = num.toString(16);
-            if (num < 16) {
-                return "0" + str + "0" + str;
-            }
-            else {
-                return "" + str + "" + str;
-            }
-        },
-        detectPlace: function (ip) {
-            if (!ip) {
-                return "未知";
-            }
-            return utils.detectIP({
-                intranet_ip: ip,
-                place: ""
-            });
-        },
-        convertHTML: function (str) {
-            let d = document.createElement("div");
-            d.innerHTML = str;
-            return d.innerText;
-        },
-        decodeHTML: function (str) {
-            if (typeof str !== "string") {
-                str = "";
-            }
-            return str.replace("·", "&middot;");
-        },
-        exportXLS: function () {
-            let doc = document.getElementById("save");
-            let XLSContentHTML = "<html xmlns:o=\"urn:schemas-microsoft-com:office:office\" xmlns:x=\"urn:schemas-microsoft-com:office:excel\" xmlns=\"http://www.w3.org/TR/REC-html40\">" + "<head><meta http-equiv='Content-Type' content='application/vnd.ms-excel; charset=utf-8' /></head>";
-            XLSContentHTML += "<center><h3>Contest " + this.cid + " " + this.title + "</h3></center>";
-            XLSContentHTML += "<table border=1>" + doc.innerHTML.replace("<tbody>", "").replace("</tbody>", "");
-            XLSContentHTML += "<tr><td colspan='8'>环境指纹指根据用户的硬件环境及IP地址不同而产生的不同的指纹</td></tr>";
-            XLSContentHTML += "<tr><td colspan='8'>硬件指纹指的是不受IP影响的指纹</td></tr>";
-            XLSContentHTML += "<tr><td colspan='8'>若环境指纹与硬件指纹均唯一，代表用户使用相同设备在相同地点完成提交</td></tr>";
-            XLSContentHTML += "<tr><td colspan='8'>若硬件指纹唯一而环境指纹不唯一，代表同型号机器在不同IP地址提交</td></tr>";
-            XLSContentHTML += "<tr><td colspan='8'>若硬件指纹不唯一，代表使用了多台设备进行提交</td></tr>";
-            XLSContentHTML += "</table></html>";
-            const wopts = { bookType: "xlsx", bookSST: false, type: "binary" };// 这里的数据是用来定义导出的格式类型
-            // const wopts = { bookType: 'csv', bookSST: false, type: 'binary' };//ods格式
-            // const wopts = { bookType: 'ods', bookSST: false, type: 'binary' };//ods格式
-            // const wopts = { bookType: 'xlsb', bookSST: false, type: 'binary' };//xlsb格式
-            // const wopts = { bookType: 'fods', bookSST: false, type: 'binary' };//fods格式
-            // const wopts = { bookType: 'biff2', bookSST: false, type: 'binary' };//xls格式
+        }
+        else {
+            this.playing = true;
+            this.startInterval();
+        }
+    }
+    stopPlayRanklist () {
+        this.playing = false;
+        clearInterval(this.playInterval);
+        this.scoreboard = this.backup_data.filter(el => typeof el !== "undefined");
+        this.backup_data = [];
+        this.auto_update = true;
+    }
+    fillZero (str: string) {
+        if (str.length < 2) {
+            return "0" + str;
+        }
+        else {
+            return str;
+        }
+    }
+    format_date (second: any, mode = 0) {
+        const fillZero = this.fillZero;
+        second = parseInt(second);
+        const hour = fillZero(Math.trunc(second / 3600).toString());
+        const minute = fillZero(Math.trunc((second - parseInt(hour) * 3600) / 60).toString());
+        const sec = fillZero((second % 60).toString());
+        if (mode) {
+            return hour + "：" + minute + "：" + sec;
+        }
+        else {
+            return hour + ":" + minute + ":" + sec;
+        }
+    }
+    formatColor (num: any) {
+        let str = num.toString(16);
+        if (num < 16) {
+            return "0" + str + "0" + str;
+        }
+        else {
+            return "" + str + "" + str;
+        }
+    }
+    detectPlace (ip: any) {
+        if (!ip) {
+            return "未知";
+        }
+        return utils.detectIP({
+            intranet_ip: ip,
+            place: ""
+        });
+    }
+    convertHTML (str: string) {
+        let d = document.createElement("div");
+        d.innerHTML = str;
+        return d.innerText;
+    }
+    decodeHTML (str: string) {
+        if (typeof str !== "string") {
+            str = "";
+        }
+        return str.replace("·", "&middot;");
+    }
+    exportXLS () {
+        let doc: any = document.getElementById("save");
+        let XLSContentHTML = "<html xmlns:o=\"urn:schemas-microsoft-com:office:office\" xmlns:x=\"urn:schemas-microsoft-com:office:excel\" xmlns=\"http://www.w3.org/TR/REC-html40\">" + "<head><meta http-equiv='Content-Type' content='application/vnd.ms-excel; charset=utf-8' /></head>";
+        XLSContentHTML += "<center><h3>Contest " + this.cid + " " + this.title + "</h3></center>";
+        XLSContentHTML += "<table border=1>" + doc.innerHTML.replace("<tbody>", "").replace("</tbody>", "");
+        XLSContentHTML += "<tr><td colspan='8'>环境指纹指根据用户的硬件环境及IP地址不同而产生的不同的指纹</td></tr>";
+        XLSContentHTML += "<tr><td colspan='8'>硬件指纹指的是不受IP影响的指纹</td></tr>";
+        XLSContentHTML += "<tr><td colspan='8'>若环境指纹与硬件指纹均唯一，代表用户使用相同设备在相同地点完成提交</td></tr>";
+        XLSContentHTML += "<tr><td colspan='8'>若硬件指纹唯一而环境指纹不唯一，代表同型号机器在不同IP地址提交</td></tr>";
+        XLSContentHTML += "<tr><td colspan='8'>若硬件指纹不唯一，代表使用了多台设备进行提交</td></tr>";
+        XLSContentHTML += "</table></html>";
+        const wopts = { bookType: "xlsx", bookSST: false, type: "binary" };// 这里的数据是用来定义导出的格式类型
 
-            function downloadExl (data, type) {
-                const wb = { SheetNames: ["Sheet1"], Sheets: {}, Props: {} };
-                wb.Sheets["Sheet1"] = XLSX.utils.table_to_sheet(data);// 通过json_to_sheet转成单页(Sheet)数据
-                saveAs(new Blob([s2ab(XLSX.write(wb, wopts))], { type: "application/octet-stream" }), "这里是下载的文件名" + "." + (wopts.bookType === "biff2" ? "xls" : wopts.bookType));
-            }
-
-            function s2ab (s) {
-                if (typeof ArrayBuffer !== "undefined") {
-                    let buf = new ArrayBuffer(s.length);
-                    let view = new Uint8Array(buf);
-                    for (let i = 0; i !== s.length; ++i) view[i] = s.charCodeAt(i) & 0xFF;
-                    return buf;
+        // downloadExl(doc);
+        const blob = new Blob([XLSContentHTML], { type: "application/vnd.ms-excel;charset=UTF-8;" });
+        if (convertFlag) {
+            saveAs(blob, "Contest " + this.cid + " 多个contest.xls");
+        }
+        else {
+            saveAs(blob, "Contest " + this.cid + " " + this.title + ".xls");
+        }
+        // var table = TableExport(document.getElementById("save"));
+        // var d = table.getExportData().save.xlsx;
+        // var filename = "Contest " + this.cid;
+        // filename = filename.substring(0,31);
+        // table.export2file(d.data,d.mimeType,filename,d.fileExtension,d.merges)
+    }
+    handleNewSubmit (data: any) {
+        if (parseInt(data.contest_id) === parseInt(this.cid)) {
+            if (data.finish === 1) {
+                let ndata = {
+                    nick: data.nick,
+                    user_id: data.user_id,
+                    start_time: this.start_time,
+                    avatar: 0,
+                    in_date: data.in_date,
+                    num: parseInt(data.num),
+                    result: data.state
+                };
+                if (!this.auto_update) {
+                    this.waiting_queue.push(ndata);
                 }
                 else {
-                    let buf = new Array(s.length);
-                    for (let i = 0; i !== s.length; ++i) buf[i] = s.charCodeAt(i) & 0xFF;
-                    return buf;
-                }
-            }
-
-            // downloadExl(doc);
-            const blob = new Blob([XLSContentHTML], { type: "application/vnd.ms-excel;charset=UTF-8;" });
-            if (convertFlag) {
-                saveAs(blob, "Contest " + this.cid + " 多个contest.xls");
-            }
-            else {
-                saveAs(blob, "Contest " + this.cid + " " + this.title + ".xls");
-            }
-            // var table = TableExport(document.getElementById("save"));
-            // var d = table.getExportData().save.xlsx;
-            // var filename = "Contest " + this.cid;
-            // filename = filename.substring(0,31);
-            // table.export2file(d.data,d.mimeType,filename,d.fileExtension,d.merges)
-        },
-        handleNewSubmit: function (data) {
-            if (parseInt(data.contest_id) === parseInt(this.cid)) {
-                if (data.finish === 1) {
-                    let ndata = {
-                        nick: data.nick,
-                        user_id: data.user_id,
-                        start_time: this.start_time,
-                        avatar: 0,
-                        in_date: data.in_date,
-                        num: parseInt(data.num),
-                        result: data.state
-                    };
-                    if (!this.auto_update) {
-                        this.waiting_queue.push(ndata);
-                    }
-                    else {
-                        this.scoreboard = ndata;
-                    }
+                    this.scoreboard = ndata;
                 }
             }
         }
-    },
-    watch: {
-        auto_update: function () {
-            while (this.waiting_queue.length > 0) {
-                this.scoreboard = this.waiting_queue.shift();
-            }
-        },
-        add_name: function (newVal) {
-            let that = this;
-            if (!newVal) return;
-            for (let i = 0; i < this.submitter.length; ++i) {
-                this.axios.get(`/api/user/nick/${this.decodeHTML(this.submitter[i].nick)}`)
-                    .then(({ data }) => {
-                        if (data && data.data && data.data.length > 0) {
-                            let nick = data.nick;
-                            let nickArray = data.data;
-                            let userId = "";
-                            for (let j = 0; j < nickArray.length; ++j) {
-                                if (!isNaN(nickArray[j].user_id)) {
-                                    userId = nickArray[j].user_id;
-                                    break;
-                                }
-                            }
-                            for (let j = 0; j < that.submitter.length; ++j) {
-                                if (that.decodeHTML(that.submitter[j].nick) === nick) {
-                                    that.submitter[j].real_name = userId;
-                                    break;
-                                }
+    }
+
+    @Watch("auto_update")
+    onAutoUpdateChanged () {
+        while (this.waiting_queue.length > 0) {
+            this.scoreboard = this.waiting_queue.shift();
+        }
+    }
+
+    @Watch("add_name")
+    onAddNameChanged (newVal: any) {
+        let that = this;
+        if (!newVal) return;
+        for (let i = 0; i < this.submitter.length; ++i) {
+            this.axios.get(`/api/user/nick/${this.decodeHTML(this.submitter[i].nick)}`)
+                .then(({ data }) => {
+                    if (data && data.data && data.data.length > 0) {
+                        let nick = data.nick;
+                        let nickArray = data.data;
+                        let userId = "";
+                        for (let j = 0; j < nickArray.length; ++j) {
+                            if (!isNaN(nickArray[j].user_id)) {
+                                userId = nickArray[j].user_id;
+                                break;
                             }
                         }
-                    });
-            }
+                        for (let j = 0; j < that.submitter.length; ++j) {
+                            if (that.decodeHTML(that.submitter[j].nick) === nick) {
+                                that.submitter[j].real_name = userId;
+                                break;
+                            }
+                        }
+                    }
+                });
         }
-    },
-    updated: function () {
+    }
+
+    updated () {
         const newTitle = "ContestRank: " + this.title;
         if (document.title !== newTitle) {
             document.title = newTitle;
@@ -498,16 +488,17 @@ export default {
         $("#rank").find("tr").each(function () {
             $(this).find("td").eq(2).css({
                 position: "sticky",
-                left: $(this).find("td").eq(2).prev().outerWidth() + $(this).find("td").eq(1).prev().outerWidth(),
+                left: $(this)!.find("td")!.eq(2)!.prev()!.outerWidth()! + $(this)!.find("td")!.eq(1)!.prev()!.outerWidth()!,
                 borderRight: "1px solid rgba(34,36,38,.1)"
             });
-            $(this).find("td").eq(1).css({
+            $(this)!.find("td")!.eq(1)!.css({
                 position: "sticky",
-                left: $(this).find("td").eq(1).prev().outerWidth()
+                left: $(this)!.find("td")!.eq(1)!.prev()!.outerWidth()!
             });
         });
-    },
-    mounted: function () {
+    }
+    mounted () {
+        // @ts-ignore
         window.datas = [];
         submissionCollection = [];
         document.title = `Contest Rank ${this.cid} -- ${document.title}`;
@@ -523,7 +514,7 @@ export default {
         bindDragEvent();
         (() => {
             let cid = this.$route.params.contest_id;
-            let cidArr = [];
+            let cidArr: any = [];
             if (cid.indexOf(",") !== -1) {
                 cidArr = cid.split(",");
             }
@@ -531,7 +522,7 @@ export default {
                 cidArr = [cid];
             }
             let cnt = 0;
-            let dataSet = [];
+            let dataSet: any = [];
             let users = new Set();
 
             const work = () => {
@@ -611,6 +602,7 @@ export default {
                                 this.finished = true;
                                 that.total = data.total;
                                 that.users = data.users;
+                                // @ts-ignore
                                 that.start_time = window.start_time = dayjs(data.start_time);
                                 _.forEach(data.data, function (val) {
                                     val.start_time = dayjs(data.start_time);
@@ -627,16 +619,8 @@ export default {
                     });
             }
         })();
-    },
-    sockets: {
-        submit: function (data) {
-            this.handleNewSubmit(data);
-        },
-        result: function (data) {
-            this.handleNewSubmit(data);
-        }
     }
-};
+}
 </script>
 
 <style scoped>

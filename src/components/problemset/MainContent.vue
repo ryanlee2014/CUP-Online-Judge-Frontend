@@ -77,101 +77,76 @@
     </table>
 </template>
 
-<script>
+<script lang="ts">
 // eslint-disable-next-line no-unused-vars
 import markdownIt from "../../lib/markdownIt/markdownIt";
-
-const lodash = require("lodash");
-export default {
-    name: "mainContent",
-    props: {
-        data: {
-            type: Object,
-            default: () => {
-                return {};
-            }
-        },
-        dim: {
-            type: Boolean,
-            default: false
-        },
-        show_tag: {
-            type: Boolean,
-            default: false
-        },
-        order: {
-            type: Number,
-            default: 0
-        },
-        order_target: {
-            type: String,
-            default: ""
-        },
-        hide_currect: {
-            type: Boolean,
-            default: false
-        }
-    },
-    data: function () {
-        return {
-            markdownIt,
-            lodash
-        };
-    },
-    computed: {
-        result: function () {
-            const data = this.data;
-            const color = Object.assign({}, data.color);
-            color["标签待整理"] = "black";
-            for (let i in data.problem) {
-                if (Object.prototype.hasOwnProperty.call(data.problem, i)) {
-                    const label = data.problem[i].label;
-                    data.problem[i].label = (label ? label.split(" ") : ["标签待整理"]).sort(function (a, b) {
-                        if (a === "简单" || a === "普通" || a === "困难") {
-                            return 1;
-                        }
-                        else if (b === "简单" || b === "普通" || b === "困难") {
-                            return -1;
-                        }
-                        else {
-                            if (a < b) return -1;
-                            else if (a === b) return 0;
-                            else return 1;
-                        }
-                    });
-                }
-            }
-            const problemArray = typeof data.problem === "undefined" ? [] : data.problem;
-            return {
-                color: color,
-                problem: problemArray
-            };
-        },
-        filterTableRow: function () {
-            const dim = this.dim;
-            const hideCurrent = this.hide_currect;
-            return this.result.problem.filter(row => !dim && (row.ac === false || row.ac === -1 || (row.ac === true && !hideCurrent)));
-        }
-    },
-    methods: {
-        sort: function (target, event, default_order = 0) {
-            this.$parent.sort(target, event, default_order);
-        },
-        tag: function (label, event) {
-            this.$parent.tag(label, event);
-        },
-        bindSticky () {
-            $(".ui.sticky.element")
-                .sticky({
-                    context: "#problemset",
-                    offset: 40,
-                    observeChanges: false,
-                    refreshOnLoad: true,
-                    refreshOnResize: true
+import jquery from "jquery";
+import lodash from "lodash";
+import { Component, Prop } from "vue-property-decorator";
+import Vue from "vue";
+const $:any = jquery;
+@Component
+export default class ProblemSetMainContent extends Vue {
+    @Prop({ default: () => { return {}; } }) data!: any;
+    @Prop({ default: false }) dim!: boolean;
+    @Prop({ default: false }) show_tag!: boolean;
+    @Prop({ default: 0 }) order!: number;
+    @Prop({ default: "" }) order_target!: string;
+    @Prop({ default: false }) hide_currect!: boolean;
+    $parent: any;
+    markdownIt = markdownIt;
+    lodash = lodash;
+    get result () {
+        const data = this.data;
+        const color = Object.assign({}, data.color);
+        color["标签待整理"] = "black";
+        for (let i in data.problem) {
+            if (Object.prototype.hasOwnProperty.call(data.problem, i)) {
+                const label = data.problem[i].label;
+                data.problem[i].label = (label ? label.split(" ") : ["标签待整理"]).sort(function (a: any, b: any) {
+                    if (a === "简单" || a === "普通" || a === "困难") {
+                        return 1;
+                    }
+                    else if (b === "简单" || b === "普通" || b === "困难") {
+                        return -1;
+                    }
+                    else {
+                        if (a < b) return -1;
+                        else if (a === b) return 0;
+                        else return 1;
+                    }
                 });
+            }
         }
+        const problemArray = typeof data.problem === "undefined" ? [] : data.problem;
+        return {
+            color: color,
+            problem: problemArray
+        };
     }
-};
+    get filterTableRow () {
+        const dim = this.dim;
+        const hideCurrent = this.hide_currect;
+        return this.result.problem.filter((row: any) => !dim && (row.ac === false || row.ac === -1 || (row.ac === true && !hideCurrent)));
+    }
+
+    sort (target: any, event: any, default_order = 0) {
+        this.$parent.sort(target, event, default_order);
+    }
+    tag (label: any, event: any) {
+        this.$parent.tag(label, event);
+    }
+    bindSticky () {
+        $(".ui.sticky.element")
+            .sticky({
+                context: "#problemset",
+                offset: 40,
+                observeChanges: false,
+                refreshOnLoad: true,
+                refreshOnResize: true
+            });
+    }
+}
 </script>
 
 <style scoped>

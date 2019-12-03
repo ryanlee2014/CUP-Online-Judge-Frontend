@@ -59,100 +59,21 @@
                 <span class="boldstatus" v-if="self === row.user_id || isadmin">{{language_name[(!row.oj_name?'local':row.oj_name.toLowerCase())][row.language]}}  / </span>
                 <span class="boldstatus">{{row.length}}B</span>
             </td>
-            <td>{{new Date(row.in_date).toLocaleString()}}<br><p>类型:{{detect_place(row.ip)}}</p></td>
+            <td>{{dayjs(row.in_date).format("YYYY-MM-DD HH:mm:ss")}}<br><p>类型:{{detect_place(row.ip)}}</p></td>
             <td>{{row.judger}}</td>
         </tr>
         </transition-group>
     </table>
 </template>
 
-<script>
-import utils from "../../../lib/util";
+<script lang="ts">
 import avatarMixin from "../../../mixin/avatarMixin";
-const _ = require("lodash");
-export default {
-    name: "StatusTable",
-    mixins: [avatarMixin],
-    props: {
-        problem_list: Array,
-        answer_icon: Array,
-        answer_class: Array,
-        target: Object,
-        language_name: Object,
-        result: Array,
-        self: String,
-        isadmin: Boolean,
-        end: Boolean,
-        finish: Boolean
-    },
-    data: function () {
-        return {
-            problem_alpha: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789",
-            user: {}
-        };
-    },
-    methods: {
-        memory_parse: function (_memory) {
-            var unit = ["KB", "MB", "GB"];
-            var cnt = 0;
-            var memory = parseInt(_memory);
-            if (isNaN(memory)) {
-                return _memory;
-            }
-            while (memory > 1024) {
-                memory /= 1024;
-                ++cnt;
-            }
-            return memory.toString().substring(0, 5) + unit[cnt];
-        },
-        time_parse: function (_time) {
-            var unit = ["ms", "s"];
-            var cnt = 0;
-            var time = parseInt(_time);
-            if (isNaN(time)) {
-                return _time;
-            }
-            while (time > 1000) {
-                ++cnt;
-                time /= 1000;
-            }
-            return time.toString().substring(0, 5) + unit[cnt];
-        },
-        detect_place: function (ip) {
-            if (!ip) {
-                return "未知";
-            }
-            var tmp = {
-                intranet_ip: ip,
-                place: ""
-            };
-            utils.detectIP(tmp);
-            return tmp.place;
-        },
-        infoRoute: function (result) {
-            if (parseInt(result) === 11) {
-                return "compile";
-            }
-            return "runtime";
-        }
-    },
-    computed: {
-        problem_lists: function () {
-            var that = this;
-            _.forEach(this.problem_list, function (i) {
-                that.user[i.user_id] = that.user[i.user_id] || i;
-            });
-            var doc = document.createElement("div");
-            let temp;
-            for (let i in this.problem_list) {
-                doc.innerHTML = this.problem_list[i].nick;
-                temp = this.problem_list[i];
-                temp.nick = doc.innerText;
-            }
-            return this.problem_list;
-        }
-    }
-};
+import { Mixins, Component } from "vue-property-decorator";
+import { StatusMixin } from "@/mixin/StatusMixin";
+@Component
+export default class StatusTable extends Mixins(avatarMixin, StatusMixin) {
+
+}
 </script>
 
 <style scoped>

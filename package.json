@@ -1,6 +1,6 @@
 {
   "name": "CUP-Online-Judge-NG-Frontend",
-  "version": "1.0.17",
+  "version": "1.0.18",
   "private": false,
   "repository": {
     "type": "git",
@@ -93,6 +93,7 @@
     "@types/chart.js": "^2.9.2",
     "@types/clipboard": "^2.0.1",
     "@types/d3": "^5.7.2",
+    "@types/file-saver": "^2.0.1",
     "@types/fingerprintjs2": "^2.0.0",
     "@types/jquery": "^3.3.31",
     "@types/lodash": "^4.14.149",

@@ -122,28 +122,32 @@
     }
 </i18n>
 
-<script>
+<script lang="ts">
 import mixins from "../../mixin/init";
-import progressBar from "../../components/progress/progressBar";
+import progressBar from "../../components/progress/progressBar.vue";
+import jquery from "jquery";
+import dayjs, { Dayjs } from "dayjs";
+import { Mixins, Component } from "vue-property-decorator";
+import { Interval } from "../../module/Decorator/method";
+import TimerMixin from "@/mixin/TimerMixin";
 
-const $ = require("jquery");
-const dayjs = require("dayjs");
-export default {
-    name: "ContestSetView",
-    mixins: [mixins],
+const $: any = jquery;
+@Component({
     components: {
         progressBar
-    },
-    data () {
-        return {
-            admin: this.$store.getters.admin,
-            contest_list: [],
-            select1: "",
-            select2: "",
-            current_column: "contest",
-            current_time: dayjs()
-        };
-    },
+    }
+})
+export default class ContestSetView extends Mixins(mixins, TimerMixin) {
+    admin = false;
+    contest_list: any[] = [];
+    select1 = "";
+    select2 = "";
+    current_column = "contest";
+    current_time:Dayjs = dayjs();
+    intervalID?: number;
+    created () {
+        this.admin = this.$store.getters.admin;
+    }
     mounted () {
         document.title = `Contest Set -- ${document.title}`;
         this.axios.get("/api/contest/list", {
@@ -163,136 +167,123 @@ export default {
                 }, 3000);
             });
         this.init();
-    },
-    methods: {
-        init: function () {
-            const diff = new Date().getTime() - new Date().getTime();
+    }
 
-            function clock () {
-                let x, h, m, s, n, y, mon, d;
-                x = new Date(new Date().getTime() + diff);
-                y = x.getYear() + 1900;
-                if (y > 3000) y -= 1900;
-                mon = x.getMonth() + 1;
-                d = x.getDate();
-                h = x.getHours();
-                m = x.getMinutes();
-                s = x.getSeconds();
-                n = y + "-" + mon + "-" + d + " " + (h >= 10 ? h : "0" + h) + ":" + (m >= 10 ? m : "0" + m) + ":" + (s >= 10 ? s : "0" + s);
-                $(".server_time").text(n);
-            }
+    @Interval(1000)
+    clock () {
+        $(".server_time").text(dayjs().format("YYYY-MM-DD HH:mm:ss"));
+    }
 
-            clock();
-            setInterval(clock, 1000);
-        },
-        bindPopup: function () {
-            if (this.admin) {
-                $(".ui.padded.table").popup({
-                    title: "管理员视图",
-                    content: "白色背景竞赛属于普通用户可见竞赛，灰色背景竞赛为不可见竞赛,绿色背景竞赛为正在进行中的竞赛",
-                    position: "top center",
-                    boundary: "body"
-                });
-            }
-            $(".visible.tag").popup({
-                content: "点击可切换显示隐藏"
+    init () {
+        this.clock();
+    }
+    bindPopup () {
+        if (this.admin) {
+            $(".ui.padded.table").popup({
+                title: "管理员视图",
+                content: "白色背景竞赛属于普通用户可见竞赛，灰色背景竞赛为不可见竞赛,绿色背景竞赛为正在进行中的竞赛",
+                position: "top center",
+                boundary: "body"
             });
-            $(".private.tag").popup({
-                content: "点击可切换私有公有属性，公有属性不限制用户访问，私有属性需输入密码或列入列表才允许访问"
+        }
+        $(".visible.tag").popup({
+            content: "点击可切换显示隐藏"
+        });
+        $(".private.tag").popup({
+            content: "点击可切换私有公有属性，公有属性不限制用户访问，私有属性需输入密码或列入列表才允许访问"
+        });
+        $(".multiple.search")
+            .dropdown({
+                fullTextSearch: true
             });
-            $(".multiple.search")
-                .dropdown({
-                    fullTextSearch: true
-                });
-        },
-        progressBarColor (row) {
-            return this.contestIsRunning(row) ? "green" : "grey";
-        },
-        contestIsRunning: function (row) {
-            let startTime;
-            if (!dayjs.isDayjs(row.start_time)) {
-                startTime = dayjs(row.start_time);
-            }
-            let endTime;
-            if (!dayjs.isDayjs(row.end_time)) {
-                endTime = dayjs(row.end_time);
-            }
-            const currentTime = this.current_time;
-            return currentTime.isBefore(endTime) && currentTime.isAfter(startTime);
-        },
-        fillZero: function (str) {
-            if (str.length < 2) {
-                return "0" + str;
-            }
-            else {
-                return str;
-            }
-        },
-        formatDate: function (second) {
-            let fillZero = this.fillZero;
-            second = Math.abs(second);
-            let day = parseInt(second / 3600 / 24);
-            let hour = parseInt((second - day * 3600 * 24) / 3600);
-            let minute = parseInt((second - day * 3600 * 24 - hour * 3600) / 60);
-            let sec = second % 60;
-            hour = fillZero(hour + "");
-            minute = fillZero(minute + "");
-            sec = fillZero(sec + "");
-            return `${day}天${hour}小时${minute}分${sec}秒`;
-        },
-        contestTimeFormat: function (row) {
-            if (Object.prototype.hasOwnProperty.call(row, "_format_") && typeof row._format_ === "string") {
-                return row._format_;
-            }
-            let startTime;
-            if (!dayjs.isDayjs(row.start_time)) {
-                startTime = dayjs(row.start_time);
-            }
-            let endTime;
-            if (!dayjs.isDayjs(row.end_time)) {
-                endTime = dayjs(row.end_time);
-            }
-            const currentTime = this.current_time;
-            if (row.isEnd || currentTime.isAfter(endTime)) {
-                row.isEnd = true;
-                // eslint-disable-next-line no-return-assign
-                return row._format_ = `${endTime.format("YYYY-MM-DD HH:mm")}${this.$t("end")}`;
-            }
-            else if (currentTime.isBefore(startTime)) {
-                return `${startTime.format("YYYY-MM-DD HH:mm")}${this.$t("start")}`;
-            }
-            else {
-                return `${startTime.format("YYYY-MM-DD HH:mm")} ${this.$t("start")}<br>${endTime.format("YYYY-MM-DD HH:mm")} ${this.$t("end")}`;
-            }
-        },
-        percentageRunning: function (row) {
-            let startTime;
-            if (row.isEnd === true) {
-                return 100;
-            }
-            if (!dayjs.isDayjs(row.start_time)) {
-                startTime = dayjs(row.start_time);
-            }
-            let endTime;
-            if (!dayjs.isDayjs(row.end_time)) {
-                endTime = dayjs(row.end_time);
-            }
-            const currentTime = this.current_time;
-            if (currentTime.isBefore(startTime)) {
-                return 0;
-            }
-            else if (currentTime.isAfter(endTime)) {
-                row.isEnd = true;
-                return 100;
-            }
-            else {
-                let diffTime = currentTime.diff(startTime, "second");
-                let totalDiff = endTime.diff(startTime, "second");
-                return parseInt(Math.floor(diffTime * 100 / totalDiff));
-            }
+    }
+    progressBarColor (row: any) {
+        return this.contestIsRunning(row) ? "green" : "grey";
+    }
+    contestIsRunning (row: any) {
+        let startTime: Dayjs;
+        if (!dayjs.isDayjs(row.start_time)) {
+            startTime = dayjs(row.start_time);
+        }
+        let endTime: Dayjs;
+        if (!dayjs.isDayjs(row.end_time)) {
+            endTime = dayjs(row.end_time);
+        }
+        const currentTime: Dayjs = this.current_time;
+        return currentTime.isBefore(endTime!) && currentTime.isAfter(startTime!);
+    }
+    fillZero (str: string) {
+        if (str.length < 2) {
+            return "0" + str;
+        }
+        else {
+            return str;
         }
     }
-};
+    formatDate (second: number) {
+        let fillZero = this.fillZero;
+        second = Math.abs(second);
+        let day = Math.trunc(second / 3600 / 24);
+        let hour = Math.trunc((second - day * 3600 * 24) / 3600);
+        let minute = Math.trunc((second - day * 3600 * 24 - hour * 3600) / 60);
+        let sec = second % 60;
+        let strHour = fillZero(hour + "");
+        let strMinute = fillZero(minute + "");
+        let strSec = fillZero(sec + "");
+        return `${day}天${strHour}小时${strMinute}分${strSec}秒`;
+    }
+    contestTimeFormat (row: any) {
+        if (Object.prototype.hasOwnProperty.call(row, "_format_") && typeof row._format_ === "string") {
+            return row._format_;
+        }
+        let startTime: Dayjs;
+        if (!dayjs.isDayjs(row.start_time)) {
+            startTime = dayjs(row.start_time);
+        }
+        let endTime: Dayjs;
+        if (!dayjs.isDayjs(row.end_time)) {
+            endTime = dayjs(row.end_time);
+        }
+        const currentTime: Dayjs = this.current_time;
+        if (row.isEnd || currentTime.isAfter(endTime!)) {
+            row.isEnd = true;
+            // eslint-disable-next-line no-return-assign
+            return row._format_ = `${endTime!.format("YYYY-MM-DD HH:mm")}${this.$t("end")}`;
+        }
+        else if (currentTime.isBefore(startTime!)) {
+            return `${startTime!.format("YYYY-MM-DD HH:mm")}${this.$t("start")}`;
+        }
+        else {
+            return `${startTime!.format("YYYY-MM-DD HH:mm")} ${this.$t("start")}<br>${endTime!.format("YYYY-MM-DD HH:mm")} ${this.$t("end")}`;
+        }
+    }
+    percentageRunning (row: any) {
+        let startTime: Dayjs;
+        if (row.isEnd === true) {
+            return 100;
+        }
+        if (!dayjs.isDayjs(row.start_time)) {
+            startTime = dayjs(row.start_time);
+        }
+        let endTime: Dayjs;
+        if (!dayjs.isDayjs(row.end_time)) {
+            endTime = dayjs(row.end_time);
+        }
+        const currentTime: Dayjs = this.current_time;
+        if (currentTime.isBefore(startTime!)) {
+            return 0;
+        }
+        else if (currentTime.isAfter(endTime!)) {
+            row.isEnd = true;
+            return 100;
+        }
+        else {
+            let diffTime = currentTime.diff(startTime!, "second");
+            let totalDiff = endTime!.diff(startTime!, "second");
+            return (Math.floor(diffTime * 100 / totalDiff));
+        }
+    }
+}
 </script>
 
 <style scoped>

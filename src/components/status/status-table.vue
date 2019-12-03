@@ -87,110 +87,15 @@
     </table>
 </template>
 
-<script>
-import util from "../../lib/util";
+<script lang="ts">
 import avatarMixin from "../../mixin/avatarMixin";
-import dayjs from "dayjs";
-import * as _ from "lodash";
+import { Mixins, Component } from "vue-property-decorator";
+import { StatusMixin } from "@/mixin/StatusMixin";
 
-export default {
-    name: "status-table",
-    mixins: [avatarMixin],
-    props: {
+@Component
+export default class StatusTable extends Mixins(avatarMixin, StatusMixin) {
 
-        problem_list: {
-            type: Array,
-            default: () => []
-        },
-        answer_icon: {
-            type: Array,
-            default: () => []
-        },
-        answer_class: {
-            type: Array,
-            default: () => []
-        },
-        target: {
-            type: Object,
-            default: () => Object.create(null)
-        },
-        language_name: {
-            type: Array,
-            default: () => []
-        },
-        result: {
-            type: Array,
-            default: () => []
-        },
-        self: {
-            type: String,
-            default: ""
-        },
-        isadmin: {
-            type: Boolean,
-            default: false
-        }
-    },
-    data: function () {
-        return {
-            user: {},
-            dayjs
-        };
-    },
-    methods: {
-        memory_parse: function (_memory) {
-            let unit = ["KB", "MB", "GB"];
-            let cnt = 0;
-            let memory = parseInt(_memory);
-            while (memory > 1024) {
-                memory /= 1024;
-                ++cnt;
-            }
-            return memory.toString().substring(0, 5) + unit[cnt];
-        },
-        time_parse: function (_time) {
-            let unit = ["ms", "s"];
-            let cnt = 0;
-            let time = parseInt(_time);
-            while (time > 1000) {
-                ++cnt;
-                time /= 1000;
-            }
-            return time.toString().substring(0, 5) + unit[cnt];
-        },
-        detect_place: function (ip) {
-            if (!ip) {
-                return "未知";
-            }
-            let tmp = {
-                intranet_ip: ip,
-                place: ""
-            };
-            util.detectIP(tmp);
-            return tmp.place;
-        },
-        infoRoute: function (result) {
-            if (parseInt(result) === 11) {
-                return "compile";
-            }
-            return "runtime";
-        }
-    },
-    computed: {
-        problem_lists: function () {
-            let that = this;
-            _.forEach(this.problem_list, function (i) {
-                that.user[i.user_id] = that.user[i.user_id] || i;
-            });
-            let doc = document.createElement("div");
-            _.forEach(this.problem_list, function (val, i) {
-                doc.innerHTML = that.problem_list[i].nick;
-                that.problem_list[i].nick = doc.innerText;
-            });
-            return this.problem_list;
-        }
-    }
-};
+}
 </script>
 
 <style scoped>

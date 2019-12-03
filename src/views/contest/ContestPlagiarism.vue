@@ -19,10 +19,12 @@
     </div>
 </template>
 
-<script>
-export default {
-    name: "ContestPlagiarism"
-};
+<script lang="ts">
+import InitMixin from "../../mixin/init";
+import { Mixins, Component } from "vue-property-decorator";
+@Component
+export default class ContestPlagiarism extends Mixins(InitMixin) {
+}
 </script>
 
 <style scoped>
