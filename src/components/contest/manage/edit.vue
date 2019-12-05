@@ -260,14 +260,14 @@ export default class BaseManage extends Vue {
             initialDate: this.startTime ? this.startTime : null,
             endCalendar: $rangeEnd,
             onChange (value: any) {
-                that.startTime = dayjs(value);
+                that.startTime = new Date(value);
             }
         });
         $rangeEnd.calendar({
             initialDate: this.endTime ? this.endTime : null,
             startCalendar: $rangeStart,
             onChange (value: any) {
-                that.endTime = dayjs(value);
+                that.endTime = new Date(value);
             }
         });
         $(".ui.dropdown").dropdown();
