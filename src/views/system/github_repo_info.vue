@@ -49,6 +49,27 @@
                 </h3>
             </div>
             <div class="row">
+                <h3 class="ui header">
+                    当前版本
+                </h3>
+            </div>
+            <div class="row">
+                <div class="ui card">
+                    <RepoInfoCard>
+                        <template v-slot:header>
+                            {{currentBackendInfo.version}}
+                        </template>
+                        <template v-slot:meta>
+                        </template>
+                    </RepoInfoCard>
+                </div>
+            </div>
+            <div class="row">
+                <h3 class="ui header">
+                    仓库分支版本
+                </h3>
+            </div>
+            <div class="row">
                 <div class="ui cards">
                     <RepoInfoCard :key="key" v-for="(row, key) in backendBranch">
                         <template v-slot:header>
@@ -81,6 +102,7 @@ export default class GithubRepoInfo extends Mixins(InitMixin) {
     frontendBranch: any[] = [];
     backendBranch: any[] = [];
     currentFrontendInfo = Package;
+    currentBackendInfo: any = {};
     [id: string]: any;
     frontendRepo = "ryanlee2014/CUP-Online-Judge-NG-Frontend";
     backendRepo = "CUP-ACM-Programming-Club/CUP-Online-Judge-Express";
@@ -128,6 +150,18 @@ export default class GithubRepoInfo extends Mixins(InitMixin) {
 
     initBackendData () {
         this.baseInitData(this.backendRepo, "backendBranch");
+        this.getBackendVersion();
+    }
+
+    getBackendVersion () {
+        this.axios.get("/api/system/config/version_control/version")
+            .then(({ data }) => {
+                this.currentBackendInfo = this.buildVersionPackage(data.data);
+            });
+    }
+
+    buildVersionPackage (version: string) {
+        return { version };
     }
 
     buildJsDelivrLink (repo: string, branch: string) {
