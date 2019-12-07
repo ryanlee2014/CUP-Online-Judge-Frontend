@@ -39,6 +39,9 @@ export default class ContestEditMixin extends Vue {
         delete val.languageSelected;
         delete val.languageSet;
         val.problemSelected = val.problemSelected.split(",").map((el: any) => parseInt(el));
+        if (typeof val.hostname !== "string" || val.hostname === "null" || val.hostname === null) {
+            val.hostname = "";
+        }
         return val;
     }
 }

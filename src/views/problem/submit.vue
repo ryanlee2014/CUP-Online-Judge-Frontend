@@ -395,7 +395,7 @@ export default class Submit extends Mixins(mixins) {
     }
     isCLanguage (options?: any, next?: any) {
         const languageName = require("../../type/index.json").language_name.local;
-        const cRegex = /C[A-Za-z0-9]+/;
+        const cRegex = /C[A-Za-z0-9]+$/;
         let ret;
         ret = cRegex.test(languageName[this.$store.getters.language]);
         if (typeof next === "function") {
