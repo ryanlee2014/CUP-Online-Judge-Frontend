@@ -48,10 +48,10 @@
                                 </a>
 
                             </div>
-                            <br><a class="ui inverted large button download basic vultr"
-                                   href="https://www.cubecloud.net/aff?aff=1461"
-                                   target="_blank">
-                            Hosted by CubeCloud
+                            <br>
+                            <a href="https://promotion.aliyun.com/ntms/act/ambassador/sharetouser.html?userCode=1ohno31e&utm_source=1ohno31e"
+                                   title="阿里云限量红包，上云就上阿里云，享数字化转型，市场占有率超过第 2-5 名总和" class="ui small image main title" target="_blank">
+                            <img src="../static/image/aliyun.svg" alt="Aliyun">
                         </a>
                             <!--<a class="vultr" href="https://www.vultr.com/?ref=7250019" target="_blank"><img src="./image/vultr.png" class="ui small image main title" style="display:inline-block"></a>-->
                             <!--<h4></h4>-->
