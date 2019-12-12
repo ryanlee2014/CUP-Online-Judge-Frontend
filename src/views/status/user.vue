@@ -66,7 +66,7 @@
                         <th><a @click="sort(6)"><i v-show="type == 6"
                                                    :class="'sort numeric icon '+(order > 0 ?'down':'up')"></i>平均代码长度</a></th>
                         <th><a @click="sort(7)">
-                            <i v-show="type == 6"
+                            <i v-show="type == 7"
                                :class="'sort numeric icon '+(order > 0 ?'down':'up')"></i>总代码长度
                         </a></th>
                     </tr>
