@@ -46,6 +46,8 @@ function binding_method(homepage, finished) {
             $('.network.menu').addClass('inverted');
     }
 
+    lightout();
+
     $('body')
         .visibility({
             once: false,
