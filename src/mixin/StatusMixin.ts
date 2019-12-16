@@ -2,7 +2,9 @@ import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import dayjs from "dayjs";
 import utils from "@/lib/util";
+import jquery from "jquery";
 import _ from "lodash";
+const $: any = jquery;
 
 @Component
 export class StatusMixin extends Vue {
@@ -31,6 +33,15 @@ export class StatusMixin extends Vue {
         }
         return memory.toString().substring(0, 5) + unit[cnt];
     }
+
+    updated () {
+        $(".list-complete-item").popup({
+            on: "hover",
+            hoverable: true,
+            positon: "top center"
+        });
+    }
+
     time_parse (_time: string) {
         const unit = ["ms", "s"];
         let cnt = 0;
@@ -48,7 +59,7 @@ export class StatusMixin extends Vue {
         if (!ip) {
             return "未知";
         }
-        const tmp = {
+        const tmp: any = {
             intranet_ip: ip,
             place: ""
         };
@@ -63,7 +74,6 @@ export class StatusMixin extends Vue {
     }
 
     get problem_lists () {
-        const that = this;
         _.forEach(this.problem_list, (i) => {
             this.user[i.user_id] = this.user[i.user_id] || i;
         });
