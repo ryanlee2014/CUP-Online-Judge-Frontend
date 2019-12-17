@@ -30,36 +30,18 @@
     </div>
 </template>
 
-<script>
-import SocketMenu from "../../components/SocketMenu";
-export default {
-    name: "nano",
+<script lang="ts">
+import SocketMenu from "../../components/SocketMenu.vue";
+import { Component, Mixins } from "vue-property-decorator";
+import MenuMixin from "@/mixin/menu/MenuMixin";
+@Component({
     components: {
         SocketMenu
-    },
-    props: {
-        nick: {
-            type: String,
-            default: ""
-        },
-        logined: {
-            type: Boolean,
-            default: false
-        },
-        user: {
-            type: Number,
-            default: 0
-        },
-        judger: {
-            type: Number,
-            default: 0
-        },
-        connected: {
-            type: Boolean,
-            default: false
-        }
     }
-};
+})
+export default class NanoMenu extends Mixins(MenuMixin) {
+
+}
 </script>
 
 <style scoped>

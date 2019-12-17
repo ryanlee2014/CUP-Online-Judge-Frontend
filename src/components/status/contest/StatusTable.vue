@@ -69,9 +69,9 @@
 <script lang="ts">
 import avatarMixin from "../../../mixin/avatarMixin";
 import { Mixins, Component } from "vue-property-decorator";
-import { StatusMixin } from "@/mixin/StatusMixin";
+import { StatusTableMixin } from "@/mixin/status-table-mixin.component";
 @Component
-export default class StatusTable extends Mixins(avatarMixin, StatusMixin) {
+export default class StatusTable extends Mixins(avatarMixin, StatusTableMixin) {
 
 }
 </script>

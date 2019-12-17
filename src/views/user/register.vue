@@ -64,129 +64,125 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 import mixins from "../../mixin/init";
 import Middleware from "../../module/Middleware/core";
-const $ = require("jquery");
-export default {
-    name: "register",
-    mixins: [mixins],
-    data () {
-        return {
-            userId: "",
-            nick: "",
-            password: "",
-            repeatPassword: "",
-            confirmquestion: "",
-            confirmanswer: "",
-            vcode: ""
-        };
-    },
+import jquery from "jquery";
+import { Mixins, Component } from "vue-property-decorator";
+const $: any = jquery;
+@Component
+export default class Register extends Mixins(mixins) {
+    userId= "";
+    nick= "";
+    password= "";
+    repeatPassword= "";
+    confirmquestion= "";
+    confirmanswer= "";
+    vcode= ""
     mounted () {
         this.initForm();
-    },
-    methods: {
-        initForm () {
-            $(".ui.form")
-                .form({
-                    on: "blur",
-                    fields: {
-                        name: {
-                            identifier: "user_id",
-                            rules: [
-                                {
-                                    type: "empty",
-                                    prompt: "Please enter your user id"
-                                },
-                                {
-                                    type: "regExp[/^201[0-9]{7}$/]",
-                                    prompt: "Please enter your legal user_id!"
-                                }
-                            ]
-                        },
-                        password: {
-                            identifier: "rptpassword",
-                            rules: [
-                                {
-                                    type: "match[password]",
-                                    prompt: "Please repeat your password correctly!"
-                                }
-                            ]
-                        },
-                        confirmquestion: {
-                            identifier: "confirmquestion",
-                            rules: [
-                                {
-                                    type: "empty",
-                                    prompt: "Please enter your confirm question"
-                                }
-                            ]
-                        },
-                        confirmanswer: {
-                            identifier: "confirmanswer",
-                            rules: [
-                                {
-                                    type: "empty",
-                                    prompt: "Please enter your confirm answer"
-                                }
-                            ]
-                        },
-                        vcode: {
-                            identifier: "vcode",
-                            rules: [
-                                {
-                                    type: "empty",
-                                    prompt: "please enter vcode"
-                                }
-                            ]
-                        }
+    }
+
+    initForm () {
+        $(".ui.form")
+            .form({
+                on: "blur",
+                fields: {
+                    name: {
+                        identifier: "user_id",
+                        rules: [
+                            {
+                                type: "empty",
+                                prompt: "Please enter your user id"
+                            },
+                            {
+                                type: "regExp[/^201[0-9]{7}$/]",
+                                prompt: "Please enter your legal user_id!"
+                            }
+                        ]
+                    },
+                    password: {
+                        identifier: "rptpassword",
+                        rules: [
+                            {
+                                type: "match[password]",
+                                prompt: "Please repeat your password correctly!"
+                            }
+                        ]
+                    },
+                    confirmquestion: {
+                        identifier: "confirmquestion",
+                        rules: [
+                            {
+                                type: "empty",
+                                prompt: "Please enter your confirm question"
+                            }
+                        ]
+                    },
+                    confirmanswer: {
+                        identifier: "confirmanswer",
+                        rules: [
+                            {
+                                type: "empty",
+                                prompt: "Please enter your confirm answer"
+                            }
+                        ]
+                    },
+                    vcode: {
+                        identifier: "vcode",
+                        rules: [
+                            {
+                                type: "empty",
+                                prompt: "please enter vcode"
+                            }
+                        ]
                     }
-                });
-        },
-        checkUserId (options, next) {
-            if (isNaN(parseInt(this.userId))) {
-                alert("user_id should be your school id");
-            }
-            else {
-                next();
-            }
-        },
-        checkPassword (options, next) {
-            if (this.password.trim() !== this.repeatPassword.trim()) {
-                alert("password you input not the same as repeat password");
-            }
-            else {
-                next();
-            }
-        },
-        checkConfirm (options, next) {
-            if (this.confirmanswer.trim().length === 0 || this.confirmquestion.trim().length === 0) {
-                alert("You must input your confirm question and confirm answer");
-            }
-            else {
-                next();
-            }
-        },
-        postData (options, next) {
-            this.axios.post("/api/user/register", this.$data)
-                .then(({ data }) => {
-                    if (data.status === "OK") {
-                        alert(this.$t("success"));
-                        if (typeof next === "function") {
-                            next();
-                        }
-                    }
-                    else {
-                        alert(data.statement);
-                    }
-                });
-        },
-        register () {
-            const middleware = new Middleware();
-            middleware.use(this.checkUserId).use(this.checkPassword).use(this.checkConfirm).use(this.postData).commit();
+                }
+            });
+    }
+    checkUserId (options: any, next: (...args: any[]) => any) {
+        if (isNaN(parseInt(this.userId))) {
+            alert("user_id should be your school id");
+        }
+        else {
+            next();
         }
     }
-};
+    checkPassword (options: any, next: (...args: any[]) => any) {
+        if (this.password.trim() !== this.repeatPassword.trim()) {
+            alert("password you input not the same as repeat password");
+        }
+        else {
+            next();
+        }
+    }
+    checkConfirm (options: any, next: (...args: any[]) => any) {
+        if (this.confirmanswer.trim().length === 0 || this.confirmquestion.trim().length === 0) {
+            alert("You must input your confirm question and confirm answer");
+        }
+        else {
+            next();
+        }
+    }
+    postData (options: any, next: (...args: any[]) => any) {
+        this.axios.post("/api/user/register", this.$data)
+            .then(({ data }) => {
+                if (data.status === "OK") {
+                    alert(this.$t("success"));
+                    if (typeof next === "function") {
+                        next();
+                    }
+                }
+                else {
+                    alert(data.statement);
+                }
+            });
+    }
+    register () {
+        const middleware = new Middleware();
+        middleware.use(this.checkUserId).use(this.checkPassword).use(this.checkConfirm).use(this.postData).commit();
+    }
+}
 </script>
 
 <style scoped>

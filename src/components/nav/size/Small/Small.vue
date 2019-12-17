@@ -1,15 +1,15 @@
 <template>
-    <div id="navbar-small" class="ui borderless network secondary menu">
+    <div class="ui borderless network secondary menu" id="navbar-small">
         <div class="ui container">
             <div class="msg header item">
                 <router-link class="item" to="/"><i class="home icon"></i>首页</router-link>
             </div>
-            <router-link to="problemset" class="item">问题</router-link>
+            <router-link class="item" to="problemset">问题</router-link>
             <router-link class="item" to="/status">历史
             </router-link>
             <router-link class="item" to="/ranklist">排名</router-link>
             <router-link class="item" to="/contest">竞赛&amp;作业</router-link>
-            <div tabindex="0" class="ui dropdown item">
+            <div class="ui dropdown item" tabindex="0">
                 <div class="text">其他</div>
                 <i class="dropdown icon"></i>
                 <div class="menu">
@@ -18,42 +18,24 @@
                     <router-link class="item" to="/extra/whiteboard">白板(β版测试)</router-link>
                 </div>
             </div>
-            <SocketMenu :nick="nick" :logined="logined" :user="user" :judger="judger" :connected="connected"
+            <SocketMenu :connected="connected" :judger="judger" :logined="logined" :nick="nick" :user="user"
             ></SocketMenu>
         </div>
     </div>
 </template>
 
-<script>
-import SocketMenu from "../../components/SocketMenu";
-export default {
-    name: "Small",
+<script lang="ts">
+import SocketMenu from "../../components/SocketMenu.vue";
+import { Component, Mixins } from "vue-property-decorator";
+import MenuMixin from "@/mixin/menu/MenuMixin";
+@Component({
     components: {
         SocketMenu
-    },
-    props: {
-        nick: {
-            type: String,
-            default: ""
-        },
-        logined: {
-            type: Boolean,
-            default: false
-        },
-        user: {
-            type: Number,
-            default: 0
-        },
-        judger: {
-            type: Number,
-            default: 0
-        },
-        connected: {
-            type: Boolean,
-            default: false
-        }
     }
-};
+})
+export default class SmallMenu extends Mixins(MenuMixin) {
+
+}
 </script>
 
 <style scoped>

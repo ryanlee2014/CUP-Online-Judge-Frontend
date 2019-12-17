@@ -42,23 +42,22 @@
     </div>
 </template>
 
-<script>
-const $ = require("jquery");
-export default {
-    name: "other_contest_schedure",
-    data () {
-        return {
-            json: {}
-        };
-    },
+<script lang="ts">
+import { Component, Mixins, Prop } from "vue-property-decorator";
+import jquery from "jquery";
+import InitMixin from "../mixin/init";
+const $: any = jquery;
+export default class OtherContestSchedure extends Mixins(InitMixin) {
+    json: any = {};
+
     mounted () {
         this.axios.get("/recent_contest.json")
             .then(({ data }) => {
                 this.json = data;
             });
-        $.get("fresh_contest.php");
+        this.axios.get("fresh_contest.php");
     }
-};
+}
 </script>
 
 <style scoped>

@@ -81,9 +81,13 @@
     </div>
 </template>
 
-<script>
-
-const Chart = require("chart.js");
+<script lang="ts">
+// @ts-nocheck
+// TODO: This component is **deprecated**. Please do not use in any other vue components.
+import { Component, Prop } from "vue-property-decorator";
+import Vue from "vue";
+import Chart from "chart.js";
+import _ from "lodash";
 let defaultSpan = 0;
 let spans = [];
 let statusCodesColors = ["#75D701", "#47b8e0", "#ffc952", "#E53A40"];
@@ -157,14 +161,11 @@ let responseTimeChart;
 let rpsChart;
 let statusCodesChart;
 let charts;
-export default {
-    name: "monitor",
-    data () {
-        return {
-            getStartMessage: false,
-            intervalId: 0
-        };
-    },
+
+@Component
+export default class Monitor extends Vue {
+    getStartMessage = false;
+    intervalId = 0;
     mounted () {
         const that = this;
         this.prepare();
@@ -343,59 +344,59 @@ export default {
                 }
             });
         });
-    },
-    methods: {
-        prepare () {
-            Chart.defaults.global.defaultFontSize = 8;
-            Chart.defaults.global.animation.duration = 500;
-            Chart.defaults.global.legend.display = false;
-            Chart.defaults.global.elements.line.backgroundColor = "rgba(0,0,0,0)";
-            Chart.defaults.global.elements.line.borderColor = "rgba(0,0,0,0.9)";
-            Chart.defaults.global.elements.line.borderWidth = 2;
-
-            cpuStat = document.getElementById("cpuStat");
-            memStat = document.getElementById("memStat");
-            loadStat = document.getElementById("loadStat");
-            responseTimeStat = document.getElementById("responseTimeStat");
-            rpsStat = document.getElementById("rpsStat");
-
-            cpuChartCtx = document.getElementById("cpuChart");
-            memChartCtx = document.getElementById("memChart");
-            loadChartCtx = document.getElementById("loadChart");
-            responseTimeChartCtx = document.getElementById("responseTimeChart");
-            rpsChartCtx = document.getElementById("rpsChart");
-            statusCodesChartCtx = document.getElementById("statusCodesChart");
-
-            cpuChart = createChart(cpuChartCtx, cpuDataset);
-            memChart = createChart(memChartCtx, memDataset);
-            loadChart = createChart(loadChartCtx, loadDataset);
-            responseTimeChart = createChart(responseTimeChartCtx, responseTimeDataset);
-            rpsChart = createChart(rpsChartCtx, rpsDataset);
-            statusCodesChart = new Chart(statusCodesChartCtx, {
-                type: "line",
-                data: {
-                    labels: [],
-                    datasets: [
-                        Object.create(defaultDataset),
-                        Object.create(defaultDataset),
-                        Object.create(defaultDataset),
-                        Object.create(defaultDataset)
-                    ]
-                },
-                options: defaultOptions
-            });
-
-            statusCodesChart.data.datasets.forEach(function (dataset, index) {
-                dataset.borderColor = statusCodesColors[index];
-            });
-            statusCodesChart.data.datasets.forEach(function (dataset, index) {
-                dataset.borderColor = statusCodesColors[index];
-            });
-
-            charts = [cpuChart, memChart, loadChart, responseTimeChart, rpsChart, statusCodesChart];
-        }
     }
-};
+
+    prepare () {
+        Chart.defaults.global.defaultFontSize = 8;
+        Chart.defaults.global.animation.duration = 500;
+        Chart.defaults.global.legend.display = false;
+        Chart.defaults.global.elements.line.backgroundColor = "rgba(0,0,0,0)";
+        Chart.defaults.global.elements.line.borderColor = "rgba(0,0,0,0.9)";
+        Chart.defaults.global.elements.line.borderWidth = 2;
+
+        cpuStat = document.getElementById("cpuStat");
+        memStat = document.getElementById("memStat");
+        loadStat = document.getElementById("loadStat");
+        responseTimeStat = document.getElementById("responseTimeStat");
+        rpsStat = document.getElementById("rpsStat");
+
+        cpuChartCtx = document.getElementById("cpuChart");
+        memChartCtx = document.getElementById("memChart");
+        loadChartCtx = document.getElementById("loadChart");
+        responseTimeChartCtx = document.getElementById("responseTimeChart");
+        rpsChartCtx = document.getElementById("rpsChart");
+        statusCodesChartCtx = document.getElementById("statusCodesChart");
+
+        cpuChart = createChart(cpuChartCtx, cpuDataset);
+        memChart = createChart(memChartCtx, memDataset);
+        loadChart = createChart(loadChartCtx, loadDataset);
+        responseTimeChart = createChart(responseTimeChartCtx, responseTimeDataset);
+        rpsChart = createChart(rpsChartCtx, rpsDataset);
+        statusCodesChart = new Chart(statusCodesChartCtx, {
+            type: "line",
+            data: {
+                labels: [],
+                datasets: [
+                    Object.create(defaultDataset),
+                    Object.create(defaultDataset),
+                    Object.create(defaultDataset),
+                    Object.create(defaultDataset)
+                ]
+            },
+            options: defaultOptions
+        });
+
+        statusCodesChart.data.datasets.forEach(function (dataset, index) {
+            dataset.borderColor = statusCodesColors[index];
+        });
+        statusCodesChart.data.datasets.forEach(function (dataset, index) {
+            dataset.borderColor = statusCodesColors[index];
+        });
+
+        charts = [cpuChart, memChart, loadChart, responseTimeChart, rpsChart, statusCodesChart];
+    }
+}
+/* tslint:enable */
 </script>
 
 <style scoped>

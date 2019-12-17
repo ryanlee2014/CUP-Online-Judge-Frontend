@@ -143,20 +143,21 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 import * as am4core from "@amcharts/amcharts4/core";
 import * as am4charts from "@amcharts/amcharts4/charts";
-import am4themes_animated from "@amcharts/amcharts4/themes/animated";
 import mixins from "../../mixin/init";
-const _ = require("lodash");
-const $ = require("jquery");
-window.$ = window.jQuery = $;
-const Chart = require("chart.js");
-let hasDrawLineChart = {};
-let hasRendered = {};
+import { Mixins, Component } from "vue-property-decorator";
+import _ from "lodash";
+import jquery from "jquery";
+import Chart from "chart.js";
+const am4themes_animated = require("@amcharts/amcharts4/themes/animated").default;
+const $: any = jquery;
+let hasDrawLineChart: any = {};
+let hasRendered: any = {};
 
-function drawLineChart (data, target = "default") {
-    let data_array = [];
+function drawLineChart (data: any, target = "default") {
+    let data_array: any = [];
 
     if (!hasDrawLineChart[target]) {
         hasDrawLineChart[target] = true;
@@ -168,7 +169,7 @@ function drawLineChart (data, target = "default") {
         return;
     }
     am4core.useTheme(am4themes_animated);
-    let chart = am4core.create("problem_code_length", am4charts.XYChart);
+    let chart: any = am4core.create("problem_code_length", am4charts.XYChart);
 
     chart.data = data_array;
 
@@ -179,7 +180,7 @@ function drawLineChart (data, target = "default") {
     chart.yAxes.push(new am4charts.ValueAxis());
 
     // Create series
-    let series = chart.series.push(new am4charts.LineSeries());
+    let series: any = chart.series.push(new am4charts.LineSeries());
     series.dataFields.valueY = "value";
     series.dataFields.dateX = "date";
     series.tooltipText = "{value}";
@@ -219,7 +220,7 @@ function drawLineChart (data, target = "default") {
     chart.scrollbarX.parent = chart.bottomAxesContainer;
 }
 
-function drawChordGraph (data, pid, prefix = "chord_graph") {
+function drawChordGraph (data: any, pid: any, prefix = "chord_graph") {
     if (hasRendered[prefix]) {
         return;
     }
@@ -240,7 +241,7 @@ function drawChordGraph (data, pid, prefix = "chord_graph") {
         el.to += "";
     });
 
-    data.sort(function (a, b) {
+    data.sort(function (a: any, b: any) {
         return b.value - a.value;
     });
 
@@ -267,331 +268,330 @@ function drawChordGraph (data, pid, prefix = "chord_graph") {
     // create animations
     chart.events.on("ready", function () {
         for (let i = 0; i < chart.links.length; i++) {
-            let link = chart.links.getIndex(i);
+            let link: any = chart.links.getIndex(i);
             let bullet = link.bullets.getIndex(0);
 
             animateBullet(bullet);
         }
     });
 
-    function animateBullet (bullet) {
+    function animateBullet (bullet: any) {
         let duration = 3000 * Math.random() + 2000;
         let animation = bullet.animate([{ property: "locationX", from: 0, to: 1 }], duration);
-        animation.events.on("animationended", function (event) {
+        animation.events.on("animationended", function (event: any) {
             animateBullet(event.target.object);
         });
     }
 }
 
-export default {
-    name: "problem",
-    mixins: [mixins],
-    data: function () {
+@Component
+export default class ProblemStatus extends Mixins(mixins) {
+    pid!: any;
+    problem_stat= [];
+    submit_stat= [];
+    problem_submit_stat= {};
+    stat_name= [];
+    current_page: any = 0;
+    language_name= [];
+    isadmin= false;
+    self= "";
+    time_range= {};
+    owner: any = "";
+    memory_range= {};
+    initedSolveMap= false;
+    $route: any;
+
+    created () {
+        this.pid = this.$route.params.id;
+        this.current_page = parseInt(this.$route.query.page || 0);
+    }
+
+    get submitStatus () {
+        let prob_stat: any = {};
+        _.forEach(this.problem_stat, function (val: any) {
+            prob_stat[val.result] = val.total;
+        });
         return {
-            pid: this.$route.params.id,
-            problem_stat: [],
-            submit_stat: [],
-            problem_submit_stat: {},
-            stat_name: [],
-            current_page: parseInt(this.$route.query.page || 0),
-            language_name: [],
-            isadmin: false,
-            self: "",
-            time_range: {},
-            memory_range: {},
-            initedSolveMap: false
+            problem_status: prob_stat,
+            solution_status: this.submit_stat,
+            total_status: this.problem_submit_stat,
+            color: ["black", "black", "black", "green", "red", "red", "yellow", "yellow", "yellow", "yellow", "yellow", "yellow", "yellow", "", "", ""],
+            statistic_name: this.stat_name,
+            language_name: this.language_name,
+            time_range: this.time_range,
+            memory_range: this.memory_range
         };
-    },
-    computed: {
-        submitStatus: {
-            get: function () {
-                let prob_stat = {};
-                _.forEach(this.problem_stat, function (val) {
-                    prob_stat[val.result] = val.total;
-                });
-                return {
-                    problem_status: prob_stat,
-                    solution_status: this.submit_stat,
-                    total_status: this.problem_submit_stat,
-                    color: ["black", "black", "black", "green", "red", "red", "yellow", "yellow", "yellow", "yellow", "yellow", "yellow", "yellow", "", "", ""],
-                    statistic_name: this.stat_name,
-                    language_name: this.language_name,
-                    time_range: this.time_range,
-                    memory_range: this.memory_range
-                };
-            },
-            set: function (val) {
-                let stat = val.data.problem_status;
-                this.problem_stat = stat;
-                this.submit_stat = val.data.solution_status;
-                this.problem_submit_stat = val.data.submit_status;
-                this.stat_name = val.data.statistic_name;
-                this.language_name = val.data.language_name;
-                this.isadmin = val.data.isadmin;
-                this.owner = val.data.self;
-                this.time_range = val.data.time_range;
-                this.memory_range = val.data.memory_range;
-            }
+    }
+
+    set submitStatus (val: any) {
+        let stat = val.data.problem_status;
+        this.problem_stat = stat;
+        this.submit_stat = val.data.solution_status;
+        this.problem_submit_stat = val.data.submit_status;
+        this.stat_name = val.data.statistic_name;
+        this.language_name = val.data.language_name;
+        this.isadmin = val.data.isadmin;
+        this.owner = val.data.self;
+        this.time_range = val.data.time_range;
+        this.memory_range = val.data.memory_range;
+    }
+
+    initSolveMap () {
+        if (this.initedSolveMap) {
+            return;
         }
-    },
-    methods: {
-        initSolveMap () {
-            if (this.initedSolveMap) {
-                return;
-            }
-            this.initedSolveMap = true;
-            this.axios.get(`/api/status/problem/solve_map/${this.pid}`)
-                .then(({ data }) => {
-                    if (data.status === "OK") {
-                        _.delay(drawChordGraph, 0, data.data, this.pid);
-                    }
-                });
-        },
-        page: function (num) {
-            this.current_page += num;
-            let that = this;
-            $.get("/api/problemstatus/" + this.pid + "?page=" + this.current_page, function (data) {
-                that.submitStatus = data;
-                that.setQuery();
+        this.initedSolveMap = true;
+        this.axios.get(`/api/status/problem/solve_map/${this.pid}`)
+            .then(({ data }) => {
+                if (data.status === "OK") {
+                    _.delay(drawChordGraph, 0, data.data, this.pid);
+                }
             });
-        },
-        setQuery: function () {
-            let queryObject = {};
-            if (this.current_page !== 0) { queryObject["page"] = this.current_page + 1; }
-            else {
-                delete queryObject["page"];
-            }
-            this.$router.push({ path: this.$route.path, query: queryObject });
-        }
-    },
-    mounted: function () {
-        document.title = `Problem ${this.pid} Statistics -- ${document.title}`;
+    }
+    page (num: any) {
+        this.current_page += num;
         let that = this;
+        this.axios.get(`/api/problemstatus/${this.pid}?page=${this.current_page}`)
+            .then(({ data }) => {
+                this.submitStatus = data;
+                this.setQuery();
+            });
+    }
+    setQuery () {
+        let queryObject: any = {};
+        if (this.current_page !== 0) { queryObject["page"] = this.current_page + 1; }
+        else {
+            delete queryObject["page"];
+        }
+        this.$router.push({ path: this.$route.path, query: queryObject });
+    }
+
+    mounted () {
+        document.title = `Problem ${this.pid} Statistics -- ${document.title}`;
         let current_title = $("title").text();
         $("title").text("Status:Problem " + this.pid + " - " + current_title);
         this.current_page = Math.max(0, this.current_page - 1);
-        $.get("/api/status/problem/code_length/problem/" + this.pid, function (data) {
-            if (data.status == "OK") {
+        this.axios.get(`/api/status/problem/code_length/problem/${this.pid}`)
+            .then(({ data }) => {
                 drawLineChart(data.data);
-            }
+            });
+        this.axios.get(`/api/problemstatus/${this.pid}?page=${this.current_page}`)
+            .then(({ data }) => {
+                this.submitStatus = data;
+                this.initGraph();
+            });
+    }
+
+    initGraph () {
+        let colors: any = _.values(window.chartColors);
+        colors.push("#af63f4");
+        colors.push("#00b5ad");
+        colors.push("#350ae8");
+        colors.push("#E2EAE9");
+        let ncolor = ["#3366CC", "#DC3912", "#FF9900", "#109618", "#990099", "#3B3EAC", "#0099C6", "#DD4477", "#66AA00", "#B82E2E", "#316395", "#994499", "#22AA99", "#AAAA11", "#6633CC", "#E67300", "#8B0707", "#329262", "#5574A6", "#3B3EAC"];
+        _.forEach(ncolor, function (val) {
+            colors.push(val);
         });
-        $.get("/api/problemstatus/" + this.pid + "?page=" + this.current_page, function (data) {
-            if (data.status == "OK") {
-                that.submitStatus = data;
+        let config = {
+            type: "pie",
+            data: {
+                datasets: [{
+                    data: _.map(this.submitStatus.problem_status, (val) => {
+                        return val;
+                    }),
+                    backgroundColor: colors,
+                    label: "Status"
+                }],
+                labels: _.map(this.submitStatus.problem_status, (val, index) => {
+                    return this.submitStatus.statistic_name[index];
+                })
+            },
+            options: {
+                responsive: true
+            }
+        };
+        let lang: any = {};
+        let labels: any = {};
+        _.forEach(this.submitStatus.time_range, function (val) {
+            labels[val.diff] = true;
+            lang[val.language] = {};
+        });
+        labels = _.map(labels, function (val, index) {
+            let arr = index.split("-");
+            let str = arr[0] + "ms";
+            if (arr.length > 1) { str += " - " + arr[1] + "ms"; }
+            return str;
+        });
+        labels.sort(function (a: any, b: any) {
+            if (a.indexOf(">") !== -1) {
+                const s = parseFloat(a.substring(1, a.length));
+                const t = parseFloat(b.split("-")[0]);
+                return s - t;
+            }
+            else if (b.indexOf(">") !== -1) {
+                const s = parseFloat(a.split("-")[0]);
+                const t = parseFloat(b.substring(1, b.length));
+                return s - t;
             }
             else {
-                return;
+                const s = parseFloat(a.split("-")[0]);
+                const t = parseFloat(b.split("-")[0]);
+                return s - t;
             }
-            let colors = _.values(window.chartColors);
-            colors.push("#af63f4");
-            colors.push("#00b5ad");
-            colors.push("#350ae8");
-            colors.push("#E2EAE9");
-            let ncolor = ["#3366CC", "#DC3912", "#FF9900", "#109618", "#990099", "#3B3EAC", "#0099C6", "#DD4477", "#66AA00", "#B82E2E", "#316395", "#994499", "#22AA99", "#AAAA11", "#6633CC", "#E67300", "#8B0707", "#329262", "#5574A6", "#3B3EAC"];
-            _.forEach(ncolor, function (val) {
-                colors.push(val);
-            });
-            let config = {
-                type: "pie",
-                data: {
-                    datasets: [{
-                        data: _.map(that.submitStatus.problem_status, function (val) {
-                            return val;
-                        }),
-                        backgroundColor: colors,
-                        label: "Status"
-                    }],
-                    labels: _.map(that.submitStatus.problem_status, function (val, index) {
-                        return that.submitStatus.statistic_name[index];
-                    })
-                },
-                options: {
-                    responsive: true
-                }
-            };
-            let lang = {};
-            let labels = {};
-            _.forEach(that.submitStatus.time_range, function (val) {
-                labels[val.diff] = true;
-                lang[val.language] = {};
-            });
-            labels = _.map(labels, function (val, index) {
-                let arr = index.split("-");
-                let str = arr[0] + "ms";
-                if (arr.length > 1) { str += " - " + arr[1] + "ms"; }
-                return str;
-            });
-            labels.sort(function (a, b) {
-                if (a.indexOf(">") !== -1) {
-                    const s = parseFloat(a.substring(1, a.length));
-                    const t = parseFloat(b.split("-")[0]);
-                    return s - t;
-                }
-                else if (b.indexOf(">") !== -1) {
-                    const s = parseFloat(a.split("-")[0]);
-                    const t = parseFloat(b.substring(1, b.length));
-                    return s - t;
-                }
-                else {
-                    const s = parseFloat(a.split("-")[0]);
-                    const t = parseFloat(b.split("-")[0]);
-                    return s - t;
-                }
-            });
-            _.forEach(lang, function (val, index) {
-                _.forEach(labels, function (v) {
-                    lang[index][v] = 0;
-                });
-            });
-
-            _.forEach(that.submitStatus.time_range, function (val) {
-                let arr = val.diff.split("-");
-                let diffstr = arr[0] + "ms";
-                if (arr.length > 1) {
-                    diffstr += " - " + arr[1] + "ms";
-                }
-                lang[val.language][diffstr] = val.total;
-            });
-            let _colors = _.map(colors, function (val) {
-                return val;
-            });
-            let config2 = {
-                type: "bar",
-                labels: labels,
-                datasets: _.map(lang, function (val, index) {
-                    return {
-                        label: that.submitStatus.language_name[index],
-                        backgroundColor: _colors.shift(),
-                        data: _.values(val)
-                    };
-                })
-            };
-            let mlabels = {};
-            let mlang = {};
-            _colors = _.map(colors, function (val) {
-                return val;
-            });
-            _.forEach(that.submitStatus.memory_range, function (val) {
-                mlabels[val.diff] = true;
-                mlang[val.language] = {};
-            });
-            mlabels = _.map(mlabels, function (val, index) {
-                if (index.indexOf("-") !== -1) {
-                    let arr = index.split("-");
-                    arr[0] = (parseFloat(arr[0]) / 1024).toFixed(2);
-                    if (arr.length > 1) { arr[1] = (parseFloat(arr[1]) / 1024).toFixed(2); }
-                    let str = arr[0] + "MB";
-                    if (arr.length > 1) { str += " - " + arr[1] + "MB"; }
-                    return str;
-                }
-                else {
-                    let str = index.substring(1, index.length);
-                    str = (parseFloat(str) / 1024).toFixed(2);
-                    return ">" + str + "MB";
-                }
-            });
-            mlabels.sort(function (a, b) {
-                if (a.charAt(0) === ">") {
-                    const s = parseFloat(a.substring(1, a.length));
-                    const t = parseFloat(b.split("-")[0]);
-                    return s - t;
-                }
-                else if (b.charAt(0) === ">") {
-                    let s = parseFloat(a.split("-")[0]);
-                    let t = parseFloat(b.substring(1, b.length));
-                    return s - t;
-                }
-                else {
-                    let s = parseFloat(a.split("-")[0]);
-                    let t = parseFloat(b.split("-")[0]);
-                    return s - t;
-                }
-            });
-            _.forEach(mlang, function (val, index) {
-                _.forEach(mlabels, function (v) {
-                    mlang[index][v] = 0;
-                });
-            });
-
-            _.forEach(that.submitStatus.memory_range, function (val) {
-                if (val.diff.indexOf("-") !== -1) {
-                    let arr = val.diff.split("-");
-                    arr[0] = (parseFloat(arr[0]) / 1024).toFixed(2);
-                    if (arr.length > 1) { arr[1] = (parseFloat(arr[1]) / 1024).toFixed(2); }
-                    let diffstr = arr[0] + "MB";
-                    if (arr.length > 1) { diffstr += " - " + arr[1] + "MB"; }
-                    mlang[val.language][diffstr] = val.total;
-                }
-                else {
-                    let str = val.diff.substring(1, val.diff.length);
-                    str = (parseFloat(str) / 1024).toFixed(2);
-                    mlang[val.language][">" + str + "MB"] = val.total;
-                }
-            });
-            let config3 = {
-                type: "bar",
-                labels: mlabels,
-                datasets: _.map(mlang, function (val, index) {
-                    return {
-                        label: that.submitStatus.language_name[index],
-                        backgroundColor: _colors.shift(),
-                        data: _.values(val)
-                    };
-                })
-            };
-            let ctx = document.getElementById("chart-area").getContext("2d");
-            window.myPie = new Chart(ctx, config);
-            let btx = document.getElementById("bar-area").getContext("2d");
-            let mtx = document.getElementById("memory_bar_area").getContext("2d");
-            window.myBar = new Chart(btx, {
-                type: "bar",
-                data: config2,
-                options: {
-                    title: {
-                        display: true,
-                        text: "AC代码运行用时"
-                    },
-                    tooltips: {
-                        mode: "index",
-                        intersect: true
-                    },
-                    responsive: true,
-                    scales: {
-                        xAxes: [{
-                            stacked: true
-                        }],
-                        yAxes: [{
-                            stacked: true
-                        }]
-                    }
-                }
-            });
-            window.myMemory = new Chart(mtx, {
-                type: "bar",
-                data: config3,
-                options: {
-                    title: {
-                        display: true,
-                        text: "AC代码内存使用"
-                    },
-                    tooltips: {
-                        mode: "index",
-                        intersect: false
-                    },
-                    responsive: true,
-                    scales: {
-                        xAxes: [{
-                            stacked: true
-                        }],
-                        yAxes: [{
-                            stacked: true
-                        }]
-                    }
-                }
+        });
+        _.forEach(lang, function (val, index) {
+            _.forEach(labels, function (v) {
+                lang[index][v] = 0;
             });
         });
+
+        _.forEach(this.submitStatus.time_range, (val) => {
+            let arr = val.diff.split("-");
+            let diffstr = arr[0] + "ms";
+            if (arr.length > 1) {
+                diffstr += " - " + arr[1] + "ms";
+            }
+            lang[val.language][diffstr] = val.total;
+        });
+        let _colors = _.map(colors, function (val) {
+            return val;
+        });
+        let config2 = {
+            type: "bar",
+            labels: labels,
+            datasets: _.map(lang, (val, index) => {
+                return {
+                    label: this.submitStatus.language_name[index],
+                    backgroundColor: _colors.shift(),
+                    data: _.values(val)
+                };
+            })
+        };
+        let mlabels: any = {};
+        let mlang: any = {};
+        _colors = _.map(colors, (val) => {
+            return val;
+        });
+        _.forEach(this.submitStatus.memory_range, (val) => {
+            mlabels[val.diff] = true;
+            mlang[val.language] = {};
+        });
+        mlabels = _.map(mlabels, (val, index) => {
+            if (index.indexOf("-") !== -1) {
+                let arr = index.split("-");
+                arr[0] = (parseFloat(arr[0]) / 1024).toFixed(2);
+                if (arr.length > 1) { arr[1] = (parseFloat(arr[1]) / 1024).toFixed(2); }
+                let str = arr[0] + "MB";
+                if (arr.length > 1) { str += " - " + arr[1] + "MB"; }
+                return str;
+            }
+            else {
+                let str = index.substring(1, index.length);
+                str = (parseFloat(str) / 1024).toFixed(2);
+                return ">" + str + "MB";
+            }
+        });
+        mlabels.sort((a: any, b: any) => {
+            if (a.charAt(0) === ">") {
+                const s = parseFloat(a.substring(1, a.length));
+                const t = parseFloat(b.split("-")[0]);
+                return s - t;
+            }
+            else if (b.charAt(0) === ">") {
+                let s = parseFloat(a.split("-")[0]);
+                let t = parseFloat(b.substring(1, b.length));
+                return s - t;
+            }
+            else {
+                let s = parseFloat(a.split("-")[0]);
+                let t = parseFloat(b.split("-")[0]);
+                return s - t;
+            }
+        });
+        _.forEach(mlang, (val: any, index: any) => {
+            _.forEach(mlabels, (v: any) => {
+                mlang[index][v] = 0;
+            });
+        });
+
+        _.forEach(this.submitStatus.memory_range, (val: any) => {
+            if (val.diff.indexOf("-") !== -1) {
+                let arr = val.diff.split("-");
+                arr[0] = (parseFloat(arr[0]) / 1024).toFixed(2);
+                if (arr.length > 1) { arr[1] = (parseFloat(arr[1]) / 1024).toFixed(2); }
+                let diffstr = arr[0] + "MB";
+                if (arr.length > 1) { diffstr += " - " + arr[1] + "MB"; }
+                mlang[val.language][diffstr] = val.total;
+            }
+            else {
+                let str = val.diff.substring(1, val.diff.length);
+                str = (parseFloat(str) / 1024).toFixed(2);
+                mlang[val.language][">" + str + "MB"] = val.total;
+            }
+        });
+        let config3 = {
+            type: "bar",
+            labels: mlabels,
+            datasets: _.map(mlang, (val: any, index: any) => {
+                return {
+                    label: this.submitStatus.language_name[index],
+                    backgroundColor: _colors.shift(),
+                    data: _.values(val)
+                };
+            })
+        };
+        let ctx = (document.getElementById!("chart-area")! as any).getContext("2d");
+        window.myPie = new Chart(ctx, config);
+        let btx = (document.getElementById!("bar-area")! as any).getContext("2d");
+        let mtx = (document.getElementById!("memory_bar_area")! as any).getContext("2d");
+        window.myBar = new Chart(btx, {
+            type: "bar",
+            data: config2,
+            options: {
+                title: {
+                    display: true,
+                    text: "AC代码运行用时"
+                },
+                tooltips: {
+                    mode: "index",
+                    intersect: true
+                },
+                responsive: true,
+                scales: {
+                    xAxes: [{
+                        stacked: true
+                    }],
+                    yAxes: [{
+                        stacked: true
+                    }]
+                }
+            }
+        });
+        window.myMemory = new Chart(mtx, {
+            type: "bar",
+            data: config3,
+            options: {
+                title: {
+                    display: true,
+                    text: "AC代码内存使用"
+                },
+                tooltips: {
+                    mode: "index",
+                    intersect: false
+                },
+                responsive: true,
+                scales: {
+                    xAxes: [{
+                        stacked: true
+                    }],
+                    yAxes: [{
+                        stacked: true
+                    }]
+                }
+            }
+        });
     }
-};
+}
 </script>
 
 <style scoped>

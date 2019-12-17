@@ -7,7 +7,7 @@ import _ from "lodash";
 const $: any = jquery;
 
 @Component
-export class StatusMixin extends Vue {
+export class StatusTableMixin extends Vue {
     @Prop({ default: () => [] }) problem_list!: any[];
     @Prop({ default: () => [] }) answer_icon!: any[];
     @Prop({ default: () => [] }) answer_class!: any;

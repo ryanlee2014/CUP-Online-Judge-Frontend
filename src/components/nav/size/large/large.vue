@@ -29,19 +29,15 @@
 
 <script lang="ts">
 import SocketMenu from "../../components/SocketMenu.vue";
-import { Component, Prop } from "vue-property-decorator";
-import Vue from "vue";
+import { Component, Mixins } from "vue-property-decorator";
+import MenuMixin from "@/mixin/menu/MenuMixin";
 @Component({
     components: {
-        SocketMenu: SocketMenu
+        SocketMenu
     }
 })
-export default class LargeMenu extends Vue {
-    @Prop({ default: "" }) nick!: string;
-    @Prop({ default: false }) logined!: boolean;
-    @Prop({ default: 0 }) user!: number;
-    @Prop({ default: 0 }) judger!: number;
-    @Prop({ default: false }) connected!: boolean;
+export default class LargeMenu extends Mixins(MenuMixin) {
+
 }
 </script>
 

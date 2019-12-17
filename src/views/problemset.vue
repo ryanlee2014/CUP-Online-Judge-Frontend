@@ -6,7 +6,8 @@
                 Problem Set
                 <div class="sub header" v-cloak>
                     {{$tc("totalProblem", (total || 0), {n: total || 0})}}
-                    {{recent_one_month !== -1 && (!label) && (!search_tag) ? $tc("addProblem", recent_one_month, {n: recent_one_month}) : "" }}
+                    {{recent_one_month !== -1 && (!label) && (!search_tag) ? $tc("addProblem", recent_one_month, {n:
+                    recent_one_month}) : "" }}
                 </div>
             </h2>
             <div class="ui grid">
@@ -116,33 +117,34 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 // eslint-disable-next-line no-unused-vars
 import Pagination from "../components/problemset/pagination.vue";
 import selectedTag from "../components/problemset/selected-tag.vue";
 import mainContent from "../components/problemset/MainContent.vue";
-import ContestMode from "../components/contestMode/block";
+import ContestMode from "../components/contestMode/block.vue";
+import { Component, Mixins } from "vue-property-decorator";
 import mixins from "../mixin/init";
-import G2 from "@antv/g2";
-import DataSet from "@antv/data-set";
+import jquery from "jquery";
+import _ from "lodash";
+
+const DataSet = require("@antv/data-set");
+const $: any = jquery;
+const G2 = require("@antv/g2");
 // eslint-disable-next-line no-unused-vars
-const $ = require("jquery");
-const jQuery = $;
-window.jQuery = $;
-const _ = require("lodash");
 $("#show_tag")
     .checkbox()
     .first().checkbox({
-        onChecked: function () {
+        onChecked () {
         },
-        onUnchecked: function () {
+        onUnchecked () {
         }
     });
 let HEIGHT = 320;
 let MAX_SIZE = 25;
 let MIN_SIZE = 20;
 
-function getTextAttrs (cfg) {
+function getTextAttrs (cfg: any) {
     return _.assign({}, cfg.style, {
         fillOpacity: cfg.opacity,
         fontSize: cfg.origin._origin.size,
@@ -155,9 +157,9 @@ function getTextAttrs (cfg) {
     });
 }
 
-const _parameterCache = {};
+const _parameterCache: any = {};
 
-function getParameterByName (name, url) {
+function getParameterByName (name: string, url?: string) {
     if (!url) url = window.location.href;
     if (_parameterCache[name + url]) {
         return _parameterCache[name + url];
@@ -171,11 +173,11 @@ function getParameterByName (name, url) {
     return (_parameterCache[name + url] = decodeURIComponent(results[2].replace(/\+/g, " ")));
 }
 
-function parseQueryString (query) {
-    let parsed = {};
+function parseQueryString (query: any) {
+    let parsed: any = {};
     query.replace(
         new RegExp("([^?=&]+)(=([^&]*))?", "g"),
-        function ($0, $1, $2, $3) {
+        function ($0: any, $1: any, $2: any, $3: any) {
             parsed[decodeURIComponent($1)] = decodeURIComponent($3);
         }
     );
@@ -184,59 +186,53 @@ function parseQueryString (query) {
 
 const queryString = parseQueryString(window.location.hash.substring(1));
 
-export default {
-    name: "problemset",
-    mixins: [mixins],
+@Component({
     components: {
         mainContent,
         Pagination,
         selectedTag,
         ContestMode
-    },
-    data: function () {
-        return {
-            table: {},
-            dim: false,
-            current_page: queryString.page || 1,
-            search_tag: queryString.search || getParameterByName("tag") || "",
-            label: queryString.label || getParameterByName("label") || "",
-            order: queryString.order || 0,
-            order_target: queryString.target || "problem_id",
-            show_tag: localStorage.getItem("show_tag") === "true",
-            page_cnt: queryString.page_cnt || 50,
-            total: 0,
-            recent_one_month: -1,
-            hide_currect: localStorage.getItem("hide_currect") === "true",
-            show_label_cloud: localStorage.getItem("show_label_cloud") === "true",
-            chart: undefined,
-            has_draw: false,
-            contest_mode: false
-        };
-    },
-    computed: {
-        tables: {
-            get: function () {
-                return {
-                    page_cnt: this.page_cnt,
-                    total: this.total,
-                    table: this._t,
-                    recent_one_month: this.recent_one_month
-                };
-            },
-            set: function (_t) {
-                this.page_cnt = _t.step;
-                this.total = _t.total;
-                this.table = _t;
-                if (_t.recent_one_month) {
-                    this.recent_one_month = _t.recent_one_month;
-                }
+    }
+})
+export default class ProblemSet extends Mixins(mixins) {
+        table = {};
+        dim = false;
+        current_page = queryString.page || 1;
+        search_tag = queryString.search || getParameterByName("tag") || "";
+        label = queryString.label || getParameterByName("label") || "";
+        order = queryString.order || 0;
+        order_target = queryString.target || "problem_id";
+        show_tag = localStorage.getItem("show_tag") === "true";
+        page_cnt = queryString.page_cnt || 50;
+        total = 0;
+        recent_one_month = -1;
+        hide_currect = localStorage.getItem("hide_currect") === "true";
+        show_label_cloud = localStorage.getItem("show_label_cloud") === "true";
+        chart = undefined;
+        has_draw = false;
+        contest_mode = false;
+
+        get tables () {
+            return {
+                page_cnt: this.page_cnt,
+                total: this.total,
+                table: undefined,
+                recent_one_month: this.recent_one_month
+            };
+        }
+
+        set tables (_t: any) {
+            this.page_cnt = _t.step;
+            this.total = _t.total;
+            this.table = _t;
+            if (_t.recent_one_month) {
+                this.recent_one_month = _t.recent_one_month;
             }
         }
-    },
-    methods: {
-        setQuery: function () {
-            let queryObject = {};
-            if (this.page !== 0) {
+
+        setQuery () {
+            let queryObject: any = {};
+            if (this.current_page !== 0) {
                 queryObject["page"] = this.current_page + 1;
             }
             if (this.search_tag && this.search_tag !== "" && this.search_tag.length > 0) {
@@ -246,8 +242,9 @@ export default {
                 queryObject["label"] = this.label;
             }
             this.$router.push({ path: this.$route.path, query: queryObject });
-        },
-        page: function (num, arrow) {
+        }
+
+        page (num: any, arrow: any) {
             // this.dim = true;
             let page = this.current_page = arrow ? this.current_page + arrow : num;
             let searchTag = this.search_tag || "none";
@@ -259,8 +256,9 @@ export default {
                 .then(({ data }) => {
                     that.tables = data;
                 });
-        },
-        sort: function (target, event, defaultOrder = 0) {
+        }
+
+        sort (target: any, event: any, defaultOrder = 0) {
             // this.dim = true;
             let prevTargetEquivToCurrent = this.order_target === target;
             this.order_target = target;
@@ -273,8 +271,9 @@ export default {
                     that.dim = false;
                     that.tables = data;
                 });
-        },
-        tag: function (label) {
+        }
+
+        tag (label: any) {
             if (label === "标签待整理") {
                 return;
             }
@@ -291,8 +290,9 @@ export default {
                     that.dim = false;
                     that.tables = data;
                 });
-        },
-        searching: function (label) {
+        }
+
+        searching (label: any) {
             if (label === "标签待整理") {
                 return;
             }
@@ -308,12 +308,13 @@ export default {
                 .then(({ data }) => {
                     that.dim = false;
                     if (!isNaN(problemId)) {
-                        (data.problem || []).sort((a, b) => a.problem_id === problemId ? -1 : b.problem_id === problemId ? 1 : 0);
+                        (data.problem || []).sort((a: any, b: any) => a.problem_id === problemId ? -1 : b.problem_id === problemId ? 1 : 0);
                     }
                     that.tables = data;
                 });
-        },
-        remove: function (type) {
+        }
+
+        remove (type: any) {
             if (type === "search") {
                 this.search_tag = "";
             }
@@ -331,34 +332,39 @@ export default {
                     that.dim = false;
                     that.tables = data;
                 });
-        },
-        check: function () {
+        }
+
+        check () {
             this.show_tag = Boolean(-this.show_tag + 1);
-            localStorage.setItem("show_tag", Boolean(this.show_tag));
-        },
-        hide: function () {
+            localStorage.setItem("show_tag", "" + Boolean(this.show_tag));
+        }
+
+        hide () {
             this.hide_currect = Boolean(!this.hide_currect);
-            localStorage.setItem("hide_currect", Boolean(this.hide_currect));
-        },
-        cloud: function () {
+            localStorage.setItem("hide_currect", "" + Boolean(this.hide_currect));
+        }
+
+        cloud () {
             if (!this.has_draw) {
                 this.drawLabelCloud();
             }
             this.show_label_cloud = Boolean(!this.show_label_cloud);
-            localStorage.setItem("show_label_cloud", Boolean(this.show_label_cloud));
-        },
-        enter: function (obj) {
+            localStorage.setItem("show_label_cloud", "" + Boolean(this.show_label_cloud));
+        }
+
+        enter (obj: any) {
             let val = obj.target.value || "none";
             this.searching(val);
-        },
-        drawLabelCloud: function () {
+        }
+
+        drawLabelCloud () {
             this.has_draw = true;
             let that = this;
             this.axios.get("/api/problem/local/?label=true")
                 .then(response => {
                     const d = response.data;
                     G2.Shape.registerShape("point", "cloud", {
-                        drawShape: function drawShape (cfg, container) {
+                        drawShape (cfg: any, container: any) {
                             let attrs = getTextAttrs(cfg);
                             return container.addShape("text", {
                                 attrs: _.assign(attrs, {
@@ -390,7 +396,7 @@ export default {
                         rotate () {
                             return 0;
                         },
-                        fontSize (d) {
+                        fontSize (d: any) {
                             return ((d.count - min) / (max - min)) * (MAX_SIZE - MIN_SIZE) + MIN_SIZE;
                         }
                     });
@@ -417,70 +423,73 @@ export default {
                         }); // 'tag*count'
 
                     chart.render();
-                    chart.on("point:click", function (ev) {
+                    chart.on("point:click", function (ev: any) {
                         that.tag(ev.data._origin["text"]);
                         // location.href = "?tag=" + encodeURI();
                     });
                 });
-        },
+        }
+
         initjQueryMethods () {
             $(".ui.search")
                 .popup({
                     on: "click",
                     content: this.$t("press enter to search")
                 });
-        },
-        preloadContent (pageList) {
-            // console.log(pageList);
         }
-    },
-    updated: function () {
-        this.initjQueryMethods();
-    },
-    mounted: function () {
-        document.title = `Problem Set -- ${document.title}`;
-        let that = this;
-        let page = parseInt(getParameterByName("page") || queryString.page || "1") - 1;
-        $(document).ready(function () {
-            $("#show_tag").checkbox((that.show_tag ? "" : "un") + "check");
+
+        updated () {
+            this.initjQueryMethods();
+        }
+
+        preloadContent () {
+
+        }
+
+        mounted () {
+            document.title = `Problem Set -- ${document.title}`;
+            let that = this;
+            let page = parseInt(getParameterByName("page") || queryString.page || "1") - 1;
+            $(document).ready(function () {
+                $("#show_tag").checkbox((that.show_tag ? "" : "un") + "check");
+                $("#hide_currect").checkbox((that.hide_currect ? "" : "un") + "check");
+                $("#show_cloud").checkbox((that.show_label_cloud ? "" : "un") + "check");
+            });
+            $("#show_tag").checkbox((this.show_tag ? "" : "un") + "check");
             $("#hide_currect").checkbox((that.hide_currect ? "" : "un") + "check");
             $("#show_cloud").checkbox((that.show_label_cloud ? "" : "un") + "check");
-        });
-        $("#show_tag").checkbox((this.show_tag ? "" : "un") + "check");
-        $("#hide_currect").checkbox((that.hide_currect ? "" : "un") + "check");
-        $("#show_cloud").checkbox((that.show_label_cloud ? "" : "un") + "check");
 
-        this.current_page = page;
-        this.axios.get("/api/problemset/" + page + "/" + (this.search_tag || "none") + "/" + this.order_target + "/" + this.order + "/?label=" + this.label)
-            .then(({ data }) => {
-                if (data.total) {
-                    if (this.show_label_cloud) {
-                        setTimeout(this.drawLabelCloud, 300);
+            this.current_page = page;
+            this.axios.get("/api/problemset/" + page + "/" + (this.search_tag || "none") + "/" + this.order_target + "/" + this.order + "/?label=" + this.label)
+                .then(({ data }) => {
+                    if (data.total) {
+                        if (this.show_label_cloud) {
+                            setTimeout(this.drawLabelCloud, 300);
+                        }
+                        that.tables = data;
                     }
-                    that.tables = data;
-                }
-                else {
-                    that.contest_mode = data.contest_mode;
-                }
-            });
-        /* $(".ui.search")
-            .search({
-                apiSettings: {
-                    url: "/api/problem/module/search/{query}"
-                },
-                fields: {
-                    results: "items",
-                    title: "title",
-                    url: "url",
-                    description: "source"
-                },
-                searchFields: [
-                    "title", "description", "source", "problem_id", "label"
-                ],
-                minCharacters: 2
-            }); */
-    }
-};
+                    else {
+                        that.contest_mode = data.contest_mode;
+                    }
+                });
+            /* $(".ui.search")
+                .search({
+                    apiSettings: {
+                        url: "/api/problem/module/search/{query}"
+                    },
+                    fields: {
+                        results: "items",
+                        title: "title",
+                        url: "url",
+                        description: "source"
+                    },
+                    searchFields: [
+                        "title", "description", "source", "problem_id", "label"
+                    ],
+                    minCharacters: 2
+                }); */
+        }
+}
 
 </script>
 
@@ -491,17 +500,17 @@ export default {
 </style>
 <i18n>
     {
-        "zh-cn": {
-            "totalProblem": "共开放{n}题",
-            "addProblem": "最近一个月新增{n}题"
-        },
-        "en": {
-            "totalProblem": "Total {n} problem | Total {n} problems",
-            "addProblem": "{n} new problem in this month | {n} new problems in this month"
-        },
-        "ja": {
-            "totalProblem": "{n}の質問があります",
-            "addProblem": "{n}つの新しい質問を追加"
-        }
+    "zh-cn": {
+    "totalProblem": "共开放{n}题",
+    "addProblem": "最近一个月新增{n}题"
+    },
+    "en": {
+    "totalProblem": "Total {n} problem | Total {n} problems",
+    "addProblem": "{n} new problem in this month | {n} new problems in this month"
+    },
+    "ja": {
+    "totalProblem": "{n}の質問があります",
+    "addProblem": "{n}つの新しい質問を追加"
+    }
     }
 </i18n>

@@ -92,21 +92,27 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 import mixins from "../../mixin/init";
 import * as am4core from "@amcharts/amcharts4/core";
 import * as am4charts from "@amcharts/amcharts4/charts";
-import am4themes_animated from "@amcharts/amcharts4/themes/animated";
-function drawgraph (_data, div = 10) {
+import _ from "lodash";
+import jquery from "jquery";
+import { Component, Mixins, Watch } from "vue-property-decorator";
+
+const $: any = jquery;
+
+const am4themes_animated = require("@amcharts/amcharts4/themes/animated").default;
+function drawgraph (_data: any, div = 10) {
     div = Math.max(div, 1);
     am4core.useTheme(am4themes_animated);
-    let chart = am4core.create("chartdiv", am4charts.XYChart);
+    let chart: any = am4core.create("chartdiv", am4charts.XYChart);
     chart.hiddenState.properties.opacity = 0; // this creates initial fade-in
     let mx = _data[0];
     let mn = _data[_data.length - 1];
-    let diff = parseInt((mx - mn) / div);
+    let diff = Math.trunc((mx - mn) / div);
     let gap = mx - diff;
-    let target = [];
+    let target: any = [];
     for (let i = 0; i < div - 1; ++i) {
         target.push({
             part: gap + "-" + (gap + diff),
@@ -164,106 +170,112 @@ function drawgraph (_data, div = 10) {
     series.columns.template.tooltipY = 0;
     series.columns.template.strokeOpacity = 0;
 
-    series.columns.template.adapter.add("fill", function (fill, target) {
+    series.columns.template.adapter.add("fill", function (fill: any, target: any) {
         return chart.colors.getIndex(target.dataItem.index);
     });
 }
-export default {
-    name: "user",
-    mixins: [mixins],
-    data: function () {
-        let cidArray = this.$route.params.contest_id;
+@Component
+export default class UserStatus extends Mixins(mixins) {
+    cidArray: any = [];
+    contest_mode= false;
+    raw_data= [];
+    header: any = [];
+    contest_id_raw = "";
+    status_data= [];
+    data_set= [];
+    order= 1;
+    contest_list= [];
+    select1= "";
+    select2= "";
+    type= 1;
+    row_count= 10;
+    lower: any = "";
+    greater: any = "";
+    ranged= false;
+    loading= false;
+
+    created () {
+        let cidArray: any = this.$route.params.contest_id;
+        this.contest_id_raw = this.$route.params.contest_id;
         if (cidArray && cidArray.length) {
             cidArray = cidArray.split(",");
         }
-        const h = cidArray;
-        return {
-            cidArray: cidArray,
-            contest_mode: false,
-            raw_data: [],
-            header: h,
-            contest_id_raw: this.$route.params.contest_id,
-            status_data: [],
-            data_set: [],
-            order: 1,
-            contest_list: [],
-            select1: "",
-            select2: "",
-            type: 1,
-            row_count: 10,
-            lower: "",
-            greater: "",
-            ranged: false,
-            loading: false
-        };
-    },
-    watch: {
-        row_count: function (newVal, oldVal) {
-            if (newVal === oldVal) {
-                return;
-            }
-            if (!!newVal === false) {
-                newVal = 10;
-            }
-            drawgraph(this.data_set, newVal);
-        },
-        lower: function (newVal, oldVal) {
-            let that = this;
-            this.$nextTick(function () {
-                that.rangeChange();
-            });
-        },
-        greater: function (newVal, oldVal) {
-            let that = this;
-            this.$nextTick(function () {
-                that.rangeChange();
-            });
-        },
-        range: function (newVal, oldVal) {
-            if (!newVal) {
-                let that = this;
-                this.$nextTick(function () {
-                    that.generate(that.raw_data);
-                });
-            }
-        }
-    },
-    created: function () {
+        this.header = cidArray;
+        this.cidArray = cidArray;
+    }
 
-    },
-    mounted: function () {
+    @Watch("row_count")
+    onRowCountChanged (newVal: any, oldVal: any) {
+        if (newVal === oldVal) {
+            return;
+        }
+        if (!!newVal === false) {
+            newVal = 10;
+        }
+        drawgraph(this.data_set, newVal);
+    }
+
+    @Watch("lower")
+    onLowerChanged (newVal: any, oldVal: any) {
+        let that = this;
+        this.$nextTick(function () {
+            that.rangeChange();
+        });
+    }
+
+    @Watch("greater")
+    onGreaterChanged (newVal: any, oldVal: any) {
+        let that = this;
+        this.$nextTick(function () {
+            that.rangeChange();
+        });
+    }
+
+    @Watch("range")
+    onRangeChanged (newVal: any, oldVal: any) {
+        if (!newVal) {
+            let that = this;
+            this.$nextTick(function () {
+                that.generate(that.raw_data);
+            });
+        }
+    }
+    mounted () {
         let that = this;
         this.loading = true;
-        $.get("/api/contest/list", function (d) {
-            d.data.sort(function (a, b) {
-                return parseInt(b.contest_id) - parseInt(a.contest_id);
+        this.axios.get("/api/contest/list")
+            .then(response => {
+                const d: any = response.data;
+                d.data.sort(function (a: any, b: any) {
+                    return parseInt(b.contest_id) - parseInt(a.contest_id);
+                });
+                that.contest_list = d.data;
+                setTimeout(function () {
+                    $(".multiple.search")
+                        .dropdown({
+                            fullTextSearch: true
+                        });
+                }, 1000);
             });
-            that.contest_list = d.data;
-            setTimeout(function () {
-                $(".multiple.search")
-                    .dropdown({
-                        fullTextSearch: true
-                    });
-            }, 1000);
-        });
         this.getData();
-    },
-    methods: {
-        updatecidArrayFromSelect: function () {
-            let cidArray = this.select2;
-            this.loading = true;
-            if (cidArray && cidArray.length) {
-                cidArray = cidArray.split(",");
-            }
-            this.cidArray = cidArray;
-            this.header = cidArray;
-        },
-        getData: function () {
-            let that = this;
-            let promiseArray = [];
-            _.forEach(this.cidArray, function (val) {
-                promiseArray.push(new Promise(function (resolve, reject) {
-                    $.get("/api/scoreboard/" + val + "/line", function (data) {
+    }
+
+    updatecidArrayFromSelect () {
+        let cidArray: any = this.select2;
+        this.loading = true;
+        if (cidArray && cidArray.length) {
+            cidArray = cidArray.split(",");
+        }
+        this.cidArray = cidArray;
+        this.header = cidArray;
+    }
+    getData () {
+        let that = this;
+        let promiseArray: any = [];
+        _.forEach(this.cidArray, (val) => {
+            promiseArray.push(new Promise((resolve, reject) => {
+                this.axios.get(`/api/scoreboard/${val}/line`)
+                    .then(({ data }) => {
                         if (data.status == "OK") {
                             resolve(data.data);
                         }
@@ -271,190 +283,188 @@ export default {
                             reject(val);
                         }
                     });
-                }));
+            }));
+        });
+        Promise.all(promiseArray)
+            .then((val: any) => {
+                that.raw_data = val;
+                that.generate(val);
             });
-            Promise.all(promiseArray)
-                .then(function (val) {
-                    that.raw_data = val;
-                    that.generate(val);
-                });
-        },
-        sortOrder: function (type) {
-            let target = this.status_data;
-            let order = this.order;
-            switch (type) {
-            case 1:
-                target.sort(function (a, b) {
-                    return order * (b.user_id > a.user_id ? 1 : b.user_id == a.user_id ? 0 : -1);
-                });
-                break;
-            case 2:
-                target.sort(function (a, b) {
-                    return order * (b.nick > a.nick ? 1 : b.nick == a.nick ? 0 : -1);
-                });
-                break;
-            case 3:
-                target.sort(function (a, b) {
-                    return order * (b.ac.size - a.ac.size);
-                });
-                break;
-            case 4:
-                target.sort(function (a, b) {
-                    return order * (b.submit.size - a.submit.size);
-                });
-                break;
-            case 6:
-                target.sort(function (a, b) {
-                    return order * (b.average_length - a.average_length);
-                });
-                break;
-            case 5:
-                target.sort(function (a, b) {
-                    return order * (b.average_line - a.average_line);
-                });
-                break;
-            case 7:
-                target.sort(function (a, b) {
-                    return order * (b.total_line - a.total_line);
-                });
-                break;
-            }
-        },
-        sort: function (type) {
-            let current_type = this.type;
-            if (current_type != type) {
-                this.order = 1;
-            }
-            else {
-                this.order = -this.order;
-            }
-            this.type = type;
-            this.sortOrder(type);
-        },
-        rangeChange: function () {
-            if (!isNaN(this.lower) || !isNaN(this.greater)) {
-                this.lower = parseInt(this.lower);
-                if (this.lower === 0) {
-                    this.lower = Infinity;
-                }
-                this.greater = parseInt(this.greater);
-                if (this.greater === 0) {
-                    this.greater = -Infinity;
-                }
-                if (this.lower < this.greater) {
-                    return;
-                }
-                this.ranged = true;
-            }
-            else {
-                this.ranged = false;
-            }
-            if (this.ranged) { this.generate(this.raw_data); }
-        },
-        generate: function (data) {
-            let that = this;
-            new Promise(function (resolve, reject) {
-                resolve(data);
-            }).then(function (val) {
-                let greater = that.greater;
-                let lower = that.lower;
-                let newArray = [];
-                _.forEach(val, function (v) {
-                    let concatArray = _.values(v.map);
-                    let user = v.user.map(function (el) { return el.user_id; });
-                    if (user.length > 0) {
-                        let tempArray = [];
-                        _.forEach(concatArray, function (value) {
-                            if (user.includes(value.user_id)) {
-                                if (that.ranged) {
-                                    if (isNaN(value.user_id)) {
-                                        return;
-                                    }
-                                    let user_id_num = parseInt(value.user_id);
-                                    if (user_id_num < greater || user_id_num > lower) {
-                                        return;
-                                    }
-                                }
-                                tempArray.push(value);
-                            }
-                        });
-                        concatArray = tempArray;
-                    }
-                    newArray = newArray.concat(concatArray);
-                });
-                return newArray;
-            })
-                .then(function (val) {
-                    let map = {};
-                    _.forEach(val, function (v) {
-                        if (typeof map[v.user_id] === "undefined") {
-                            map[v.user_id] = {
-                                ac: new Set(),
-                                submit: new Set(),
-                                line: [],
-                                len: [],
-                                user_id: v.user_id,
-                                nick: v.nick,
-                                average_line: 0,
-                                average_length: 0,
-                                total_line: 0
-                            };
-                        }
-                        if (v.result === 4) {
-                            map[v.user_id].ac.add(v.problem_id);
-                            map[v.user_id].line.push(v.line);
-                            map[v.user_id].len.push(v.code_length);
-                        }
-                        map[v.user_id].submit.add(v.solution_id);
-                    });
-                    return _.values(map);
-                })
-                .then(function (val) {
-                    val.sort(function (a, b) {
-                        return 1 * (b.user_id > a.user_id ? 1 : b.user_id == a.user_id ? 0 : -1);
-                    });
-                    that.order = 1;
-                    that.type = 1;
-                    return val;
-                })
-                .then(function (val) {
-                    _.forEach(val, function (v) {
-                        if (v.line.length === 0) {
-                            v.line = [0];
-                        }
-                        if (v.len.length === 0) {
-                            v.len = [0];
-                        }
-                        v.average_line = parseInt(Math.round(v.line.reduce(function (sum, cur) { return sum + cur; }) / Math.max(1, v.line.length)));
-                        v.average_length = parseInt(Math.round(v.len.reduce(function (sum, cur) { return sum + cur; }) / Math.max(1, v.len.length)));
-                        v.total_line = v.line.reduce(function (sum, cur) { return sum + cur; });
-                    });
-                    return val;
-                })
-                .then(function (val) {
-                    let tot = [];
-                    _.forEach(val, function (v) {
-                        tot.push(v.total_line);
-                    });
-                    tot.sort(function (a, b) {
-                        return b - a;
-                    });
-                    drawgraph(tot, 10);
-                    that.data_set = tot;
-                    return val;
-                })
-                .then(function (val) {
-                    that.status_data = val;
-                    that.loading = false;
-                });
-        },
-        run: function (type) {
-            this.updatecidArrayFromSelect();
-            this.getData();
+    }
+    sortOrder (type: any) {
+        let target = this.status_data;
+        let order = this.order;
+        switch (type) {
+        case 1:
+            target.sort(function (a: any, b: any) {
+                return order * (b.user_id > a.user_id ? 1 : b.user_id == a.user_id ? 0 : -1);
+            });
+            break;
+        case 2:
+            target.sort(function (a: any, b: any) {
+                return order * (b.nick > a.nick ? 1 : b.nick == a.nick ? 0 : -1);
+            });
+            break;
+        case 3:
+            target.sort(function (a: any, b: any) {
+                return order * (b.ac.size - a.ac.size);
+            });
+            break;
+        case 4:
+            target.sort(function (a: any, b: any) {
+                return order * (b.submit.size - a.submit.size);
+            });
+            break;
+        case 6:
+            target.sort(function (a: any, b: any) {
+                return order * (b.average_length - a.average_length);
+            });
+            break;
+        case 5:
+            target.sort(function (a: any, b: any) {
+                return order * (b.average_line - a.average_line);
+            });
+            break;
+        case 7:
+            target.sort(function (a: any, b: any) {
+                return order * (b.total_line - a.total_line);
+            });
+            break;
         }
-    },
-    computed: {}
-};
+    }
+    sort (type: any) {
+        let current_type = this.type;
+        if (current_type != type) {
+            this.order = 1;
+        }
+        else {
+            this.order = -this.order;
+        }
+        this.type = type;
+        this.sortOrder(type);
+    }
+    rangeChange () {
+        if (!isNaN(this.lower) || !isNaN(this.greater)) {
+            this.lower = parseInt(this.lower);
+            if (this.lower === 0) {
+                this.lower = Infinity;
+            }
+            this.greater = parseInt(this.greater);
+            if (this.greater === 0) {
+                this.greater = -Infinity;
+            }
+            if (this.lower < this.greater) {
+                return;
+            }
+            this.ranged = true;
+        }
+        else {
+            this.ranged = false;
+        }
+        if (this.ranged) { this.generate(this.raw_data); }
+    }
+    generate (data: any) {
+        let that = this;
+        new Promise(function (resolve, reject) {
+            resolve(data);
+        }).then(function (val: any) {
+            let greater = that.greater;
+            let lower = that.lower;
+            let newArray: any = [];
+            _.forEach(val, function (v: any) {
+                let concatArray = _.values(v.map);
+                let user = v.user.map(function (el: any) { return el.user_id; });
+                if (user.length > 0) {
+                    let tempArray: any = [];
+                    _.forEach(concatArray, function (value) {
+                        if (user.includes(value.user_id)) {
+                            if (that.ranged) {
+                                if (isNaN(value.user_id)) {
+                                    return;
+                                }
+                                let user_id_num = parseInt(value.user_id);
+                                if (user_id_num < greater || user_id_num > lower) {
+                                    return;
+                                }
+                            }
+                            tempArray.push(value);
+                        }
+                    });
+                    concatArray = tempArray;
+                }
+                newArray = newArray.concat(concatArray);
+            });
+            return newArray;
+        })
+            .then(function (val) {
+                let map: any = {};
+                _.forEach(val, function (v) {
+                    if (typeof map[v.user_id] === "undefined") {
+                        map[v.user_id] = {
+                            ac: new Set(),
+                            submit: new Set(),
+                            line: [],
+                            len: [],
+                            user_id: v.user_id,
+                            nick: v.nick,
+                            average_line: 0,
+                            average_length: 0,
+                            total_line: 0
+                        };
+                    }
+                    if (v.result === 4) {
+                        map[v.user_id].ac.add(v.problem_id);
+                        map[v.user_id].line.push(v.line);
+                        map[v.user_id].len.push(v.code_length);
+                    }
+                    map[v.user_id].submit.add(v.solution_id);
+                });
+                return _.values(map);
+            })
+            .then(function (val: any) {
+                val.sort(function (a: any, b: any) {
+                    return 1 * (b.user_id > a.user_id ? 1 : b.user_id == a.user_id ? 0 : -1);
+                });
+                that.order = 1;
+                that.type = 1;
+                return val;
+            })
+            .then(function (val: any) {
+                _.forEach(val, function (v: any) {
+                    if (v.line.length === 0) {
+                        v.line = [0];
+                    }
+                    if (v.len.length === 0) {
+                        v.len = [0];
+                    }
+                    v.average_line = Math.trunc(Math.round(v.line.reduce(function (sum: any, cur: any) { return sum + cur; }) / Math.max(1, v.line.length)));
+                    v.average_length = Math.trunc(Math.round(v.len.reduce(function (sum: any, cur: any) { return sum + cur; }) / Math.max(1, v.len.length)));
+                    v.total_line = v.line.reduce(function (sum: any, cur: any) { return sum + cur; });
+                });
+                return val;
+            })
+            .then(function (val: any) {
+                let tot: any = [];
+                _.forEach(val, function (v: any) {
+                    tot.push(v.total_line);
+                });
+                tot.sort(function (a: any, b: any) {
+                    return b - a;
+                });
+                drawgraph(tot, 10);
+                that.data_set = tot;
+                return val;
+            })
+            .then(function (val: any) {
+                that.status_data = val;
+                that.loading = false;
+            });
+    }
+    run (type: any) {
+        this.updatecidArrayFromSelect();
+        this.getData();
+    }
+}
 </script>
 
 <style scoped>
