@@ -163,6 +163,7 @@ export default class ContestSetView extends Mixins(mixins, TimerMixin) {
     page_cnt = 50;
     current_page = 0;
     total_number = 0;
+    prevGetPageCancelToken: any = null;
     created () {
         this.admin = this.$store.getters.admin;
         let page: any = this.$route.query.page;
@@ -195,7 +196,6 @@ export default class ContestSetView extends Mixins(mixins, TimerMixin) {
     @Watch("current_page", { immediate: true })
     onCurrentPageChanged (newVal: any) {
         this.setQuery({ page: newVal });
-        this.getPage({ page: newVal });
     }
 
     @Watch("$route.query")
@@ -207,11 +207,20 @@ export default class ContestSetView extends Mixins(mixins, TimerMixin) {
         this.current_page = arrow ? this.current_page + arrow : num;
     }
 
+    cancelPrevGetPage () {
+        if (this.prevGetPageCancelToken !== null) {
+            this.prevGetPageCancelToken.cancel();
+        }
+    }
+
     getPage (mergeOptions?: any) {
+        this.cancelPrevGetPage();
         return this.axios.get("/api/contest/list", {
-            params: Object.assign(this.getParams(), mergeOptions)
+            params: Object.assign(this.getParams(), mergeOptions),
+            cancelToken: (this.prevGetPageCancelToken = this.axios.CancelToken.source()).token
         })
             .then(({ data }) => {
+                this.prevGetPageCancelToken = null;
                 this.contest_list = data.data;
             });
     }

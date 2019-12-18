@@ -27,6 +27,9 @@ export default function () {
     // @ts-ignore
     axios.get = function () {
         return _get.apply(this, <any>arguments).catch(reason => {
+            if (axios.isCancel(reason)) {
+                return;
+            }
             console.log("GET ERROR: ", reason);
         });
     };
