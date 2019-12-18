@@ -202,7 +202,7 @@ export default class ContestSetView extends Mixins(mixins, TimerMixin) {
         this.current_page = arrow ? this.current_page + arrow : num;
     }
 
-    getPage (mergeOptions: any) {
+    getPage (mergeOptions?: any) {
         return this.axios.get("/api/contest/list", {
             params: Object.assign(this.getParams(), mergeOptions)
         })
