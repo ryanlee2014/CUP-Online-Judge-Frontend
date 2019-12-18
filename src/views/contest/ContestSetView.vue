@@ -186,16 +186,21 @@ export default class ContestSetView extends Mixins(mixins, TimerMixin) {
         this.init();
     }
 
-    setQuery () {
-        let queryString: any = {};
-        queryString.page = this.current_page;
+    setQuery (mergeOptions?: any) {
+        let queryString: any = Object.assign({}, this.$route.query);
+        Object.assign(queryString, mergeOptions);
         this.$router.push({ path: this.$route.path, query: queryString });
     }
 
     @Watch("current_page", { immediate: true })
     onCurrentPageChanged (newVal: any) {
-        this.setQuery();
+        this.setQuery({ page: newVal });
         this.getPage({ page: newVal });
+    }
+
+    @Watch("$route.query")
+    onRouteQueryChanged (newVal: any) {
+        this.getPage(newVal);
     }
 
     page (num: number, arrow: any) {
