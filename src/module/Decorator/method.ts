@@ -14,7 +14,7 @@ interface IWebSocketPropertyDescriptor extends PropertyDescriptor {
 
 export function Debounce (wait?: number, options?: any) {
     return function (target: any, propertyName: string, propertyDescriptor: PropertyDescriptor) {
-        decoratorLog(`debounce, target:${target}, propertyName:${propertyName}`);
+        decoratorLog(`debounce, target:${target.constructor.name}, propertyName:${propertyName}`);
         const method = propertyDescriptor.value;
         propertyDescriptor.value = _.debounce(method, wait, options);
         return propertyDescriptor;
@@ -23,21 +23,21 @@ export function Debounce (wait?: number, options?: any) {
 
 export function Interval (wait = 0) {
     return function (target: any, propertyName: string, propertyDescriptor: IPropertyDescriptor) {
-        decoratorLog(`Interval, target:${target}, propertyName:${propertyName}`);
+        decoratorLog(`Interval, target:${target.constructor.name}, propertyName:${propertyName}`);
         const method = propertyDescriptor.value;
         propertyDescriptor.value = function (...args: any[]) {
             if (typeof this.timer_ === "undefined" || typeof this.timer_.length === "undefined") {
                 throw new Error("You should mixin TimerMixin to your component");
             }
             method.apply(this, args);
-            this.timer_.push(setInterval(() => { method.apply(this, args); }, wait));
+            this.timer_.push(setInterval(() => { decoratorLog(`${target.constructor.name}.${propertyName} called.`); method.apply(this, args); }, wait));
         };
         log("mounted interval");
     };
 }
 
 export function Debuglogging (target: any, propertyName: string, propertyDescriptor: IPropertyDescriptor) {
-    decoratorLog(`Debuglogging, target:${target}, propertyName:${propertyName}`);
+    decoratorLog(`Debuglogging, target:${target.constructor.name}, propertyName:${propertyName}`);
     const method = propertyDescriptor.value;
     propertyDescriptor.value = function (...args: any[]) {
         const params = args.map(a => JSON.stringify(a)).join();
@@ -49,7 +49,7 @@ export function Debuglogging (target: any, propertyName: string, propertyDescrip
 }
 
 export function WebSocketRequest (target: any, propertyName: string, propertyDescriptor: IWebSocketPropertyDescriptor) {
-    decoratorLog(`WebSocketRequest, target:${target}, propertyName:${propertyName}`);
+    decoratorLog(`WebSocketRequest, target:${target.constructor.name}, propertyName:${propertyName}`);
     const method = propertyDescriptor.value;
     propertyDescriptor.value = function (...args: any[]) {
         if (!this.$socket!.connected) {

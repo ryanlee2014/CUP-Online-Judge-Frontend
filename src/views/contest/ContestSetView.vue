@@ -19,6 +19,13 @@
                     <p class="server_time"></p>
                 </div>
             </div>
+            <div class="ui grid">
+                <div class="row">
+                    <div class="thirteen wide column">
+                        <Pagination :current_page="current_page" :page_cnt="page_cnt" :total="total_number"></Pagination>
+                    </div>
+                </div>
+            </div>
             <table class='ui padded celled unstackable selectable table' width=90%>
                 <thead>
                 <tr align=center class=toprow>
@@ -53,6 +60,13 @@
                 </tr>
                 </tbody>
             </table>
+            <div class="ui grid">
+                <div class="row">
+                    <div class="thirteen wide column">
+                        <Pagination :current_page="current_page" :page_cnt="page_cnt" :total="total_number"></Pagination>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="ui bottom attached segment" v-show="current_column === 'rank'">
             <h3 class="ui dividing header">{{$t("ranklist statistic")}}</h3>
@@ -127,14 +141,16 @@ import mixins from "../../mixin/init";
 import progressBar from "../../components/progress/progressBar.vue";
 import jquery from "jquery";
 import dayjs, { Dayjs } from "dayjs";
-import { Mixins, Component } from "vue-property-decorator";
+import { Mixins, Component, Watch } from "vue-property-decorator";
 import { Interval } from "../../module/Decorator/method";
 import TimerMixin from "@/mixin/TimerMixin";
+import Pagination from "@/components/problemset/pagination.vue";
 
 const $: any = jquery;
 @Component({
     components: {
-        progressBar
+        progressBar,
+        Pagination
     }
 })
 export default class ContestSetView extends Mixins(mixins, TimerMixin) {
@@ -144,29 +160,73 @@ export default class ContestSetView extends Mixins(mixins, TimerMixin) {
     select2 = "";
     current_column = "contest";
     current_time:Dayjs = dayjs();
-    intervalID?: number;
+    page_cnt = 50;
+    current_page = 0;
+    total_number = 0;
     created () {
         this.admin = this.$store.getters.admin;
+        let page: any = this.$route.query.page;
+        if (page === null || typeof page === "undefined" || isNaN(parseInt(page as string))) {
+            page = 0;
+        }
+        else {
+            page = parseInt(page);
+        }
+        this.current_page = page;
     }
     mounted () {
         document.title = `Contest Set -- ${document.title}`;
-        this.axios.get("/api/contest/list", {
-            params: (params => {
-                for (let key in params) {
-                    if (params[key] === null || params[key] === undefined) {
-                        params[key] = "1";
-                    }
-                }
-                return params;
-            })(this.$route.query)
+        this.axios.get("/api/contest/total")
+            .then(({ data }) => {
+                this.total_number = data.data;
+            });
+        this.getPage().then(() => {
+            this.updateCurrentTime();
+        });
+        this.init();
+    }
+
+    setQuery () {
+        let queryString: any = {};
+        queryString.page = this.current_page;
+        this.$router.push({ path: this.$route.path, query: queryString });
+    }
+
+    @Watch("current_page", { immediate: true })
+    onCurrentPageChanged (newVal: any) {
+        this.setQuery();
+        this.getPage({ page: newVal });
+    }
+
+    page (num: number, arrow: any) {
+        this.current_page = arrow ? this.current_page + arrow : num;
+    }
+
+    getPage (mergeOptions: any) {
+        return this.axios.get("/api/contest/list", {
+            params: Object.assign(this.getParams(), mergeOptions)
         })
             .then(({ data }) => {
                 this.contest_list = data.data;
-                this.intervalID = setInterval(() => {
-                    this.current_time = dayjs();
-                }, 3000);
             });
-        this.init();
+    }
+
+    getParams () {
+        const params = this.$route.query;
+        for (let key in params) {
+            if (!Object.prototype.hasOwnProperty.call(params, key)) {
+                continue;
+            }
+            if (params[key] === null || params[key] === undefined) {
+                params[key] = "1";
+            }
+        }
+        return params;
+    }
+
+    @Interval(10000)
+    updateCurrentTime () {
+        this.current_time = dayjs();
     }
 
     @Interval(1000)
@@ -280,7 +340,7 @@ export default class ContestSetView extends Mixins(mixins, TimerMixin) {
         else {
             let diffTime = currentTime.diff(startTime!, "second");
             let totalDiff = endTime!.diff(startTime!, "second");
-            return (Math.floor(diffTime * 100 / totalDiff));
+            return Math.trunc(Math.floor(diffTime * 100 / totalDiff));
         }
     }
 }
