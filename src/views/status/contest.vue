@@ -501,6 +501,10 @@ export default class ContestStatus extends Mixins(mixins, StatusViewMixin) {
 
         created () {
             this.cid = parseInt(this.$route.params.contest_id);
+            this.fetchData();
+        }
+
+        fetchData () {
             let problem_id = (this.problem_id = this.getProblemID() || null) || "null";
             let user_id = (this.user_id = this.getUserId() || null) || "null";
             let language = (this.language = this.getLanguage() || -1) == -1 ? "null" : this.getLanguage();
@@ -510,11 +514,6 @@ export default class ContestStatus extends Mixins(mixins, StatusViewMixin) {
                 .then(({ data }) => {
                     this.dim = false;
                     this.finish = true;
-                    this.search_func(data);
-                });
-            this.axios.get(`/api/status/${problem_id}/${user_id}/${language}/${result}/0/${cid}`)
-                .then(({ data }) => {
-                    this.dim = false;
                     this.search_func(data);
                 });
         }
