@@ -824,14 +824,8 @@ export default class GeneralStatus extends Mixins(mixins, StatusViewMixin) {
         }
 
         created () {
-            let problem_id = (this.problem_id = this.getProblemID() || null) || "null";
-            let user_id = (this.user_id = this.getUserId() || null) || "null";
-            let language = (this.language = this.getLanguage() || -1) == -1 ? "null" : this.getLanguage();
-            let result = (this.problem_result = this.getResult() || -1) == -1 ? "null" : this.problem_result;
-            this.axios.get(`/api/status/${problem_id}/${user_id}/${language}/${result}/0/`)
-                .then(({ data }) => {
-                    this.dim = false;
-                    this.search_func(data);
+            this.fetchData()
+                .then((data) => {
                     this.axios.get("/api/status/result")
                         .then(response => {
                             const dat: any = response.data;
@@ -848,8 +842,17 @@ export default class GeneralStatus extends Mixins(mixins, StatusViewMixin) {
                 });
         }
 
-        updated () {
-
+        fetchData () {
+            let problem_id = (this.problem_id = this.getProblemID() || null) || "null";
+            let user_id = (this.user_id = this.getUserId() || null) || "null";
+            let language = (this.language = this.getLanguage() || -1) == -1 ? "null" : this.getLanguage();
+            let result = (this.problem_result = this.getResult() || -1) == -1 ? "null" : this.problem_result;
+            return this.axios.get(`/api/status/${problem_id}/${user_id}/${language}/${result}/0/`)
+                .then(({ data }) => {
+                    this.dim = false;
+                    this.search_func(data);
+                    return data;
+                });
         }
 
         beforeDestory () {

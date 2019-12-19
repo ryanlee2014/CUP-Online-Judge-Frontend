@@ -25,6 +25,15 @@ export default class StatusViewMixin extends Vue {
         }
     }
 
+    @Watch("$route.query")
+    onRouteQueryChanged () {
+        this.fetchData();
+    }
+
+    fetchData () {
+
+    }
+
     search () {
         console.error("Implement this method");
     }

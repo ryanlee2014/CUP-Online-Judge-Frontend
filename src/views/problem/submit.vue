@@ -436,10 +436,6 @@ export default class Submit extends Mixins(mixins) {
     @WebSocketRequest
     @Debounce()
     do_submit () {
-        if (!this.$socket.connected) {
-            alert("WebSocket服务未启动，请等待服务启动后提交\nWebSocket服务启动标志未:\n右上角显示在线人数");
-            return;
-        }
         this.hide_warning = true;
         new Middleware()
             .use(this.initConfirms)
@@ -449,6 +445,7 @@ export default class Submit extends Mixins(mixins) {
             .use(this.presubmit)
             .commit();
     }
+
     presubmit () {
         let that = this;
         const submitLanguage = parseInt(this.$store.getters.language);
