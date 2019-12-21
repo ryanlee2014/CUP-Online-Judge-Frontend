@@ -5,7 +5,7 @@
             <div></div>
             <div v-show="!diffmode">
                 <h3 class="ui dividing header">运行结果</h3>
-                <div class="row" v-html="info">
+                <div class="plain_text row" v-text="info">
 
                 </div>
             </div>
@@ -128,7 +128,7 @@ export default class RuntimeInfo extends Mixins(mixins) {
                 });
             }
             else {
-                this.info = text.split("\n").join("<br>").split(" ").join("&nbsp;");
+                this.info = text;
             }
         }
 
@@ -144,5 +144,8 @@ export default class RuntimeInfo extends Mixins(mixins) {
     .margin {
         margin-top: 1em;
         margin-bottom: 1em;
+    }
+    .plain_text {
+        white-space: pre-wrap;
     }
 </style>
