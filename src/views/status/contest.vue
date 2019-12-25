@@ -205,7 +205,7 @@ import jquery from "jquery";
 import StatusViewMixin from "@/mixin/StatusViewMixin";
 
 const $: any = jquery;
-const am4themes_animated = require("@amcharts/amcharts4/themes/animated");
+const am4themes_animated = require("@amcharts/amcharts4/themes/animated").default;
 
 function draw (_result: any) {
     let result = _result.result;
