@@ -212,6 +212,13 @@ import Chart from "chart.js";
 import _ from "lodash";
 import { Component, Mixins, Watch } from "vue-property-decorator";
 import StatusViewMixin from "@/mixin/StatusViewMixin";
+import AwaitLock from "await-lock";
+import { Lock } from "@/module/Decorator/method";
+declare global {
+    interface Window {
+        [id: string]: any
+    }
+}
 
 const $: any = jquery;
 const am4themes_animated = require("@amcharts/amcharts4/themes/animated").default;
@@ -679,6 +686,7 @@ export default class GeneralStatus extends Mixins(mixins, StatusViewMixin) {
         page_cnt = 0;
         dim = false;
         sockets: any;
+        prevSolutionId = 0;
 
         @Watch("current_tag")
         onCurrentTagChanged (newVal: string) {
@@ -753,10 +761,15 @@ export default class GeneralStatus extends Mixins(mixins, StatusViewMixin) {
                 });
         }
 
-        Submit (data: any) {
+        @Lock(new AwaitLock())
+        async Submit (data: any) {
             if (!this.auto_refresh) {
                 return;
             }
+            if (data.submission_id <= this.prevSolutionId) {
+                return;
+            }
+            this.prevSolutionId = data.submission_id;
             if (this.privilege && (data.val.id <= 0 || (data.val.cid && data.val.cid <= 0))) {
                 return;
             }

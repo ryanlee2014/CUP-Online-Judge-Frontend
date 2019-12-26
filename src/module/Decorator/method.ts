@@ -1,6 +1,7 @@
 import _ from "lodash";
 
 import { log, logFactory } from "@/util/logger";
+import AwaitLock from "await-lock";
 
 const decoratorLog = logFactory("Decorator mounted: ");
 interface IPropertyDescriptor extends PropertyDescriptor {
@@ -57,5 +58,18 @@ export function WebSocketRequest (target: any, propertyName: string, propertyDes
             return;
         }
         return method.apply(this, args);
+    };
+}
+
+export function Lock (lock: AwaitLock) {
+    return function (target: any, propertyName: string, propertyDescriptor: IWebSocketPropertyDescriptor) {
+        decoratorLog(`Lock, target:${target.constructor.name}, propertyName:${propertyName}`);
+        const method = propertyDescriptor.value;
+        propertyDescriptor.value = async function (...args: any) {
+            await lock.acquireAsync();
+            const resp = method.apply(this, args);
+            lock.release();
+            return resp;
+        };
     };
 }
