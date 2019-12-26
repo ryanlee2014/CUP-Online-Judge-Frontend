@@ -23,7 +23,7 @@ export default class SelectedTag extends Vue {
 
     $parent: any;
 
-    datas () {
+    get datas () {
         const color = this.color;
         let search = this.data;
         let label = this.label;
