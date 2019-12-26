@@ -214,11 +214,6 @@ import { Component, Mixins, Watch } from "vue-property-decorator";
 import StatusViewMixin from "@/mixin/StatusViewMixin";
 import AwaitLock from "await-lock";
 import { Lock } from "@/module/Decorator/method";
-declare global {
-    interface Window {
-        [id: string]: any
-    }
-}
 
 const $: any = jquery;
 const am4themes_animated = require("@amcharts/amcharts4/themes/animated").default;
