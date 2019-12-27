@@ -94,8 +94,8 @@ export default class NavbarMixin extends Vue {
             this.socketConnected = true;
             this.$socket.emit("auth", authMsg);
         });
-        this.sockets.subscribe("judgerChange", (data: any) => {
-            this.judger = data.length;
+        this.sockets.subscribe("freeJudgerNumber", (data: any) => {
+            this.judger = data.num;
         });
         this.sockets.subscribe("disconnect", () => {
             this.socketConnected = false;
