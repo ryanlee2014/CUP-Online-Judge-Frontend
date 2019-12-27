@@ -13,7 +13,7 @@
                                 <div class="ui toggle checkbox" ref="public">
                                     <input @click="Private = !Private" class="hidden" tabindex="0" type="checkbox"
                                            v-model="Private">
-                                    <label>{{$t("public contest")}}</label>
+                                    <label>{{$t("private contest")}}</label>
                                 </div>
                             </div>
                             <div class="field">
