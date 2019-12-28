@@ -33,6 +33,7 @@ export default class Pagination extends Vue {
     @Prop() total!: number;
     @Prop() page_cnt!: number;
     @Prop() current_page!: number;
+    @Prop() onPageChanged!: (event: any, arrow?: any) => any;
     $parent: any;
     total_menu = 0;
     created () {
@@ -62,10 +63,10 @@ export default class Pagination extends Vue {
 
     page (event: any, arrow: any) {
         if (arrow) {
-            this.$parent.page(null, arrow);
+            this.onPageChanged(null, arrow);
         }
         else {
-            this.$parent.page(parseInt(event.target.innerText) - 1);
+            this.onPageChanged(parseInt(event.target.innerText) - 1);
         }
     }
 }

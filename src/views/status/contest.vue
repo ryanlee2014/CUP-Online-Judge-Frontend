@@ -56,7 +56,7 @@
                         <div class="field">
                             <label>{{$t("result")}}</label>
                             <div class="ui fluid search dropdown selection" size="1">
-                                <input @change="problem_result=$event.target.value" name="jresult"
+                                <input @change="problem_result=$event.target.value"
                                        type="hidden" v-model="problem_result">
                                 <i class="dropdown icon"></i>
                                 <div class="default text">All</div>

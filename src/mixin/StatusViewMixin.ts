@@ -47,7 +47,7 @@ export default class StatusViewMixin extends Vue {
 
     getResult () {
         if (this.$route.query) {
-            return this.$route.query.jresult;
+            return this.$route.query.result;
         }
         return null;
     }
@@ -72,7 +72,7 @@ export default class StatusViewMixin extends Vue {
             queryobject["user_id"] = this.user_id;
         }
         if (this.problem_result && this.problem_result !== -1) {
-            queryobject["jresult"] = this.problem_result;
+            queryobject["result"] = this.problem_result;
         }
         if (this.problem_id && this.problem_id !== 0) {
             queryobject["problem_id"] = this.problem_id;

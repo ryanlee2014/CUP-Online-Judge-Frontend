@@ -1,6 +1,6 @@
 <template>
     <div class="ui container padding">
-        <Pagination :current_page="current_page" :page_cnt="page_cnt" :total="total_number"></Pagination>
+        <Pagination :current_page="current_page" :page_cnt="page_cnt" :total="total_number" :on-page-changed="page"></Pagination>
         <table class="ui celled structured table">
             <thead>
             <tr>

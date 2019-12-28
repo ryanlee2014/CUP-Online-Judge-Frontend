@@ -3,7 +3,7 @@
         <div class="ui grid">
             <div class="row">
                 <div class="thirteen wide column">
-                    <Pagination :current_page="current_page" :page_cnt="page_cnt" :total="total_number"></Pagination>
+                    <Pagination :current_page="current_page" :page_cnt="page_cnt" :total="total_number" :on-page-changed="page"></Pagination>
                 </div>
                 <div class="three wide right aligned column">
                     <router-link to="/admin/contest/add" class="ui primary button">
