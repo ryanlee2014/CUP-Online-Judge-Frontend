@@ -154,17 +154,17 @@ export default {
                         tmp.place = "机房";
                     }
                 } else if (tmp.intranet_ip.match(/10\.1[1-2]{1}0\.[0-9]{1,3}\.[0-9]{1,3}/)) {
-                    tmp.place = "润杰公寓Wi-Fi";
+                    tmp.place = "Wi-Fi";
                 } else if (tmp.intranet_ip.match(/10\.116\.[0-9]{1,3}\.[0-9]{1,3}/)) {
-                    tmp.place = "新综合楼Wi-Fi";
+                    tmp.place = "Wi-Fi";
                 } else if (tmp.intranet_ip.match(/10\.102\.[0-9]{1,3}\.[0-9]{1,3}/) || tmp.intranet_ip.match(/10\.120\.[0-9]{1,3}\.[0-9]{1,3}/)) {
-                    tmp.place = "第三教学楼Wi-Fi";
+                    tmp.place = "Wi-Fi";
                 } else if (tmp.intranet_ip.match(/10\.105\.[0-9]{1,3}\.[0-9]{1,3}/)) {
-                    tmp.place = "逸夫楼Wi-Fi";
+                    tmp.place = "Wi-Fi";
                 } else if (tmp.intranet_ip.match(/10\.103\.[0-9]{1,3}\.[0-9]{1,3}/)) {
-                    tmp.place = "地质楼Wi-Fi";
+                    tmp.place = "Wi-Fi";
                 } else if (tmp.intranet_ip.match(/10\.1[0-9]{2}\.[0-9]{1,3}\.[0-9]{1,3}/)) {
-                    tmp.place = "其他Wi-Fi";
+                    tmp.place = "Wi-Fi";
                 } else if (tmp.intranet_ip.match(/172\.16\.[\s\S]+/)) {
                     tmp.place = "VPN";
                 }  else if (tmp.intranet_ip.match(/10\.200\.32\.[0-9]{1,3}/)) {
