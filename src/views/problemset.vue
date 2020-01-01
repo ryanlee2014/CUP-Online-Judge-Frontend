@@ -109,7 +109,9 @@
                                 :current_page="current_page"
                                 :page_cnt="page_cnt"
                                 :total="total"
-                                @pageUpdated="preloadContent"></pagination>
+                                @pageUpdated="preloadContent"
+                                :on-page-changed="page"
+                            ></pagination>
                         </div>
                     </div>
                 </div>
