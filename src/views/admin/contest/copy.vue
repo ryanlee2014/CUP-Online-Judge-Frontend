@@ -16,6 +16,18 @@ export default class ContestCopy extends Mixins(mixins, contestEditMixin) {
     edit (val: any) {
         console.log("get", val);
     }
+    add (val: any) {
+        val = this.dataFormat(val);
+        this.axios.post("/api/admin/contest/add", val)
+            .then(({ data }) => {
+                if (data.status === "OK") {
+                    alert(this.$t("success"));
+                }
+                else {
+                    alert(this.$t("error"));
+                }
+            });
+    }
 }
 </script>
 
