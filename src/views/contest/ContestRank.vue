@@ -135,7 +135,7 @@ import {
     SubmitterFactory,
     firstBloodListFactory,
     SubmitterComparator
-} from "../../module/ContestRank/ContestRankFactories";
+} from "@/module/ContestRank/ContestRankFactories";
 
 const { reset: bindDragEvent } = require("dragscroll");
 let submissionCollection: any[] = [];
