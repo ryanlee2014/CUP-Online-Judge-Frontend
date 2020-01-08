@@ -110,6 +110,9 @@ export default {
                         if (parseInt(ip) <= 80) {
                             tmp.place = "502机房";
                         }
+                        else if (parseInt(ip) === 81) {
+                            tmp.place = "502教师机";
+                        }
                         else if (parseInt(ip) < 172 && parseInt(ip) >= 101) {
                             tmp.place = "503机房";
                         }
