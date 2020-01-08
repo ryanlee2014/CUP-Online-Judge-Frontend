@@ -4,6 +4,7 @@ import userInfo from "./store/userInfo";
 import socket from "./store/socket";
 import routeInfo from "./store/routeInfo";
 import code from "./store/code";
+import system from "./store/system";
 Vue.use(Vuex);
 
 export default new Vuex.Store({
@@ -11,6 +12,7 @@ export default new Vuex.Store({
         userInfo,
         socket,
         routeInfo,
-        code
+        code,
+        system
     }
 });

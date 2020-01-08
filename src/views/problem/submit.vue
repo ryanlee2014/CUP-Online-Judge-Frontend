@@ -1,6 +1,6 @@
 <template>
     <div class="ui container" id="cmod" v-if="contest_mode || limit">
-        <ContestMode v-if="contest_mode"></ContestMode>
+        <ContestMode v-if="contest_mode || contestMode"></ContestMode>
         <LimitHostname :address="address" v-if="limit"></LimitHostname>
     </div>
     <div class="main screen" v-else>
@@ -67,6 +67,7 @@ import { Debounce, WebSocketRequest } from "@/module/Decorator/method";
 import { Mixins, Component } from "vue-property-decorator";
 import jquery from "jquery";
 import _ from "lodash";
+import { mapGetters } from "vuex";
 const $: any = jquery;
 const doc = document.createElement("div");
 let $modal: any;
@@ -79,7 +80,8 @@ let handlerInterval: any;
         ContestMode,
         LimitHostname,
         ConfirmModal
-    }
+    },
+    computed: mapGetters(["contestMode"])
 })
 export default class Submit extends Mixins(mixins) {
     $socket: any;
@@ -686,8 +688,15 @@ export default class Submit extends Mixins(mixins) {
                                 }
                             }
                         }
+
                         setTimeout(function () {
-                            $(".mainwindow").html("").animate({ width: 0, borderRadius: 0, padding: 0 });
+                            $(".mainwindow")
+                                .removeClass("five")
+                                .removeClass("wide")
+                                .removeClass("container")
+                                .removeClass("ui")
+                                .html("")
+                                .animate({ width: 0, borderRadius: 0, padding: 0 });
                         }, 500);
                         let str = "<a class='item'><h3>剩下未完成的题目</h3></a>";
                         if (json.length === 0) {
@@ -838,6 +847,9 @@ export default class Submit extends Mixins(mixins) {
         display: block;
         margin-left: auto;
         margin-right: auto;
+    }
+    div {
+        transition: all 0.5s;
     }
 
     .code {

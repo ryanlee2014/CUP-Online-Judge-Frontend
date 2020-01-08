@@ -1,5 +1,5 @@
 <template>
-    <ContestMode v-if="contest_mode"></ContestMode>
+    <ContestMode v-if="contest_mode || contestMode"></ContestMode>
     <div v-else class="ui container padding">
         <h2 class="ui dividing header">
             Source Code
@@ -91,13 +91,15 @@
 import mixins from "../../mixin/init";
 import ContestMode from "../../components/contestMode/block.vue";
 import { Component, Mixins } from "vue-property-decorator";
+import { mapGetters } from "vuex";
 const Clipboard = require("clipboard");
 const clipboard = new Clipboard("#copy");
 const $ = require("jquery");
 @Component({
     components: {
         ContestMode: ContestMode
-    }
+    },
+    computed: mapGetters(["contestMode"])
 })
 export default class UserCode extends Mixins(mixins) {
     code = "";

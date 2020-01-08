@@ -2,6 +2,7 @@ import axios from "axios";
 import { IUserInfoState } from "@/store/userInfo/userInfo";
 import { ActionTree, Commit } from "vuex";
 import { IRootState } from "@/store/root";
+import store from "@/store";
 function getInfo (commit: Commit, tryTime: number) {
     if (tryTime <= 0) {
         return;
@@ -11,6 +12,7 @@ function getInfo (commit: Commit, tryTime: number) {
             const data = response.data;
             if (data.status === "OK") {
                 commit("setUserData", data.data);
+                store.commit("setContestMode", data.data.contest_mode);
                 commit("loginMutate", { login: true });
             }
             else {

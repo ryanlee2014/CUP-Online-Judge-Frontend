@@ -1,5 +1,7 @@
 <template>
-    <ContestMode v-if="contest_mode"></ContestMode>
+    <div class="ui container padding" v-if="contest_mode || contestMode">
+        <ContestMode/>
+    </div>
     <div class="ui container padding" v-else>
         <h2 class="ui dividing header">Discuss</h2>
         <div class="ui grid">
@@ -60,11 +62,13 @@ import { Mixins, Component, Watch } from "vue-property-decorator";
 import ContestMode from "../components/contestMode/block.vue";
 import mixins from "../mixin/init";
 import dayjs from "dayjs";
+import { mapGetters } from "vuex";
 
 @Component({
     components: {
         ContestMode
-    }
+    },
+    computed: mapGetters(["contestMode"])
 })
 export default class Discuss extends Mixins(mixins) {
     page = 0;

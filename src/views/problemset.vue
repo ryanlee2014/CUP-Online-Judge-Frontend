@@ -1,6 +1,6 @@
 <template>
     <div class="ui left aligned container" id="problemsetContainer">
-        <ContestMode v-if="contest_mode"></ContestMode>
+        <ContestMode v-if="contest_mode || contestMode"></ContestMode>
         <div class="padding" v-else>
             <h2 class="ui dividing header">
                 Problem Set
@@ -126,6 +126,7 @@ import Pagination from "../components/problemset/pagination.vue";
 import selectedTag from "../components/problemset/selected-tag.vue";
 import mainContent from "../components/problemset/MainContent.vue";
 import ContestMode from "../components/contestMode/block.vue";
+import { mapGetters } from "vuex";
 import { Component, Mixins } from "vue-property-decorator";
 import mixins from "../mixin/init";
 import jquery from "jquery";
@@ -195,7 +196,8 @@ const queryString = parseQueryString(window.location.hash.substring(1));
         Pagination,
         selectedTag,
         ContestMode
-    }
+    },
+    computed: mapGetters(["contestMode"])
 })
 export default class ProblemSet extends Mixins(mixins) {
         table = {};

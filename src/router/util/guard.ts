@@ -18,6 +18,7 @@ function checkAdmin (to: Route, admin: boolean, next: NextFunction) {
         getSelfInfo().then(({ data }) => {
             if (data.data && data.data.user_id) {
                 store.commit("setUserData", data.data);
+                store.commit("setContestMode", data.data.contest_mode);
                 store.commit("loginMutate", { login: true });
             }
             else {
