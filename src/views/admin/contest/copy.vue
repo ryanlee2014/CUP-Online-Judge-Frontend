@@ -1,5 +1,5 @@
 <template>
-    <contest-editor :contestInfo="data" :externalUserListText="userListText" :externalProblemSelected="problemSelected" @postData="edit"></contest-editor>
+    <contest-editor :contestInfo="data" :externalUserListText="userListText" :externalProblemSelected="problemSelected" @postData="add"></contest-editor>
 </template>
 
 <script lang="ts">
