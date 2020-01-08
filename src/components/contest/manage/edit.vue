@@ -41,7 +41,7 @@
                         <div class="ui calendar" id="rangestart">
                             <div class="ui input left icon">
                                 <i class="calendar icon"></i>
-                                <input @input="debug('input')" id="startTime" placeholder="Start" type="text"
+                                <input id="startTime" placeholder="Start" type="text" autocomplete="off"
                                        v-model="startTime">
                             </div>
                         </div>
@@ -51,7 +51,7 @@
                         <div class="ui calendar" id="rangeend">
                             <div class="ui input left icon">
                                 <i class="calendar icon"></i>
-                                <input id="endTime" placeholder="End" type="text" v-model="endTime">
+                                <input id="endTime" placeholder="End" type="text" v-model="endTime" autocomplete="off">
                             </div>
                         </div>
                     </div>
