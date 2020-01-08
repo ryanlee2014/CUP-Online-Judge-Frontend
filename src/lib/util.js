@@ -101,7 +101,7 @@ export default {
                     }
                 }
                 else if (tmp.intranet_ip.match(/10\.200\.28\.[0-9]{1,3}/) || tmp.intranet_ip.match(/10\.200\.26\.[0-9]{1,3}/)
-                    || tmp.intranet_ip.match(/10\.200\.25\.[0-9]{1,3}/)) {
+                    || tmp.intranet_ip.match(/10\.200\.25\.[0-9]{1,3}/) || tmp.intranet_ip.match(/10\.200\.27\.[0-9]{1,3}/)) {
                     if (tmp.intranet_ip.match(/10\.200\.26\.[0-9]{1,3}/)) {
                         tmp.place = "405机房";
                     }
@@ -112,6 +112,19 @@ export default {
                         }
                         else if (parseInt(ip) < 172 && parseInt(ip) >= 101) {
                             tmp.place = "503机房";
+                        }
+                        else {
+                            tmp.place = "机房";
+                        }
+                    }
+                    else if (tmp.intranet_ip.match(/10\.200\.27\.[0-9]{1,3}/)) {
+                        ip = tmp.intranet_ip.substring(tmp.intranet_ip.lastIndexOf(".") + 1);
+                        ip = parseInt(ip);
+                        if (ip >= 1 && ip <= 102) {
+                            tmp.place = "504机房";
+                        }
+                        else if (ip === 217) {
+                            tmp.place = "504机房教师机";
                         }
                         else {
                             tmp.place = "机房";
@@ -164,7 +177,7 @@ export default {
                     tmp.place = "润杰有线";
                 }
                 else if (tmp.intranet_ip.match(/10\.200\.28\.[0-9]{1,3}/) || tmp.intranet_ip.match(/10\.200\.26\.[0-9]{1,3}/)
-                    || tmp.intranet_ip.match(/10\.200\.25\.[0-9]{1,3}/)) {
+                    || tmp.intranet_ip.match(/10\.200\.25\.[0-9]{1,3}/) || tmp.intranet_ip.match(/10\.200\.27\.[0-9]{1,3}/)) {
                     if (tmp.intranet_ip.match(/10\.200\.26\.[0-9]{1,3}/)) {
                         tmp.place = "405机房";
                     }
@@ -175,6 +188,19 @@ export default {
                         }
                         else if (parseInt(ip) < 172 && parseInt(ip) >= 101) {
                             tmp.place = "503机房";
+                        }
+                        else {
+                            tmp.place = "机房";
+                        }
+                    }
+                    else if (tmp.intranet_ip.match(/10\.200\.27\.[0-9]{1,3}/)) {
+                        ip = tmp.intranet_ip.substring(tmp.intranet_ip.lastIndexOf(".") + 1);
+                        ip = parseInt(ip);
+                        if (ip >= 1 && ip <= 102) {
+                            tmp.place = "504机房";
+                        }
+                        else if (ip === 217) {
+                            tmp.place = "504机房教师机";
                         }
                         else {
                             tmp.place = "机房";
