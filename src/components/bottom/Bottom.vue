@@ -44,7 +44,7 @@
                     </h3>
                 </div>
                 <div class="five wide column">
-                    <h3 class="ui inverted header">© CUP Online Judge 2017-2019
+                    <h3 class="ui inverted header">© CUP Online Judge 2017-{{ year }}
                         <div class="sub header">  Impressed by HUSTOJ & SYZOJ & ECNUOJ</div>
                         <div class="sub header">  Powered By Vue.js,Node.js,Semantic-UI</div>
                         <div class="sub header">Software Designer:<a href="https://github.com/ryanlee2014" target="_blank">Ryan Lee(李昊元)</a></div>
@@ -60,8 +60,10 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
+import dayjs from "dayjs";
 @Component
 export default class Bottom extends Vue {
+    year = dayjs().format("YYYY")
 }
 </script>
 

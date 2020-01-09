@@ -8,7 +8,7 @@
         <transition name="fade">
             <router-view class="router"/>
         </transition>
-        <Bottom></Bottom>
+        <Bottom/>
     </div>
 </template>
 <script lang="ts">
