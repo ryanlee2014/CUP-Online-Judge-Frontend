@@ -92,15 +92,16 @@ export default class Login extends Mixins(mixins) {
                         this.$router.push({ path: "/" });
                     }
                 }
+            })
+            .catch(response => {
+                $(".ui.fluid.large.teal.button").removeClass("loading");
+                $("#vcode_graph").attr("src", `/api/captcha?from=login&ramdom=${Math.random()}`);
+                $(".ui.middle.aligned.center.aligned.grid .column").transition("shake");
+                if (response.data.statement.match("captcha doesn't match")) {
+                    $(".ui.error.message").html("验证码错误").show();
+                }
                 else {
-                    $("#vcode_graph").attr("src", `/api/captcha?from=login&ramdom=${Math.random()}`);
-                    $(".ui.middle.aligned.center.aligned.grid .column").transition("shake");
-                    if (response.data.statement.match("captcha doesn't match")) {
-                        $(".ui.error.message").html("验证码错误").show();
-                    }
-                    else {
-                        $(".ui.error.message").html("账号或密码错误").show();
-                    }
+                    $(".ui.error.message").html("账号或密码错误").show();
                 }
             });
     }

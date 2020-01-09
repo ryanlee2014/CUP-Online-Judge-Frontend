@@ -31,7 +31,7 @@ export default function () {
                 return;
             }
             console.log("GET ERROR: ", reason);
-            return reason;
+            return Promise.reject(reason);
         });
     };
 
@@ -39,6 +39,7 @@ export default function () {
     axios.post = function () {
         return _post.apply(this, <any>arguments).catch(reason => {
             console.log("POST ERROR: ", reason);
+            return Promise.reject(reason);
         });
     };
 }
