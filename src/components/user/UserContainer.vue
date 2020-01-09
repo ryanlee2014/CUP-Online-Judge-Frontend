@@ -1,5 +1,8 @@
 <template>
-    <div class="ui container pusher">
+    <div class="ui container padding" v-if="contestMode">
+        <ContestMode/>
+    </div>
+    <div class="ui container pusher" v-else>
         <div class="padding">
             <h2 class="ui dividing header" v-show="!finished">
                 {{$t("loading")}}
@@ -469,14 +472,21 @@
 import * as d3 from "d3";
 import markdownIt from "../../lib/markdownIt/markdownIt";
 import calendarHeatmap from "../../lib/calendar-heapmap";
+import ContestMode from "../../components/contestMode/block.vue";
 import avatarMixin from "../../mixin/avatarMixin";
 import { Component, Mixins, Prop, Watch } from "vue-property-decorator";
 import jquery from "jquery";
 import _ from "lodash";
 import Chart from "chart.js";
 import dayjs from "dayjs";
+import { mapGetters } from "vuex";
 const $: any = jquery;
-@Component
+@Component({
+    components: {
+        ContestMode
+    },
+    computed: mapGetters(["contestMode"])
+})
 export default class UserContainer extends Mixins(avatarMixin) {
     @Prop({ default: "" }) userId!: string;
     award = [];

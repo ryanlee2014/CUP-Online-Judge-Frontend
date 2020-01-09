@@ -1,5 +1,8 @@
 <template>
-    <div class="padding ui container">
+    <div class="ui container padding" v-if="contestMode">
+        <ContestMode/>
+    </div>
+    <div class="padding ui container" v-else>
         <h2 class="ui dividing header">
             Status
         </h2>
@@ -206,6 +209,7 @@
 import statusTable from "../components/status/status-table.vue";
 import * as am4core from "@amcharts/amcharts4/core";
 import * as am4charts from "@amcharts/amcharts4/charts";
+import ContestMode from "../components/contestMode/block.vue";
 import mixins from "../mixin/init";
 import jquery from "jquery";
 import Chart from "chart.js";
@@ -214,6 +218,7 @@ import { Component, Mixins, Watch } from "vue-property-decorator";
 import StatusViewMixin from "@/mixin/StatusViewMixin";
 import AwaitLock from "await-lock";
 import { Lock } from "@/module/Decorator/method";
+import { mapGetters } from "vuex";
 
 const $: any = jquery;
 const am4themes_animated = require("@amcharts/amcharts4/themes/animated").default;
@@ -664,8 +669,10 @@ function drawRegisterTimeline (data: any) {
 } // end am4core.ready()
     @Component({
         components: {
-            statusTable
-        }
+            statusTable,
+            ContestMode
+        },
+        computed: mapGetters(["contestMode"])
     })
 export default class GeneralStatus extends Mixins(mixins, StatusViewMixin) {
         problem_list: any[] = [];

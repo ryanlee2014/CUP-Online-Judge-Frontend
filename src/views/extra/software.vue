@@ -49,11 +49,11 @@
         <div class="ui two column grid">
             <div class="column">
                 <div class="ui card">
-                    <a class="image chrome" href="software/63.0.3239.84_chrome_installer.exe">
+                    <a class="image chrome" href="software/ChromeStandaloneSetup.exe">
                         <img src="/img/Chrome.png">
                     </a>
                     <div class="content">
-                        <a class="header chrome" href="software/63.0.3239.84_chrome_installer.exe">Chrome 63</a>
+                        <a class="header chrome" href="software/ChromeStandaloneSetup.exe">Chrome 79</a>
                         <div class="meta">
                             <a class="chrome_content">适合Windows 7/8/8.1/10 系统使用</a>
                         </div>
@@ -178,11 +178,11 @@ export default class Software extends Mixins(mixins) {
         if (userAgent.includes("Windows NT")) {
             $clion.attr("href", $clionSuffix + "exe");
             if (userAgent.includes("64")) {
-                $(".chrome").attr("href", "software/63.0.3239.84_chrome_installer_x64.exe");
+                $(".chrome").attr("href", "software/ChromeStandaloneSetup.exe");
                 $(".header.chrome").html($chrome + " For Windows X64");
             }
             else {
-                $(".chrome").attr("href", "software/63.0.3239.84_chrome_installer.exe");
+                $(".chrome").attr("href", "software/ChromeStandaloneSetup.exe");
                 $(".header.chrome").html($chrome + " For Windows X86");
             }
         }

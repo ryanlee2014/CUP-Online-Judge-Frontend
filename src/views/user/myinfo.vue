@@ -1,5 +1,5 @@
 <template>
-    <UserContainer :userId="userId"></UserContainer>
+    <UserContainer :userId="userId"/>
 </template>
 
 <script lang="ts">

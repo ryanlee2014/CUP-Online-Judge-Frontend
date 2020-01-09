@@ -1,5 +1,8 @@
 <template>
-    <div class="ui container padding">
+    <div class="ui container padding" v-if="contestMode">
+        <ContestMode/>
+    </div>
+    <div class="ui container padding" v-else>
         <div>
             <h2 class="ui dividing header">
                 Rank List
@@ -12,11 +15,15 @@
 <script lang="ts">
 import RankList from "../components/ranklist/MainContent.vue";
 import InitMixin from "../mixin/init";
+import ContestMode from "../components/contestMode/block.vue";
 import { Mixins, Component } from "vue-property-decorator";
+import { mapGetters } from "vuex";
 @Component({
     components: {
-        RankList: RankList
-    }
+        RankList: RankList,
+        ContestMode
+    },
+    computed: mapGetters(["contestMode"])
 })
 export default class Rank extends Mixins(InitMixin) {
     ranklist = {};

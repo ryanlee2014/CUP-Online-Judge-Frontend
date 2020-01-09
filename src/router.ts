@@ -1,10 +1,11 @@
 import Vue from "vue";
-import Router from "vue-router";
+import Router, { RouterOptions } from "vue-router";
 import adminAuth from "./lib/router";
 import Guard from "./router/util/guard";
 
 // eslint-disable-next-line no-unused-vars
-const emptyFunc = (...arg: any[]) => {};
+const emptyFunc = (...arg: any[]) => {
+};
 // warn if in developing env
 const warn = process.env.NODE_ENV !== "production" ? ((console && console.warn) || emptyFunc) : emptyFunc;
 const originalPush: (...arg: any[]) => any = Router.prototype.push;
@@ -500,6 +501,15 @@ const router = new Router({
             }
         },
         {
+            path: "/admin/global",
+            name: "Global Settings",
+            components: () => import("./views/admin/global_setting.vue"),
+            meta: {
+                auth: true,
+                admin: true
+            }
+        },
+        {
             path: "/system/version_control",
             name: "Version Control",
             component: () => import("./views/system/github_repo_info.vue")
@@ -525,7 +535,7 @@ const router = new Router({
             component: () => import("./views/error/404.vue")
         }
     ]
-});
+} as RouterOptions);
 
 router.beforeEach(Guard);
 

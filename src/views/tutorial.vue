@@ -1,5 +1,6 @@
 <template>
-    <div class="ui container padding">
+    <div class="ui container padding" v-if="contestMode"></div>
+    <div class="ui container padding" v-else >
         <h2 class="ui dividing header">
             Solution
             <div class="sub header">
@@ -104,12 +105,19 @@
 import mixins from "../mixin/init";
 import avatarMixin from "../mixin/avatarMixin";
 import mermaidMixin from "../mixin/mermaidMixin";
+import ContestMode from "../components/contestMode/block.vue";
 import { Component, Mixins } from "vue-property-decorator";
 import markdownIt from "../lib/markdownIt/markdownIt";
 import jquery from "jquery";
+import { mapGetters } from "vuex";
 const $: any = jquery;
 const Clipboard = require("clipboard");
-@Component
+@Component({
+    components: {
+        ContestMode
+    },
+    computed: mapGetters(["contestMode"])
+})
 export default class Tutorial extends Mixins(mixins, avatarMixin, mermaidMixin) {
     $route: any;
     content = "";
