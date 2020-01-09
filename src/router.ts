@@ -525,6 +525,11 @@ const router = new Router({
             component: () => import("./views/error/unavailable.vue")
         },
         {
+            path: "/forbidden/contest_mode",
+            name: "Global contest mode state",
+            component: () => import("./views/error/contest-mode.vue")
+        },
+        {
             path: "/ban",
             name: "Ban view",
             component: () => import("./views/error/ban.vue")

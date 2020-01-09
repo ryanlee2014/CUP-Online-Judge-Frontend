@@ -38,7 +38,7 @@ export default class App extends Vue {
     sockets: any;
     created () {
         this.homepage = this.$route.path === "/";
-        this.contest = this.$route.fullPath.includes("contest");
+        this.contest = this.isContestView(this.$route.fullPath);
         this.adminView = this.$route.fullPath.indexOf("/admin") === 0;
     }
     mounted () {
@@ -49,12 +49,16 @@ export default class App extends Vue {
         }, 1500);
     }
 
+    isContestView (path: string) {
+        return path.includes("contest\/");
+    }
+
     @Watch("$route")
     onRouteChange (to: Route) {
         this.homepage = to.path === "/";
         this.adminView = to.fullPath.indexOf("/admin") === 0;
         const matchedPath = to.matched[0].path.substring(1);
-        this.contest = matchedPath !== "contest" && matchedPath.includes("contest");
+        this.contest = matchedPath !== "contest" && this.isContestView(matchedPath);
         this.$store.commit("setRouteInfo", { path: to.path, fullPath: to.fullPath });
         this.$store.commit("setHomepage", { homepage: this.homepage });
         this.$socket.emit("updateURL", { url: to.fullPath });

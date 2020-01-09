@@ -193,9 +193,11 @@ export default class ContestProblemView extends Mixins(mixins) {
         const that = this;
         this.cid = parseInt(contestID);
         this.axios.get("/api/contest/problem/" + contestID)
-            .then(({ data }) => {
-                const _d = data;
+            .then(response => {
+                console.log(response);
+                const _d = response.data;
                 if (_d.status !== "OK") {
+                    console.log(_d);
                     if (_d.statement === "Permission denied") {
                         that.mode = 1;
                         return;

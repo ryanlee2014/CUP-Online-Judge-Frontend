@@ -31,6 +31,7 @@ export default function () {
                 return;
             }
             console.log("GET ERROR: ", reason);
+            return reason;
         });
     };
 
