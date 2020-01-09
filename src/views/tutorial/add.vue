@@ -49,7 +49,10 @@ export default class TutorialAdd extends Mixins(mixins) {
     solution_id = 0;
     captcha = "";
     from = "local";
-    id = this.$route.params.problem_id;
+    id!: any;
+    created () {
+        this.id = this.$route.params.problem_id;
+    }
     mounted () {
         document.title = `Add Tutorial -- ${document.title}`;
     }
