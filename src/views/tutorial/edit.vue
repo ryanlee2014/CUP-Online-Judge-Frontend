@@ -45,7 +45,12 @@ export default class TutorialEdit extends Mixins(InitMixin) {
     content = "";
     solution_id = 0;
     captcha = "";
-    tutorial_id = this.$route.params.tutorial_id;
+    tutorial_id!: string;
+
+    created () {
+        this.tutorial_id = this.$route.params.tutorial_id;
+    }
+
     mounted () {
         document.title = `Edit Tutorial -- ${document.title}`;
         this.axios.get(`/api/tutorial/${this.tutorial_id}`)
