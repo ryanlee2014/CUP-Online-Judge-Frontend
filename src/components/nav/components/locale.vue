@@ -1,6 +1,6 @@
 <template>
     <div class="ui dropdown item">
-        <div class="text">{{$t("language")}}</div>
+        <div class="text">{{$t("global_language")}}</div>
         <i class="dropdown icon">
         </i>
         <div class="menu">
