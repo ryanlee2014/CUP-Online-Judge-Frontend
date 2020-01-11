@@ -247,7 +247,7 @@ export default class ProblemEdit extends Mixins(mixins) {
         inputInstance = markdownIt.newInstance();
         outputInstance = markdownIt.newInstance();
         hintInstance = markdownIt.newInstance();
-        hint = undefined;
+        hint: any = undefined;
         source = "";
         from = "local";
         label = [];
@@ -292,6 +292,7 @@ export default class ProblemEdit extends Mixins(mixins) {
             sendObj["prepend"] = this.prepend;
             sendObj["append"] = this.append;
             sendObj["spj"] = Number(this.spj);
+            sendObj["hint"] = this.hint;
             const labels = this.label;
 
             sendObj["label"] = unique(labels).join(" ");
