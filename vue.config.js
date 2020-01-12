@@ -38,6 +38,11 @@ module.exports = {
                 secure: false,
                 changeOrigin: true
             },
+            "/upload": {
+                target: "https://www.cupacm.com",
+                secure: false,
+                changeOrigin: true
+            },
             "/img": {
                 target: "https://www.cupacm.com",
                 secure: false,

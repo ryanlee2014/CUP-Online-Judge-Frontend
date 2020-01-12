@@ -51,7 +51,7 @@
                 </h2>
             </div>
             <div class="row">
-                <mavon-editor :markInstance="descriptionInstance" v-model="description"></mavon-editor>
+                <mavon-editor ref="description" :markInstance="descriptionInstance" v-model="description"></mavon-editor>
             </div>
             <br>
             <div class="row">
@@ -60,7 +60,7 @@
                 </h2>
             </div>
             <div class="row">
-                <mavon-editor :markInstance="inputInstance" v-model="input"></mavon-editor>
+                <mavon-editor ref="input" :markInstance="inputInstance" v-model="input"></mavon-editor>
             </div>
             <br>
             <div class="row">
@@ -69,7 +69,7 @@
                 </h2>
             </div>
             <div class="row">
-                <mavon-editor :markInstance="outputInstance" v-model="output"></mavon-editor>
+                <mavon-editor ref="output" :markInstance="outputInstance" v-model="output"></mavon-editor>
             </div>
             <br>
             <div class="row">
@@ -112,44 +112,46 @@
                 <div class="four wide column">
                     <div class="ui attached vertical fluid pointing menu"
                          style="height: 370px; overflow-y: scroll; overflow-x: hidden;">
-                        <a class="item">C
+                        <a class="item" @click="prependSelected = 0">C
                             <div class="ui right floated" style="opacity: 0.4; margin-top: 8px; font-size: 0.7em; ">GNU
                                 C99/C11 LLVM Clang
                             </div>
                         </a>
-                        <a class="item">C++
+                        <a class="item" @click="prependSelected = 1">C++
                             <div class="ui right floated" style="opacity: 0.4; margin-top: 8px; font-size: 0.7em; ">GNU
                                 C++11/C++89/C++17 LLVM Clang++
                             </div>
                         </a>
-                        <a class="item">Pascal
+                        <a class="item" @click="prependSelected = 2">Pascal
                             <div class="ui right floated" style="opacity: 0.4; margin-top: 8px; font-size: 0.7em; ">fpc
                                 Pascal
                             </div>
                         </a>
-                        <a class="item">Java
+                        <a class="item" @click="prependSelected = 3">Java
                             <div class="ui right floated" style="opacity: 0.4; margin-top: 8px; font-size: 0.7em; ">
                                 openJDK 1.6/1.7/1.8/1.10
                             </div>
                         </a>
-                        <a class="item">JavaScript
+                        <a class="item" @click="prependSelected = 16">JavaScript
                             <div class="ui right floated" style="opacity: 0.4; margin-top: 8px; font-size: 0.7em; ">
                                 NodeJS 10.13.0
                             </div>
                         </a>
-                        <a class="item">Python
+                        <a class="item" @click="prependSelected = 6">Python
                             <div class="ui right floated" style="opacity: 0.4; margin-top: 8px; font-size: 0.7em; ">
                                 Python 2.7/3.6 PyPy2/3
                             </div>
                         </a>
-                        <a class="item">C#
+                        <a class="item" @click="prependSelected = 9">C#
                             <div class="ui right floated" style="opacity: 0.4; margin-top: 8px; font-size: 0.7em; ">
                                 Mono
                             </div>
                         </a>
                     </div>
                 </div>
-                <div class="ten wide column"></div>
+                <div class="ten wide column">
+                    <monaco-editor v-model="prepend[prependSelected]"/>
+                </div>
             </div>
             <div class="row">
                 <h2 class="ui header">
@@ -160,44 +162,46 @@
                 <div class="four wide column">
                     <div class="ui attached vertical fluid pointing menu"
                          style="height: 370px; overflow-y: scroll; overflow-x: hidden;">
-                        <a class="item">C
+                        <a class="item" @click="appendSelected = 0">C
                             <div class="ui right floated" style="opacity: 0.4; margin-top: 8px; font-size: 0.7em; ">GNU
                                 C99/C11 LLVM Clang
                             </div>
                         </a>
-                        <a class="item">C++
+                        <a class="item" @click="appendSelected = 1">C++
                             <div class="ui right floated" style="opacity: 0.4; margin-top: 8px; font-size: 0.7em; ">GNU
                                 C++11/C++89/C++17 LLVM Clang++
                             </div>
                         </a>
-                        <a class="item">Pascal
+                        <a class="item" @click="appendSelected = 2">Pascal
                             <div class="ui right floated" style="opacity: 0.4; margin-top: 8px; font-size: 0.7em; ">fpc
                                 Pascal
                             </div>
                         </a>
-                        <a class="item">Java
+                        <a class="item" @click="appendSelected = 3">Java
                             <div class="ui right floated" style="opacity: 0.4; margin-top: 8px; font-size: 0.7em; ">
-                                openJDK 1.6/1.7/1.8/1.10
+                                OpenJDK 1.6/1.7/1.8/1.10
                             </div>
                         </a>
-                        <a class="item">JavaScript
+                        <a class="item" @click="appendSelected = 16">JavaScript
                             <div class="ui right floated" style="opacity: 0.4; margin-top: 8px; font-size: 0.7em; ">
                                 NodeJS 10.13.0
                             </div>
                         </a>
-                        <a class="item">Python
+                        <a class="item" @click="appendSelected = 6">Python
                             <div class="ui right floated" style="opacity: 0.4; margin-top: 8px; font-size: 0.7em; ">
                                 Python 2.7/3.6 PyPy2/3
                             </div>
                         </a>
-                        <a class="item">C#
+                        <a class="item" @click="appendSelected = 9">C#
                             <div class="ui right floated" style="opacity: 0.4; margin-top: 8px; font-size: 0.7em; ">
                                 Mono
                             </div>
                         </a>
                     </div>
                 </div>
-                <div class="ten wide column"></div>
+                <div class="ten wide column">
+                    <monaco-editor v-model="append[appendSelected]"/>
+                </div>
             </div>
             <div class="row" v-if="from === 'local'">
                 <h2 class="ui header">
@@ -205,7 +209,7 @@
                 </h2>
             </div>
             <div class="row" v-if="from === 'local'">
-                <mavon-editor :markInstance="hintInstance" :test="'1'" v-model="hint"></mavon-editor>
+                <mavon-editor ref="hint" :markInstance="hintInstance" :test="'1'" v-model="hint"></mavon-editor>
             </div>
             <a @click="submit" class="ui button">提交</a>
         </div>
@@ -216,14 +220,39 @@
 <script lang="ts">
 import mixins from "../../mixin/init";
 import markdownIt from "../../lib/markdownIt/markdownIt";
+import monacoEditor from "@/components/submit/codeEditor/monacoEditor.vue";
 import { Component, Mixins } from "vue-property-decorator";
 import jquery from "jquery";
 import * as _ from "lodash";
 
 const $: any = jquery;
 
-interface ICodeSet {
+interface IKeyValueString {
     [id: string]: string
+}
+
+interface ICodeSet extends IKeyValueString {
+}
+
+interface IMavonEditorVueComponent extends IKeyValueString{}
+
+interface IKeyValue {
+    [id: string]: any
+}
+
+interface IPrependAppendPayload {
+    language: string,
+    code: string
+}
+
+interface ICodePayload {
+    language: number,
+    code: string
+}
+
+interface IPrefileDTOPayload {
+    payload: ICodePayload[],
+    problemId: number | string
 }
 
 function unique (array: any[]) {
@@ -232,8 +261,12 @@ function unique (array: any[]) {
     });
 }
 
-@Component
-export default class ProblemEdit extends Mixins(mixins) {
+@Component({
+    components: {
+        monacoEditor
+    }
+})
+export default class ProblemEdit extends Mixins(mixins) implements IKeyValue {
         title = "";
         description = "";
         time = "";
@@ -241,21 +274,23 @@ export default class ProblemEdit extends Mixins(mixins) {
         input = "";
         output = "";
         spj = false;
-        sampleinput = undefined;
-        sampleoutput = undefined;
+        sampleinput = "";
+        sampleoutput = "";
         descriptionInstance = markdownIt.newInstance();
         inputInstance = markdownIt.newInstance();
         outputInstance = markdownIt.newInstance();
         hintInstance = markdownIt.newInstance();
-        hint: any = undefined;
+        hint: any = "";
         source = "";
         from = "local";
         label = [];
         all_label = [];
         prepend: ICodeSet = {
         };
+        prependSelected = 0;
         append: ICodeSet = {
         };
+        appendSelected = 0;
         files = [];
         id = "0";
         select = $;
@@ -274,11 +309,53 @@ export default class ProblemEdit extends Mixins(mixins) {
             return `/api/admin/problem/download/data/${this.id}/${fileName}`;
         }
 
+        PrependAppendLanguage (key: string, defaultKey: number | string, defaultSet: number[]) {
+            const baseValue = (this as IKeyValue)[key][defaultKey];
+            if (typeof baseValue !== "undefined") {
+                defaultSet.forEach(e => {
+                    (this as IKeyValue)[key][e] = baseValue;
+                });
+            }
+        }
+
         submit () {
             let from = "local";
+            this.PrependAppendLanguage("prepend", 0, [21, 13, 28]);
+            this.PrependAppendLanguage("prepend", 1, [19, 20, 14, 29]);
+            this.PrependAppendLanguage("prepend", 3, [23, 24, 27]);
+            this.PrependAppendLanguage("append", 3, [23, 24, 27]);
+            this.PrependAppendLanguage("append", 0, [21, 13, 28]);
+            this.PrependAppendLanguage("append", 1, [19, 20, 14, 29]);
             const id = this.id;
             const sendObj: any = { imageData: {} };
+            const prependDTO: IPrefileDTOPayload = {
+                payload: [],
+                problemId: id
+            };
+            Object.keys(this.prepend).forEach(e => {
+                if (this.prepend[e].trim().length > 0) {
+                    prependDTO.payload.push({
+                        language: parseInt(e),
+                        code: this.prepend[e]
+                    });
+                }
+            });
+            const appendDTO: IPrefileDTOPayload = {
+                payload: [],
+                problemId: id
+            };
+            Object.keys(this.append).forEach(e => {
+                if (this.append[e].trim().length > 0) {
+                    appendDTO.payload.push({
+                        language: parseInt(e),
+                        code: this.append[e]
+                    });
+                }
+            });
             for (const i of this.$children) {
+                if (typeof i.markdownIt === "undefined") {
+                    continue;
+                }
                 const target = i.$vnode.data.model;
                 sendObj[target.expression] = target.value;
                 sendObj.imageData[target.expression] = i.markdownIt.__image || {};
@@ -289,8 +366,6 @@ export default class ProblemEdit extends Mixins(mixins) {
             sendObj["title"] = this.title;
             sendObj["sampleinput"] = this.sampleinput;
             sendObj["sampleoutput"] = this.sampleoutput;
-            sendObj["prepend"] = this.prepend;
-            sendObj["append"] = this.append;
             sendObj["spj"] = Number(this.spj);
             sendObj["hint"] = this.hint;
             const labels = this.label;
@@ -303,17 +378,27 @@ export default class ProblemEdit extends Mixins(mixins) {
                         alert("提交成功");
                     }
                 });
+            console.log(prependDTO);
+            console.log(appendDTO);
+            this.axios.post("/api/problem/prefile/prepend", prependDTO);
+            this.axios.post("/api/problem/prefile/append", appendDTO);
         }
 
         imageHandler (key: number | string, data: any) {
+            const map: IMavonEditorVueComponent = {
+                "0": "description",
+                "1": "input",
+                "2": "output",
+                "3": "hint"
+            };
             let mx = -1;
             const that = this;
-            _.forEach(data.data, function (val, idx) {
-                that.$children[key].markdownIt.image_add_with_check(val.name, val.data);
+            _.forEach(data.data, (val, idx) => {
+                (this.$refs[map[key]] as any).markdownIt.image_add_with_check(val.name, val.data);
                 mx = Math.max(mx, parseInt(val.name));
             });
-            this.$children[key].$children[0].num = mx + 1;
-            this.$children[key].iRender();
+            (this.$refs[map[key]] as any).$children[0].num = mx + 1;
+            (this.$refs[map[key]] as any).iRender();
         }
 
         initData () {
@@ -365,6 +450,21 @@ export default class ProblemEdit extends Mixins(mixins) {
                                 this.files = data.data;
                             }
                         });
+                });
+            this.initPrependAppendCode("prepend", "prepend");
+            this.initPrependAppendCode("append", "append");
+        }
+
+        initPrependAppendCode (target: string, scheme: string) {
+            this.axios.get(`/api/problem/prefile/${scheme}/${this.id}`)
+                .then(({ data }) => {
+                    data = data.data;
+                    if (data.payload && data.payload.length && data.payload.length > 0) {
+                        const payload: IPrependAppendPayload[] = data.payload;
+                        payload.forEach(e => {
+                            (this as IKeyValue)[target][e.language] = e.code;
+                        });
+                    }
                 });
         }
 
