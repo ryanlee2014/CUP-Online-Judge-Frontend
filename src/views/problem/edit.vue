@@ -112,37 +112,37 @@
                 <div class="four wide column">
                     <div class="ui attached vertical fluid pointing menu"
                          style="height: 370px; overflow-y: scroll; overflow-x: hidden;">
-                        <a :class="prependSelected === 0 ? 'item' : 'active item'" @click="prependSelected = 0">C
+                        <a :class="prependSelected === 0 ? 'active item' : 'item'" @click="prependSelected = 0">C
                             <div class="ui right floated" style="opacity: 0.4; margin-top: 8px; font-size: 0.7em; ">GNU
                                 C99/C11 LLVM Clang
                             </div>
                         </a>
-                        <a :class="prependSelected === 1 ? 'item' : 'active item'" @click="prependSelected = 1">C++
+                        <a :class="prependSelected === 1 ? 'active item' : 'item'" @click="prependSelected = 1">C++
                             <div class="ui right floated" style="opacity: 0.4; margin-top: 8px; font-size: 0.7em; ">GNU
                                 C++11/C++89/C++17 LLVM Clang++
                             </div>
                         </a>
-                        <a :class="prependSelected === 2 ? 'item' : 'active item'" @click="prependSelected = 2">Pascal
+                        <a :class="prependSelected === 2 ? 'active item' : 'item'" @click="prependSelected = 2">Pascal
                             <div class="ui right floated" style="opacity: 0.4; margin-top: 8px; font-size: 0.7em; ">fpc
                                 Pascal
                             </div>
                         </a>
-                        <a :class="prependSelected === 3 ? 'item' : 'active item'" @click="prependSelected = 3">Java
+                        <a :class="prependSelected === 3 ? 'active item' : 'item'" @click="prependSelected = 3">Java
                             <div class="ui right floated" style="opacity: 0.4; margin-top: 8px; font-size: 0.7em; ">
                                 openJDK 1.6/1.7/1.8/1.10
                             </div>
                         </a>
-                        <a :class="prependSelected === 16 ? 'item' : 'active item'" @click="prependSelected = 16">JavaScript
+                        <a :class="prependSelected === 16 ? 'active item' : 'item'" @click="prependSelected = 16">JavaScript
                             <div class="ui right floated" style="opacity: 0.4; margin-top: 8px; font-size: 0.7em; ">
                                 NodeJS 10.13.0
                             </div>
                         </a>
-                        <a :class="prependSelected === 6 ? 'item' : 'active item'" @click="prependSelected = 6">Python
+                        <a :class="prependSelected === 6 ? 'active item' : 'item'" @click="prependSelected = 6">Python
                             <div class="ui right floated" style="opacity: 0.4; margin-top: 8px; font-size: 0.7em; ">
                                 Python 2.7/3.6 PyPy2/3
                             </div>
                         </a>
-                        <a :class="prependSelected === 9 ? 'item' : 'active item'" @click="prependSelected = 9">C#
+                        <a :class="prependSelected === 9 ? 'active item' : 'item'" @click="prependSelected = 9">C#
                             <div class="ui right floated" style="opacity: 0.4; margin-top: 8px; font-size: 0.7em; ">
                                 Mono
                             </div>
@@ -150,7 +150,7 @@
                     </div>
                 </div>
                 <div class="ten wide column">
-                    <monaco-editor v-model="prepend[prependSelected]"/>
+                    <monaco-editor v-model="prepend[prependSelected]" :selected_language="prependSelected"/>
                 </div>
             </div>
             <div class="row">
@@ -162,37 +162,37 @@
                 <div class="four wide column">
                     <div class="ui attached vertical fluid pointing menu"
                          style="height: 370px; overflow-y: scroll; overflow-x: hidden;">
-                        <a :class="appendSelected === 0 ? 'item' : 'active item'" @click="appendSelected = 0">C
+                        <a :class="appendSelected === 0 ? 'active item' : 'item'" @click="appendSelected = 0">C
                             <div class="ui right floated" style="opacity: 0.4; margin-top: 8px; font-size: 0.7em; ">GNU
                                 C99/C11 LLVM Clang
                             </div>
                         </a>
-                        <a :class="appendSelected === 1 ? 'item' : 'active item'" @click="appendSelected = 1">C++
+                        <a :class="appendSelected === 1 ? 'active item' : 'item'" @click="appendSelected = 1">C++
                             <div class="ui right floated" style="opacity: 0.4; margin-top: 8px; font-size: 0.7em; ">GNU
                                 C++11/C++89/C++17 LLVM Clang++
                             </div>
                         </a>
-                        <a :class="appendSelected === 2 ? 'item' : 'active item'" @click="appendSelected = 2">Pascal
+                        <a :class="appendSelected === 2 ? 'active item' : 'item'" @click="appendSelected = 2">Pascal
                             <div class="ui right floated" style="opacity: 0.4; margin-top: 8px; font-size: 0.7em; ">fpc
                                 Pascal
                             </div>
                         </a>
-                        <a :class="appendSelected === 3 ? 'item' : 'active item'" @click="appendSelected = 3">Java
+                        <a :class="appendSelected === 3 ? 'active item' : 'item'" @click="appendSelected = 3">Java
                             <div class="ui right floated" style="opacity: 0.4; margin-top: 8px; font-size: 0.7em; ">
                                 OpenJDK 1.6/1.7/1.8/1.10
                             </div>
                         </a>
-                        <a :class="appendSelected === 16 ? 'item' : 'active item'" @click="appendSelected = 16">JavaScript
+                        <a :class="appendSelected === 16 ? 'active item' : 'item'" @click="appendSelected = 16">JavaScript
                             <div class="ui right floated" style="opacity: 0.4; margin-top: 8px; font-size: 0.7em; ">
                                 NodeJS 10.13.0
                             </div>
                         </a>
-                        <a :class="appendSelected === 6 ? 'item' : 'active item'" @click="appendSelected = 6">Python
+                        <a :class="appendSelected === 6 ? 'active item' : 'item'" @click="appendSelected = 6">Python
                             <div class="ui right floated" style="opacity: 0.4; margin-top: 8px; font-size: 0.7em; ">
                                 Python 2.7/3.6 PyPy2/3
                             </div>
                         </a>
-                        <a :class="appendSelected === 9 ? 'item' : 'active item'" @click="appendSelected = 9">C#
+                        <a :class="appendSelected === 9 ? 'active item' : 'item'" @click="appendSelected = 9">C#
                             <div class="ui right floated" style="opacity: 0.4; margin-top: 8px; font-size: 0.7em; ">
                                 Mono
                             </div>
@@ -200,7 +200,7 @@
                     </div>
                 </div>
                 <div class="ten wide column">
-                    <monaco-editor v-model="append[appendSelected]"/>
+                    <monaco-editor v-model="append[appendSelected]" :selected_language="appendSelected"/>
                 </div>
             </div>
             <div class="row" v-if="from === 'local'">
