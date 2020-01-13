@@ -77,7 +77,7 @@
                         <i class="dropdown icon"></i>
                         <div class="default text">Select Contest Or Input Contest ID</div>
                         <div class="menu">
-                            <div :data-value="row.contest_id" :key="key" class="item" v-for="(row,key) in contest_list">
+                            <div :data-value="row.contest_id" :key="key" class="item" v-for="(row,key) in total_contest_list">
                                 {{"Contest" +
                                 row.contest_id + " " + row.title}}
                             </div>
@@ -98,7 +98,7 @@
                         <div class="default text">Select Contest Or Input Contest ID</div>
                         <div class="menu">
                             <div :data-value="row.contest_id" :key="key" :title="row.title" class="item"
-                                 v-for="(row,key) in contest_list">{{"Contest" + row.contest_id + " " + row.title}}
+                                 v-for="(row,key) in total_contest_list">{{"Contest" + row.contest_id + " " + row.title}}
                             </div>
                         </div>
                     </div>
@@ -156,6 +156,7 @@ const $: any = jquery;
 export default class ContestSetView extends Mixins(mixins, TimerMixin) {
     admin = false;
     contest_list: any[] = [];
+    total_contest_list: any[] = [];
     select1 = "";
     select2 = "";
     current_column = "contest";
@@ -201,6 +202,16 @@ export default class ContestSetView extends Mixins(mixins, TimerMixin) {
     @Watch("$route.query")
     onRouteQueryChanged (newVal: any) {
         this.getPage(newVal);
+    }
+
+    @Watch("current_column")
+    onCurrentColumnChanged () {
+        if (this.total_contest_list.length === 0) {
+            this.axios.get("/api/contest/list/all")
+                .then(({ data }) => {
+                    this.total_contest_list = data.data;
+                });
+        }
     }
 
     page (num: number, arrow: any) {
