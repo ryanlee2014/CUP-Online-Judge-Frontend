@@ -144,8 +144,7 @@
                                             {{row.problem_id}}
                                         </td>
                                         <td>
-                                            <router-link :to="`/tutorial/${row.problem_id}`">
-                                                {{row.title}}
+                                            <router-link :to="`/tutorial/${row.problem_id}`" v-html="markdownIt.renderRaw(row.title)">
                                             </router-link>
                                         </td>
                                     </tr>
