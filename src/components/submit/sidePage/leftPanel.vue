@@ -20,7 +20,8 @@
                 </router-link>
                 <a @click.prevent="switch_screen"
                    class='ui button blue'>{{$t("switch single screen")}}</a>
-                <router-link :to="`/tutorial/${original_id}`" class="ui button teal">{{$t("read solution")}}
+                <router-link :to="`/tutorial/${original_id}`" class="ui button teal" v-if="normal_problem">
+                    {{$t("read solution")}}
                 </router-link>
                 <router-link :to="`/problem/edit/${original_id}`" class="ui button violet" v-if="iseditor||isadmin">
                     {{$t("edit problem")}}
