@@ -122,6 +122,38 @@
                                 </table>
                             </div>
                         </div>
+                        <div class="ui card" style="width:100%">
+                            <div class="content">
+                                <div class="header">
+                                    {{$t("tutorial")}}
+                                </div>
+                            </div>
+                            <div class="content">
+                                <div class="ui placeholder" v-cloak>
+                                    <div class="line"></div>
+                                    <div class="line"></div>
+                                </div>
+                                <table class="ui very basic table" v-cloak>
+                                    <thead>
+                                    <th>{{$t("problem_id")}}</th>
+                                    <th>{{$t("title")}}</th>
+                                    </thead>
+                                    <tbody>
+                                    <tr :key="row.problem_id" v-for="row in tutorial_publish">
+                                        <td>
+                                            {{row.problem_id}}
+                                        </td>
+                                        <td>
+                                            <router-link :to="`/tutorial/${row.problem_id}`">
+                                                {{row.title}}
+                                            </router-link>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
                         <div class="ui card" style="width:100%" v-cloak v-if="admin">
                             <div class="content">
                                 <div class="header">
@@ -496,6 +528,7 @@ export default class UserContainer extends Mixins(avatarMixin) {
     error = false;
     const_variable = {};
     article_publish = [];
+    tutorial_publish = [];
     markdownIt = markdownIt;
     nick = "";
     accepted_details = {};
@@ -1090,6 +1123,10 @@ export default class UserContainer extends Mixins(avatarMixin) {
                     });
                 });
                 $("title").html(that.user_id + " " + that.nick + " " + $title);
+            });
+        this.axios.get(`/api/user/tutorial/${userId}`)
+            .then(({ data }) => {
+                this.tutorial_publish = data.data;
             });
     }
     get online () {
