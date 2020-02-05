@@ -81,6 +81,7 @@ export default class Login extends Mixins(mixins) {
                 $(".ui.fluid.large.teal.button").removeClass("loading");
                 if (response.data.status === "OK") {
                     this.$root.$store.commit("loginMutate", { login: true });
+                    this.$socket.connect();
                     sessionStorage.isLogined = "true";
                     this.$socket.disconnect();
                     setTimeout(() => this.$socket.connect(), 700);

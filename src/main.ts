@@ -8,12 +8,11 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 // @ts-ignore
-import VueSocketIO from "vue-socket.io";
-// @ts-ignore
 import VueWorker from "vue-worker";
 import mavonEditor from "./lib/mavon-editor/mavon-editor";
 import VueObserveVisibility from "vue-observe-visibility";
 import i18n from "./i18n";
+import VueSocketIo from "./lib/vue-socketio";
 import Injection from "./injection/index";
 import AxiosInterceptors from "./router/middleware/AxiosInterceptors";
 Injection();
@@ -27,13 +26,7 @@ Vue.use(VueLazyload, {
     loading: "/assets/images/wireframe/white-image.png",
     attempt: 2
 });
-Vue.use(new VueSocketIO({
-    debug: process.env.NODE_ENV === "development",
-    connection: location.origin,
-    vuex: {
-        store
-    }
-}));
+VueSocketIo(Vue);
 Vue.config.productionTip = false;
 Vue.config.performance = true;
 

@@ -44,9 +44,16 @@ export default class App extends Vue {
     mounted () {
         this.$store.dispatch("NavStatus");
         util.initToTopButton();
+        this.initWebSocket();
         setTimeout(() => {
             this.connectTry(10);
         }, 1500);
+    }
+
+    initWebSocket () {
+        if (this.$socket && this.$socket.connect && this.$store.getters.logined) {
+            this.$socket.connect();
+        }
     }
 
     isContestView (path: string) {
@@ -79,6 +86,9 @@ export default class App extends Vue {
     }
 
     connectTry (times: number) {
+        if (!this.$store.getters.logined) {
+            return;
+        }
         (async () => {
             let Promise = require("bluebird");
             while (times-- > 0) {

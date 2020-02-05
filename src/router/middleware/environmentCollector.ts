@@ -1,5 +1,5 @@
 import Axios from "axios";
-
+import store from "@/store";
 const platform = require("platform");
 const _ = require("lodash");
 
@@ -26,7 +26,7 @@ export default function () {
         storePlatformInfo = {};
     }
 
-    if (!_.isEqual(PlatformInfo, storePlatformInfo)) {
+    if (!_.isEqual(PlatformInfo, storePlatformInfo) && store.getters.logined) {
         Axios.post("/api/env/client", PlatformInfo)
             .then(({ data }) => {
                 if (data.status !== "OK") {
