@@ -52,6 +52,7 @@ export default class ProfileCard extends Vue {
     @Prop({ default: "" }) nick!: string;
     @Prop({ default: false }) avatar!: boolean;
     @Prop({ default: false }) admin!: boolean;
+    $socket: any;
     get img_url () {
         return util.getAvatarURL({ user_id: this.user_id, avatar: this.avatar, avatarUrl: this.$store.getters.avatarUrl });
     }
@@ -60,6 +61,7 @@ export default class ProfileCard extends Vue {
             .then(response => {
                 if (response.data.status === "OK") {
                     sessionStorage.isLogined = false;
+                    this.$socket.close();
                     store.commit("loginMutate", { login: false });
                     location.reload();
                 }
