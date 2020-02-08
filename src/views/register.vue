@@ -59,9 +59,10 @@
 </template>
 
 <script lang="ts">
-import { Mixins } from "vue-property-decorator";
+import { Component, Mixins } from "vue-property-decorator";
 import InitMixin from "../mixin/init";
 
+@Component
 export default class RegisterPage extends Mixins(InitMixin) {
     mounted () {
         super.mounted();

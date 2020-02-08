@@ -218,14 +218,13 @@
 </template>
 
 <script lang="ts">
-import mixins from "../../mixin/init";
-import markdownIt from "../../lib/markdownIt/markdownIt";
-import monacoEditor from "@/components/submit/codeEditor/monacoEditor.vue";
+import InitMixin from "../../../mixin/init";
 import { Component, Mixins } from "vue-property-decorator";
+import markdownIt from "@/lib/markdownIt/markdownIt";
+import monacoEditor from "@/components/submit/codeEditor/monacoEditor.vue";
 import { unique } from "@/lib/ts-util";
+import _ from "lodash";
 import jquery from "jquery";
-import * as _ from "lodash";
-
 const $: any = jquery;
 
 @Component({
@@ -233,216 +232,143 @@ const $: any = jquery;
         monacoEditor
     }
 })
-export default class ProblemEdit extends Mixins(mixins) implements IKeyValue {
-        title = "";
-        description = "";
-        time = "";
-        memory = "";
-        input = "";
-        output = "";
-        spj = false;
-        sampleinput = "";
-        sampleoutput = "";
-        descriptionInstance = markdownIt.newInstance();
-        inputInstance = markdownIt.newInstance();
-        outputInstance = markdownIt.newInstance();
-        hintInstance = markdownIt.newInstance();
-        hint: any = "";
-        source = "";
-        from = "local";
-        label = [];
-        all_label = [];
-        prepend: ICodeSet = {
+export default class AddProblem extends Mixins(InitMixin) implements IKeyValue {
+    title = "";
+    description = "";
+    time = "";
+    memory = "";
+    input = "";
+    output = "";
+    spj = false;
+    sampleinput = "";
+    sampleoutput = "";
+    descriptionInstance = markdownIt.newInstance();
+    inputInstance = markdownIt.newInstance();
+    outputInstance = markdownIt.newInstance();
+    hintInstance = markdownIt.newInstance();
+    hint: any = "";
+    source = "local";
+    from = "local";
+    label = [];
+    all_label = [];
+    prepend: ICodeSet = {
+    };
+    prependSelected = 0;
+    append: ICodeSet = {
+    };
+    appendSelected = 0;
+    files = [];
+    id = null;
+    select = $;
+    $children: any;
+
+    mounted () {
+        document.title = `${this.$t("addproblem")} -- ${document.title}`;
+        this.initData();
+    }
+
+    makeHref (fileName: string) {
+        return `/api/admin/problem/download/data/${this.id}/${fileName}`;
+    }
+
+    PrependAppendLanguage (key: string, defaultKey: number | string, defaultSet: number[]) {
+        const baseValue = (this as IKeyValue)[key][defaultKey];
+        if (typeof baseValue !== "undefined") {
+            defaultSet.forEach(e => {
+                (this as IKeyValue)[key][e] = baseValue;
+            });
+        }
+    }
+
+    generateProblemId () {
+        return this.axios.post("/api/problem/add")
+            .then(({ data }) => {
+                return data.data;
+            });
+    }
+
+    async submit () {
+        let from = "local";
+        this.PrependAppendLanguage("prepend", 0, [21, 13, 28]);
+        this.PrependAppendLanguage("prepend", 1, [19, 20, 14, 29]);
+        this.PrependAppendLanguage("prepend", 3, [23, 24, 27]);
+        this.PrependAppendLanguage("append", 3, [23, 24, 27]);
+        this.PrependAppendLanguage("append", 0, [21, 13, 28]);
+        this.PrependAppendLanguage("append", 1, [19, 20, 14, 29]);
+        const id = await this.generateProblemId();
+        const sendObj: any = { imageData: {} };
+        const prependDTO: IPrefileDTOPayload = {
+            payload: [],
+            problemId: id
         };
-        prependSelected = 0;
-        append: ICodeSet = {
-        };
-        appendSelected = 0;
-        files = [];
-        id = "0";
-        select = $;
-        $children: any;
-
-        created () {
-            this.id = this.$route.params.problem_id;
-        }
-
-        mounted () {
-            document.title = `Problem ${this.id} Edit -- ${document.title}`;
-            this.initData();
-        }
-
-        makeHref (fileName: string) {
-            return `/api/admin/problem/download/data/${this.id}/${fileName}`;
-        }
-
-        PrependAppendLanguage (key: string, defaultKey: number | string, defaultSet: number[]) {
-            const baseValue = (this as IKeyValue)[key][defaultKey];
-            if (typeof baseValue !== "undefined") {
-                defaultSet.forEach(e => {
-                    (this as IKeyValue)[key][e] = baseValue;
+        Object.keys(this.prepend).forEach(e => {
+            if (this.prepend[e].trim().length > 0) {
+                prependDTO.payload.push({
+                    language: parseInt(e),
+                    code: this.prepend[e]
                 });
             }
-        }
-
-        submit () {
-            let from = "local";
-            this.PrependAppendLanguage("prepend", 0, [21, 13, 28]);
-            this.PrependAppendLanguage("prepend", 1, [19, 20, 14, 29]);
-            this.PrependAppendLanguage("prepend", 3, [23, 24, 27]);
-            this.PrependAppendLanguage("append", 3, [23, 24, 27]);
-            this.PrependAppendLanguage("append", 0, [21, 13, 28]);
-            this.PrependAppendLanguage("append", 1, [19, 20, 14, 29]);
-            const id = this.id;
-            const sendObj: any = { imageData: {} };
-            const prependDTO: IPrefileDTOPayload = {
-                payload: [],
-                problemId: id
-            };
-            Object.keys(this.prepend).forEach(e => {
-                if (this.prepend[e].trim().length > 0) {
-                    prependDTO.payload.push({
-                        language: parseInt(e),
-                        code: this.prepend[e]
-                    });
-                }
-            });
-            const appendDTO: IPrefileDTOPayload = {
-                payload: [],
-                problemId: id
-            };
-            Object.keys(this.append).forEach(e => {
-                if (this.append[e].trim().length > 0) {
-                    appendDTO.payload.push({
-                        language: parseInt(e),
-                        code: this.append[e]
-                    });
-                }
-            });
-            for (const i of this.$children) {
-                if (typeof i.markdownIt === "undefined") {
-                    continue;
-                }
-                const target = i.$vnode.data.model;
-                sendObj[target.expression] = target.value;
-                sendObj.imageData[target.expression] = i.markdownIt.__image || {};
+        });
+        const appendDTO: IPrefileDTOPayload = {
+            payload: [],
+            problemId: id
+        };
+        Object.keys(this.append).forEach(e => {
+            if (this.append[e].trim().length > 0) {
+                appendDTO.payload.push({
+                    language: parseInt(e),
+                    code: this.append[e]
+                });
             }
-
-            sendObj["time"] = this.time;
-            sendObj["memory"] = this.memory;
-            sendObj["title"] = this.title;
-            sendObj["sampleinput"] = this.sampleinput;
-            sendObj["sampleoutput"] = this.sampleoutput;
-            sendObj["spj"] = Number(this.spj);
-            sendObj["hint"] = this.hint;
-            const labels = this.label;
-
-            sendObj["label"] = unique(labels).join(" ");
-            this.axios.post(`/api/problem/${this.source}/${id}`, { json: sendObj })
-                .then(({ data }) => {
-                    if (data.status === "OK") {
-                        this.axios.get(`/api/problem/${from}?id=${id}`);
-                        alert("提交成功");
-                    }
-                });
-            console.log(prependDTO);
-            console.log(appendDTO);
-            this.axios.post("/api/problem/prefile/prepend", prependDTO);
-            this.axios.post("/api/problem/prefile/append", appendDTO);
+        });
+        for (const i of this.$children) {
+            if (typeof i.markdownIt === "undefined") {
+                continue;
+            }
+            const target = i.$vnode.data.model;
+            sendObj[target.expression] = target.value;
+            sendObj.imageData[target.expression] = i.markdownIt.__image || {};
         }
 
-        imageHandler (key: number | string, data: any) {
-            const map: IMavonEditorVueComponent = {
-                "0": "description",
-                "1": "input",
-                "2": "output",
-                "3": "hint"
-            };
-            let mx = -1;
-            const that = this;
-            _.forEach(data.data, (val, idx) => {
-                (this.$refs[map[key]] as any).markdownIt.image_add_with_check(val.name, val.data);
-                mx = Math.max(mx, parseInt(val.name));
+        sendObj["time"] = this.time;
+        sendObj["memory"] = this.memory;
+        sendObj["title"] = this.title;
+        sendObj["sampleinput"] = this.sampleinput;
+        sendObj["sampleoutput"] = this.sampleoutput;
+        sendObj["spj"] = Number(this.spj);
+        sendObj["hint"] = this.hint;
+        const labels = this.label;
+
+        sendObj["label"] = unique(labels).join(" ");
+        this.axios.post(`/api/problem/${this.source}/${id}`, { json: sendObj })
+            .then(({ data }) => {
+                if (data.status === "OK") {
+                    this.axios.get(`/api/problem/${from}?id=${id}`);
+                    alert("提交成功");
+                }
             });
-            (this.$refs[map[key]] as any).$children[0].num = mx + 1;
-            (this.$refs[map[key]] as any).iRender();
-        }
+        this.axios.post("/api/problem/prefile/prepend", prependDTO);
+        this.axios.post("/api/problem/prefile/append", appendDTO);
+    }
 
-        initData () {
-            const that = this;
-            const id = this.id;
-            this.axios.get("/api/problem/local", { params: { id: this.id, raw: "" } })
-                .then(({ data }) => {
-                    const d = data.problem;
-                    const _data = {
-                        title: d.title,
-                        description: d.description,
-                        time: d.time_limit,
-                        memory: d.memory_limit,
-                        input: d.input,
-                        output: d.output,
-                        spj: !!parseInt(d.spj),
-                        sampleinput: d.sample_input,
-                        sampleoutput: d.sample_output,
-                        hint: d.hint,
-                        source: "local",
-                        label: d.label ? d.label.split(" ") : [],
-                        all_label: [],
-                        files: []
-                    };
-                    Object.assign(this, _data);
-                    this.axios.get(`/api/problem/${this.source}/?label=true`)
-                        .then(({ data }) => {
-                            const $dropdown = $(".label.selection.ui.dropdown");
-                            that.all_label = data.data;
-                            const hasLabel = that.label;
-                            $dropdown
-                                .dropdown({
-                                    allowAdditions: true
-                                })
-                                .on("click", function () {
-                                    that.label = $dropdown.dropdown("get value");
-                                });
-                            for (let i = 0; i < hasLabel.length; ++i) {
-                                $dropdown.dropdown("set selected", hasLabel[i]);
-                            }
-                        });
-                    this.initMarkdown("description", id, 0);
-                    this.initMarkdown("input", id, 1);
-                    this.initMarkdown("output", id, 2);
-                    this.initMarkdown("hint", id, 3);
-                    this.axios.get(`/api/file/${id}`)
-                        .then(({ data }) => {
-                            if (data.status === "OK") {
-                                this.files = data.data;
-                            }
-                        });
-                });
-            this.initPrependAppendCode("prepend", "prepend");
-            this.initPrependAppendCode("append", "append");
-        }
-
-        initPrependAppendCode (target: string, scheme: string) {
-            this.axios.get(`/api/problem/prefile/${scheme}/${this.id}`)
-                .then(({ data }) => {
-                    data = data.data;
-                    if (data.payload && data.payload.length && data.payload.length > 0) {
-                        const payload: IPrependAppendPayload[] = data.payload;
-                        payload.forEach(e => {
-                            (this as IKeyValue)[target][e.language] = e.code;
-                        });
-                    }
-                });
-        }
-
-        initMarkdown (path: string, id: string, code: number | string) {
-            this.axios.get(`/api/photo/${path}/${id}`)
-                .then(({ data }) => {
-                    if (data.status === "OK") {
-                        this.imageHandler(code, data);
-                    }
-                });
-        }
+    initData () {
+        this.axios.get("/api/problem/local/?label=true")
+            .then(({ data }) => {
+                const $dropdown = $(".label.selection.ui.dropdown");
+                this.all_label = data.data;
+                const hasLabel = this.label;
+                $dropdown
+                    .dropdown({
+                        allowAdditions: true
+                    })
+                    .on("click", () => {
+                        this.label = $dropdown.dropdown("get value");
+                    });
+                for (let i = 0; i < hasLabel.length; ++i) {
+                    $dropdown.dropdown("set selected", hasLabel[i]);
+                }
+            });
+    }
 }
 </script>
 

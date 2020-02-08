@@ -228,6 +228,15 @@ const router = new Router({
             }
         },
         {
+            path: "/admin/problem/add",
+            name: "Add problem",
+            component: () => import("./views/admin/problem/add.vue"),
+            meta: {
+                auth: true,
+                admin: true
+            }
+        },
+        {
             path: "/compare/:left/:right",
             name: "compare two code",
             component: () => import("./views/code/diff.vue"),

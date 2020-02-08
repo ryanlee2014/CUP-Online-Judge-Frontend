@@ -16,6 +16,10 @@
                         <i class="list icon"></i>
                         {{$t("problem list")}}
                     </router-link>
+                    <router-link class="item" exact-active-class="active" to="/admin/problem/add">
+                        <i class="add icon"></i>
+                        {{$t("addproblem")}}
+                    </router-link>
                 </div>
             </div>
             <div class="ui dropdown item">
