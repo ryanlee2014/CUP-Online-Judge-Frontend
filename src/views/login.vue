@@ -83,8 +83,6 @@ export default class Login extends Mixins(mixins) {
                     this.$root.$store.commit("loginMutate", { login: true });
                     this.$socket.connect();
                     sessionStorage.isLogined = "true";
-                    this.$socket.disconnect();
-                    setTimeout(() => this.$socket.connect(), 700);
                     this.$store.dispatch("NavStatus");
                     if (this.$route.query.redirect) {
                         this.$router.push({ path: this.$route.query.redirect });

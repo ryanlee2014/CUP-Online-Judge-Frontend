@@ -199,5 +199,11 @@
   "export": "导出列表",
   "export problem": "标签导出题目列表",
   "global setting": "全局设置",
-  "version control": "系统版本信息"
+  "version control": "系统版本信息",
+  "login": "登录",
+  "register": "注册",
+  "retrieve password question": "找回密码问题",
+  "retrieve password answer": "找回密码答案",
+  "invite code": "邀请码",
+  "captcha": "验证码"
 }

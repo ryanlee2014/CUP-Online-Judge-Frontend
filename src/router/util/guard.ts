@@ -9,6 +9,22 @@ function getSelfInfo () {
 
 type NextFunction = (...arg: any[]) => any;
 
+function errorHandler (next: NextFunction, to: Route) {
+    return function (reason: any) {
+        if (reason.data.statement === "not login") {
+            next({
+                path: "/login",
+                query: {
+                    redirect: to.fullPath
+                }
+            });
+        }
+        else {
+            console.error("Undefined error: ", reason);
+        }
+    };
+}
+
 function checkAdmin (to: Route, admin: boolean, next: NextFunction) {
     const meta = to.meta;
     if (meta.admin && admin) {
@@ -53,7 +69,7 @@ function checkAdmin (to: Route, admin: boolean, next: NextFunction) {
             else {
                 next();
             }
-        });
+        }).catch(errorHandler(next, to));
     }
 }
 
@@ -73,7 +89,7 @@ function getLoginInfo (to: Route, next: NextFunction) {
                 }
             });
         }
-    });
+    }).catch(errorHandler(next, to));
 }
 
 const Guard = function (to: Route, from: Route, next: NextFunction) {

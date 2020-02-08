@@ -198,5 +198,11 @@
   "export": "Export Excel",
   "export problem": "Export Problem by Label",
   "global setting": "Global Setting",
-  "version control": "Version Control"
+  "version control": "Version Control",
+  "login": "Sign In",
+  "register": "Sign Up",
+  "retrieve password question": "Retrieve Password Question",
+  "retrieve password answer": "Retrieve Password Answer",
+  "invite code": "Invite Code",
+  "captcha": "Captcha"
 }

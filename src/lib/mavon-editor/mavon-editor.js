@@ -36168,17 +36168,17 @@
                     d_preview_imgsrc: null,
                     s_external_link: {
                         markdown_css: function () {
-                            return "https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/2.9.0/github-markdown.min.css"
+                            return "https://cdn.jsdelivr.net/npm/github-markdown-css@3.0.1/github-markdown.min.css"
                         }, hljs_js: function () {
-                            return "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"
+                            return "https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.1/build/highlight.min.js"
                         }, hljs_lang: function (t) {
-                            return "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/" + t + ".min.js"
+                            return "https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.1/build/languages/" + t + ".min.js"
                         }, hljs_css: function (t) {
-                            return __WEBPACK_IMPORTED_MODULE_3__lib_core_hljs_lang_hljs_css_js__.a[t] ? "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/" + t + ".min.css" : ""
+                            return __WEBPACK_IMPORTED_MODULE_3__lib_core_hljs_lang_hljs_css_js__.a[t] ? "https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.1/build/styles/" + t + ".min.css" : ""
                         }, katex_js: function () {
-                            return "https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.8.3/katex.min.js"
+                            return "https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"
                         }, katex_css: function () {
-                            return "https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.8.3/katex.min.css"
+                            return "https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css"
                         }
                     },
                     p_external_link: {}
