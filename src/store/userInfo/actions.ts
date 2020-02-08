@@ -7,20 +7,19 @@ function getInfo (commit: Commit, tryTime: number) {
     if (tryTime <= 0) {
         return;
     }
-    if (store.getters.logined) {
-        axios.get("/api/user/self")
-            .then(response => {
-                const data = response.data;
-                if (data.status === "OK") {
-                    commit("setUserData", data.data);
-                    store.commit("setContestMode", data.data.contest_mode);
-                    commit("loginMutate", { login: true });
-                }
-                else {
-                    getInfo(commit, tryTime - 1);
-                }
-            });
-    }
+    axios.get("/api/user/self")
+        .then(response => {
+            const data = response.data;
+            if (data.status === "OK") {
+                commit("setUserData", data.data);
+                store.commit("setContestMode", data.data.contest_mode);
+                commit("loginMutate", { login: true });
+            }
+            else {
+                getInfo(commit, tryTime - 1);
+            }
+        })
+        .catch(e => e);
 }
 
 const actions: ActionTree<IUserInfoState, IRootState> = {
