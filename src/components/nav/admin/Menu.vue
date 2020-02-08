@@ -58,6 +58,10 @@
                         <i class="user check icon"></i>
                         {{$t("modify password")}}
                     </router-link>
+                    <router-link to="/admin/user/invite" class="item" exact-active-class="active">
+                        <i class="user plus icon"></i>
+                        {{$t("invite code manage")}}
+                    </router-link>
                 </div>
             </div>
             <div class="ui dropdown item">

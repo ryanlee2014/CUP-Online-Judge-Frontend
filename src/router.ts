@@ -435,6 +435,15 @@ const router = new Router({
             }
         },
         {
+            path: "/admin/user/invite",
+            name: "Invite code manager",
+            component: () => import("./views/admin/account/invite.vue"),
+            meta: {
+                auth: true,
+                admin: true
+            }
+        },
+        {
             path: "/admin/user/password",
             name: "Modify User Password",
             component: () => import("./views/admin/account/password.vue"),
