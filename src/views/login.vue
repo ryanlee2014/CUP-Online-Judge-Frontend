@@ -43,10 +43,10 @@
                 </div>
                 <div class="ui bottom attached warning message">
                     <i class="icon help"></i>
-                    New to us? <a href="registerpage.php">Sign Up</a>
+                    {{$t("new to us")}}? <router-link to="/register">{{$t("sign up")}}</router-link>
                     <br>
                     <i class="icon help"></i>
-                    Forgot password? <a href="lostpassword.php">Reset your password</a>
+                    Forgot password? <router-link to="/user/resetpassword">Reset your password</router-link>
                 </div>
             </div>
         </div>

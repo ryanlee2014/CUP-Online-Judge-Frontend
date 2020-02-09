@@ -34,7 +34,7 @@
                                 <a class="github_button"
                                    href="https://travis-ci.com/CUP-ACM-Programming-Club/CUP-Online-Judge-Express"
                                    target="_blank"><img
-                                        src="https://travis-ci.com/ryanlee2014/CUP-Online-Judge-NG-FrontEnd.svg?branch=typescript"
+                                        src="https://travis-ci.com/CUP-ACM-Programming-Club/CUP-Online-Judge-Express.svg?branch=typescript"
                                         style="vertical-align: middle;"></a>
                                 <a class="github_button"
                                    href="https://codebeat.co/projects/github-com-cup-acm-programming-club-cup-online-judge-express-master-7e8760db-7670-4c22-9862-1262dddcb4ec"><img

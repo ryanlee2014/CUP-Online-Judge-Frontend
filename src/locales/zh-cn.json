@@ -205,5 +205,10 @@
   "retrieve password question": "找回密码问题",
   "retrieve password answer": "找回密码答案",
   "invite code": "邀请码",
-  "captcha": "验证码"
+  "captcha": "验证码",
+  "invite code manage": "邀请码管理",
+  "expire date": "过期时间",
+  "valid time": "有效次数",
+  "new to us": "新用户",
+  "sign up": "点击注册"
 }

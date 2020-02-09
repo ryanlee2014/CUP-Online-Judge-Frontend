@@ -204,5 +204,10 @@
   "retrieve password question": "パスワードを取得する質問",
   "retrieve password answer": "パスワードを取得する回答",
   "invite code": "招待コード",
-  "captcha": "キャプチャ"
+  "captcha": "キャプチャ",
+  "invite code manage": "招待コード管理",
+  "expire date": "有効期限",
+  "valid time": "有効回数",
+  "new to us": "アカウントなし",
+  "sign up": "登録"
 }

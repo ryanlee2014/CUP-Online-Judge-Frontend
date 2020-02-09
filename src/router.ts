@@ -77,6 +77,14 @@ const router = new Router({
             component: () => import("./views/login.vue")
         },
         {
+            path: "/user/lostpassword",
+            name: "Lost password",
+            component: () => import("./views/user/lostpassword.vue"),
+            meta: {
+                auth: false
+            }
+        },
+        {
             path: "/register",
             name: "register",
             component: () => import("./views/register.vue"),

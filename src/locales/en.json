@@ -204,5 +204,10 @@
   "retrieve password question": "Retrieve Password Question",
   "retrieve password answer": "Retrieve Password Answer",
   "invite code": "Invite Code",
-  "captcha": "Captcha"
+  "captcha": "Captcha",
+  "invite code manage": "Invite Code Manage",
+  "expire date": "Expiry Date",
+  "valid time": "Valid time",
+  "new to us": "New to us",
+  "sign up": "Sign Up"
 }
