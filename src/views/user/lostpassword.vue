@@ -36,8 +36,8 @@
                     </div>
                     <div class="field">
                         <label>CAPTCHA</label>
-                        <input name="vcode" id="vcode" size="10" style="width:60%" type=text v-model="captcha"><img alt="click to change" onclick="this.src='/api/captcha?from=login&ramdom='+Math.random()"
-                                                                                                  src="/api/captcha?from=login" height="40px">
+                        <input name="vcode" id="vcode" size="10" style="width:60%" type=text v-model="captcha"><img alt="click to change" onclick="changeCaptcha"
+                                                                                                  :src="captchaSrc" height="40px">
                     </div>
                 </div>
                 <div class="fields">
@@ -88,6 +88,11 @@ export default class LostPassword extends Mixins(InitMixin) implements ILostPass
     confirmQuestion: string = "";
     password: string = "";
     repeatPassword: string = "";
+    captchaSrc = "/api/captcha?from=lost&ramdom=" + Math.random();
+
+    changeCaptcha () {
+        this.captchaSrc = "/api/captcha?from=lost&ramdom=" + Math.random();
+    }
 
     getConfirmQuestion () {
         this.axios.get(`/api/lost/password/${this.userId}`)
@@ -102,12 +107,14 @@ export default class LostPassword extends Mixins(InitMixin) implements ILostPass
         };
         this.axios.post("/api/lost/password", payload)
             .then(({ data }) => {
+                alert("修改成功");
                 this.$router.push({
                     path: "/login"
                 });
             })
             .catch(reason => {
-                alert(reason.statement);
+                alert(reason.data.statement);
+                this.changeCaptcha();
             });
     }
 

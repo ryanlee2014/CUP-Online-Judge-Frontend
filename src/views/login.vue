@@ -35,7 +35,7 @@
                                      src="/api/captcha?from=login">
                             </div>
                         </div>
-                        <div @click="login" @keyup.enter="login" class="ui fluid large teal button">Login</div>
+                        <div @click="login" @keyup.enter="login" class="ui fluid large teal button">{{$t("login")}}</div>
                     </div>
 
                     <div class="ui error message"></div>
@@ -46,7 +46,7 @@
                     {{$t("new to us")}}? <router-link to="/register">{{$t("sign up")}}</router-link>
                     <br>
                     <i class="icon help"></i>
-                    Forgot password? <router-link to="/user/resetpassword">Reset your password</router-link>
+                    {{$t("forgot password")}}? <router-link to="/user/lostpassword">{{$t("reset password")}}</router-link>
                 </div>
             </div>
         </div>

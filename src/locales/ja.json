@@ -209,5 +209,7 @@
   "expire date": "有効期限",
   "valid time": "有効回数",
   "new to us": "アカウントなし",
-  "sign up": "登録"
+  "sign up": "登録",
+  "forgot password": "パスワード忘れた",
+  "reset password": "パスワードをリセット"
 }

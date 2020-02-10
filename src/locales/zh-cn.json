@@ -210,5 +210,7 @@
   "expire date": "过期时间",
   "valid time": "有效次数",
   "new to us": "新用户",
-  "sign up": "点击注册"
+  "sign up": "点击注册",
+  "forgot password": "忘记密码",
+  "reset password": "重置密码"
 }
