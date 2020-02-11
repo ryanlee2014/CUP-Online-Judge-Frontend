@@ -7,6 +7,7 @@
         <ConfirmModal :confirm_text="confirm_text"></ConfirmModal>
         <TestrunView :hide_warning="hide_warning" :sampleinput="sampleinput"
                      :sampleoutput="sampleoutput" :submitDisabled="submitDisabled" :test_run="test_run"
+                     :judge-info-text="judgeInfoText"
                      v-model="test_run_sampleinput"></TestrunView>
         <div class="main submit layout">
             <singlePageProblemView
@@ -43,6 +44,7 @@
                              :source_code="source_code" :spj="spj" :submit="submit"
                              :submitDisabled="submitDisabled"
                              :switch_screen="switch_screen" :time="time" :title="temp_title" :uploader="uploader"
+                             :judge-info-text="judgeInfoText"
                              v-show="!single_page">
             </sideProblemView>
         </div>
@@ -68,6 +70,7 @@ import { Mixins, Component } from "vue-property-decorator";
 import jquery from "jquery";
 import _ from "lodash";
 import { mapGetters } from "vuex";
+import { CancelTokenSource } from "axios";
 const $: any = jquery;
 const doc = document.createElement("div");
 let $modal: any;
@@ -91,6 +94,7 @@ export default class Submit extends Mixins(mixins) {
     isRenderBodyOnTop= false;
     temp_title= "";
     state= 0;
+    judgeInfoText: string = "";
     problem_id= 0;
     contest_mode= false;
     limit= false;
@@ -463,7 +467,7 @@ export default class Submit extends Mixins(mixins) {
         }
         this.submitDisabled = true;
         $(".ui.teal.progress").show();
-        $(".progess_text").text("提交");
+        this.judgeInfoText = "提交";
         const $progressResult = $(".progress.result");
         $progressResult.progress({
             percent: 0
@@ -594,12 +598,50 @@ export default class Submit extends Mixins(mixins) {
         handlerInterval = setTimeout(that.resume, 1000);
         $("#test_run_modal").modal("set").clickaway();
     }
+
+    submissionDataUpdateByHTTPRequest (solutionId: number) {
+        let prevCancelToken: CancelTokenSource | null = null;
+        const intervalId = setInterval(() => {
+            if (prevCancelToken !== null) {
+                prevCancelToken.cancel();
+            }
+            this.axios.get(`/api/solution/info/${solutionId}`, {
+                cancelToken: (prevCancelToken = this.axios.CancelToken.source()).token
+            })
+                .then(response => {
+                    if (response && response.data) {
+                        const data = response.data;
+                        prevCancelToken = null;
+                        this.wsresult(data.data);
+                        this.wsfs_result(data.data);
+                        if (data.data.state > 3) {
+                            clearInterval(intervalId);
+                        }
+                    }
+                })
+                .catch(reason => {
+                    if (reason && reason.data && reason.data.statement) {
+                        console.warn(reason.data.statement);
+                    }
+                    else if (reason && reason.data) {
+                        console.error(reason.data);
+                    }
+                    else {
+                        console.error(reason);
+                    }
+                });
+        }, 1000);
+    }
+
     registerSocketListener () {
         this.sockets.subscribe("result", (data: any) => {
             this.wsresult(data);
             this.wsfs_result(data);
         });
         this.sockets.subscribe("reject_submit", this.error_callback);
+        this.sockets.subscribe("remoteJudge", (data: any) => {
+            this.submissionDataUpdateByHTTPRequest(data.solutionId);
+        });
     }
     wsresult (data: any) {
         // let res = data.split(',');
@@ -645,21 +687,21 @@ export default class Submit extends Mixins(mixins) {
             $("#right-side").transition("shake");
         }
         if (status === 0) {
-            $(".progess_text").text(judgeResult[status]);
+            this.judgeInfoText = judgeResult[status];
             // setTimeout("frush_result(" + runner_id + ")", 250);
             $progressResult.progress({
                 percent: 20
             });
         }
         else if (status === 2) {
-            $(".progess_text").text(judgeResult[status]);
+            this.judgeInfoText = judgeResult[status];
             // setTimeout("frush_result(" + runner_id + ")", 250);
             $progressResult.progress({
                 percent: 40
             });
         }
         else if (status === 3) {
-            $(".progess_text").text(judgeResult[status] + " 已通过测试点:" + passPoint + "  通过率:" + passRate.toString().substring(0, 3) + "%");
+            this.judgeInfoText = `${judgeResult[status]} 已通过测试点:${passPoint}  通过率:${passRate.toString().substring(0, 3)}%`;
             // setTimeout("frush_result(" + runner_id + ")", 250);
             $progressResult.progress({
                 percent: 40
@@ -671,7 +713,7 @@ export default class Submit extends Mixins(mixins) {
             if (sim) {
                 str += " 触发判重 与运行号: " + simSourceID + "代码重复 重复率:" + sim + "%";
             }
-            $(".progess_text").text(str);
+            this.judgeInfoText = str;
             $progressResult.progress({
                 percent: 100
             });
@@ -726,7 +768,7 @@ export default class Submit extends Mixins(mixins) {
             }
         }
         else if (status === 5 || status === 6) {
-            $(".progess_text").text("在第" + (passPoint + 1) + "个测试点发生 " + judgeResult[status] + "  通过率:" + passRate.toString().substring(0, 3) + "%");
+            this.judgeInfoText = `在第${passPoint + 1}个测试点发生 ${judgeResult[status]}  通过率:${passRate.toString().substring(0, 3)}%`;
             $progressResult.progress({
                 percent: 100
             });
@@ -735,7 +777,7 @@ export default class Submit extends Mixins(mixins) {
         else if (status === 13) {
             if (typeof compileInfo !== "undefined") compileInfo = this.nl2br(compileInfo);
             else compileInfo = "";
-            $(".progess_text").text("在第" + (passPoint + 1) + "个测试点发生 " + judgeResult[status] + " 内存使用:" + memory + "KB 运行时间:" + time + "ms");
+            this.judgeInfoText = `在第${passPoint + 1}个测试点发生 ${judgeResult[status]} 内存使用:${memory}KB 运行时间:${time}ms`;
             compileInfo = compileInfo.split(" ").join("&nbsp;");
             if (compileInfo && compileInfo.trim().length > 0) {
                 $(".compile.header").html("<br>" + compileInfo);
@@ -749,7 +791,7 @@ export default class Submit extends Mixins(mixins) {
         else {
             if (typeof compileInfo !== "undefined") compileInfo = "<br>" + this.convertHTML(compileInfo);
             else compileInfo = "";
-            $(".progess_text").text("在第" + (passPoint + 1) + "个测试点发生 " + judgeResult[status] + "  通过率:" + passRate.toString().substring(0, 3) + "%");
+            this.judgeInfoText = `在第${passPoint + 1}个测试点发生 ${judgeResult[status]} 通过率:${passRate.toString().substring(0, 3)}%`;
             if (compileInfo.length > 0) {
                 $(".compile.header").html(compileInfo);
                 $(".warning.message").show();

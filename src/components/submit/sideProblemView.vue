@@ -13,7 +13,8 @@
                    :time="time"
                    :title="title" :uploader="uploader"></leftPanel>
         <rightPanel :append="append" :do_submit="do_submit" :lang_list="lang_list" :pre_test_run="pre_test_run"
-                    :prepend="prepend" :source_code="source_code" :submitDisabled="submitDisabled"></rightPanel>
+                    :prepend="prepend" :source_code="source_code" :submitDisabled="submitDisabled"
+                    :judge-info-text="judgeInfoText"></rightPanel>
 
     </div>
 </template>
@@ -57,6 +58,7 @@ export default class SideProblemView extends Vue {
     @Prop({ default: () => {} }) pre_test_run!: (...arg: any[]) => any;
     @Prop({ default: () => { return {}; } }) prepend!: any;
     @Prop({ default: () => { return {}; } }) append!: any;
+    @Prop({ default: "" }) judgeInfoText!: string;
 }
 </script>
 

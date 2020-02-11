@@ -46,7 +46,9 @@
                         <div class="bar">
                             <div class="progress"></div>
                         </div>
-                        <div class="label progess_text" id="progess_text"></div>
+                        <div class="label progess_text" id="progess_text">
+                            {{judgeInfoText}}
+                        </div>
                     </div>
                     <div class="ui warning message" :class="'ui warning message '+(hide_warning?'hidden':'')">
                         <i class="close icon"></i>
@@ -73,6 +75,7 @@ export default class TestRunView extends Vue {
     @Prop({ default: true }) hide_warning!: boolean;
     @Prop({ default: () => {} }) test_run!: (...arg: any[]) => any;
     @Prop({ default: false }) submitDisabled!: boolean;
+    @Prop({ default: "" }) judgeInfoText!: string;
     @Watch("test_run_sampleinput")
     onTestRunSampleInputChange (val: string) {
         this.$emit("input", val);

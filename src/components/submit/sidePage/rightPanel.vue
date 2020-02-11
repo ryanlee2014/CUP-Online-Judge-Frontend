@@ -82,7 +82,9 @@
             <div class="bar">
                 <div class="progress"></div>
             </div>
-            <div class="label progess_text"></div>
+            <div class="label progess_text">
+                {{judgeInfoText}}
+            </div>
         </div>
         <div :class="'ui warning message '+(hide_warning?'hidden':'')" class="ui warning message hidden ">
             <i class="close icon"></i>
@@ -158,6 +160,7 @@ export default class RightPanel extends Vue {
             }
         }) append!: any;
         @Prop({ default: false }) iscontest!: boolean;
+        @Prop({ default: "" }) judgeInfoText!: string;
         @Prop({ default: () => [] }) lang_list!: any[];
         @Prop({ default: () => [] }) language_template!: any[];
         @Prop({
