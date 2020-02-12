@@ -15,7 +15,7 @@
                 <div class="avatar">
                     <router-link :src="getAvatarURL(row)" :to="`/user/${row.user_id}`" class="avatar"
                                  tag="img" v-if="hasAvatarURL(row)"></router-link>
-                    <router-link :src="'/assets/images/wireframe/white-image.png'" :to="`/user/${row.user_id}`"
+                    <router-link src="@/static/image/white-image.png" :to="`/user/${row.user_id}`"
                                  tag="img" v-else></router-link>
                 </div>
                 <div class="content">

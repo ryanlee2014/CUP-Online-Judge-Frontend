@@ -23,10 +23,10 @@
                     </h3>
                     <div class="ui mini images">
 
-                        <img class="ui image" src="/img/cc_icon_white_x2.png">
-                        <img class="ui image" src="/img/attribution_icon_white_x2.png">
-                        <img class="ui image" src="/img/nc_white_x2.png">
-                        <img class="ui image" src="/img/nd_white_x2.png">
+                        <img class="ui image" src="@/static/image/cc_icon_white_x2.png">
+                        <img class="ui image" src="@/static/image/attribution_icon_white_x2.png">
+                        <img class="ui image" src="@/static/image/nc_white_x2.png">
+                        <img class="ui image" src="@/static/image/nd_white_x2.png">
                     </div>
                 </div>
                 <div class="four wide column">

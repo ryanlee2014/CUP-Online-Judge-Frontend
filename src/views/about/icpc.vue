@@ -3,7 +3,7 @@
         <div class='is-node' id='write'><h1><a class='md-header-anchor ' name='header-n0'></a>国际大学生程序设计竞赛（ICPC）
         </h1>
             <h2><a class='md-header-anchor ' name='header-n15'></a>1.什么是ICPC？</h2>
-            <div align="center"><img align="center" alt='icpc' src='/img/icpc.jpg'></div>
+            <div align="center"><img align="center" alt='icpc' src='@/static/image/icpc.jpg'></div>
             <p> 国际大学生程序设计竞赛（International Collegiate Programming
                 Contest，简称ICPC）是一项旨在展示大学生创新能力、团队精神和在压力下编写程序、分析和解决问题能力的年度竞赛。国际大学生程序设计竞赛始于1970年，成形于1977年，并于1996年由上海大学引入中国大陆，目前已发展成为最具影响力的大学生计算机竞赛，被誉为“程序设计竞赛的奥林匹克”。</p>
             <p>

@@ -758,7 +758,7 @@ export default class UserContainer extends Mixins(avatarMixin) {
                         submission: timeobj,
                         accept: acobj
                     },
-                    avatar: this.hasAvatarURL(d.data.information) ? this.getAvatarURL(Object.assign({ user_id: userId }, d.data.information)) : "/assets/images/wireframe/white-image.png",
+                    avatar: this.hasAvatarURL(d.data.information) ? this.getAvatarURL(Object.assign({ user_id: userId }, d.data.information)) : require("@/static/image/white-image.png"),
                     user_id: userId,
                     acm_user: d.data.acm_user,
                     privilege: privilege,

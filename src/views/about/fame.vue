@@ -48,7 +48,7 @@
                         <p>成员:冯云豪 吕博枫 季来虎</p>
                     </div>
                 </div>
-                <img class="ui image" data-src="/assets/images/wireframe/white-image.png">
+                <img class="ui image" data-src="@/static/image/white-image.png">
             </div>
             <div class="ui segment" id="ccpc2017">
                 <h3 class="ui header contents">2017 秦皇岛(东北大学秦皇岛分校)</h3>
@@ -292,7 +292,7 @@
                         <p>成员: You...?</p>
                     </div>
                 </div>
-                <img class="ui image" data-src="/assets/images/wireframe/white-image.png">
+                <img class="ui image" data-src="@/static/image/white-image.png">
             </div>
         </div>
 

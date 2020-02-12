@@ -50,7 +50,7 @@
             <div class="column">
                 <div class="ui card">
                     <a class="image chrome" href="software/ChromeStandaloneSetup.exe">
-                        <img src="/img/Chrome.png">
+                        <img src="@/static/image/Chrome.png">
                     </a>
                     <div class="content">
                         <a class="header chrome" href="software/ChromeStandaloneSetup.exe">Chrome 79</a>
@@ -63,7 +63,7 @@
             <div class="column">
                 <div class="ui card">
                     <a class="image" href="software/Firefox-ESR-full-latest.exe">
-                        <img src="/img/firefox.jpg">
+                        <img src="@/static/image/firefox.jpg">
                     </a>
                     <div class="content">
                         <a class="header" href="software/Firefox-ESR-full-latest.exe">Firefox ESR (for Windows XP)</a>
@@ -90,7 +90,7 @@
             <div class="column">
                 <div class="ui card">
                     <a class="image clion" href="software/CLion-2017.3.">
-                        <img src="/img/clion.png">
+                        <img src="@/static/image/clion.png">
                     </a>
                     <div class="content">
                         <a class="header clion" href="software/CLion-2017.3.">CLion 2017.3</a>
@@ -103,7 +103,7 @@
             <div class="column">
                 <div class="ui card">
                     <a class="image" href="software/codeblocks-16.01mingw-setup.exe">
-                        <img src="/img/codeblocks.png">
+                        <img src="@/static/image/codeblocks.png">
                     </a>
                     <div class="content">
                         <a class="header" href="software/codeblocks-16.01mingw-setup.exe">Code::Blocks (For Windows)</a>
@@ -150,7 +150,7 @@
                     <code>gcc-${version}</code>
                     <code>g++-${version}</code>
                     (gcc-8 in sample picture below)</p>
-                <img src="/img/mac_install_gcc.svg" class="ui image">
+                <img src="@/static/image/mac_install_gcc.svg" class="ui image">
                 <h3 class="ui header">Ubuntu</h3>
                 <code>sudo apt install gcc</code>
                 <h3 class="ui header">CentOS/Fedora/RHEL</h3>

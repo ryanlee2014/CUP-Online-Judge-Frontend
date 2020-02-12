@@ -6,7 +6,7 @@
                     <router-link :src="getAvatarURL(thread_head)" :to="`/user/${thread_head.user_id}`"
                                  tag="img" v-if="hasAvatarURL(thread_head)">
                     </router-link>
-                    <img src="/assets/images/wireframe/white-image.png" v-else>
+                    <img src="@/static/image/white-image.png" v-else>
                 </div>
                 <div class="content">
                     <div class="header">

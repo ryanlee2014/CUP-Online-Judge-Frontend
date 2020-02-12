@@ -20,7 +20,7 @@ const getters: GetterTree<IUserInfoState, IRootState> = {
                 return avatarUrl;
             }
             else {
-                return "/image/default-user.png";
+                return require("@/static/image/default-user.png");
             }
         }
         catch (e) {

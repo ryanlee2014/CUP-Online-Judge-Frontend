@@ -22,8 +22,8 @@ Vue.use(VueAxios, axios);
 Vue.use(VueWorker);
 Vue.use(VueLazyload, {
     preLoad: 1.3,
-    error: "/assets/images/wireframe/white-image.png",
-    loading: "/assets/images/wireframe/white-image.png",
+    error: require("@/static/image/white-image.png"),
+    loading: require("@/static/image/white-image.png"),
     attempt: 2
 });
 VueSocketIo(Vue);

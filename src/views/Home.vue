@@ -110,7 +110,7 @@
                     </div>
                     <div class="six wide right floated column">
                         <img class="ui large borderless rounded image"
-                             src="../static/image/jetbrains.png">
+                             src="@/static/image/jetbrains.png">
                     </div>
                 </div>
             </div>
@@ -130,9 +130,9 @@
                 <h4>由 <a class="club" href="https://github.com/CUP-ACM-Programming-Club" target="_blank">ACM程序设计俱乐部</a>
                     <span class="maintainer">维护开发</span> <a class="support">点此支持</a>
                     <div class='ui flowing popup  hidden'>
-                        <div class='ui image' style="width:220px"><img src='/img/wechat.png'></div>
-                        <div class="ui image" style="width:220px"><img src="/img/alipay_2.jpg"></div>
-                        <div class="ui image" style="width:220px"><img src="/img/alipay.jpg"></div>
+                        <div class='ui image' style="width:220px"><img src="@/static/image/wechat.png"></div>
+                        <div class="ui image" style="width:220px"><img src="@/static/image/alipay_2.jpg"></div>
+                        <div class="ui image" style="width:220px"><img src="@/static/image/alipay.jpg"></div>
                     </div>
                 </h4>
                 <h4 class="ui content">技术栈:Linux + C/C++ + MySQL + PHP + Node.js + ExpressJS + Apache</h4>

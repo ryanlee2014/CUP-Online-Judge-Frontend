@@ -21,7 +21,7 @@
                 <div class="ui link card">
                     <div class="image">
                         <router-link tag="img" :src="getAvatarURL(thread_head)" :to="`/user/${thread_head.user_id}`" v-if="hasAvatarURL(thread_head)"></router-link>
-                        <img src="/assets/images/wireframe/white-image.png" v-else>
+                        <img src="@/static/image/white-image.png" v-else>
                     </div>
                     <div class="content">
                         <div class="header">
