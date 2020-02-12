@@ -211,5 +211,11 @@
   "new to us": "New to us",
   "sign up": "Sign Up",
   "forgot password": "Forgot password",
-  "reset password": "Reset password"
+  "reset password": "Reset password",
+  "user submit statistics": "User Submit Statistics",
+  "current server time": "Server Time",
+  "ranklist statistic": "Ranklist Statistics",
+  "start": "Start",
+  "end": "End",
+  "description": "Description"
 }

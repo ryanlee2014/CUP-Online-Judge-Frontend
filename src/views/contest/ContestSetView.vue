@@ -26,40 +26,7 @@
                     </div>
                 </div>
             </div>
-            <table class='ui padded celled unstackable selectable table' width=90%>
-                <thead>
-                <tr align=center class=toprow>
-                    <th width=55%>{{$t("title")}}</th>
-                    <th width=25%>{{$t("status")}}</th>
-                    <th width=7%>{{$t("privilege")}}</th>
-                    <th width="13%">{{$t("creator")}}</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr :class="`${(key % 2 === 0 ? 'evenrow' : 'oddrow')} ${row.defunct === 'Y' ? 'active' : ''}`"
-                    :key="key"
-                    v-for="(row,key) in contest_list">
-                    <td>
-                        <router-link :to="`/contest/${row.contest_id}`">
-                            {{`Contest ${row.contest_id}: ${row.title}`}}
-                        </router-link>
-                    </td>
-                    <td>
-                        <p style="margin-bottom: 0.25em" v-html="contestTimeFormat(row)"></p>
-                        <progress-bar :active="contestIsRunning(row)" :color="progressBarColor(row)" :percentage="percentageRunning(row)"
-                                      :size="'tiny'"></progress-bar>
-                    </td>
-                    <td>
-                        {{row.private ? $t("private") : $t("public")}}
-                    </td>
-                    <td>
-                        <router-link :to="`/user/${row.user_id}`">
-                            {{row.user_id}}
-                        </router-link>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+            <ContestView :contest_list="contest_list"></ContestView>
             <div class="ui grid">
                 <div class="row">
                     <div class="thirteen wide column">
@@ -138,18 +105,18 @@
 
 <script lang="ts">
 import mixins from "../../mixin/init";
-import progressBar from "../../components/progress/progressBar.vue";
 import jquery from "jquery";
 import dayjs, { Dayjs } from "dayjs";
 import { Mixins, Component, Watch } from "vue-property-decorator";
 import { Interval } from "../../module/Decorator/method";
 import TimerMixin from "@/mixin/TimerMixin";
 import Pagination from "@/components/problemset/pagination.vue";
+import ContestView from "@/components/contest/contest-view.vue";
 
 const $: any = jquery;
 @Component({
     components: {
-        progressBar,
+        ContestView,
         Pagination
     }
 })
@@ -160,7 +127,6 @@ export default class ContestSetView extends Mixins(mixins, TimerMixin) {
     select1 = "";
     select2 = "";
     current_column = "contest";
-    current_time:Dayjs = dayjs();
     page_cnt = 50;
     current_page = 0;
     total_number = 0;
@@ -182,9 +148,7 @@ export default class ContestSetView extends Mixins(mixins, TimerMixin) {
             .then(({ data }) => {
                 this.total_number = data.data;
             });
-        this.getPage().then(() => {
-            this.updateCurrentTime();
-        });
+        this.getPage();
         this.init();
     }
 
@@ -249,11 +213,6 @@ export default class ContestSetView extends Mixins(mixins, TimerMixin) {
         return params;
     }
 
-    @Interval(10000)
-    updateCurrentTime () {
-        this.current_time = dayjs();
-    }
-
     @Interval(1000)
     clock () {
         $(".server_time").text(dayjs().format("YYYY-MM-DD HH:mm:ss"));
@@ -281,92 +240,6 @@ export default class ContestSetView extends Mixins(mixins, TimerMixin) {
             .dropdown({
                 fullTextSearch: true
             });
-    }
-    progressBarColor (row: any) {
-        return this.contestIsRunning(row) ? "green" : "grey";
-    }
-    contestIsRunning (row: any) {
-        let startTime: Dayjs;
-        if (!dayjs.isDayjs(row.start_time)) {
-            startTime = dayjs(row.start_time);
-        }
-        let endTime: Dayjs;
-        if (!dayjs.isDayjs(row.end_time)) {
-            endTime = dayjs(row.end_time);
-        }
-        const currentTime: Dayjs = this.current_time;
-        return currentTime.isBefore(endTime!) && currentTime.isAfter(startTime!);
-    }
-    fillZero (str: string) {
-        if (str.length < 2) {
-            return "0" + str;
-        }
-        else {
-            return str;
-        }
-    }
-    formatDate (second: number) {
-        let fillZero = this.fillZero;
-        second = Math.abs(second);
-        let day = Math.trunc(second / 3600 / 24);
-        let hour = Math.trunc((second - day * 3600 * 24) / 3600);
-        let minute = Math.trunc((second - day * 3600 * 24 - hour * 3600) / 60);
-        let sec = second % 60;
-        let strHour = fillZero(hour + "");
-        let strMinute = fillZero(minute + "");
-        let strSec = fillZero(sec + "");
-        return `${day}天${strHour}小时${strMinute}分${strSec}秒`;
-    }
-    contestTimeFormat (row: any) {
-        if (Object.prototype.hasOwnProperty.call(row, "_format_") && typeof row._format_ === "string") {
-            return row._format_;
-        }
-        let startTime: Dayjs;
-        if (!dayjs.isDayjs(row.start_time)) {
-            startTime = dayjs(row.start_time);
-        }
-        let endTime: Dayjs;
-        if (!dayjs.isDayjs(row.end_time)) {
-            endTime = dayjs(row.end_time);
-        }
-        const currentTime: Dayjs = this.current_time;
-        if (row.isEnd || currentTime.isAfter(endTime!)) {
-            row.isEnd = true;
-            // eslint-disable-next-line no-return-assign
-            return row._format_ = `${endTime!.format("YYYY-MM-DD HH:mm")}${this.$t("end")}`;
-        }
-        else if (currentTime.isBefore(startTime!)) {
-            return `${startTime!.format("YYYY-MM-DD HH:mm")}${this.$t("start")}`;
-        }
-        else {
-            return `${startTime!.format("YYYY-MM-DD HH:mm")} ${this.$t("start")}<br>${endTime!.format("YYYY-MM-DD HH:mm")} ${this.$t("end")}`;
-        }
-    }
-    percentageRunning (row: any) {
-        let startTime: Dayjs;
-        if (row.isEnd === true) {
-            return 100;
-        }
-        if (!dayjs.isDayjs(row.start_time)) {
-            startTime = dayjs(row.start_time);
-        }
-        let endTime: Dayjs;
-        if (!dayjs.isDayjs(row.end_time)) {
-            endTime = dayjs(row.end_time);
-        }
-        const currentTime: Dayjs = this.current_time;
-        if (currentTime.isBefore(startTime!)) {
-            return 0;
-        }
-        else if (currentTime.isAfter(endTime!)) {
-            row.isEnd = true;
-            return 100;
-        }
-        else {
-            let diffTime = currentTime.diff(startTime!, "second");
-            let totalDiff = endTime!.diff(startTime!, "second");
-            return Math.trunc(Math.floor(diffTime * 100 / totalDiff));
-        }
     }
 }
 </script>

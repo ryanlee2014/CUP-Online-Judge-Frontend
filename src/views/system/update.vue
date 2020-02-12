@@ -2,7 +2,7 @@
     <div class="ui main text container padding">
             <div class="ui raised segment" :key="key" v-for="(row,key) in log">
                 <h3 class="ui dividing header">
-                    Version {{row.version}} {{dayjs(row.mtime).format("YYYY-MM-DD")}}
+                    Core Version {{row.version}} Frontend Version {{row.frontend_version}} {{dayjs(row.mtime).format("YYYY-MM-DD")}}
                 </h3>
                 <p v-html="row.msg">
                 </p>

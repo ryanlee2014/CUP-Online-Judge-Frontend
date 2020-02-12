@@ -211,5 +211,11 @@
   "new to us": "アカウントなし",
   "sign up": "登録",
   "forgot password": "パスワード忘れた",
-  "reset password": "パスワードをリセット"
+  "reset password": "パスワードをリセット",
+  "user submit statistics": "ユーザー提出統計",
+  "current server time": "サーバー時間",
+  "ranklist statistic": "ランキング統計",
+  "start": "始め",
+  "end": "終わり",
+  "description": "説明"
 }

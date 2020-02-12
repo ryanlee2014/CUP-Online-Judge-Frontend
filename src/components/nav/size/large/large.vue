@@ -8,7 +8,20 @@
             </router-link>
             <router-link class="item" exact-active-class="active" to="/ranklist"><i class="trophy icon"></i>{{$t("ranklist")}}</router-link>
             <router-link class="item" exact-active-class="active" to="/discuss"><i class="comment alternate icon"></i>{{$t("discuss")}}</router-link>
-            <router-link class="item" exact-active-class="active" to="/contest"><i class="puzzle icon"></i>{{$t("contest")}}&amp;{{$t("homework")}}</router-link>
+            <div class="ui dropdown item" tabindex="0">
+                <div class="text">
+                    <i class="keyboard icon"></i>
+                    {{$t("contest")}}&amp;{{$t("homework")}}
+                </div>
+                <i class="dropdown icon"></i>
+                <div class="menu">
+                    <router-link class="item" exact-active-class="active" to="/contest"><i class="puzzle icon"></i>{{$t("contest")}}&amp;{{$t("homework")}}</router-link>
+                    <router-link class="item" exact-active-class="active" to="/topic">
+                        <i class="paperclip icon"></i>
+                        {{$t("contest topic")}}
+                    </router-link>
+                </div>
+            </div>
             <div class="ui dropdown item" tabindex="0">
                 <div class="text"><i class="options icon"></i>{{$t("feature")}}</div>
                 <i class="dropdown icon"></i>

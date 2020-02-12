@@ -169,6 +169,22 @@ const router = new Router({
             }
         },
         {
+            path: "/topic",
+            name: "contest topic",
+            component: () => import("./views/contesttopic/contest-topic-view.vue"),
+            meta: {
+                auth: true
+            }
+        },
+        {
+            path: "/topic/:contestSetId",
+            name: "topic contest list",
+            component: () => import("./views/contesttopic/contest-topic-problem-view.vue"),
+            meta: {
+                auth: true
+            }
+        },
+        {
             path: "/tutorial/:problem_id",
             name: "problem tutorial/solution manual",
             component: () => import("./views/tutorial.vue"),
@@ -377,6 +393,42 @@ const router = new Router({
             component: () => import("./views/status/info/runtime.vue"),
             meta: {
                 auth: true
+            }
+        },
+        {
+            path: "/admin/contestset/add",
+            name: "Add Contest Set",
+            component: () => import("./views/admin/contestset/add.vue"),
+            meta: {
+                auth: true,
+                admin: true
+            }
+        },
+        {
+            path: "/admin/contestset/copy/:contestSetId",
+            name: "Copy Contest Set",
+            component: () => import("./views/admin/contestset/copy.vue"),
+            meta: {
+                auth: true,
+                admin: true
+            }
+        },
+        {
+            path: "/admin/contestset/edit/:contestSetId",
+            name: "Contest Set Edit",
+            component: () => import("./views/admin/contestset/edit.vue"),
+            meta: {
+                auth: true,
+                admin: true
+            }
+        },
+        {
+            path: "/admin/contestset/list",
+            name: "Contest Set List",
+            component: () => import("./views/admin/contestset/list.vue"),
+            meta: {
+                auth: true,
+                admin: true
             }
         },
         {

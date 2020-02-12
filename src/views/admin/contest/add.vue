@@ -14,18 +14,6 @@ import { Component, Mixins } from "vue-property-decorator";
     }
 })
 export default class ContestAdd extends Mixins(mixins, ContestEditMixin) {
-    add (val: any) {
-        val = this.dataFormat(val);
-        this.axios.post("/api/admin/contest/add", val)
-            .then(({ data }) => {
-                if (data.status === "OK") {
-                    alert(this.$t("success"));
-                }
-                else {
-                    alert(this.$t("error"));
-                }
-            });
-    }
 }
 </script>
 

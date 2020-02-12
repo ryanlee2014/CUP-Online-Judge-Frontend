@@ -189,9 +189,15 @@ export default class Home extends Mixins(InitMixin) {
                 let data = response.data.data[0];
                 let version = data.version;
                 let vj_version = data.vj_version;
+                let frontendVersion = data.frontend_version;
                 let content = data.msg;
                 let time = dayjs(data.mtime).format("YYYY-MM-DD");
-                $(".maintain").html("Version:" + time).attr("data-html", "<div class='ui header'>" + "升级维护内容" + "<div class='sub header'>引擎版本:" + version + "</div><div class='sub header'>VJ版本:" + vj_version + "</div></div><div class='content'>" + content + "</div>")
+                $(".maintain").html("Version:" + time).attr("data-html", "<div class='ui header'>" +
+                    "升级维护内容" +
+                    "<div class='sub header'>引擎版本:" + version +
+                    "</div><div class='sub header'>VJ版本:" + vj_version +
+                    "</div><div class='sub header'>前端版本:" + frontendVersion +
+                        "</div></div><div class='content'>" + content + "</div>")
                     .popup({
                         position: "top center",
                         on: "hover"

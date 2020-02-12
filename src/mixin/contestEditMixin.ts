@@ -10,6 +10,20 @@ export default class ContestEditMixin extends Vue {
     mounted () {
         this.initData();
     }
+
+    add (val: any) {
+        val = this.dataFormat(val);
+        this.axios.post("/api/admin/contest/add", val)
+            .then(({ data }) => {
+                if (data.status === "OK") {
+                    alert(this.$t("success"));
+                }
+                else {
+                    alert(this.$t("error"));
+                }
+            });
+    }
+
     created () {
         this.contest_id = this.$route.params.contest_id;
     }

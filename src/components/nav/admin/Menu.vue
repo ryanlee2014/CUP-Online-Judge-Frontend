@@ -33,6 +33,10 @@
                         <i class="list icon"></i>
                         {{$t("contest list")}}
                     </router-link>
+                    <router-link class="item" exact-active-class="active" to="/admin/contestset/list">
+                        <i class="list icon"></i>
+                        {{$t("contest set list")}}
+                    </router-link>
                 </div>
             </div>
             <div class="ui dropdown item">
