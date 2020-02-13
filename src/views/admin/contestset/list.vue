@@ -106,7 +106,7 @@ export default class ContestSetList extends Mixins(InitMixin) {
         }
 
         flushData (page: any) {
-            this.axios.get(`/api/admin/contestset/set/${page}`)
+            this.axios.get(`/api/admin/contestset/list/${page}`)
                 .then(({ data }) => {
                     this.contestSetList = data.data.data;
                     this.totalNumber = data.data.count;
