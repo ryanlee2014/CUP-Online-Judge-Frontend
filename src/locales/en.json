@@ -218,5 +218,14 @@
   "start": "Start",
   "end": "End",
   "description": "Description",
-  "contest topic": "Contest Topic"
+  "contest topic": "Contest Topic",
+  "copy contest set": "Copy Topic",
+  "contest set id": "Topic ID",
+  "contest set list": "Contest Topic List",
+  "add contest set": "Add Topic",
+  "visible": "Visible",
+  "enable": "Enable",
+  "inviter": "Invite User",
+  "rest valid time": "Rest of valid time",
+  "valid date": "Expiry Date"
 }

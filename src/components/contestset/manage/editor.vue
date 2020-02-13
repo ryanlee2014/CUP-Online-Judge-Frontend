@@ -48,22 +48,14 @@
                     <input type="text" ref="description" v-model="description">
                 </div>
             </div>
-            <div class="padding field">
+            <div class="field">
                 <div class="two fields">
-                    <div class="field"></div>
                     <div class="field">
-                        <div class="fields">
-                            <div class="field">
-                                <button class="ui secondary button">
-                                    Reset
-                                </button>
-                            </div>
-                            <div class="field">
-                                <button class="ui primary button" @click="emitData">
-                                    Submit
-                                </button>
-                            </div>
-                        </div>
+                        <button class="ui primary button" @click="emitData">
+                            Submit
+                        </button>
+                    </div>
+                    <div class="field">
                     </div>
                 </div>
             </div>
@@ -90,6 +82,17 @@ export default class ContestSetEditor extends Mixins(Vue) implements IContestSet
         contestSetId: string = "";
 
         @Prop({ default: {} }) contestSetInfo!: IContestSetEditDTO;
+        @Prop({ default: [] }) contestList!: (string | number)[];
+
+        @Watch("contestList")
+        onContestListChanged (val: (string | number)[]) {
+            if (val.length > 0) {
+                this.contestIdList = val;
+                this.$nextTick(() => {
+                    this.initJQuery();
+                });
+            }
+        }
 
         @Watch("contestSetInfo")
         onContestSetInfoChanged (val: IContestSetEditDTO) {
@@ -101,7 +104,6 @@ export default class ContestSetEditor extends Mixins(Vue) implements IContestSet
                 if (val.contestset_id) {
                     this.contestSetId = val.contestset_id + "";
                 }
-                this.contestIdList = val.contestIdList;
                 this.$nextTick(() => {
                     this.initJQuery();
                 });
@@ -118,9 +120,11 @@ export default class ContestSetEditor extends Mixins(Vue) implements IContestSet
         }
 
         initJQuery () {
-            $(this.$refs.visible).checkbox(this.visible ? "check" : "uncheck");
-            $(this.$refs.defunct).checkbox(this.defunct === "N" ? "check" : "uncheck");
-            $(this.$refs.contestList).dropdown("set selected", this.contestIdList);
+            this.$nextTick(() => {
+                $(this.$refs.visible).checkbox(this.visible ? "check" : "uncheck");
+                $(this.$refs.defunct).checkbox(this.defunct === "N" ? "check" : "uncheck");
+                $(this.$refs.contestList).dropdown("set selected", this.contestIdList);
+            });
         }
 
         initTotalContest () {

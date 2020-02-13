@@ -219,5 +219,14 @@
   "start": "开始",
   "end": "结束",
   "description": "内容描述",
-  "contest topic": "竞赛与作业专题"
+  "contest topic": "竞赛与作业专题",
+  "copy contest set": "复制专题",
+  "contest set id": "专题号",
+  "contest set list": "专题列表",
+  "add contest set": "增加专题",
+  "visible": "可见",
+  "enable": "启用",
+  "inviter": "邀请人",
+  "rest valid time": "剩余有效次数",
+  "valid date": "过期时间"
 }

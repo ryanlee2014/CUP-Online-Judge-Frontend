@@ -15,9 +15,9 @@
         <table class="ui celled structured table">
             <thead>
             <tr>
-                <th>{{$t("contest set id")}}</th>
-                <th>{{$t("title")}}</th>
-                <th>{{$t("create time")}}</th>
+                <th style="width: 80px">{{$t("contest set id")}}</th>
+                <th style="width: 450px">{{$t("title")}}</th>
+                <th style="width: 160px">{{$t("create time")}}</th>
                 <th>{{$t("copy contest set")}}</th>
                 <th>{{$t("available")}}</th>
                 <th>{{$t("remove")}}</th>

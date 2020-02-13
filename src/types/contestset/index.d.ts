@@ -18,5 +18,4 @@ export interface IContestSetResponseDTO {
 }
 
 export interface IContestSetEditDTO extends IContestSetResponseDTO{
-    contestIdList: (string | number)[]
 }

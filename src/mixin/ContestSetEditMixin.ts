@@ -23,14 +23,13 @@ export default class ContestSetEditMixin extends Vue {
 
         this.axios.get(`/api/contestset/list/${this.contestSetId}`)
             .then(({ data }) => {
-                this.contestSetList = data.data;
+                this.contestSetList = data.data.map((e: any) => e.contest_id + "");
             });
     }
 
     get contestSetEditInfo () {
         if (this.contestSetInfo) {
             const payload: IContestSetEditDTO = {
-                contestIdList: this.contestSetList.map(e => e.contest_id + ""),
                 contestset_id: parseInt(this.contestSetId),
                 defunct: this.contestSetInfo!.defunct,
                 description: this.contestSetInfo!.description,

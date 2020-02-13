@@ -218,5 +218,14 @@
   "start": "始め",
   "end": "終わり",
   "description": "説明",
-  "contest topic": "宿題トピック"
+  "contest topic": "宿題トピック",
+  "copy contest set": "トピックコピー",
+  "contest set id": "トピック番号",
+  "contest set list": "トピックリスト",
+  "add contest set": "トピック追加",
+  "visible": "見える",
+  "enable": "使能",
+  "inviter": "招待者",
+  "rest valid time": "使用可能回数",
+  "valid date": "有効期間"
 }
