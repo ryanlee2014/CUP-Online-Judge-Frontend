@@ -29,7 +29,7 @@
                     {{row.contestset_id}}
                 </td>
                 <td>
-                    <a :href="`/admin/contestset/edit/${row.contestset_id}`" targe="_blank">
+                    <a :href="`/admin/contestset/edit/${row.contestset_id}`" target="_blank">
                         {{row.title}}
                     </a>
                 </td>

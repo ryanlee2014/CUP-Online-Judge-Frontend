@@ -45,7 +45,7 @@
             <div class="field">
                 <div class="field">
                     <label>{{$t("description")}}</label>
-                    <input type="text" ref="description" v-model="description">
+                    <mavon-editor ref="description" v-model="description" :markInstance="markdownIt"></mavon-editor>
                 </div>
             </div>
             <div class="field">
@@ -66,6 +66,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Mixins, Prop, Watch } from "vue-property-decorator";
+import markdownIt from "@/lib/markdownIt/markdownIt";
 import jquery from "jquery";
 import { IContestSetEditDTO, IContestSetRequestDTO, IContestSetResponseDTO } from "@/types/contestset";
 const $: any = jquery;
@@ -80,6 +81,7 @@ export default class ContestSetEditor extends Mixins(Vue) implements IContestSet
         select1: any = "";
         totalContestList: any[] = [];
         contestSetId: string = "";
+        markdownIt = markdownIt;
 
         @Prop({ default: {} }) contestSetInfo!: IContestSetEditDTO;
         @Prop({ default: [] }) contestList!: (string | number)[];
