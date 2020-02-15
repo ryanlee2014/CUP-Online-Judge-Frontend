@@ -228,5 +228,6 @@
   "enable": "启用",
   "inviter": "邀请人",
   "rest valid time": "剩余有效次数",
-  "valid date": "过期时间"
+  "valid date": "过期时间",
+  "select file": "选择文件"
 }

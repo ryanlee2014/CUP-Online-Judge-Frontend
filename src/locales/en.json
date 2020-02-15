@@ -227,5 +227,6 @@
   "enable": "Enable",
   "inviter": "Invite User",
   "rest valid time": "Rest of valid time",
-  "valid date": "Expiry Date"
+  "valid date": "Expiry Date",
+  "select file": "Select File"
 }

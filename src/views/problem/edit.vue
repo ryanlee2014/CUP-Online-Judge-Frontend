@@ -101,7 +101,32 @@
                 <h2 class="ui header">Files</h2>
             </div>
             <div class="row">
-                <a :href="makeHref(file_name)" :key="file_name" class="ui label" v-for="file_name in files">{{file_name}}</a>
+                <div class="ui label"  :key="file_name" v-for="file_name in files">
+                    <a :href="makeHref(file_name)">
+                        {{file_name}}
+                    </a>
+                    <i class="delete icon" @click="removeFile(file_name)"></i>
+                </div>
+            </div>
+            <div class="row">
+                <div class="four wide column">
+                    <div class="ui grid">
+                        <div class="row">
+                            <div class="eight wide column">
+                                <form ref="upload_file_form">
+                                    <a @click="selectFile" class="ui button">{{uploadFileName}}</a>
+                                    <input @change="fileChanged" ref="file_input" name="upload_file" style="display: none" type="file">
+                                </form>
+                            </div>
+                            <div class="eight wide column">
+                                <a @click="uploadFile" class="ui primary button">{{$t("submit")}}</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="twelve wide column">
+                    <p></p>
+                </div>
             </div>
             <div class="row">
                 <h2 class="ui header">
@@ -243,6 +268,7 @@ export default class ProblemEdit extends Mixins(mixins) implements IKeyValue {
         spj = false;
         sampleinput = "";
         sampleoutput = "";
+        uploadFileName = "";
         descriptionInstance = markdownIt.newInstance();
         inputInstance = markdownIt.newInstance();
         outputInstance = markdownIt.newInstance();
@@ -265,6 +291,7 @@ export default class ProblemEdit extends Mixins(mixins) implements IKeyValue {
 
         created () {
             this.id = this.$route.params.problem_id;
+            this.uploadFileName = this.$t("select file") as string;
         }
 
         mounted () {
@@ -411,15 +438,19 @@ export default class ProblemEdit extends Mixins(mixins) implements IKeyValue {
                     this.initMarkdown("input", id, 1);
                     this.initMarkdown("output", id, 2);
                     this.initMarkdown("hint", id, 3);
-                    this.axios.get(`/api/file/${id}`)
-                        .then(({ data }) => {
-                            if (data.status === "OK") {
-                                this.files = data.data;
-                            }
-                        });
+                    this.initFiles();
                 });
             this.initPrependAppendCode("prepend", "prepend");
             this.initPrependAppendCode("append", "append");
+        }
+
+        initFiles () {
+            this.axios.get(`/api/file/${this.id}`)
+                .then(({ data }) => {
+                    if (data.status === "OK") {
+                        this.files = data.data;
+                    }
+                });
         }
 
         initPrependAppendCode (target: string, scheme: string) {
@@ -442,6 +473,40 @@ export default class ProblemEdit extends Mixins(mixins) implements IKeyValue {
                         this.imageHandler(code, data);
                     }
                 });
+        }
+
+        selectFile () {
+            (this.$refs.file_input as any).click();
+        }
+
+        fileChanged (event: any) {
+            this.uploadFileName = event.target.files[0].name;
+        }
+
+        uploadFile () {
+            const data = new FormData(this.$refs.upload_file_form as any);
+            const config = {
+                onUploadProgress: function (progressEvent: any) {
+                    const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+                    console.log(percentCompleted);
+                }
+            };
+            this.axios.post(`/api/admin/problem/data/set/${this.id}`, data, config)
+                .then(({ data }) => {
+                    alert("上传成功");
+                    this.initFiles();
+                });
+        }
+
+        removeFile (fileName: string) {
+            const check = confirm(`是否删除${fileName}?`);
+            if (check) {
+                this.axios.get(`/api/admin/problem/data/remove/${this.id}/${fileName}`)
+                    .then(({ data }) => {
+                        alert(`文件: ${fileName}已删除`);
+                        this.initFiles();
+                    });
+            }
         }
 }
 </script>
