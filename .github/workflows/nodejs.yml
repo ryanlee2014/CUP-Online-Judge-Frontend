@@ -9,29 +9,35 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [8.x, 10.x, 12.x]
+        node-version: [12.x]
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
-    - run: npm install
-    - run: npm run modern --if-present
-    - run: npm test
-      env:
-        CI: true
-    - name: GitHub Push
-      uses: ad-m/github-push-action@v0.5.0
-      with:
-        # Token for the repo. Can be passed in using $\{{ secrets.GITHUB_TOKEN }}
-        github_token: ${{ secrets.GITHUB_ACTIONS_TOKEN }}
-        # Repository name to push. Default or empty value represents current github repository (${GITHUB_REPOSITORY})
-        repository: ryanlee2014/CUP-Online-Judge-CDN
-        # Destination branch to push changes
-        branch: master
-        # Determines if force push is used
-        force: true
-        # Directory to change to before pushing.
-        directory: dist
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - uses: actions/cache@v1
+        name: Cache NPM dependencies
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      - run: npm install
+      - run: npm run modern --if-present
+        env:
+          CI: true
+      - name: GitHub Push
+        uses: ad-m/github-push-action@v0.5.0
+        with:
+          # Token for the repo. Can be passed in using $\{{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          # Repository name to push. Default or empty value represents current github repository (${GITHUB_REPOSITORY})
+          repository: ryanlee2014/CUP-Online-Judge-CDN
+          # Destination branch to push changes
+          branch: master
+          # Determines if force push is used
+          force: true
+          # Directory to change to before pushing.
+          directory: dist
