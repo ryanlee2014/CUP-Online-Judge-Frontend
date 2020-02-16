@@ -13,31 +13,23 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
+        name: Checkout code
+      - uses: actions/checkout@v2
+        name: Checkout CDN Repository
         with:
-          node-version: ${{ matrix.node-version }}
-      - uses: actions/cache@v1
-        name: Cache NPM dependencies
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-      - run: npm install
-      - run: npm run modern --if-present
-        env:
-          CI: true
-      - name: GitHub Push
-        uses: ad-m/github-push-action@v0.5.0
-        with:
-          # Token for the repo. Can be passed in using $\{{ secrets.GITHUB_TOKEN }}
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          # Repository name to push. Default or empty value represents current github repository (${GITHUB_REPOSITORY})
           repository: ryanlee2014/CUP-Online-Judge-CDN
-          # Destination branch to push changes
-          branch: master
-          # Determines if force push is used
-          force: true
-          # Directory to change to before pushing.
-          directory: dist
+          path: cdn
+          persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal token
+          fetch-depth: 0 # otherwise, you will failed to push refs to dest repo
+      - name: Move file to another repository
+        run: cp -r dist/* cdn/
+      - name: Commit files and push
+        run: |
+          cd cdn
+          git config --local user.email "gxlhybh@gmail.com"
+          git config --local user.name "Ryan Lee"
+          git add --all
+          git commit -m "deploy `TZ=UTC-8 date +'%Y-%m-%d %H:%M:%S'`"
+          git push -f https://ryanlee2014:$GITHUB_TOKEN@github.com/ryanlee2014/CUP-Online-Judge-CDN.git master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_ACTIONS_TOKEN }}
