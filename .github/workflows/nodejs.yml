@@ -30,6 +30,7 @@ jobs:
           git config --local user.name "Ryan Lee"
           git add --all
           git commit -m "deploy `TZ=UTC-8 date +'%Y-%m-%d %H:%M:%S'`"
+          git tag "`cat VERSION`"
           git push -f https://ryanlee2014:$GITHUB_TOKEN@github.com/ryanlee2014/CUP-Online-Judge-CDN.git master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_ACTIONS_TOKEN }}
