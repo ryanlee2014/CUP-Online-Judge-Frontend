@@ -1,6 +1,8 @@
 const MonacoEditorPlugin = require("monaco-editor-webpack-plugin");
 const CompressionPlugin = require("compression-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const version = require("./package.json").version;
+const webPath = `https://cdn.jsdelivr.net/gh/ryanlee2014/CUP-Online-Judge-CDN@v${version}/`;
 
 module.exports = {
     chainWebpack: config => {
@@ -60,6 +62,7 @@ module.exports = {
             }
         }
     },
+    publicPath: process.env.NODE_ENV === "production" ? webPath : "/",
     configureWebpack: config => {
         const configs = {
             plugins: [
