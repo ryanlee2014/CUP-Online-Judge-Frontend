@@ -80,7 +80,7 @@
                                     </div>
                                     <div class="field">
                                         <label>Biography(支持markdown语法)</label>
-                                        <mavon-editor v-model="biography" :markInstance="new markdownIt()"></mavon-editor>
+                                        <mavon-editor v-model="biography" :markInstance="markdownIt"></mavon-editor>
                                         <input name="biography" type="text" v-model="biography">
                                     </div>
                                     <div class="fields">
