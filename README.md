@@ -1,13 +1,16 @@
 # CUP-Online-Judge Next Generation Frontend
 
-本项目使用Vue.js开发。
-* 请勿添加以`/api`为前缀的路由，该前缀为后端请求预留。
+中国石油大学(北京)在线评测系统前端
 
 **Demo: [CUP-Online-Judge](http://oj.cupacm.com)**
 
 **请保证预留至少4GB的内存空间用于打包构建**
 
 可使用Github Actions进行打包构建
+[GitHub Actions 构建指南]()
+
+* 请勿添加以`/api`为前缀的路由，该前缀为后端请求预留。
+
 
 ## Run Vue CLI GUI
 ```

@@ -195,6 +195,10 @@ export default class Submit extends Mixins(mixins) {
             borderBottom: "",
             boxShadow: ""
         });
+
+        this.sockets.unsubscribe("result");
+        this.sockets.unsubscribe("reject_submit");
+        this.sockets.unsubscribe("remoteJudge");
     }
 
     convertHTML (html: string) {
@@ -644,6 +648,7 @@ export default class Submit extends Mixins(mixins) {
             this.submissionDataUpdateByHTTPRequest(data.solutionId);
         });
     }
+
     wsresult (data: any) {
         // let res = data.split(',');
         const judgeResult = [

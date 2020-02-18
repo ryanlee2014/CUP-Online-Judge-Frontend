@@ -680,6 +680,7 @@ export default class GeneralStatus extends Mixins(mixins, StatusViewMixin) {
         judge_color = [];
         judge_icon = [];
         target = {};
+        hasDrawedGraph = false;
         language_name = [];
         result = [];
         language_icon = [];
@@ -707,6 +708,7 @@ export default class GeneralStatus extends Mixins(mixins, StatusViewMixin) {
                     });
             }
             else if (newVal === "graph") {
+                this.drawGraph();
                 this.axios.get("/api/user/register_timeline")
                     .then(({ data }) => {
                         _.delay(drawRegisterTimeline, 0, data.data);
@@ -870,9 +872,21 @@ export default class GeneralStatus extends Mixins(mixins, StatusViewMixin) {
                 });
         }
 
-        beforeDestory () {
+        beforeDestroy () {
             this.sockets.unsubscribe("submit");
             this.sockets.unsubscribe("result");
+        }
+
+        drawGraph () {
+            if (this.hasDrawedGraph) {
+                return;
+            }
+            this.hasDrawedGraph = true;
+            this.axios.get("/api/status/graph")
+                .then(({ data }) => {
+                    draw(data);
+                    drawDynamicInteractiveLineChart();
+                });
         }
 
         mounted () {
@@ -883,11 +897,6 @@ export default class GeneralStatus extends Mixins(mixins, StatusViewMixin) {
             this.sockets.subscribe("result", (data: any) => {
                 this.Update(data);
             });
-            this.axios.get("/api/status/graph")
-                .then(({ data }) => {
-                    draw(data);
-                    drawDynamicInteractiveLineChart();
-                });
         }
 }
 </script>

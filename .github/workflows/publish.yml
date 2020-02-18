@@ -24,6 +24,21 @@ jobs:
           path: cdn
           persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal token
           fetch-depth: 0 # otherwise, you will failed to push refs to dest repo
+      - name: Build env
+        run: |
+          echo "::set-env name=NEED_BUILD::$(cat NEED_BUILD)"
+      - name: Use Node.js environment
+        if: env.NEED_BUILD == 'true'
+        uses: actions/setup-node@v1
+        env:
+          NEED_BUILD: "`cat NEED_BUILD`"
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Build distribution if needed
+        if: env.NEED_BUILD == 'true'
+        run: |
+          npm i
+          npm run modern
       - name: Move file to another repository
         run: cp -r dist/* cdn/
       - name: Commit files and push
