@@ -467,7 +467,7 @@ export default class Submit extends Mixins(mixins) {
         }
         this.submitDisabled = true;
         $(".ui.teal.progress").show();
-        this.judgeInfoText = "提交";
+        this.judgeInfoText = "已提交，等待任务分配";
         const $progressResult = $(".progress.result");
         $progressResult.progress({
             percent: 0
@@ -601,6 +601,7 @@ export default class Submit extends Mixins(mixins) {
 
     submissionDataUpdateByHTTPRequest (solutionId: number) {
         let prevCancelToken: CancelTokenSource | null = null;
+        this.judgeInfoText = "已分配至远程判题机判题";
         const intervalId = setInterval(() => {
             if (prevCancelToken !== null) {
                 prevCancelToken.cancel();

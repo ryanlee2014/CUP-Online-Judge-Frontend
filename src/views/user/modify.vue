@@ -80,6 +80,7 @@
                                     </div>
                                     <div class="field">
                                         <label>Biography(支持markdown语法)</label>
+                                        <mavon-editor v-model="biography" :markInstance="new markdownIt()"></mavon-editor>
                                         <input name="biography" type="text" v-model="biography">
                                     </div>
                                     <div class="fields">
@@ -113,6 +114,7 @@
 import { mapGetters } from "vuex";
 import util from "../../lib/util";
 import mixins from "../../mixin/init";
+import markdownIt from "@/lib/markdownIt/markdownIt";
 import { Component, Mixins, Watch } from "vue-property-decorator";
 @Component({
     computed: {
@@ -135,6 +137,9 @@ export default class UserInfoModify extends Mixins(mixins) {
     nick= "";
     avatar= false;
     avatarUrl= "";
+
+    markdownIt = markdownIt;
+
     created () {
         this.nick = this.$store.getters.nick;
         this.avatar = this.$store.getters.avatar;
