@@ -231,5 +231,8 @@
   "select file": "ファイルを選択",
   "problem file": "質問データ",
   "prepend code": "プレフィックスコード",
-  "append code": "サフィックスコード"
+  "append code": "サフィックスコード",
+  "upload problem": "質問をアップロード",
+  "code compare": "コード比較",
+  "source code": "ソースコード"
 }

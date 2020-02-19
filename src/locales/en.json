@@ -109,7 +109,7 @@
   "problem manage": "Problem Manager",
   "problem number": "Count",
   "problem_id": "Problem ID",
-  "problemset": "ProblemSet",
+  "problemset": "Problem Set",
   "programming language": "Programming Language",
   "public": "Public",
   "public contest": "Public Contest",
@@ -231,5 +231,8 @@
   "select file": "Select File",
   "problem file": "Problem Data",
   "prepend code": "Prepend Code",
-  "append code": "Append Code"
+  "append code": "Append Code",
+  "upload problem": "Upload Problem",
+  "code compare": "Code Comparision",
+  "source code": "Source Code"
 }

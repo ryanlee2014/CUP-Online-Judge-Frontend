@@ -2,9 +2,9 @@
     <div class="ui container padding" v-if="contestMode"></div>
     <div class="ui container padding" v-else >
         <h2 class="ui dividing header">
-            Solution
+            {{$t("tutorial")}}
             <div class="sub header">
-                公测中
+                beta
             </div>
         </h2>
         <div class="ui grid">

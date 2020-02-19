@@ -1,8 +1,8 @@
 <template>
     <div class="ui container padding" v-cloak>
         <h1 class="ui dividing header">
-            Problem
-            <router-link :to="`/problem/submit/${pid}`">{{pid}}</router-link> Status
+            {{$t("problem")}}
+            <router-link :to="`/problem/submit/${pid}`">{{pid}}</router-link> {{$t("status")}}
         </h1>
         <div class="ui stacked segment">
             <div class="ui statistics">

@@ -1,6 +1,6 @@
 <template>
     <div class="ui container padding" style="min-height:400px">
-        <h2 class="ui dividing header">Upload Problem</h2>
+        <h2 class="ui dividing header">{{$t("upload problem")}}</h2>
         <div class="ui grid">
             <div class="row">
                 <div class="ui center aligned segment" style="min-height:400px">

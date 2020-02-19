@@ -3,7 +3,7 @@
         <ContestMode v-if="contest_mode || contestMode"></ContestMode>
         <div class="padding" v-else>
             <h2 class="ui dividing header">
-                Problem Set
+                {{$t("problemset")}}
                 <div class="sub header" v-cloak>
                     {{$tc("totalProblem", (total || 0), {n: total || 0})}}
                     {{recent_one_month !== -1 && (!label) && (!search_tag) ? $tc("addProblem", recent_one_month, {n:

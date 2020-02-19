@@ -1,7 +1,7 @@
 <template>
     <div class="ui container padding">
         <h2 class="ui dividing header">
-            Code Compare
+            {{$t("code compare")}}
         </h2>
         <div class="ui grid">
             <div class="row">

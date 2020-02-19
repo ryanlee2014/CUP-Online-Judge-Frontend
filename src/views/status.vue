@@ -4,7 +4,7 @@
     </div>
     <div class="padding ui container" v-else>
         <h2 class="ui dividing header">
-            Status
+            {{$t("status")}}
         </h2>
         <div class="ui top attached tabular menu">
             <a :class="(current_tag == 'status'?'active':'')+' item'" @click="tag('status',$event)" id="submitstatus"

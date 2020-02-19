@@ -5,7 +5,7 @@
     <div class="ui container padding" v-else>
         <div>
             <h2 class="ui dividing header">
-                Rank List
+                {{$t("ranklist")}}
             </h2>
             <RankList :rank="ranklist"></RankList>
         </div>

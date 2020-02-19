@@ -3,7 +3,9 @@
         <ContestMode/>
     </div>
     <div class="ui container padding" v-else>
-        <h2 class="ui dividing header">Discuss</h2>
+        <h2 class="ui dividing header">
+            {{$t("discuss")}}
+        </h2>
         <div class="ui grid">
             <div class="row">
                 <div class="thirteen wide column">

@@ -2,7 +2,7 @@
     <ContestMode v-if="contest_mode || contestMode"></ContestMode>
     <div v-else class="ui container padding">
         <h2 class="ui dividing header">
-            Source Code
+            {{$t("source code")}}
         </h2>
         <div class="ui existing segment" v-cloak>
             <div class="ui raised segment" v-cloak>
