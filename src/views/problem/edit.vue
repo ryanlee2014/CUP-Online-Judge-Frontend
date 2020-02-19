@@ -3,7 +3,7 @@
         <div class="ui grid">
             <div class="row">
                 <h2 class="ui header">
-                    Title
+                    {{$t("title")}}
                 </h2>
             </div>
             <div class="two column row">
@@ -47,7 +47,7 @@
             </div>
             <div class="row">
                 <h2 class="ui header">
-                    Description
+                    {{$t("description")}}
                 </h2>
             </div>
             <div class="row">
@@ -56,7 +56,7 @@
             <br>
             <div class="row">
                 <h2 class="ui header">
-                    Input
+                    {{$t("input")}}
                 </h2>
             </div>
             <div class="row">
@@ -65,7 +65,7 @@
             <br>
             <div class="row">
                 <h2 class="ui header">
-                    Output
+                    {{$t("output")}}
                 </h2>
             </div>
             <div class="row">
@@ -74,7 +74,7 @@
             <br>
             <div class="row">
                 <h2 class="ui header">
-                    Sample Input
+                    {{$t("sampleinput")}}
                 </h2>
             </div>
             <div class="row">
@@ -87,7 +87,7 @@
             <br>
             <div class="row">
                 <h2 class="ui header">
-                    Sample Output
+                    {{$t("sampleoutput")}}
                 </h2>
             </div>
             <div class="row">
@@ -98,7 +98,7 @@
                 </div>
             </div>
             <div class="row">
-                <h2 class="ui header">Files</h2>
+                <h2 class="ui header">{{$t("problem file")}}</h2>
             </div>
             <div class="row">
                 <div class="ui label"  :key="file_name" v-for="file_name in files">
@@ -130,7 +130,7 @@
             </div>
             <div class="row">
                 <h2 class="ui header">
-                    Prepend Code
+                    {{$t("prepend code")}}
                 </h2>
             </div>
             <div class="row">
@@ -180,7 +180,7 @@
             </div>
             <div class="row">
                 <h2 class="ui header">
-                    Append Code
+                    {{$t("append code")}}
                 </h2>
             </div>
             <div class="row">
@@ -230,7 +230,7 @@
             </div>
             <div class="row" v-if="from === 'local'">
                 <h2 class="ui header">
-                    Hint
+                    {{$t("hint")}}
                 </h2>
             </div>
             <div class="row" v-if="from === 'local'">

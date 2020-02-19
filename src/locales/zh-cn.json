@@ -229,5 +229,8 @@
   "inviter": "邀请人",
   "rest valid time": "剩余有效次数",
   "valid date": "过期时间",
-  "select file": "选择文件"
+  "select file": "选择文件",
+  "problem file": "题目数据",
+  "prepend code": "前置代码",
+  "append code": "后置代码"
 }

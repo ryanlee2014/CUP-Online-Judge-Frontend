@@ -228,5 +228,8 @@
   "inviter": "Invite User",
   "rest valid time": "Rest of valid time",
   "valid date": "Expiry Date",
-  "select file": "Select File"
+  "select file": "Select File",
+  "problem file": "Problem Data",
+  "prepend code": "Prepend Code",
+  "append code": "Append Code"
 }
