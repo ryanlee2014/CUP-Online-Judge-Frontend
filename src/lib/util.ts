@@ -1,10 +1,15 @@
 import { notUndefinedOrNull } from "../store/util/index";
-
-const $ = require("jquery");
+import jquery from "jquery";
+declare global {
+    interface Window {
+        [id: string]: any
+    }
+}
+const $: any = jquery;
 const jQuery = $;
 window.jQuery = window.$ = $;
 require("../../semantic/semantic-ui/semantic.min");
-function binding_method(homepage, finished) {
+function binding_method(homepage?: boolean, finished?: boolean) {
     // fix menu when passed
     if ($(".fixed.menu").html()) {
         $(".masthead")
@@ -66,7 +71,7 @@ function binding_method(homepage, finished) {
         });
     $(".message .close")
         .off("click")
-        .on("click", function () {
+        .on("click", function (this: any) {
             $(this)
                 .closest(".message")
                 .transition("fade")
@@ -75,8 +80,8 @@ function binding_method(homepage, finished) {
 
 }
 
-export default {
-    detectIP: function (tmp) {
+class Util {
+    detectIP (tmp: any) {
         let ip;
         if (tmp.ip && !tmp.intranet_ip) {
             tmp.intranet_ip = tmp.ip;
@@ -258,11 +263,12 @@ export default {
             tmp.place = "未知";
         }
         return tmp.place;
-    },
-    init: function (homepage, finished) {
+    }
+
+    init (homepage?: boolean, finished?: boolean) {
         $("body, html").animate({ scrollTop: 0 }, 0);
         jQuery.event.special.touchstart = {
-            setup: function (_, ns, handle) {
+            setup: function (_: any, ns: string | string[], handle: any) {
                 if (ns.includes("noPreventDefault")) {
                     this.addEventListener("touchstart", handle, { passive: false });
                 }
@@ -314,11 +320,11 @@ export default {
 
             Samples.utils = {
                 // Adapted from http://indiegamr.com/generate-repeatable-random-numbers-in-js/
-                srand: function (seed) {
+                srand: function (seed: any) {
                     this._seed = seed;
                 },
 
-                rand: function (min, max) {
+                rand: function (min: any, max: any) {
                     let seed = this._seed;
                     min = min === undefined ? 0 : min;
                     max = max === undefined ? 1 : max;
@@ -326,7 +332,7 @@ export default {
                     return min + (this._seed / 233280) * (max - min);
                 },
 
-                numbers: function (config) {
+                numbers: function (config: any) {
                     let cfg = config || {};
                     let min = cfg.min || 0;
                     let max = cfg.max || 1;
@@ -351,7 +357,7 @@ export default {
                     return data;
                 },
 
-                labels: function (config) {
+                labels: function (config: any) {
                     let cfg = config || {};
                     let min = cfg.min || 0;
                     let max = cfg.max || 100;
@@ -370,7 +376,7 @@ export default {
                     return values;
                 },
 
-                months: function (config) {
+                months: function (config: any) {
                     let cfg = config || {};
                     let count = cfg.count || 12;
                     let section = cfg.section;
@@ -385,11 +391,11 @@ export default {
                     return values;
                 },
 
-                color: function (index) {
+                color: function (index: any) {
                     return COLORS[index % COLORS.length];
                 },
 
-                transparentize: function (color, opacity) {
+                transparentize: function (color: any, opacity: any) {
                     let alpha = opacity === undefined ? 0.5 : 1 - opacity;
                     return Color(color).alpha(alpha).rgbString();
                 }
@@ -409,8 +415,8 @@ export default {
         }
         binding_method(homepage, finished);
         this.bindDropdown();
-    },
-    bindDropdown: function () {
+    }
+    bindDropdown () {
         if ($(".ui.accordion").html()) {
             $(".ui.accordion")
                 .accordion({
@@ -450,7 +456,7 @@ export default {
         }
         $(".message .close")
             .off("click")
-            .on("click", function () {
+            .on("click", function (this: any) {
                 $(this)
                     .closest(".message")
                     .transition("fade")
@@ -461,18 +467,19 @@ export default {
             , hoverable: true,
             popup: ".flowing.popup.dropdown_menu_group"
         });
-    },
-    initToTopButton: function () {
+    }
+
+    initToTopButton () {
         (function (a) {
-            a.fn.scrollToTop = function (c) {
+            a.fn.scrollToTop = function (c: any) {
                 let d = { speed: 800 };
                 c && a.extend(d, { speed: c });
-                return this.each(function () {
+                return this.each(function (this: any) {
                     let b = a(this);
-                    a(window).scroll(function () {
+                    a(window).scroll(function (this: any) {
                         100 < a(this).scrollTop() ? b.fadeIn() : b.fadeOut();
                     });
-                    b.click(function (b) {
+                    b.click(function (b: { preventDefault: () => void; }) {
                         b.preventDefault();
                         a("body, html").animate({ scrollTop: 0 }, d.speed);
                     });
@@ -487,8 +494,9 @@ export default {
                 }, 50);
             });
         });
-    },
-    getAvatarURL (state) {
+    }
+
+    getAvatarURL (state: any) {
         const hasAvatar = !!state.avatar;
         const avatarUrl = typeof state.avatarUrl === "string" ? state.avatarUrl.trim() : "";
         if (hasAvatar && avatarUrl.length === 0) {
@@ -500,8 +508,9 @@ export default {
         else {
             return require("@/static/image/default-user.png");
         }
-    },
-    hasAvatarURL (state) {
+    }
+
+    hasAvatarURL (state: any) {
         const hasAvatar = !!state.avatar;
         const avatarUrl = typeof state.avatarUrl === "string" ? state.avatarUrl.trim() : "";
         if (hasAvatar && avatarUrl.length === 0) {
@@ -510,8 +519,9 @@ export default {
         else {
             return avatarUrl.length > 0;
         }
-    },
-    stringify (target) {
+    }
+
+    stringify (target: any) {
         if (notUndefinedOrNull(target)) {
             return target + "";
         }
@@ -519,4 +529,6 @@ export default {
             return "";
         }
     }
-};
+}
+
+export default new Util();

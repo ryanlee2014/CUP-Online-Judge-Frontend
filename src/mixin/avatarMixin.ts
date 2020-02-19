@@ -5,11 +5,11 @@ const { getAvatarURL, hasAvatarURL } = util;
 
 @Component
 export default class AvatarMixin extends Vue {
-    getAvatarURL (...arg: [any?]) {
+    getAvatarURL (...arg: any) {
         return getAvatarURL.apply(this, arg);
     }
 
-    hasAvatarURL (...arg: [any?]) {
+    hasAvatarURL (...arg: any) {
         return hasAvatarURL.apply(this, arg);
     }
 }

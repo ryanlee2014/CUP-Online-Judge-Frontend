@@ -53,8 +53,10 @@ import aceThemeSelector from "../../components/submit/codeEditor/aceComponent/ac
 import monacoEditor from "../../components/submit/codeEditor/monacoEditor.vue";
 import monacoThemeSelector from "../../components/submit/codeEditor/monacoComponent/monacoThemeSelector.vue";
 import mixins from "../../mixin/init";
-import { Mixins, Component, Watch } from "vue-property-decorator";
-import _ from "lodash";
+import { Component, Mixins, Watch } from "vue-property-decorator";
+import { Debounce } from "@/module/Decorator/method";
+import AwaitLock from "await-lock";
+import Emitter = SocketIOClient.Emitter;
 const langMap = {
     "c11": 0,
     "cpp17": 1,
@@ -103,6 +105,11 @@ export default class Whiteboard extends Mixins(mixins) {
     editorPackage = true;
     fontSize = "16";
     selected_language = 0;
+    $socket!: Emitter;
+    sockets: any;
+    remoteData = false;
+    lock = new AwaitLock();
+
     @Watch("editorPackage")
     onEditorPackageChange (val?: string) {
         if (val) {
@@ -114,24 +121,55 @@ export default class Whiteboard extends Mixins(mixins) {
     }
 
     @Watch("code")
-    onCodeChange (val?: string) {
+    async onCodeChange (val?: string) {
         if (val) {
             this.detectLanguageDebouncer();
+            await this.lock.acquireAsync();
+            if (!this.remoteData && this.$store.getters.admin) {
+                this.sendChanges(val!);
+            }
+            else {
+                this.remoteData = false;
+            }
+            this.lock.release();
         }
+    }
+
+    @Debounce(500)
+    sendChanges (val: string) {
+        this.$socket.emit("whiteboard", {
+            request: "text",
+            content: val
+        });
     }
 
     mounted () {
         document.title = `Whiteboard -- ${document.title}`;
+        this.$socket.emit("whiteboard", {
+            request: "register"
+        });
+
+        this.sockets.subscribe("whiteboard", async (data: any) => {
+            const { from, type } = data;
+            if (type === "content" && from !== this.$store.getters.user_id) {
+                await this.lock.acquireAsync();
+                this.remoteData = true;
+                this.lock.release();
+                this.code = data.content;
+            }
+        });
     }
 
+    beforeDestroy () {
+        this.sockets.unsubscribe("whiteboard");
+    }
+
+    @Debounce(100)
     detectLanguageDebouncer () {
-        const that = this;
-        (_.debounce(() => {
-            const detectedLang = detectLang(that.code, Object.values(langMap));
-            if (that.selected_language !== detectedLang) {
-                that.selected_language = detectedLang;
-            }
-        }, 100))();
+        const detectedLang = detectLang(this.code, Object.values(langMap));
+        if (this.selected_language !== detectedLang) {
+            this.selected_language = detectedLang;
+        }
     }
 }
 </script>

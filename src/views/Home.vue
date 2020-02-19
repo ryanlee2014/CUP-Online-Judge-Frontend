@@ -154,11 +154,7 @@ import InitMixin from "../mixin/init";
 import dayjs from "dayjs";
 import jQuery from "jquery";
 const $: any = jQuery;
-declare global {
-    interface Window {
-       [id: string]: any
-    }
-}
+
 @Component
 export default class Home extends Mixins(InitMixin) {
     mounted () {

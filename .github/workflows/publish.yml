@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - typescript
+    paths-ignore:
+      - 'dist/**'
 
 jobs:
   publish:
@@ -17,6 +19,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         name: Checkout code
+        with:
+          persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal token
+          fetch-depth: 0 # otherwise, you will failed to push refs to dest repo
 
       - name: Build env
         run: |
@@ -25,8 +30,6 @@ jobs:
       - name: Use Node.js environment
         if: env.NEED_BUILD == 'true'
         uses: actions/setup-node@v1
-        env:
-          NEED_BUILD: "`cat NEED_BUILD`"
         with:
           node-version: ${{ matrix.node-version }}
 
@@ -35,6 +38,18 @@ jobs:
         run: |
           npm i
           npm run modern
+
+      - name: Update dist folder to current repository
+        if: env.NEED_BUILD == 'true'
+        run: |
+          git config --local user.email "gxlhybh@gmail.com"
+          git config --local user.name "Ryan Lee"
+          git add dist
+          git commit -m "Auto commit version $(cat public/VERSION)"
+          git push -f https://ryanlee2014:$GITHUB_TOKEN@github.com/ryanlee2014/CUP-Online-Judge-NG-FrontEnd.git typescript
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_ACTIONS_TOKEN }}
+
 
       - uses: actions/checkout@v2
         name: Checkout CDN Repository
