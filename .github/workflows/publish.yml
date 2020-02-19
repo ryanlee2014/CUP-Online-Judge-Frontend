@@ -36,14 +36,6 @@ jobs:
           npm i
           npm run modern
 
-      - name: Push current change to repository
-        run: |
-          git config --local user.email "gxlhybh@gmail.com"
-          git config --local user.name "Ryan Lee"
-          git add dist
-          git commit -m "Github Actions build:`TZ=UTC-8 date +'%Y-%m-%d %H:%M:%S'`"
-          git push https://ryanlee2014:$GITHUB_TOKEN@github.com/ryanlee2014/CUP-Online-Judge-NG-FrontEnd.git typescript
-
       - uses: actions/checkout@v2
         name: Checkout CDN Repository
         with:
