@@ -540,6 +540,15 @@ const router = new Router({
             }
         },
         {
+            path: "/admin/judge/compile",
+            name: "Compile settings",
+            component: () => import("./views/admin/judge/compile.vue"),
+            meta: {
+                auth: true,
+                admin: true
+            }
+        },
+        {
             path: "/admin/contest/add",
             name: "Add contest",
             component: () => import("./views/admin/contest/add.vue"),

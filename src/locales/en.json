@@ -234,5 +234,7 @@
   "append code": "Append Code",
   "upload problem": "Upload Problem",
   "code compare": "Code Comparision",
-  "source code": "Source Code"
+  "source code": "Source Code",
+  "tutorial": "Tutorial",
+  "compile arguments": "Compilation Arguments"
 }

@@ -234,5 +234,7 @@
   "append code": "サフィックスコード",
   "upload problem": "質問をアップロード",
   "code compare": "コード比較",
-  "source code": "ソースコード"
+  "source code": "ソースコード",
+  "tutorial": "チュートリアル",
+  "compile arguments": "コンパイルパラメータ"
 }

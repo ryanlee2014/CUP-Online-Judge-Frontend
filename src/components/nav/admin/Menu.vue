@@ -79,6 +79,10 @@
                         <i class="check double icon"></i>
                         {{$t("rejudge manage")}}
                     </router-link>
+                    <router-link class="item" exact-active-class="active" to="/admin/judge/compile">
+                        <i class="check icon"></i>
+                        {{$t("compile arguments")}}
+                    </router-link>
                 </div>
             </div>
             <div class="ui dropdown item">
