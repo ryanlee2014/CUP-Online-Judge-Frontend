@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - typescript
-    paths-ignore:
-      - 'dist/**'
     paths:
       - 'package.json'
       - 'src/**'
