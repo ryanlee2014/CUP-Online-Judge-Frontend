@@ -237,5 +237,12 @@
   "code compare": "代码比较",
   "source code": "源代码",
   "compile arguments": "编译参数",
-  "tutorial": "题解"
+  "tutorial": "题解",
+  "system management panel": "系统管理面板",
+  "loginlog": "登录记录",
+  "login time": "登录时间",
+  "browser name": "浏览器",
+  "browser version": "浏览器版本",
+  "os name": "操作系统",
+  "os version": "操作系统版本"
 }

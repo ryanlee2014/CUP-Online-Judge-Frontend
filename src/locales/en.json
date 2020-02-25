@@ -236,5 +236,12 @@
   "code compare": "Code Comparision",
   "source code": "Source Code",
   "tutorial": "Tutorial",
-  "compile arguments": "Compilation Arguments"
+  "compile arguments": "Compilation Arguments",
+  "system management panel": "System Management Panel",
+  "loginlog": "Login log",
+  "login time": "Login time",
+  "browser name": "Browser Name",
+  "browser version": "Browser Version",
+  "os name": "OS Name",
+  "os version": "OS Version"
 }

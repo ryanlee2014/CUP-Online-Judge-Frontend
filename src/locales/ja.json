@@ -236,5 +236,12 @@
   "code compare": "コード比較",
   "source code": "ソースコード",
   "tutorial": "チュートリアル",
-  "compile arguments": "コンパイルパラメータ"
+  "compile arguments": "コンパイルパラメータ",
+  "system management panel": "System Management Panel",
+  "loginlog": "ログイン記録",
+  "login time": "ログイン時間",
+  "browser name": "ブラウザ",
+  "browser version": "ブラウザバージョン",
+  "os name": "オペレイティングシステム",
+  "os version": "オペレイティングシステムバージョン"
 }
