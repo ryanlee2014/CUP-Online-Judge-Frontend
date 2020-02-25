@@ -10,28 +10,31 @@
                 </div>
             </div>
             <div class="row">
-                <div class="eight wide column">
-                    <div class="ui header">
-                        User ID: <router-link :to="`/user/${this.leftUserID}`">{{this.leftUserID}}</router-link> Solution ID: {{this.leftSolutionID}}
-                    </div>
-                    <div class="ui content">
-                        <p><b>Date: </b>{{dayjs(this.left.code.in_date).format("YYYY-MM-DD HH:mm:ss")}}</p>
-                        <p><b>Language: </b> {{this.left.language}}&nbsp;&nbsp;<b>Memory: </b> {{this.left.memory}}KB&nbsp;&nbsp;<b>Time: </b> {{this.left.time}}ms</p>
-                        <p><b>Code Length: </b> {{this.left.length}}B&nbsp;&nbsp;<b>Code length without space: </b> {{this.left.trimlength}}B</p>
-                        <p :class="this.left.judge_color"><b>Result: </b> <i :class="`${this.left.icon} icon`"></i>{{this.left.result}}</p>
-                    </div>
-                </div>
-                <div class="eight wide column">
-                    <div class="ui header">
-                        User ID: <router-link :to="`/user/${this.rightUserID}`">{{this.rightUserID}}</router-link> Solution ID: {{this.rightSolutionID}}
-                    </div>
-                    <div class="ui content">
-                        <p><b>Date: </b>{{dayjs(this.right.code.in_date).format("YYYY-MM-DD HH:mm:ss")}}</p>
-                        <p><b>Language: </b> {{this.right.language}}&nbsp;&nbsp;<b>Memory: </b> {{this.right.memory}}KB&nbsp;&nbsp;<b>Time: </b> {{this.right.time}}ms</p>
-                        <p><b>Code Length: </b> {{this.right.length}}B&nbsp;&nbsp;<b>Code length without space: </b> {{this.right.trimlength}}B</p>
-                        <p :class="this.right.judge_color"><b>Result: </b> <i :class="`${this.right.icon} icon`"></i>{{this.right.result}}</p>
-                    </div>
-                </div>
+                    <CodeInfo wrapper-class="eight wide column"
+                    :user-id="leftUserID"
+                    :solution-id="leftSolutionID"
+                    :date="left.code.in_date"
+                    :language="left.language"
+                    :memory="left.memory"
+                    :time="left.time"
+                    :code-length="left.length"
+                    :trim-length="left.trimlength"
+                    :judge-color="left.judge_color"
+                    :icon="left.icon"
+                    :result="left.result"></CodeInfo>
+                <CodeInfo wrapper-class="eight wide column"
+                :user-id="rightUserID"
+                :solution-id="rightSolutionID"
+                :date="right.code.in_date"
+                :language="right.language"
+                :memory="right.memory"
+                :time="right.time"
+                :code-length="right.length"
+                :trim-length="right.trimlength"
+                :judge-color="right.judge_color"
+                :icon="right.icon"
+                :result="right.result">
+                </CodeInfo>
             </div>
             <div class="row">
                 <div id="container" style="min-width:100%;height:600px;border:1px solid #ccc">
@@ -49,19 +52,28 @@ import mixins from "../../mixin/init";
 import languageMap from "../../lib/constants/monaco-editor/language-map";
 import dayjs, { Dayjs } from "dayjs";
 import { Mixins, Component } from "vue-property-decorator";
+import CodeInfo from "@/components/code/code-info.vue";
 import editor = monaco.editor;
 import IDiffEditor = editor.IDiffEditor;
 interface ICode {
     code: {
         // eslint-disable-next-line camelcase
         in_date: Dayjs,
-        source?: string
+        source?: string,
     },
+    language: string,
+    memory: string,
+    time: string,
+    judge_color: string,
+    result: string,
+    icon: string,
     length?: number,
     trimlength?: number
 }
 
-@Component
+@Component({
+    components: { CodeInfo }
+})
 export default class CodeDiff extends Mixins(mixins) {
     diffEditor?: IDiffEditor;
     problem_id = 0;
@@ -76,12 +88,24 @@ export default class CodeDiff extends Mixins(mixins) {
     left: ICode = {
         code: {
             in_date: dayjs()
-        }
+        },
+        language: "",
+        memory: "",
+        judge_color: "",
+        time: "",
+        icon: "",
+        result: ""
     };
     right: ICode = {
         code: {
             in_date: dayjs()
-        }
+        },
+        language: "",
+        memory: "",
+        time: "",
+        judge_color: "",
+        icon: "",
+        result: ""
     };
     dayjs = dayjs;
     async mounted () {

@@ -51,8 +51,8 @@ jobs:
           git add --all
           git commit -m "deploy `TZ=UTF-8 date +'%Y-%m-%d %H:%M:%S'`"
           git tag "v`cat VERSION`"
-          git push -f https://ryanlee2014:$GITHUB_TOKEN@github.com/ryanlee2014/CUP-Online-Judge-Frontend-Local
-          git push --tags https://ryanlee2014:$GITHUB_TOKEN@github.com/ryanlee2014/CUP-Online-Judge-Frontend-Local
+          git push -f https://ryanlee2014:$GITHUB_TOKEN@github.com/ryanlee2014/CUP-Online-Judge-Frontend-Local.git master
+          git push --tags https://ryanlee2014:$GITHUB_TOKEN@github.com/ryanlee2014/CUP-Online-Judge-Frontend-Local.git
 
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_ACTIONS_TOKEN }}
