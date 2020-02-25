@@ -6,6 +6,10 @@ on:
       - typescript
     paths-ignore:
       - 'dist/**'
+    paths:
+      - 'package.json'
+      - 'src/**'
+      - 'public/**'
 
 jobs:
   publish:
