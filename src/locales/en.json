@@ -243,5 +243,7 @@
   "browser name": "Browser Name",
   "browser version": "Browser Version",
   "os name": "OS Name",
-  "os version": "OS Version"
+  "os version": "OS Version",
+  "comments": "Comments",
+  "reply": "Reply"
 }

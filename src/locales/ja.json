@@ -243,5 +243,7 @@
   "browser name": "ブラウザ",
   "browser version": "ブラウザバージョン",
   "os name": "オペレイティングシステム",
-  "os version": "オペレイティングシステムバージョン"
+  "os version": "オペレイティングシステムバージョン",
+  "comments": "コメント",
+  "reply": "返事"
 }

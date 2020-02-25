@@ -33,12 +33,8 @@ jobs:
           npm run modern:local
 
       - name: Checkout repository to store local distribution
-        uses: actions/checkout@v2
-        with:
-          repository: ryanlee2014/CUP-Online-Judge-Frontend-Local
-          path: local_build
-          persist-credential: false
-          fetch-depth: 0
+        run: |
+          git clone https://github.com/ryanlee2014/CUP-Online-Judge-Frontend-Local.git local_build
 
       - name: Move file to repository
         run: cp -r dist/* local_build/

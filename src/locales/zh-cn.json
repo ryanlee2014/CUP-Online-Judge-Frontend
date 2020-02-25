@@ -244,5 +244,7 @@
   "browser name": "浏览器",
   "browser version": "浏览器版本",
   "os name": "操作系统",
-  "os version": "操作系统版本"
+  "os version": "操作系统版本",
+  "comments": "评论",
+  "reply": "回复"
 }

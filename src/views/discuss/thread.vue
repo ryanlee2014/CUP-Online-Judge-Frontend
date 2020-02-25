@@ -1,6 +1,6 @@
 <template>
     <div class="ui container padding">
-        <h2 class="ui dividing header">Discuss</h2>
+        <h2 class="ui dividing header">{{$t("discuss")}}</h2>
         <div class="ui breadcrumb">
             <router-link class="section" to="/discuss">讨论主页</router-link>
             <i class="right angle icon divider"></i>
@@ -9,7 +9,7 @@
         <h1>{{thread_head.title}}</h1>
         <MainContent :content="content" :id="id" :owner="owner"
                      :thread_head="thread_head"></MainContent>
-        <h3 class="ui dividing header">Comments</h3>
+        <h3 class="ui dividing header">{{$t("comments")}}</h3>
         <div class="ui comments">
             <div :key="key" class="comment" v-for="(row,key) in reply">
                 <div class="avatar">
