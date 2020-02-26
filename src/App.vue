@@ -13,8 +13,8 @@
 </template>
 <script lang="ts">
 import Vue from "vue";
-import Navbar from "./components/nav/Navbar.vue";
-import AdminNavbar from "./components/nav/AdminNavbar.vue";
+import Navbar from "./components/navigator/Navbar.vue";
+import AdminNavbar from "./components/navigator/AdminNavbar.vue";
 import Bottom from "./components/bottom/Bottom.vue";
 import util from "./lib/util";
 import { mapGetters } from "vuex";

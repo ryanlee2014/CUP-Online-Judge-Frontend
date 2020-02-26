@@ -245,5 +245,7 @@
   "os name": "オペレイティングシステム",
   "os version": "オペレイティングシステムバージョン",
   "comments": "コメント",
-  "reply": "返事"
+  "reply": "返事",
+  "contest mode": "コンテストモード",
+  "result statistics": "結果の統計"
 }
