@@ -9,11 +9,11 @@
 <i18n>
     {
         "zh-cn": {
-            "access limit": "访问限制"
+            "access limit": "访问限制",
             "context": "根据管理员设置的策略，本次contest请使用以下地址访问"
         },
         "en": {
-            "access limit": "Access Limitation"
+            "access limit": "Access Limitation",
             "context": "According to current system policy setting by admin, you should access this page by using this url:"
         },
         "ja": {
