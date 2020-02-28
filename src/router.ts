@@ -610,6 +610,11 @@ const router = new Router({
             component: () => import("./views/system/github_repo_info.vue")
         },
         {
+            path: "/system/compile_arguments",
+            name: "Compile Arguments",
+            component: () => import("./views/system/compile_arguments.vue")
+        },
+        {
             path: "/forbidden/privilege",
             name: "No privilege",
             component: () => import("./views/error/noprivilege.vue")

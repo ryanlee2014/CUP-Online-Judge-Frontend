@@ -50,6 +50,10 @@ Author: [Ryan Lee(李昊元)](/user/2016011253)
 - Python:CPython/PyPy
 ## 私のコンパイル環境は何ですか？
 
+詳しいコンパイルパラメーターはこのリンクをチェックしてください
+
+[コンパイラーパラメーター](/system/compile_arguments)
+
 | コンパイラ（言語） | コマンド                                                                                                        |
 |:------------------:| -------------------------------------------------------------------------------------------------------------- |
 | GCC(C/C++)         | `gcc/g++ -fmax-errors=10 -fno-asm -Wall -O2 -lm --static -std=c++${version} -DONLINE_JUDGE -o Main Main.cc `   |

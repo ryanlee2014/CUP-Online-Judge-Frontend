@@ -47,6 +47,8 @@ This system is based on the latest version of the Chrome browser for front-end d
 - Python:CPython/PyPy
 ## What is my compiling environment?
 
+To have further information of compiler arguments for current judger please go to [Compiler Arguments](/system/compile_arguments)
+
 | Compiler(Language) | Command                                                                                                        |
 |:------------------:| -------------------------------------------------------------------------------------------------------------- |
 | GCC(C/C++)         | `gcc/g++ -fmax-errors=10 -fno-asm -Wall -O2 -lm --static -std=c++${version} -DONLINE_JUDGE -o Main Main.cc `   |

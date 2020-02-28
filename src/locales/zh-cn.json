@@ -248,5 +248,6 @@
   "comments": "评论",
   "reply": "回复",
   "contest mode": "竞赛模式",
-  "result statistics": "结果统计"
+  "result statistics": "结果统计",
+  "compiler arguments": "编译指令"
 }

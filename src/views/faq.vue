@@ -1,6 +1,6 @@
 <template>
     <div class="ui main container">
-        <h1 class="ui dividing header">{{$t("faq")}}(Version:2019/04/11)</h1>
+        <h1 class="ui dividing header">{{$t("faq")}}(Version:2020/02/28)</h1>
         <div class="markdown target" v-html="$t(`${$i18n.locale}-contents`)"></div>
     </div>
 </template>

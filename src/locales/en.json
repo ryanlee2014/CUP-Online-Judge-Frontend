@@ -247,5 +247,6 @@
   "comments": "Comments",
   "reply": "Reply",
   "contest mode": "Contest Mode",
-  "result statistics": "Result Statistics"
+  "result statistics": "Result Statistics",
+  "compiler arguments": "Compiler Arguments"
 }

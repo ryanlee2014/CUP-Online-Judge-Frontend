@@ -1,7 +1,7 @@
 <template>
     <div class="ui container padding">
         <h2 class="ui dividing header">Version Control</h2>
-        <div class="ui grid">
+        <div class="ui grid" style="margin-left: 0">
             <div class="row">
                 <h3 class="ui header">
                     前端组件

@@ -30,12 +30,9 @@ import { Component, Mixins } from "vue-property-decorator";
 import InitMixin from "../../../mixin/init";
 import _ from "lodash";
 import languageNameConfig from "@/type/index.json";
+import { ICompileArguments } from "@/types/judge/compile";
 
 const languageName = languageNameConfig.language_name.local;
-
-interface ICompileArguments {
-    [id: string]: string[]
-}
 
 interface ICompileEditArguments {
     [id: string]: string
