@@ -269,7 +269,7 @@ export default class Submit extends Mixins(mixins) {
                 let language = -1;
                 if (typeof sourceCode !== "string") {
                     language = sourceCode.language;
-                    sourceCode = sourceCode.source;
+                    sourceCode = sourceCode.source_code;
                 }
                 const iseditor = data.editor;
                 const isadmin = data.isadmin;
