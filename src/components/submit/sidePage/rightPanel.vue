@@ -159,6 +159,7 @@ export default class RightPanel extends Vue {
                 return {};
             }
         }) append!: any;
+        @Prop({ default: null }) source_code_language!: number | null;
         @Prop({ default: false }) iscontest!: boolean;
         @Prop({ default: "" }) judgeInfoText!: string;
         @Prop({ default: () => [] }) lang_list!: any[];
@@ -174,6 +175,13 @@ export default class RightPanel extends Vue {
         @Prop({ default: false }) submitDisabled!: boolean;
         @Prop({ default: false }) hide_warning!: boolean;
         @Prop({ default: "" }) source_code!: string;
+
+        @Watch("source_code_language")
+        onSourceCodeLanguageChanged (val: any) {
+            if (!isNaN(val)) {
+                this.selected_language = val;
+            }
+        }
 
         @Watch("selected_language")
         onSelectedLanguageChanged (val: any) {

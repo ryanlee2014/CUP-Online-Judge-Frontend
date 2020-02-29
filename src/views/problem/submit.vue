@@ -45,6 +45,7 @@
                              :submitDisabled="submitDisabled"
                              :switch_screen="switch_screen" :time="time" :title="temp_title" :uploader="uploader"
                              :judge-info-text="judgeInfoText"
+                             :source_code_language="source_code_language"
                              v-show="!single_page">
             </sideProblemView>
         </div>
@@ -144,6 +145,7 @@ export default class Submit extends Mixins(mixins) {
     submitDisabled= false;
     resume_time= 0;
     finished= false;
+    source_code_language: any = null;
     created () {
         this.normal_problem = !this.$route.params.contest_id && !this.$route.params.topic_id;
     }
@@ -263,7 +265,12 @@ export default class Submit extends Mixins(mixins) {
                     return;
                 }
                 const d = data.problem;
-                const sourceCode = data.source;
+                let sourceCode = data.source;
+                let language = -1;
+                if (typeof sourceCode !== "string") {
+                    language = sourceCode.language;
+                    sourceCode = sourceCode.source;
+                }
                 const iseditor = data.editor;
                 const isadmin = data.isadmin;
                 this.$store.commit("setCodeInfo", { code: sourceCode });
@@ -271,6 +278,7 @@ export default class Submit extends Mixins(mixins) {
                     temp_title: d.title,
                     problem_id: d.problem_id,
                     original_id: d.problem_id,
+                    source_code_language: language,
                     iscontest: !!this.$route.params.contest_id,
                     description: d.description,
                     original_content: {
