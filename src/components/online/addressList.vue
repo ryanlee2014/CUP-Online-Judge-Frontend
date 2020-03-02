@@ -4,9 +4,9 @@
         <table class='ui padded celled selectable table' id='cs' width=90%>
             <thead>
             <tr align=center class=toprow>
-                <th onclick="sortTable('cs', 0, 'float');" width=20%>ID</th>
-                <th width=20%>Name</th>
-                <th width=60%>href</th>
+                <th onclick="sortTable('cs', 0, 'float');" width=20%>{{$t("user_id")}}</th>
+                <th width=20%>{{$t("nick")}}</th>
+                <th width=60%>{{$t("link")}}</th>
             </tr>
             </thead>
             <tbody id="online_user_table" refresh="true">

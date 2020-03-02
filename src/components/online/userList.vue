@@ -3,9 +3,9 @@
         <table class="ui padded celled selectable table" id="name_list">
             <thead>
             <tr align=center class="toprow">
-                <th>user_id</th>
-                <th>name</th>
-                <th width=10%>Position</th>
+                <th>{{$t("user_id")}}</th>
+                <th>{{$t("nick")}}</th>
+                <th width=10%>{{$t("position")}}</th>
             </tr>
             </thead>
             <tbody id="user_list_table" refresh="true">

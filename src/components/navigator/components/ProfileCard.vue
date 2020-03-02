@@ -10,29 +10,29 @@
                 <div class='column'>
                     <div class='ui link list'>
                         <router-link class="item" to="/user/self/info/modify">
-                            <i class='edit icon'></i>修改帐号
+                            <i class='edit icon'></i>{{$t("modify account")}}
                         </router-link>
                         <br>
                         <router-link to="/myinfo" class="item">
-                            <i class='archive icon'></i>个人信息
+                            <i class='archive icon'></i>{{$t("personal information")}}
                         </router-link>
                         <br>
                         <router-link :to="`/status/?user_id=${user_id}`" class="item">
-                            <i class='send icon'></i>我的提交
+                            <i class='send icon'></i>{{$t("my submission")}}
                         </router-link>
                         <br>
                         <router-link class="item" to="/contest?myContest">
-                            <i class='book icon'></i>我的竞赛&作业
+                            <i class='book icon'></i>{{$t("my contest&homework")}}
                         </router-link>
                         <br>
                         <a @click.prevent="logout" class='logout item'><i
-                            class='remove user icon'></i>注销</a>&nbsp;<br>
+                            class='remove user icon'></i>{{$t("logout")}}</a>&nbsp;<br>
                         <router-link class="item" to="/admin">
-                            <i class='write icon'></i>管理
+                            <i class='write icon'></i>{{$t("admin panel")}}
                         </router-link>
                         &nbsp;<br>
                         <router-link class="item" to="/extra/broadcast" v-if="admin"><i
-                            class='send outline icon'></i>在线用户推送
+                            class='send outline icon'></i>{{$t("online push")}}
                         </router-link>
                     </div>
                 </div>

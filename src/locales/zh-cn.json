@@ -73,6 +73,7 @@
   "language": "语言",
   "last login": "上次登录",
   "latest post": "最新回复",
+  "post new discussion": "创建新帖",
   "length": "长度",
   "limit classroom": "教室访问限制",
   "limit hostname": "域名访问限制",
@@ -249,5 +250,11 @@
   "reply": "回复",
   "contest mode": "竞赛模式",
   "result statistics": "结果统计",
-  "compiler arguments": "编译指令"
+  "compiler arguments": "编译指令",
+  "link": "链接",
+  "position": "位置",
+  "contest set": "竞赛作业集",
+  "contest problem set": "竞赛问题集",
+  "running": "运行",
+  "now": "现在"
 }

@@ -6,7 +6,7 @@
         <LimitHostname :content="limit_content" v-if="mode === 4"></LimitHostname>
         <div class="padding" v-if="mode === 0">
             <h2 class="ui dividing header">
-                Contest Problem Set
+                {{$t("contest problem set")}}
             </h2>
             <div class="ui grid">
                 <div class="row">

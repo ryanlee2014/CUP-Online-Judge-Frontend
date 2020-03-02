@@ -1,7 +1,7 @@
 <template>
     <div class="ui padding container contest">
         <h2 class="ui dividing header">
-            Contest Set
+            {{$t("contest set")}}
         </h2>
         <div class="ui top attached tabular menu">
             <a :class="(current_column === 'contest' ? 'active':'') + ' item'"

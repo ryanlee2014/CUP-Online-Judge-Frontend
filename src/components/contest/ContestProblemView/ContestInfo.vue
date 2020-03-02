@@ -1,21 +1,21 @@
 <template>
     <div class="ui raised segment">
         <h1></h1>
-        <h2 class="ui header" style="text-align:center"><i class="star outline icon"></i>Contest {{cid}}</h2>
+        <h2 class="ui header" style="text-align:center"><i class="star outline icon"></i>{{$t("contest")}} {{cid}}</h2>
         <h2 class="ui header" style="text-align:center">{{title}}</h2>
         <p>{{description}}</p>
-        <!--2018年 中国石油大学（北京）团委 不发ICPC/CCPC奖学金-->
-        <div style="text-align: center;">Start Time {{start_time.format("YYYY-MM-DD HH:mm:ss")}}
-            <br> &nbsp;Now&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span id=nowdate>{{now.format("YYYY-MM-DD HH:mm:ss")}}</span>
-            <br>End Time&nbsp;&nbsp;{{end_time.format("YYYY-MM-DD HH:mm:ss")}}
+        <!--2018 2019 2020年 中国石油大学（北京）团委 不发ICPC/CCPC奖学金-->
+        <div style="text-align: center;">{{$t("start time")}} {{start_time.format("YYYY-MM-DD HH:mm:ss")}}
+            <br> &nbsp;{{$t("now")}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span id=nowdate>{{now.format("YYYY-MM-DD HH:mm:ss")}}</span>
+            <br>{{$t("end time")}}&nbsp;{{end_time.format("YYYY-MM-DD HH:mm:ss")}}
         </div>
         <div :class="'ui top right attached label ' + (private_contest ?'red':'green')">{{ private_contest
-            ?'Private':'Public'}}
+            ?$t("private"):$t("public")}}
         </div>
         <div :class="'ui top left attached ' + (now.isAfter(end_time)?'red':now.isBefore(start_time)?'grey':'green') + ' label'">
-            <span class="red" v-if="now.isAfter(end_time)">Ended</span>
+            <span class="red" v-if="now.isAfter(end_time)">{{$t("end")}}</span>
             <span class="red" v-else-if="now.isBefore(start_time)">Pending</span>
-            <span class="green" v-else>Running</span></div>
+            <span class="green" v-else>{{$t("running")}}</span></div>
         <div style="text-align: center;">
             <div class="row padding">
                 <div class="ui buttons mini">

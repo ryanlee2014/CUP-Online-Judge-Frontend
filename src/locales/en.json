@@ -248,5 +248,18 @@
   "reply": "Reply",
   "contest mode": "Contest Mode",
   "result statistics": "Result Statistics",
-  "compiler arguments": "Compiler Arguments"
+  "compiler arguments": "Compiler Arguments",
+  "modify account": "Modify my account",
+  "personal information": "Personal Info",
+  "my submission": "My Submission",
+  "my contest&homework": "My Contest&Homework",
+  "logout": "Log out",
+  "admin panel": "Admin Panel",
+  "online push": "Online Push",
+  "link": "Link",
+  "position": "Position",
+  "post new discussion": "Post",
+  "contest set": "Contest Set",
+  "contest problem set": "Contest Problem Set",
+  "now": "Now"
 }

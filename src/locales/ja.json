@@ -248,5 +248,18 @@
   "reply": "返事",
   "contest mode": "コンテストモード",
   "result statistics": "結果の統計",
-  "compiler arguments": "コンパイルパラメータ"
+  "compiler arguments": "コンパイルパラメータ",
+  "modify account": "アカウント情報変更",
+  "personal information": "個人情報",
+  "my submission": "個人提出",
+  "my contest&homework": "関するコンテスト",
+  "logout": "ログアウト",
+  "admin panel": "アドミンパネル",
+  "online push": "オンラインプッシュ",
+  "link": "リンク",
+  "position": "位置",
+  "post new discussion": "新しい議論を投稿",
+  "contest set": "コンテストセット",
+  "contest problem set": "コンテスト質問セット",
+  "now": "今"
 }
