@@ -256,5 +256,12 @@
   "contest set": "竞赛作业集",
   "contest problem set": "竞赛问题集",
   "running": "运行",
-  "now": "现在"
+  "now": "现在",
+  "modify account": "修改账号",
+  "personal information": "个人信息",
+  "my submission": "我的提交",
+  "my contest&homework": "我的竞赛&作业",
+  "logout": "注销",
+  "admin panel": "管理界面",
+  "online push": "在线用户推送"
 }
