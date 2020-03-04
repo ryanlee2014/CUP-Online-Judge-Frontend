@@ -44,6 +44,7 @@ export default class ContestUserList extends Mixins(mixins) {
     mounted () {
         this.initList();
     }
+
     initList () {
         this.axios.get("/api/admin/account/teamlist")
             .then(({ data }) => {

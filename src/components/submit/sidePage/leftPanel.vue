@@ -119,7 +119,7 @@ export default class LeftPanel extends Vue {
         this.axios.get(`/api/problem/contest_list/${originalId}`)
             .then(({ data }) => {
                 if (data.status === "OK") {
-                    let contestList = data.data;
+                    const contestList = data.data;
                     _.uniqWith(contestList, _.isEqual);
                     contestList.sort((a: any, b: any) => a.contest_id - b.contest_id);
                     this.contestList = contestList;
@@ -129,6 +129,7 @@ export default class LeftPanel extends Vue {
                 }
             });
     }
+
     isPrivateContestLabel (state: any) {
         if (this.isPrivate(state)) {
             return "red";
@@ -137,9 +138,11 @@ export default class LeftPanel extends Vue {
             return "green";
         }
     }
+
     isPrivate (state: any) {
         return parseInt(state) === 1;
     }
+
     isPrivateContest (state: any) {
         if (this.isPrivate(state)) {
             return "Private";
@@ -148,6 +151,7 @@ export default class LeftPanel extends Vue {
             return "Public";
         }
     }
+
     mounted () {
         if (this.admin) {
             this.initContestListForAdministrator();

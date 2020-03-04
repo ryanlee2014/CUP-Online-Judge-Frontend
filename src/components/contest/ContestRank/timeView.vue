@@ -38,8 +38,8 @@ export default class TimeView extends Mixins(TimerMixin) {
     }
 
     format_time (second: number) {
-        let arr = ["还有", "已经过"];
-        let passed = Number(second > 0);
+        const arr = ["还有", "已经过"];
+        const passed = Number(second > 0);
         return arr[passed] + this.format_date(second);
     }
 

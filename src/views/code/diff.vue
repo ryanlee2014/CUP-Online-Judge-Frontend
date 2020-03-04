@@ -85,6 +85,7 @@ export default class CodeDiff extends Mixins(mixins) {
         this.leftSolutionID = this.$route.params.left;
         this.rightSolutionID = this.$route.params.right;
     }
+
     left: ICode = {
         code: {
             in_date: dayjs()
@@ -96,6 +97,7 @@ export default class CodeDiff extends Mixins(mixins) {
         icon: "",
         result: ""
     };
+
     right: ICode = {
         code: {
             in_date: dayjs()
@@ -107,12 +109,13 @@ export default class CodeDiff extends Mixins(mixins) {
         icon: "",
         result: ""
     };
+
     dayjs = dayjs;
     async mounted () {
         document.title = `Code compare -- ${document.title}`;
-        let leftPromise = this.axios.get(`/api/source/local/${this.$route.params.left}?raw=1`).then(({ data }) => data);
-        let rightPromise = this.axios.get(`/api/source/local/${this.$route.params.right}?raw=1`).then(({ data }) => data);
-        let [leftData, rightData] = await Promise.all([leftPromise, rightPromise]);
+        const leftPromise = this.axios.get(`/api/source/local/${this.$route.params.left}?raw=1`).then(({ data }) => data);
+        const rightPromise = this.axios.get(`/api/source/local/${this.$route.params.right}?raw=1`).then(({ data }) => data);
+        const [leftData, rightData] = await Promise.all([leftPromise, rightPromise]);
         this.leftUserID = leftData.data.user_id;
         this.left = leftData.data;
         this.left.length = this.left.code.source!.length;

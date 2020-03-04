@@ -171,10 +171,10 @@ const $: any = jquery;
 export default class Software extends Mixins(mixins) {
     mounted () {
         document.title = `Software -- ${document.title}`;
-        let userAgent = window.navigator.userAgent;
-        let $chrome = $(".header.chrome").html();
-        let $clion = $(".clion");
-        let $clionSuffix = $clion.attr("href");
+        const userAgent = window.navigator.userAgent;
+        const $chrome = $(".header.chrome").html();
+        const $clion = $(".clion");
+        const $clionSuffix = $clion.attr("href");
         if (userAgent.includes("Windows NT")) {
             $clion.attr("href", $clionSuffix + "exe");
             if (userAgent.includes("64")) {

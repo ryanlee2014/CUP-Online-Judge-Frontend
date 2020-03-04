@@ -57,6 +57,7 @@ export default class DiscussEdit extends Mixins(mixins) {
         this.article_id = this.$route.params.article_id;
         this.comment_id = this.$route.params.comment_id;
     }
+
     mounted () {
         document.title = `Edit Thread -- ${document.title}`;
         const isMainContent = !this.reply;

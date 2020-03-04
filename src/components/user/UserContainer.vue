@@ -540,8 +540,11 @@ export default class UserContainer extends Mixins(avatarMixin) {
     os = "";
     browser = "";
     blog = "";
-    recent_submission = { submission: 0,
-        accept: 0 };
+    recent_submission = {
+        submission: 0,
+        accept: 0
+    };
+
     avatar = "";
     acm_user = false;
     privilege = false;
@@ -552,6 +555,7 @@ export default class UserContainer extends Mixins(avatarMixin) {
         uva: [],
         other: []
     } as unknown as any;
+
     accept = {
         hdu: [],
         poj: [],
@@ -559,6 +563,7 @@ export default class UserContainer extends Mixins(avatarMixin) {
         local: [],
         other: []
     } as unknown as any;
+
     rank = 0;
     vjudge_rank = 0;
     last_login= 0;
@@ -589,17 +594,17 @@ export default class UserContainer extends Mixins(avatarMixin) {
                     this.error = true;
                     return;
                 }
-                let d = data;
-                let submission = d.data.submission;
-                let local: any = [];
+                const d = data;
+                const submission = d.data.submission;
+                const local: any = [];
                 let localAccept;
-                let hdu: any = [];
+                const hdu: any = [];
                 let hduAccept;
-                let poj:any = [];
+                const poj:any = [];
                 let pojAccept;
-                let uva: any = [];
+                const uva: any = [];
                 let uvaAccept;
-                let other:any = [];
+                const other:any = [];
                 let otherAccept;
                 const pick_ac = function (arr:any) {
                     let res: any = [];
@@ -627,9 +632,9 @@ export default class UserContainer extends Mixins(avatarMixin) {
                     });
                     return res;
                 };
-                let analsubmission: any = [];
-                let now = dayjs();
-                let otherSideSubmission: any = {};
+                const analsubmission: any = [];
+                const now = dayjs();
+                const otherSideSubmission: any = {};
                 _.forEach(submission, function (val: any) {
                     if ((val.time = dayjs(val.time)).add(3, "month").isAfter(now)) {
                         analsubmission.push(val);
@@ -664,10 +669,10 @@ export default class UserContainer extends Mixins(avatarMixin) {
                         return 1;
                     }
                 });
-                let timeobj: any = {};
-                let acobj: any = {};
+                const timeobj: any = {};
+                const acobj: any = {};
                 _.forEach(analsubmission, function (val: any) {
-                    let daystr = val.time.format("YYYY-MM-DD");
+                    const daystr = val.time.format("YYYY-MM-DD");
                     if (!timeobj[daystr]) {
                         timeobj[daystr] = 1;
                         acobj[daystr] = 0;
@@ -688,10 +693,10 @@ export default class UserContainer extends Mixins(avatarMixin) {
                 pojAccept = pick_ac(poj);
                 uvaAccept = pick_ac(uva);
                 otherAccept = pick_ac(other);
-                if (otherSideSubmission["LOCAL"]) {
-                    delete otherSideSubmission["LOCAL"];
+                if (otherSideSubmission.LOCAL) {
+                    delete otherSideSubmission.LOCAL;
                 }
-                for (let idx in otherSideSubmission) {
+                for (const idx in otherSideSubmission) {
                     if (Object.prototype.hasOwnProperty.call(otherSideSubmission, idx)) {
                         otherSideSubmission[idx] = pick_ac(otherSideSubmission[idx]);
                     }
@@ -716,7 +721,7 @@ export default class UserContainer extends Mixins(avatarMixin) {
                 if (typeof privilege !== "string") {
                     privilege = this.$t("general user");
                 }
-                let dsort = function (a: any, b: any) {
+                const dsort = function (a: any, b: any) {
                     return b.cnt - a.cnt;
                 };
                 for (const key in otherSideSubmission) {
@@ -794,17 +799,17 @@ export default class UserContainer extends Mixins(avatarMixin) {
             })
             .then(() => {
                 $("#preload").hide();
-                let $title = $("title").html();
+                const $title = $("title").html();
                 $(".placeholder").remove();
                 this.$nextTick(() => {
-                    let now = dayjs().endOf("day").toDate();
-                    let yearAgo = dayjs().startOf("day").subtract(1, "year").toDate();
-                    let submission_cnt = this.submission_count;
-                    let countForDate: any = {};
+                    const now = dayjs().endOf("day").toDate();
+                    const yearAgo = dayjs().startOf("day").subtract(1, "year").toDate();
+                    const submission_cnt = this.submission_count;
+                    const countForDate: any = {};
                     _.forEach(submission_cnt, function (row: any) {
                         if (row.day < 10) row.day = "0" + row.day;
                         if (row.month < 10) row.month = "0" + row.month;
-                        let date = row.year + "-" + row.month + "-" + row.day;
+                        const date = row.year + "-" + row.month + "-" + row.day;
                         if (!countForDate[date]) {
                             countForDate[date] = row.cnt;
                         }
@@ -812,7 +817,7 @@ export default class UserContainer extends Mixins(avatarMixin) {
                             countForDate[date] += row.cnt;
                         }
                     });
-                    let chartData = d3.timeDays(yearAgo, now).map(function (dateElement: any) {
+                    const chartData = d3.timeDays(yearAgo, now).map(function (dateElement: any) {
                         return {
                             date: dateElement,
                             count: countForDate[dayjs(dateElement).format("YYYY-MM-DD")] || 0
@@ -820,7 +825,7 @@ export default class UserContainer extends Mixins(avatarMixin) {
                     });
 
                     // @ts-ignore
-                    let heatmap = calendarHeatmap({ width: $(".heatmap").width() }).data(chartData).selector(".heatmap").tooltipEnabled(true).colorRange(["#c6e48b", "#7bc96f", "#239a3b", "#196127"], "#dfdfdf")
+                    const heatmap = calendarHeatmap({ width: $(".heatmap").width() }).data(chartData).selector(".heatmap").tooltipEnabled(true).colorRange(["#c6e48b", "#7bc96f", "#239a3b", "#196127"], "#dfdfdf")
                         .onClick(function () {
                         })
                         .tooltipEnabled(true)
@@ -828,7 +833,7 @@ export default class UserContainer extends Mixins(avatarMixin) {
                     heatmap();
                     that.$nextTick(function () {
                         // @ts-ignore
-                        let pie = new Chart(document.getElementById("pie_chart")!.getContext("2d"), {
+                        const pie = new Chart(document.getElementById("pie_chart")!.getContext("2d"), {
                             type: "pie",
                             data: {
                                 datasets: [
@@ -922,12 +927,12 @@ export default class UserContainer extends Mixins(avatarMixin) {
                                     display: false
                                 },
                                 legendCallback: function (chart: any) {
-                                    let text = [];
+                                    const text = [];
                                     text.push("<ul style=\"list-style: none; padding-left: 20px; margin-top: 0; \" class=\"" + chart.id + "-legend\">");
 
-                                    let data = chart.data;
-                                    let datasets = data.datasets;
-                                    let labels = data.labels;
+                                    const data = chart.data;
+                                    const datasets = data.datasets;
+                                    const labels = data.labels;
 
                                     if (datasets.length) {
                                         for (let i = 0; i < datasets[0].data.length; ++i) {
@@ -947,7 +952,7 @@ export default class UserContainer extends Mixins(avatarMixin) {
                         // @ts-ignore
                         document.getElementById("pie_chart_legend")!.innerHTML = pie.generateLegend();
                         // @ts-ignore
-                        let lang = new Chart(document.getElementById("pie_chart_language")!.getContext("2d"), {
+                        const lang = new Chart(document.getElementById("pie_chart_language")!.getContext("2d"), {
                             type: "pie",
                             data: {
                                 datasets: [
@@ -1037,12 +1042,12 @@ export default class UserContainer extends Mixins(avatarMixin) {
                                     display: false
                                 },
                                 legendCallback: function (chart: any) {
-                                    let text = [];
+                                    const text = [];
                                     text.push("<ul style=\"list-style: none; padding-left: 20px; margin-top: 0; \" class=\"" + chart.id + "-legend\">");
 
-                                    let data = chart.data;
-                                    let datasets = data.datasets;
-                                    let labels = data.labels;
+                                    const data = chart.data;
+                                    const datasets = data.datasets;
+                                    const labels = data.labels;
 
                                     if (datasets.length) {
                                         for (let i = 0; i < datasets[0].data.length; ++i) {
@@ -1061,7 +1066,7 @@ export default class UserContainer extends Mixins(avatarMixin) {
                         });
                         // @ts-ignore
                         document.getElementById("pie_chart_language_legend")!.innerHTML = lang.generateLegend();
-                        let config = {
+                        const config = {
                             type: "line",
                             data: {
                                 labels: _.keys(that.recent_submission.submission),
@@ -1116,7 +1121,7 @@ export default class UserContainer extends Mixins(avatarMixin) {
                             }
                         };
                         // @ts-ignore
-                        let ctx = document.getElementById("canvas")!.getContext("2d");
+                        const ctx = document.getElementById("canvas")!.getContext("2d");
                         // @ts-ignore
                         window.myLine = new Chart(ctx, config);
                     });
@@ -1128,6 +1133,7 @@ export default class UserContainer extends Mixins(avatarMixin) {
                 this.tutorial_publish = data.data;
             });
     }
+
     get online () {
         return this.$store.getters.onlineUser.some((el: any) => el.user_id === this.user_id);
     }

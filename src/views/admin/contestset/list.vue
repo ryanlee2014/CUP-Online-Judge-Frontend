@@ -114,7 +114,7 @@ export default class ContestSetList extends Mixins(InitMixin) {
         }
 
         setQuery () {
-            let queryString: any = {};
+            const queryString: any = {};
             queryString.page = this.currentPage;
             this.$router.push({ path: this.$route.path, query: queryString });
         }

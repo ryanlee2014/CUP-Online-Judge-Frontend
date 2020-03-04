@@ -91,6 +91,7 @@ export default class ProblemList extends Mixins(mixins) {
         });
         // console.log(collector);
     }
+
     getLabel () {
         const that = this;
         this.axios.get("/api/problem/local/?label=true")

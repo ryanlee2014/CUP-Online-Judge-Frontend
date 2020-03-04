@@ -134,13 +134,14 @@ export default class Tutorial extends Mixins(mixins, avatarMixin, mermaidMixin) 
         this.id = this.$route.params.problem_id;
         this.source = this.$route.query.from || "local";
     }
+
     updated () {
         this.$nextTick(function () {
             $(".ui.accordion")
                 .accordion({
-                    "exclusive": false
+                    exclusive: false
                 });
-            let copyContent = new Clipboard(".copy.context", {
+            const copyContent = new Clipboard(".copy.context", {
                 text: function (trigger: any) {
                     return $(trigger).parent().next().text();
                 }
@@ -156,6 +157,7 @@ export default class Tutorial extends Mixins(mixins, avatarMixin, mermaidMixin) 
             });
         });
     }
+
     mounted () {
         document.title = `Tutorial -- ${document.title}`;
         this.axios.get(`/api/tutorial/${this.source}/${this.id}`)

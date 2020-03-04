@@ -4,7 +4,7 @@ import { IKVStruct, IUserInfoState } from "@/store/userInfo/userInfo";
 
 function addContestPrivilege (state:IUserInfoState, contest: IKVStruct) {
     if (isObject(contest)) {
-        for (let property in contest) {
+        for (const property in contest) {
             if (Object.prototype.hasOwnProperty.call(contest, property)) {
                 state.userInfo.contest[property] = true;
             }
@@ -14,7 +14,7 @@ function addContestPrivilege (state:IUserInfoState, contest: IKVStruct) {
 
 function addProblemMakerPrivilege (state:IUserInfoState, problemMaker: IKVStruct) {
     if (isObject(problemMaker)) {
-        for (let property in problemMaker) {
+        for (const property in problemMaker) {
             if (Object.prototype.hasOwnProperty.call(problemMaker, property)) {
                 state.userInfo.problem_maker[property] = true;
             }
@@ -24,7 +24,7 @@ function addProblemMakerPrivilege (state:IUserInfoState, problemMaker: IKVStruct
 
 function addContestMakerPrivilege (state:IUserInfoState, contestMaker: IKVStruct) {
     if (isObject(contestMaker)) {
-        for (let property in contestMaker) {
+        for (const property in contestMaker) {
             if (Object.prototype.hasOwnProperty.call(contestMaker, property)) {
                 state.userInfo.contest_maker[property] = true;
             }

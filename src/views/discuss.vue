@@ -82,8 +82,8 @@ export default class Discuss extends Mixins(mixins) {
 
     @Watch("search")
     onSearchChanged (newVal: string) {
-        let that = this;
-        let page = this.page * 20;
+        const that = this;
+        const page = this.page * 20;
         let url = "/api/discuss/";
         if (newVal && newVal.length > 0) {
             url += "search/" + newVal;
@@ -110,8 +110,8 @@ export default class Discuss extends Mixins(mixins) {
         document.title = `Discuss -- ${document.title}`;
         const $route: any = this.$route;
         this.page = isNaN($route.hash.page) ? 0 : $route.hash.page;
-        let page = this.page * 20;
-        let that = this;
+        const page = this.page * 20;
+        const that = this;
         this.axios.get("/api/discuss?page=" + page).then(({ data }) => {
             if (data.contest_mode) {
                 that.contest_mode = true;
@@ -127,6 +127,7 @@ export default class Discuss extends Mixins(mixins) {
             that.table = data;
         });
     }
+
     get table () {
         return this.table_val;
     }

@@ -140,6 +140,7 @@ export default class Register extends Mixins(mixins) {
                 }
             });
     }
+
     checkUserId (options: any, next: (...args: any[]) => any) {
         if (isNaN(parseInt(this.userId))) {
             alert("user_id should be your school id");
@@ -148,6 +149,7 @@ export default class Register extends Mixins(mixins) {
             next();
         }
     }
+
     checkPassword (options: any, next: (...args: any[]) => any) {
         if (this.password.trim() !== this.repeatPassword.trim()) {
             alert("password you input not the same as repeat password");
@@ -156,6 +158,7 @@ export default class Register extends Mixins(mixins) {
             next();
         }
     }
+
     checkConfirm (options: any, next: (...args: any[]) => any) {
         if (this.confirmanswer.trim().length === 0 || this.confirmquestion.trim().length === 0) {
             alert("You must input your confirm question and confirm answer");
@@ -164,6 +167,7 @@ export default class Register extends Mixins(mixins) {
             next();
         }
     }
+
     postData (options: any, next: (...args: any[]) => any) {
         this.axios.post("/api/user/register", this.$data)
             .then(({ data }) => {
@@ -178,6 +182,7 @@ export default class Register extends Mixins(mixins) {
                 }
             });
     }
+
     register () {
         const middleware = new Middleware();
         middleware.use(this.checkUserId).use(this.checkPassword).use(this.checkConfirm).use(this.postData).commit();

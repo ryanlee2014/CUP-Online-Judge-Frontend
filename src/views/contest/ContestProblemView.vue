@@ -137,12 +137,13 @@ export default class ContestProblemView extends Mixins(mixins) {
     }
 
     set mode (val: any) {
-        let diff = val !== this.current_mode;
+        const diff = val !== this.current_mode;
         this.current_mode = val;
         if (diff) {
             this.run(this.run);
         }
     }
+
     mounted () {
         const contestID = this.$route.params.contest_id;
         document.title = `Contest ${contestID} -- ${document.title}`;
@@ -162,6 +163,7 @@ export default class ContestProblemView extends Mixins(mixins) {
                 }
             });
     }
+
     triggerPopup (key: string, problem_id: any) {
         const html = this.problemDetail(problem_id);
         $("#popup" + key).popup({
@@ -169,6 +171,7 @@ export default class ContestProblemView extends Mixins(mixins) {
             html
         }).popup("show");
     }
+
     problemDetail (problem_id: any) {
         console.log("problem_id", problem_id);
         const problemInfo = this.problemInfo[problem_id];
@@ -179,7 +182,7 @@ export default class ContestProblemView extends Mixins(mixins) {
             const submit = problemInfo.submit;
             const passRate = Math.floor(accepted * 100 / submit);
             const label = problemInfo.label;
-            let html = `<div class="content">
+            const html = `<div class="content">
 提交: ${submit} 通过:${accepted} 通过率:${passRate}%
 <br>
 标签:${label}
@@ -188,6 +191,7 @@ export default class ContestProblemView extends Mixins(mixins) {
         }
         return "";
     }
+
     run (resolve?: (...args: any[]) => any) {
         const contestID = this.$route.params.contest_id;
         const that = this;
@@ -228,7 +232,7 @@ export default class ContestProblemView extends Mixins(mixins) {
                 }
                 that.problem_table = _d.data;
 
-                let info = _d.info;
+                const info = _d.info;
                 that.start_time = dayjs(info.start_time);
                 that.end_time = dayjs(info.end_time);
                 that.title = info.title;
@@ -241,6 +245,7 @@ export default class ContestProblemView extends Mixins(mixins) {
                 }
             });
     }
+
     detect_source (row: any) {
         if (!row.oj_name || row.oj_name.toLowerCase() === "local") {
             return "new";
@@ -249,6 +254,7 @@ export default class ContestProblemView extends Mixins(mixins) {
             return row.oj_name.toLowerCase();
         }
     }
+
     contest (html: any, num: any) {
         if (this.contest_mode) {
             return "Problem " + String.fromCharCode("A".charCodeAt(0) + parseInt(num));
@@ -257,29 +263,30 @@ export default class ContestProblemView extends Mixins(mixins) {
             return html;
         }
     }
+
     orderBy (type: any) {
-        let that = this;
+        const that = this;
         if (that.type === type) {
             that.order = -that.order;
         }
-        let problemIdComparator = function (a: any, b: any) {
+        const problemIdComparator = function (a: any, b: any) {
             return that.order * (a.pnum - b.pnum);
         };
-        let titleComparator = function (a: any, b: any) {
+        const titleComparator = function (a: any, b: any) {
             return that.order * (a.title > b.title ? 1 : (a.title < b.title ? -1 : 0));
         };
-        let submitComparator = function (a: any, b: any) {
+        const submitComparator = function (a: any, b: any) {
             return that.order * (a.submit - b.submit);
         };
-        let acceptedComparator = function (a: any, b: any) {
+        const acceptedComparator = function (a: any, b: any) {
             return that.order * (a.accepted - b.accepted);
         };
-        let correctPercentageComparator = function (a: any, b: any) {
-            let currentA = a.accepted / Math.max(a.submit, 1);
-            let currentB = b.accepted / Math.max(b.submit, 1);
+        const correctPercentageComparator = function (a: any, b: any) {
+            const currentA = a.accepted / Math.max(a.submit, 1);
+            const currentB = b.accepted / Math.max(b.submit, 1);
             return that.order * (currentA - currentB);
         };
-        let comparatorSet = [problemIdComparator, titleComparator, acceptedComparator, submitComparator, correctPercentageComparator];
+        const comparatorSet = [problemIdComparator, titleComparator, acceptedComparator, submitComparator, correctPercentageComparator];
         that.problem_table.sort(comparatorSet[type]);
         that.type = type;
     }

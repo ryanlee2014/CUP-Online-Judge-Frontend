@@ -280,9 +280,11 @@ export default class ProblemEdit extends Mixins(mixins) implements IKeyValue {
         all_label = [];
         prepend: ICodeSet = {
         };
+
         prependSelected = 0;
         append: ICodeSet = {
         };
+
         appendSelected = 0;
         files = [];
         id = "0";
@@ -313,7 +315,7 @@ export default class ProblemEdit extends Mixins(mixins) implements IKeyValue {
         }
 
         submit () {
-            let from = "local";
+            const from = "local";
             this.PrependAppendLanguage("prepend", 0, [21, 13, 28]);
             this.PrependAppendLanguage("prepend", 1, [19, 20, 14, 29]);
             this.PrependAppendLanguage("prepend", 3, [23, 24, 27]);
@@ -355,16 +357,16 @@ export default class ProblemEdit extends Mixins(mixins) implements IKeyValue {
                 sendObj.imageData[target.expression] = i.markdownIt.__image || {};
             }
 
-            sendObj["time"] = this.time;
-            sendObj["memory"] = this.memory;
-            sendObj["title"] = this.title;
-            sendObj["sampleinput"] = this.sampleinput;
-            sendObj["sampleoutput"] = this.sampleoutput;
-            sendObj["spj"] = Number(this.spj);
-            sendObj["hint"] = this.hint;
+            sendObj.time = this.time;
+            sendObj.memory = this.memory;
+            sendObj.title = this.title;
+            sendObj.sampleinput = this.sampleinput;
+            sendObj.sampleoutput = this.sampleoutput;
+            sendObj.spj = Number(this.spj);
+            sendObj.hint = this.hint;
             const labels = this.label;
 
-            sendObj["label"] = unique(labels).join(" ");
+            sendObj.label = unique(labels).join(" ");
             this.axios.post(`/api/problem/${this.source}/${id}`, { json: sendObj })
                 .then(({ data }) => {
                     if (data.status === "OK") {
@@ -380,10 +382,10 @@ export default class ProblemEdit extends Mixins(mixins) implements IKeyValue {
 
         imageHandler (key: number | string, data: any) {
             const map: IMavonEditorVueComponent = {
-                "0": "description",
-                "1": "input",
-                "2": "output",
-                "3": "hint"
+                0: "description",
+                1: "input",
+                2: "output",
+                3: "hint"
             };
             let mx = -1;
             const that = this;

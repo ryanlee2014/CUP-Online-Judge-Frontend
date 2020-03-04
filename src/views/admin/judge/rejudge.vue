@@ -69,6 +69,7 @@ export default class Rejudge extends Mixins(mixins) {
         data[idType[this.rejudgeType]] = this.id;
         return data;
     }
+
     rejudge () {
         this.axios.post(`/api/admin/problem/rejudge/${postType[this.rejudgeType]}`, this.makeSendData())
             .then(({ data }) => {

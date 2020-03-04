@@ -54,9 +54,11 @@ export default class ModifyModal extends Vue {
         Object.assign(this, payload);
         $(this.$refs.modal).modal("show");
     }
+
     deactivate () {
         $(this.$refs.modal).modal("hide");
     }
+
     submit () {
         this.$emit("callback", this.$data);
     }

@@ -131,7 +131,7 @@ export default class Thread extends Mixins(mixins, avatarMixin, mermaidMixin) {
         console.log("updated");
         const tableOfContents = $(".table-of-contents");
         let $content = tableOfContents.html();
-        let $container = $("#contentContainer");
+        const $container = $("#contentContainer");
         if (!$content) $content = "";
         tableOfContents.html("");
         if ($content) {
@@ -149,6 +149,7 @@ export default class Thread extends Mixins(mixins, avatarMixin, mermaidMixin) {
         });
         this.content = ($content && $content.trim && $content.trim().length > 0) || ($container && $container.html() && $container.html().trim().length > 0);
     }
+
     mounted () {
         document.title = `Thread ${this.id} -- ${document.title}`;
         const page = this.page * 20;
@@ -192,6 +193,7 @@ export default class Thread extends Mixins(mixins, avatarMixin, mermaidMixin) {
                 }
             });
     }
+
     block_reply (commentId: string) {
         this.axios.get(`/api/discuss/update/reply/block/${this.id}/${commentId}`)
             .then(({ data }) => {
@@ -203,6 +205,7 @@ export default class Thread extends Mixins(mixins, avatarMixin, mermaidMixin) {
                 }
             });
     }
+
     readTime (content: string) {
         const doc = document.createElement("div");
         doc.innerHTML = content;

@@ -208,12 +208,12 @@ const $: any = jquery;
 const am4themes_animated = require("@amcharts/amcharts4/themes/animated").default;
 
 function draw (_result: any) {
-    let result = _result.result;
-    let _label = _result.label;
-    let _labels: any = [];
-    let _submits: any = [];
-    let _accepteds: any = [];
-    let _persent: any = [];
+    const result = _result.result;
+    const _label = _result.label;
+    const _labels: any = [];
+    const _submits: any = [];
+    const _accepteds: any = [];
+    const _persent: any = [];
     let total_submit = 0;
     let total_accepted = 0;
     _.forEach(result, function (i) {
@@ -226,7 +226,7 @@ function draw (_result: any) {
             _persent.push((total_accepted / total_submit * 100).toString().substring(0, 5));
         }
     });
-    let config: any = {
+    const config: any = {
         type: "line",
         data: {
             labels: _labels,
@@ -299,17 +299,17 @@ function draw (_result: any) {
             }
         }
     };
-    let ctx = (document!.getElementById!("canvas")! as any).getContext("2d");
+    const ctx = (document!.getElementById!("canvas")! as any).getContext("2d");
     window.myLine = new Chart(ctx, config);
 }
 
-let hasDrawLineChart: any = {};
+const hasDrawLineChart: any = {};
 
 function drawLineChart (data: any, target = "default") {
 // Themes begin
 
     // Themes end
-    let data_array: any = [];
+    const data_array: any = [];
 
     if (!hasDrawLineChart[target]) {
         hasDrawLineChart[target] = true;
@@ -321,18 +321,18 @@ function drawLineChart (data: any, target = "default") {
         return;
     }
     am4core.useTheme(am4themes_animated);
-    let chart = am4core.create("contest_code_length", am4charts.XYChart);
+    const chart = am4core.create("contest_code_length", am4charts.XYChart);
 
     chart.data = data_array;
 
     // Create axes
-    let dateAxis = chart.xAxes.push(new am4charts.DateAxis());
+    const dateAxis = chart.xAxes.push(new am4charts.DateAxis());
     dateAxis.renderer.minGridDistance = 60;
 
     chart.yAxes.push(new am4charts.ValueAxis());
 
     // Create series
-    let series: any = chart.series.push(new am4charts.LineSeries());
+    const series: any = chart.series.push(new am4charts.LineSeries());
     series.dataFields.valueY = "value";
     series.dataFields.dateX = "date";
     series.tooltipText = "{value}";
@@ -373,11 +373,12 @@ export default class ContestStatus extends Mixins(mixins, StatusViewMixin) {
         cid: any = null;
         res = ["WT", "WR", "CPL", "RN", "AC", "PE", "WA", "TLE", "MLE", "OLE", "RE", "CE", "CF", "TR",
             "SP", "SR", "SE"];
+
         sockets: any;
 
         get statistics () {
-            let lang: any = {};
-            let status: any = {};
+            const lang: any = {};
+            const status: any = {};
             let maxResult: any = 0;
             let minResult: any = 19;
             let maxNum: any = 0;
@@ -429,7 +430,7 @@ export default class ContestStatus extends Mixins(mixins, StatusViewMixin) {
                     }
                 });
             });
-            let totalSumProblem: any = {};
+            const totalSumProblem: any = {};
             _.forEach(status, function (val: any, index: any) {
                 if (!totalSumProblem[index]) {
                     totalSumProblem[index] = 0;
@@ -438,7 +439,7 @@ export default class ContestStatus extends Mixins(mixins, StatusViewMixin) {
                     totalSumProblem[index] += val2;
                 });
             });
-            let totalSumResult: any = {};
+            const totalSumResult: any = {};
             _.forEach(lang, function (val: any, index: any) {
                 if (!totalSumResult[index]) {
                     totalSumResult[index] = 0;
@@ -447,7 +448,7 @@ export default class ContestStatus extends Mixins(mixins, StatusViewMixin) {
                     totalSumResult[index] += val2;
                 });
             });
-            let langsum: any = {};
+            const langsum: any = {};
             _.forEach(lang, function (val: any) {
                 _.forEach(val, function (v: any, idx: any) {
                     if (!langsum[idx]) {
@@ -458,7 +459,7 @@ export default class ContestStatus extends Mixins(mixins, StatusViewMixin) {
                     }
                 });
             });
-            let statsum: any = {};
+            const statsum: any = {};
             _.forEach(status, function (val: any) {
                 _.forEach(val, function (v: any, idx: any) {
                     if (!statsum[idx]) {
@@ -469,13 +470,13 @@ export default class ContestStatus extends Mixins(mixins, StatusViewMixin) {
                     }
                 });
             });
-            let d: any = _.reduce(totalSumProblem, function (a, b) {
+            const d: any = _.reduce(totalSumProblem, function (a, b) {
                 return a + b;
             }, 0);
             if (maxResult === 0) {
                 maxNum = -1;
             }
-            let tot_res = [];
+            const tot_res = [];
             for (let i = minResult; i <= maxResult; ++i) tot_res.push(i);
             return {
                 total_problem: maxNum || 0,
@@ -505,11 +506,11 @@ export default class ContestStatus extends Mixins(mixins, StatusViewMixin) {
         }
 
         fetchData () {
-            let problem_id = (this.problem_id = this.getProblemID() || null) || "null";
-            let user_id = (this.user_id = this.getUserId() || null) || "null";
-            let language = (this.language = this.getLanguage() || -1) == -1 ? "null" : this.getLanguage();
-            let result = (this.problem_result = this.getResult() || -1) == -1 ? "null" : this.problem_result;
-            let cid = this.cid || "";
+            const problem_id = (this.problem_id = this.getProblemID() || null) || "null";
+            const user_id = (this.user_id = this.getUserId() || null) || "null";
+            const language = (this.language = this.getLanguage() || -1) == -1 ? "null" : this.getLanguage();
+            const result = (this.problem_result = this.getResult() || -1) == -1 ? "null" : this.problem_result;
+            const cid = this.cid || "";
             this.axios.get(`/api/status/${problem_id}/${user_id}/${language}/${result}/0/${cid}`)
                 .then(({ data }) => {
                     this.dim = false;
@@ -529,7 +530,7 @@ export default class ContestStatus extends Mixins(mixins, StatusViewMixin) {
         }
 
         search_func (data: any) {
-            let that = this;
+            const that = this;
             this.setQuery();
             that.problem_list = data.result;
             that.icon_list = data.const_list.icon_list;
@@ -548,14 +549,14 @@ export default class ContestStatus extends Mixins(mixins, StatusViewMixin) {
         search () {
             this.dim = true;
             this.page_cnt = 0;
-            let problem_id = this.problem_id || "null";
-            let user_id = this.user_id || "null";
-            let language = this.language == -1 ? "null" : this.language;
-            let result = this.problem_result == -1 ? "null" : this.problem_result;
-            let page_cnt = this.page_cnt * 20;
-            let cid = this.cid || "";
-            let sim = Number(this.sim_checkbox);
-            let pri = Number(this.privilege);
+            const problem_id = this.problem_id || "null";
+            const user_id = this.user_id || "null";
+            const language = this.language == -1 ? "null" : this.language;
+            const result = this.problem_result == -1 ? "null" : this.problem_result;
+            const page_cnt = this.page_cnt * 20;
+            const cid = this.cid || "";
+            const sim = Number(this.sim_checkbox);
+            const pri = Number(this.privilege);
             this.axios.get(`/api/status/${problem_id}/${user_id}/${language}/${result}/${page_cnt}/${cid}/${sim}/${pri}`)
                 .then(({ data }) => {
                     this.dim = false;
@@ -566,14 +567,14 @@ export default class ContestStatus extends Mixins(mixins, StatusViewMixin) {
         page (num: any) {
             this.dim = true;
             this.page_cnt += num;
-            let problem_id = this.problem_id || "null";
-            let user_id = this.user_id || "null";
-            let language = this.language == -1 ? "null" : this.language;
-            let result = this.problem_result == -1 ? "null" : this.problem_result;
-            let page_cnt = this.page_cnt * 20;
-            let cid = this.cid || "";
-            let sim_checkbox = Number(this.sim_checkbox);
-            let pri = Number(this.privilege);
+            const problem_id = this.problem_id || "null";
+            const user_id = this.user_id || "null";
+            const language = this.language == -1 ? "null" : this.language;
+            const result = this.problem_result == -1 ? "null" : this.problem_result;
+            const page_cnt = this.page_cnt * 20;
+            const cid = this.cid || "";
+            const sim_checkbox = Number(this.sim_checkbox);
+            const pri = Number(this.privilege);
             this.axios.get(`/api/status/${problem_id}/${user_id}/${language}/${result}/${page_cnt}/${cid}/${sim_checkbox}/${pri}`)
                 .then(({ data }) => {
                     this.dim = false;
@@ -585,7 +586,7 @@ export default class ContestStatus extends Mixins(mixins, StatusViewMixin) {
             if (!this.auto_refresh) {
                 return;
             }
-            let obj: any = {};
+            const obj: any = {};
             if ((!this.user_id || this.user_id === data.user_id) && (!~this.problem_result || data.val.result === this.problem_result) && (this.language === -1 || this.language === data.val.language) && !this.page_cnt && (!this.problem_id || parseInt(this.problem_id) === Math.abs(data.val.pid))) {
                 obj.problem_id = Math.abs(data.val.id);
                 obj.solution_id = data.submission_id;
@@ -616,16 +617,16 @@ export default class ContestStatus extends Mixins(mixins, StatusViewMixin) {
             if (this.privilege && isNaN(data.contest_id)) {
                 return;
             }
-            let solution_id = data.solution_id;
-            let status = data.state;
-            let time = data.time;
-            let memory = data.memory;
-            let pass_rate = data.pass_rate;
-            let contest_id = parseInt(data.contest_id);
-            let num = parseInt(data.num);
-            let sim = parseInt(data.sim);
-            let sim_s_id = parseInt(data.sim_s_id);
-            for (let i of this.problem_list) {
+            const solution_id = data.solution_id;
+            const status = data.state;
+            const time = data.time;
+            const memory = data.memory;
+            const pass_rate = data.pass_rate;
+            const contest_id = parseInt(data.contest_id);
+            const num = parseInt(data.num);
+            const sim = parseInt(data.sim);
+            const sim_s_id = parseInt(data.sim_s_id);
+            for (const i of this.problem_list) {
                 if (i.solution_id == solution_id) {
                     console.warn("int", i);
                     i.result = status;

@@ -20,6 +20,7 @@ export default class Locale extends Vue {
         this.$i18n.locale = el.target.getAttribute("locale");
         localStorage.locale = this.$i18n.locale;
     }
+
     mounted () {
         if (Object.prototype.hasOwnProperty.call(localStorage, "locale")) {
             this.$i18n.locale = localStorage.locale;

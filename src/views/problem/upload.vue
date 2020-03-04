@@ -39,12 +39,15 @@ export default class ProblemUpload extends Mixins(mixins) {
     $refs!: {
         file: HTMLFormElement
     };
+
     mounted () {
         document.title = `Upload problem -- ${document.title}`;
     }
+
     fileChange (event: any) {
         this.fileStatus = event.target.files[0].name;
     }
+
     selectFile () {
         this.$refs.file.click();
     }

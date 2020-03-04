@@ -37,9 +37,11 @@ export default class SelectedTag extends Vue {
             label: label ? [label] : []
         };
     }
+
     remove () {
         this.$parent.remove(...arguments);
     }
+
     labelColor (label: any) {
         const datas: any = this.datas;
         if (datas && datas.color && datas.color[label]) {

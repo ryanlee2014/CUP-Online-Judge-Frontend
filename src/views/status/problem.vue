@@ -153,11 +153,11 @@ import jquery from "jquery";
 import Chart from "chart.js";
 const am4themes_animated = require("@amcharts/amcharts4/themes/animated").default;
 const $: any = jquery;
-let hasDrawLineChart: any = {};
-let hasRendered: any = {};
+const hasDrawLineChart: any = {};
+const hasRendered: any = {};
 
 function drawLineChart (data: any, target = "default") {
-    let data_array: any = [];
+    const data_array: any = [];
 
     if (!hasDrawLineChart[target]) {
         hasDrawLineChart[target] = true;
@@ -169,18 +169,18 @@ function drawLineChart (data: any, target = "default") {
         return;
     }
     am4core.useTheme(am4themes_animated);
-    let chart: any = am4core.create("problem_code_length", am4charts.XYChart);
+    const chart: any = am4core.create("problem_code_length", am4charts.XYChart);
 
     chart.data = data_array;
 
     // Create axes
-    let dateAxis = chart.xAxes.push(new am4charts.DateAxis());
+    const dateAxis = chart.xAxes.push(new am4charts.DateAxis());
     dateAxis.renderer.minGridDistance = 60;
 
     chart.yAxes.push(new am4charts.ValueAxis());
 
     // Create series
-    let series: any = chart.series.push(new am4charts.LineSeries());
+    const series: any = chart.series.push(new am4charts.LineSeries());
     series.dataFields.valueY = "value";
     series.dataFields.dateX = "date";
     series.tooltipText = "{value}";
@@ -195,12 +195,12 @@ function drawLineChart (data: any, target = "default") {
 
     series.tooltip.pointerOrientation = "vertical";
     // Make bullets grow on hover
-    let bullet = series.bullets.push(new am4charts.CircleBullet());
+    const bullet = series.bullets.push(new am4charts.CircleBullet());
     bullet.circle.strokeWidth = 2;
     bullet.circle.radius = 4;
     bullet.circle.fill = am4core.color("#fff");
 
-    let bullethover = bullet.states.create("hover");
+    const bullethover = bullet.states.create("hover");
     bullethover.properties.scale = 1.3;
 
     // Make a panning cursor
@@ -229,11 +229,11 @@ function drawChordGraph (data: any, pid: any, prefix = "chord_graph") {
     am4core.useTheme(am4themes_animated);
     // Themes end
 
-    let chart = am4core.create("chord_graph", am4charts.ChordDiagram);
+    const chart = am4core.create("chord_graph", am4charts.ChordDiagram);
 
     _.forEach(data, function (el) {
         if (el.from != pid) {
-            let tmp = el.from;
+            const tmp = el.from;
             el.from = el.to;
             el.to = tmp;
         }
@@ -255,12 +255,12 @@ function drawChordGraph (data: any, pid: any, prefix = "chord_graph") {
     chart.dataFields.value = "value";
 
     // make nodes draggable
-    let nodeTemplate = chart.nodes.template;
+    const nodeTemplate = chart.nodes.template;
     nodeTemplate.readerTitle = "点击块可显示或隐藏";
     nodeTemplate.showSystemTooltip = true;
 
-    let nodeLink = chart.links.template;
-    let bullet = nodeLink.bullets.push(new am4charts.CircleBullet());
+    const nodeLink = chart.links.template;
+    const bullet = nodeLink.bullets.push(new am4charts.CircleBullet());
     bullet.fillOpacity = 1;
     bullet.circle.radius = 5;
     bullet.locationX = 0.5;
@@ -268,16 +268,16 @@ function drawChordGraph (data: any, pid: any, prefix = "chord_graph") {
     // create animations
     chart.events.on("ready", function () {
         for (let i = 0; i < chart.links.length; i++) {
-            let link: any = chart.links.getIndex(i);
-            let bullet = link.bullets.getIndex(0);
+            const link: any = chart.links.getIndex(i);
+            const bullet = link.bullets.getIndex(0);
 
             animateBullet(bullet);
         }
     });
 
     function animateBullet (bullet: any) {
-        let duration = 3000 * Math.random() + 2000;
-        let animation = bullet.animate([{ property: "locationX", from: 0, to: 1 }], duration);
+        const duration = 3000 * Math.random() + 2000;
+        const animation = bullet.animate([{ property: "locationX", from: 0, to: 1 }], duration);
         animation.events.on("animationended", function (event: any) {
             animateBullet(event.target.object);
         });
@@ -307,7 +307,7 @@ export default class ProblemStatus extends Mixins(mixins) {
     }
 
     get submitStatus () {
-        let prob_stat: any = {};
+        const prob_stat: any = {};
         _.forEach(this.problem_stat, function (val: any) {
             prob_stat[val.result] = val.total;
         });
@@ -324,7 +324,7 @@ export default class ProblemStatus extends Mixins(mixins) {
     }
 
     set submitStatus (val: any) {
-        let stat = val.data.problem_status;
+        const stat = val.data.problem_status;
         this.problem_stat = stat;
         this.submit_stat = val.data.solution_status;
         this.problem_submit_stat = val.data.submit_status;
@@ -348,27 +348,29 @@ export default class ProblemStatus extends Mixins(mixins) {
                 }
             });
     }
+
     page (num: any) {
         this.current_page += num;
-        let that = this;
+        const that = this;
         this.axios.get(`/api/problemstatus/${this.pid}?page=${this.current_page}`)
             .then(({ data }) => {
                 this.submitStatus = data;
                 this.setQuery();
             });
     }
+
     setQuery () {
-        let queryObject: any = {};
-        if (this.current_page !== 0) { queryObject["page"] = this.current_page + 1; }
+        const queryObject: any = {};
+        if (this.current_page !== 0) { queryObject.page = this.current_page + 1; }
         else {
-            delete queryObject["page"];
+            delete queryObject.page;
         }
         this.$router.push({ path: this.$route.path, query: queryObject });
     }
 
     mounted () {
         document.title = `Problem ${this.pid} Statistics -- ${document.title}`;
-        let current_title = $("title").text();
+        const current_title = $("title").text();
         $("title").text("Status:Problem " + this.pid + " - " + current_title);
         this.current_page = Math.max(0, this.current_page - 1);
         this.axios.get(`/api/status/problem/code_length/problem/${this.pid}`)
@@ -383,16 +385,16 @@ export default class ProblemStatus extends Mixins(mixins) {
     }
 
     initGraph () {
-        let colors: any = _.values(window.chartColors);
+        const colors: any = _.values(window.chartColors);
         colors.push("#af63f4");
         colors.push("#00b5ad");
         colors.push("#350ae8");
         colors.push("#E2EAE9");
-        let ncolor = ["#3366CC", "#DC3912", "#FF9900", "#109618", "#990099", "#3B3EAC", "#0099C6", "#DD4477", "#66AA00", "#B82E2E", "#316395", "#994499", "#22AA99", "#AAAA11", "#6633CC", "#E67300", "#8B0707", "#329262", "#5574A6", "#3B3EAC"];
+        const ncolor = ["#3366CC", "#DC3912", "#FF9900", "#109618", "#990099", "#3B3EAC", "#0099C6", "#DD4477", "#66AA00", "#B82E2E", "#316395", "#994499", "#22AA99", "#AAAA11", "#6633CC", "#E67300", "#8B0707", "#329262", "#5574A6", "#3B3EAC"];
         _.forEach(ncolor, function (val) {
             colors.push(val);
         });
-        let config = {
+        const config = {
             type: "pie",
             data: {
                 datasets: [{
@@ -410,14 +412,14 @@ export default class ProblemStatus extends Mixins(mixins) {
                 responsive: true
             }
         };
-        let lang: any = {};
+        const lang: any = {};
         let labels: any = {};
         _.forEach(this.submitStatus.time_range, function (val) {
             labels[val.diff] = true;
             lang[val.language] = {};
         });
         labels = _.map(labels, function (val, index) {
-            let arr = index.split("-");
+            const arr = index.split("-");
             let str = arr[0] + "ms";
             if (arr.length > 1) { str += " - " + arr[1] + "ms"; }
             return str;
@@ -446,7 +448,7 @@ export default class ProblemStatus extends Mixins(mixins) {
         });
 
         _.forEach(this.submitStatus.time_range, (val) => {
-            let arr = val.diff.split("-");
+            const arr = val.diff.split("-");
             let diffstr = arr[0] + "ms";
             if (arr.length > 1) {
                 diffstr += " - " + arr[1] + "ms";
@@ -456,7 +458,7 @@ export default class ProblemStatus extends Mixins(mixins) {
         let _colors = _.map(colors, function (val) {
             return val;
         });
-        let config2 = {
+        const config2 = {
             type: "bar",
             labels: labels,
             datasets: _.map(lang, (val, index) => {
@@ -468,7 +470,7 @@ export default class ProblemStatus extends Mixins(mixins) {
             })
         };
         let mlabels: any = {};
-        let mlang: any = {};
+        const mlang: any = {};
         _colors = _.map(colors, (val) => {
             return val;
         });
@@ -478,7 +480,7 @@ export default class ProblemStatus extends Mixins(mixins) {
         });
         mlabels = _.map(mlabels, (val, index) => {
             if (index.indexOf("-") !== -1) {
-                let arr = index.split("-");
+                const arr = index.split("-");
                 arr[0] = (parseFloat(arr[0]) / 1024).toFixed(2);
                 if (arr.length > 1) { arr[1] = (parseFloat(arr[1]) / 1024).toFixed(2); }
                 let str = arr[0] + "MB";
@@ -498,13 +500,13 @@ export default class ProblemStatus extends Mixins(mixins) {
                 return s - t;
             }
             else if (b.charAt(0) === ">") {
-                let s = parseFloat(a.split("-")[0]);
-                let t = parseFloat(b.substring(1, b.length));
+                const s = parseFloat(a.split("-")[0]);
+                const t = parseFloat(b.substring(1, b.length));
                 return s - t;
             }
             else {
-                let s = parseFloat(a.split("-")[0]);
-                let t = parseFloat(b.split("-")[0]);
+                const s = parseFloat(a.split("-")[0]);
+                const t = parseFloat(b.split("-")[0]);
                 return s - t;
             }
         });
@@ -516,7 +518,7 @@ export default class ProblemStatus extends Mixins(mixins) {
 
         _.forEach(this.submitStatus.memory_range, (val: any) => {
             if (val.diff.indexOf("-") !== -1) {
-                let arr = val.diff.split("-");
+                const arr = val.diff.split("-");
                 arr[0] = (parseFloat(arr[0]) / 1024).toFixed(2);
                 if (arr.length > 1) { arr[1] = (parseFloat(arr[1]) / 1024).toFixed(2); }
                 let diffstr = arr[0] + "MB";
@@ -529,7 +531,7 @@ export default class ProblemStatus extends Mixins(mixins) {
                 mlang[val.language][">" + str + "MB"] = val.total;
             }
         });
-        let config3 = {
+        const config3 = {
             type: "bar",
             labels: mlabels,
             datasets: _.map(mlang, (val: any, index: any) => {
@@ -540,10 +542,10 @@ export default class ProblemStatus extends Mixins(mixins) {
                 };
             })
         };
-        let ctx = (document.getElementById!("chart-area")! as any).getContext("2d");
+        const ctx = (document.getElementById!("chart-area")! as any).getContext("2d");
         window.myPie = new Chart(ctx, config);
-        let btx = (document.getElementById!("bar-area")! as any).getContext("2d");
-        let mtx = (document.getElementById!("memory_bar_area")! as any).getContext("2d");
+        const btx = (document.getElementById!("bar-area")! as any).getContext("2d");
+        const mtx = (document.getElementById!("memory_bar_area")! as any).getContext("2d");
         window.myBar = new Chart(btx, {
             type: "bar",
             data: config2,

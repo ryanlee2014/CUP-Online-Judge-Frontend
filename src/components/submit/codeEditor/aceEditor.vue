@@ -69,8 +69,9 @@ export default class AceEditor extends Vue {
         editor.getSession().setMode(`ace/mode/${language[this.selected_language]}`);
         editor.setTheme(this.getThemeFromStorage());
     }
+
     getThemeFromStorage () {
-        let defaultTheme = "ace/theme/monokai";
+        const defaultTheme = "ace/theme/monokai";
         let theme;
         try {
             theme = JSON.parse(localStorage.submitConfig).theme;

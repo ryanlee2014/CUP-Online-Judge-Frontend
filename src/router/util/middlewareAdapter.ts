@@ -53,7 +53,7 @@ export default class MiddlewareAdapter {
     }
 
     add (...argument:any[]) {
-        for (let i of arguments) {
+        for (const i of arguments) {
             if (typeof i !== "function") {
                 throw argumentNotFunctionError;
             }

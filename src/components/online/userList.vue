@@ -50,6 +50,7 @@ export default class UserList extends Mixins(TimerMixin) {
     created () {
         this.temp_userList = this.$store.getters.onlineUser;
     }
+
     get user () {
         const that = this;
         if (!this.userlist) return [];
@@ -61,13 +62,14 @@ export default class UserList extends Mixins(TimerMixin) {
         }
         if (localStorage.getItem("sort") === "true") {
             that.userlist.sort(function (a: any, b: any) {
-                var a1 = a["user_id"];
-                var b1 = b["user_id"];
+                var a1 = a.user_id;
+                var b1 = b.user_id;
                 return a1 < b1 ? -1 : a1 === b1 ? 0 : 1;
             });
         }
         return this.userlist;
     }
+
     updated () {
         if (this.need_popup) {
             $("#user_list_table td").popup({

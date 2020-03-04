@@ -53,13 +53,13 @@ export default class AddressList extends Vue {
     }
 
     get user () {
-        let newlist = [];
-        let doc = document.createElement("div");
+        const newlist = [];
+        const doc = document.createElement("div");
         if (!this.userlist) return [];
         for (let i = 0; i < this.userlist.length; ++i) {
-            let tat = this.userlist[i];
+            const tat = this.userlist[i];
             for (let j = 0; j < this.userlist[i].url.length; ++j) {
-                let tmp = JSON.parse(JSON.stringify(tat));
+                const tmp = JSON.parse(JSON.stringify(tat));
                 tmp.url = tmp.url[j];
                 doc.innerHTML = tmp.nick;
                 tmp.nick = doc.innerText;
@@ -69,8 +69,8 @@ export default class AddressList extends Vue {
         }
         if (localStorage.getItem("sort") === "true") {
             newlist.sort(function (a, b) {
-                let a1 = a["user_id"];
-                let b1 = b["user_id"];
+                const a1 = a.user_id;
+                const b1 = b.user_id;
                 // if (!isNaN(parseInt(a1)) && !isNaN(parseInt(b1))) {
                 //   return parseInt(a1) - parseInt(b1);
                 // }

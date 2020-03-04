@@ -35,6 +35,7 @@ export default class FAQ extends Mixins(mixins) {
     created () {
         this.locales = this.$i18n.locale;
     }
+
     mounted () {
         document.title = `FAQ -- ${document.title}`;
     }

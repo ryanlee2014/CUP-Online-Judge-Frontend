@@ -46,7 +46,7 @@ export default class Check extends Mixins(mixins) {
     resultUserListText = "";
     resultPasswordText = "";
     Check () {
-        let pairList = this.makePairList();
+        const pairList = this.makePairList();
         if (pairList.length > 0) {
             this.axios.post("/api/admin/account/check", { pairList })
                 .then(({ data }) => {
@@ -62,14 +62,15 @@ export default class Check extends Mixins(mixins) {
                 });
         }
     }
+
     makePairList () {
-        let userList = this.userListText.split("\n").map(el => el.trim()).filter(el => el.length > 0);
-        let passwordList = this.passwordText.split("\n").map(el => el.trim()).filter(el => el.length > 0);
+        const userList = this.userListText.split("\n").map(el => el.trim()).filter(el => el.length > 0);
+        const passwordList = this.passwordText.split("\n").map(el => el.trim()).filter(el => el.length > 0);
         if (userList.length !== passwordList.length) {
             alert(this.$t("user number mismatch password number"));
             return [];
         }
-        let newPairList: any = [];
+        const newPairList: any = [];
         userList.forEach(el => {
             newPairList.push({
                 user_id: el,

@@ -253,9 +253,11 @@ export default class AddProblem extends Mixins(InitMixin) implements IKeyValue {
     all_label = [];
     prepend: ICodeSet = {
     };
+
     prependSelected = 0;
     append: ICodeSet = {
     };
+
     appendSelected = 0;
     files = [];
     id = null;
@@ -288,7 +290,7 @@ export default class AddProblem extends Mixins(InitMixin) implements IKeyValue {
     }
 
     async submit () {
-        let from = "local";
+        const from = "local";
         this.PrependAppendLanguage("prepend", 0, [21, 13, 28]);
         this.PrependAppendLanguage("prepend", 1, [19, 20, 14, 29]);
         this.PrependAppendLanguage("prepend", 3, [23, 24, 27]);
@@ -330,16 +332,16 @@ export default class AddProblem extends Mixins(InitMixin) implements IKeyValue {
             sendObj.imageData[target.expression] = i.markdownIt.__image || {};
         }
 
-        sendObj["time"] = this.time;
-        sendObj["memory"] = this.memory;
-        sendObj["title"] = this.title;
-        sendObj["sampleinput"] = this.sampleinput;
-        sendObj["sampleoutput"] = this.sampleoutput;
-        sendObj["spj"] = Number(this.spj);
-        sendObj["hint"] = this.hint;
+        sendObj.time = this.time;
+        sendObj.memory = this.memory;
+        sendObj.title = this.title;
+        sendObj.sampleinput = this.sampleinput;
+        sendObj.sampleoutput = this.sampleoutput;
+        sendObj.spj = Number(this.spj);
+        sendObj.hint = this.hint;
         const labels = this.label;
 
-        sendObj["label"] = unique(labels).join(" ");
+        sendObj.label = unique(labels).join(" ");
         this.axios.post(`/api/problem/${this.source}/${id}`, { json: sendObj })
             .then(({ data }) => {
                 if (data.status === "OK") {

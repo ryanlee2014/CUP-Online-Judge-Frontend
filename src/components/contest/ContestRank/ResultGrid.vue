@@ -22,12 +22,15 @@ const $: any = jquery;
 export default class ResultGrid extends Vue {
     @Prop({ default: 0 }) gridBackground!: number;
     @Prop({ default: () => {} }) lock!: any;
-    @Prop({ default: () => {
-        return {
-            accept: [],
-            submit: []
-        };
-    } }) problem!: any;
+    @Prop({
+        default: () => {
+            return {
+                accept: [],
+                submit: []
+            };
+        }
+    }) problem!: any;
+
     @Prop({ default: () => () => {} }) format_date!: (...ang: any[]) => any;
     get generateDataHTML () {
         let htmlBuilder = "<div class=\"ui list\">";
@@ -35,6 +38,7 @@ export default class ResultGrid extends Vue {
         htmlBuilder += "</div>";
         return htmlBuilder;
     }
+
     get gridBackgroundClass () {
         const gridBackground = this.gridBackground;
         if (gridBackground === 0) {

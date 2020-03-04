@@ -38,12 +38,13 @@ export default class Pagination extends Vue {
     total_menu = 0;
     created () {
         let width = document.body.clientWidth;
-        let container = 1100;
+        const container = 1100;
         if (width > 1127) {
             width = container;
         }
         this.total_menu = Math.max(0, Math.trunc(width * 0.7 / 42) - 4);
     }
+
     get pageList () {
         const { current_page, page_cnt, total, total_menu } = this;
         const list = Array.from(Array(Math.min(Math.ceil(total / page_cnt), total_menu)).keys()).map(function (n) {

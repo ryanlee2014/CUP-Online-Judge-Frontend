@@ -167,6 +167,7 @@ export default class ContestRank extends Mixins(mixins) {
         this.sockets.unsubscribe("submit");
         this.sockets.unsubscribe("result");
     }
+
     submitter: any = {};
     total = -1;
     start_time = dayjs();
@@ -194,6 +195,7 @@ export default class ContestRank extends Mixins(mixins) {
     get scoreboard () {
         return null;
     }
+
     set scoreboard (val: any) {
         const that = this;
         this.auto_update = false;
@@ -212,7 +214,7 @@ export default class ContestRank extends Mixins(mixins) {
             }
             else {
                 submitter = this.userStructure;
-                let lazyUpdateSet = new Set();
+                const lazyUpdateSet = new Set();
                 this.fillSubmitterList(submitter, val);
                 val.forEach((el: any) => typeof submitter[el.user_id.toLowerCase()] !== "undefined" ? lazyUpdateSet.add(submitter[el.user_id.toLowerCase()]) : "");
                 lazyUpdateSet.forEach(this.updateSubmitter);
@@ -240,11 +242,13 @@ export default class ContestRank extends Mixins(mixins) {
         }
         return val;
     }
+
     updateSubmitter (el: any) {
         el.calculatePenaltyTime();
         el.calculateAC();
         el.calculateFirstBlood(this.firstBloodList);
     }
+
     fillSubmitterList (submitter: any, val: any) {
         const len = val.length;
         for (let i = 0; i < len; ++i) {
@@ -260,6 +264,7 @@ export default class ContestRank extends Mixins(mixins) {
             }
         }
     }
+
     initUserTable (submitter: any) {
         _.forEach(this.users, (val: any) => {
             if (!submitter[val.user_id.toLowerCase()]) {
@@ -267,6 +272,7 @@ export default class ContestRank extends Mixins(mixins) {
             }
         });
     }
+
     calculateRank () {
         this.submitter.sort(SubmitterComparator("greater"));
         let rnk = 1;
@@ -275,6 +281,7 @@ export default class ContestRank extends Mixins(mixins) {
         this.totalNumber = 0;
         _.forEach(this.submitter, val => (val.rank = val.ac > 0 ? (++this.totalNumber, rnk++) : rnk));
     }
+
     rankClass (rank: any) {
         const total = this.totalNumber;
         rank = parseInt(rank);
@@ -291,6 +298,7 @@ export default class ContestRank extends Mixins(mixins) {
             return "ui white";
         }
     }
+
     playRanklist () {
         this.auto_update = false;
         this.playing = true;
@@ -305,6 +313,7 @@ export default class ContestRank extends Mixins(mixins) {
         this.firstRender = true;
         this.startInterval();
     }
+
     startInterval () {
         const backupTempData = this.backup_data;
         this.playInterval = setInterval(() => {
@@ -324,11 +333,13 @@ export default class ContestRank extends Mixins(mixins) {
             }
         }, 30);
     }
+
     endInterval () {
         clearInterval(this.playInterval);
         this.playing = false;
         this.auto_update = true;
     }
+
     pausePlayRanklist () {
         if (this.playing) {
             this.playing = false;
@@ -339,6 +350,7 @@ export default class ContestRank extends Mixins(mixins) {
             this.startInterval();
         }
     }
+
     stopPlayRanklist () {
         this.playing = false;
         clearInterval(this.playInterval);
@@ -346,6 +358,7 @@ export default class ContestRank extends Mixins(mixins) {
         this.backup_data = [];
         this.auto_update = true;
     }
+
     fillZero (str: string) {
         if (str.length < 2) {
             return "0" + str;
@@ -354,6 +367,7 @@ export default class ContestRank extends Mixins(mixins) {
             return str;
         }
     }
+
     format_date (second: any, mode = 0) {
         const fillZero = this.fillZero;
         second = parseInt(second);
@@ -367,8 +381,9 @@ export default class ContestRank extends Mixins(mixins) {
             return hour + ":" + minute + ":" + sec;
         }
     }
+
     formatColor (num: any) {
-        let str = num.toString(16);
+        const str = num.toString(16);
         if (num < 16) {
             return "0" + str + "0" + str;
         }
@@ -376,6 +391,7 @@ export default class ContestRank extends Mixins(mixins) {
             return "" + str + "" + str;
         }
     }
+
     detectPlace (ip: any) {
         if (!ip) {
             return "未知";
@@ -385,19 +401,22 @@ export default class ContestRank extends Mixins(mixins) {
             place: ""
         });
     }
+
     convertHTML (str: string) {
-        let d = document.createElement("div");
+        const d = document.createElement("div");
         d.innerHTML = str;
         return d.innerText;
     }
+
     decodeHTML (str: string) {
         if (typeof str !== "string") {
             str = "";
         }
         return str.replace("·", "&middot;");
     }
+
     exportXLS () {
-        let doc: any = document.getElementById("save");
+        const doc: any = document.getElementById("save");
         let XLSContentHTML = "<html xmlns:o=\"urn:schemas-microsoft-com:office:office\" xmlns:x=\"urn:schemas-microsoft-com:office:excel\" xmlns=\"http://www.w3.org/TR/REC-html40\">" + "<head><meta http-equiv='Content-Type' content='application/vnd.ms-excel; charset=utf-8' /></head>";
         XLSContentHTML += "<center><h3>Contest " + this.cid + " " + this.title + "</h3></center>";
         XLSContentHTML += "<table border=1>" + doc.innerHTML.replace("<tbody>", "").replace("</tbody>", "");
@@ -423,10 +442,11 @@ export default class ContestRank extends Mixins(mixins) {
         // filename = filename.substring(0,31);
         // table.export2file(d.data,d.mimeType,filename,d.fileExtension,d.merges)
     }
+
     handleNewSubmit (data: any) {
         if (parseInt(data.contest_id) === parseInt(this.cid)) {
             if (data.finish === 1) {
-                let ndata = {
+                const ndata = {
                     nick: data.nick,
                     user_id: data.user_id,
                     start_time: this.start_time,
@@ -454,14 +474,14 @@ export default class ContestRank extends Mixins(mixins) {
 
     @Watch("add_name")
     onAddNameChanged (newVal: any) {
-        let that = this;
+        const that = this;
         if (!newVal) return;
         for (let i = 0; i < this.submitter.length; ++i) {
             this.axios.get(`/api/user/nick/${this.decodeHTML(this.submitter[i].nick)}`)
                 .then(({ data }) => {
                     if (data && data.data && data.data.length > 0) {
-                        let nick = data.nick;
-                        let nickArray = data.data;
+                        const nick = data.nick;
+                        const nickArray = data.data;
                         let userId = "";
                         for (let j = 0; j < nickArray.length; ++j) {
                             if (!isNaN(nickArray[j].user_id)) {
@@ -497,6 +517,7 @@ export default class ContestRank extends Mixins(mixins) {
             });
         });
     }
+
     mounted () {
         // @ts-ignore
         window.datas = [];
@@ -523,7 +544,7 @@ export default class ContestRank extends Mixins(mixins) {
             }
             let cnt = 0;
             let dataSet: any = [];
-            let users = new Set();
+            const users = new Set();
 
             const work = () => {
                 cid = cidArr.shift();

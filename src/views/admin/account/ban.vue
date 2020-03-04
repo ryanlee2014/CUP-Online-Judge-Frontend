@@ -49,6 +49,7 @@ export default class AdminBanUser extends Mixins(mixins) {
     mounted () {
         this.initData();
     }
+
     initData () {
         this.axios.get("/api/admin/account/ban")
             .then(({ data }) => {
@@ -57,6 +58,7 @@ export default class AdminBanUser extends Mixins(mixins) {
                 }
             });
     }
+
     remove (userId: string) {
         this.axios.post("/api/admin/account/ban/delete", {
             user_id: userId
@@ -71,6 +73,7 @@ export default class AdminBanUser extends Mixins(mixins) {
                 }
             });
     }
+
     edit (userId: string) {
         $(this.$refs[userId]).calendar();
     }

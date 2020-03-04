@@ -53,9 +53,11 @@ export default class TutorialAdd extends Mixins(mixins) {
     created () {
         this.id = this.$route.params.problem_id;
     }
+
     mounted () {
         document.title = `Add Tutorial -- ${document.title}`;
     }
+
     fetch_solution () {
         const that = this;
         this.axios.get(`/api/status/${this.id}/my/null/4/0`)
@@ -68,6 +70,7 @@ export default class TutorialAdd extends Mixins(mixins) {
                 }
             });
     }
+
     create_post () {
         const send = {
             solution_id: this.solution_id,

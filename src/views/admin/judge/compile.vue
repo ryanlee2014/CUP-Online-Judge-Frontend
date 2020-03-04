@@ -49,7 +49,7 @@ export default class CompileView extends Mixins(InitMixin) {
         initCompileArguments () {
             this.axios.get("/api/admin/system/compile/compile_arguments")
                 .then(({ data }) => {
-                    let compileArguments = data.data;
+                    const compileArguments = data.data;
                     _.forEach(compileArguments, (value, index) => {
                         compileArguments[index] = value.join(" ");
                     });
@@ -58,7 +58,7 @@ export default class CompileView extends Mixins(InitMixin) {
         }
 
         submitCompileArguments () {
-            let compileArguments = {} as ICompileArguments;
+            const compileArguments = {} as ICompileArguments;
             _.forEach(this.compileArguments, (value, index) => {
                 compileArguments[index] = value.split(" ").map(e => e.trim());
             });

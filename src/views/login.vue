@@ -69,6 +69,7 @@ export default class Login extends Mixins(mixins) {
     mounted () {
         document.title = `Login -- ${document.title}`;
     }
+
     user_id = "";
     password = "";
     captcha = "";

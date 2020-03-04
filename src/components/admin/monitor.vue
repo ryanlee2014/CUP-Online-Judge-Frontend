@@ -89,10 +89,10 @@ import Vue from "vue";
 import Chart from "chart.js";
 import _ from "lodash";
 let defaultSpan = 0;
-let spans = [];
-let statusCodesColors = ["#75D701", "#47b8e0", "#ffc952", "#E53A40"];
+const spans = [];
+const statusCodesColors = ["#75D701", "#47b8e0", "#ffc952", "#E53A40"];
 
-let defaultOptions = {
+const defaultOptions = {
     scales: {
         yAxes: [{
             ticks: {
@@ -117,7 +117,7 @@ let defaultOptions = {
     animation: false
 };
 
-let createChart = function (ctx, dataset) {
+const createChart = function (ctx, dataset) {
     return new Chart(ctx, {
         type: "line",
         data: {
@@ -127,22 +127,22 @@ let createChart = function (ctx, dataset) {
         options: defaultOptions
     });
 };
-let defaultDataset = {
+const defaultDataset = {
     label: "",
     data: [],
     lineTension: 0.2,
     pointRadius: 0
 };
 
-let addTimestamp = function (point) {
+const addTimestamp = function (point) {
     return point.timestamp;
 };
 
-let cpuDataset = [Object.create(defaultDataset)];
-let memDataset = [Object.create(defaultDataset)];
-let loadDataset = [Object.create(defaultDataset)];
-let responseTimeDataset = [Object.create(defaultDataset)];
-let rpsDataset = [Object.create(defaultDataset)];
+const cpuDataset = [Object.create(defaultDataset)];
+const memDataset = [Object.create(defaultDataset)];
+const loadDataset = [Object.create(defaultDataset)];
+const responseTimeDataset = [Object.create(defaultDataset)];
+const rpsDataset = [Object.create(defaultDataset)];
 let cpuStat;
 let memStat;
 let loadStat;
@@ -170,11 +170,11 @@ export default class Monitor extends Vue {
         const that = this;
         this.prepare();
         this.$socket.emit("esm_change");
-        let onSpanChange = function (e) {
+        const onSpanChange = function (e) {
             e.target.classList.add("active");
             defaultSpan = parseInt(e.target.id, 10);
 
-            let otherSpans = document.getElementsByTagName("span");
+            const otherSpans = document.getElementsByTagName("span");
 
             for (let i = 0; i < otherSpans.length; i++) {
                 if (otherSpans[i] !== e.target) otherSpans[i].classList.remove("active");
@@ -195,7 +195,7 @@ export default class Monitor extends Vue {
             data[defaultSpan].responses.pop();
             data[defaultSpan].os.pop();
 
-            let lastOsMetric = data[defaultSpan].os[data[defaultSpan].os.length - 1];
+            const lastOsMetric = data[defaultSpan].os[data[defaultSpan].os.length - 1];
 
             cpuStat.textContent = "0.0%";
             if (lastOsMetric) {
@@ -227,7 +227,7 @@ export default class Monitor extends Vue {
             });
             loadChart.data.labels = data[defaultSpan].os.map(addTimestamp);
 
-            let lastResponseMetric = data[defaultSpan].responses[data[defaultSpan].responses.length - 1];
+            const lastResponseMetric = data[defaultSpan].responses[data[defaultSpan].responses.length - 1];
 
             responseTimeStat.textContent = "0.00ms";
             if (lastResponseMetric) {
@@ -262,7 +262,7 @@ export default class Monitor extends Vue {
                 chart.update();
             });
 
-            let spanControls = document.getElementById("span-controls");
+            const spanControls = document.getElementById("span-controls");
 
             if (data.length !== spans.length) {
                 data.forEach(function (span, index) {
@@ -271,8 +271,8 @@ export default class Monitor extends Vue {
                         interval: span.interval
                     });
 
-                    let spanNode = document.createElement("span");
-                    let textNode = document.createTextNode(((span.retention * span.interval) / 60) + " Minute");
+                    const spanNode = document.createElement("span");
+                    const textNode = document.createTextNode(((span.retention * span.interval) / 60) + " Minute");
                     spanNode.className = "ui tiny button";
                     spanNode.appendChild(textNode);
                     spanNode.setAttribute("id", index);
@@ -284,8 +284,8 @@ export default class Monitor extends Vue {
             this.sockets.subscribe("esm_stats", function (data) {
                 if (data.retention === spans[defaultSpan].retention &&
                     data.interval === spans[defaultSpan].interval) {
-                    let os = data.os;
-                    let responses = data.responses;
+                    const os = data.os;
+                    const responses = data.responses;
 
                     cpuStat.textContent = "0.0%";
                     if (os) {

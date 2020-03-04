@@ -59,6 +59,7 @@ export default class ContestView extends Mixins(Vue, TimerMixin) {
     updateCurrentTime () {
         this.current_time = dayjs();
     }
+
     contestTimeFormat (row: any) {
         if (Object.prototype.hasOwnProperty.call(row, "_format_") && typeof row._format_ === "string") {
             return row._format_;
@@ -123,8 +124,8 @@ export default class ContestView extends Mixins(Vue, TimerMixin) {
             return 100;
         }
         else {
-            let diffTime = currentTime.diff(startTime!, "second");
-            let totalDiff = endTime!.diff(startTime!, "second");
+            const diffTime = currentTime.diff(startTime!, "second");
+            const totalDiff = endTime!.diff(startTime!, "second");
             return Math.trunc(Math.floor(diffTime * 100 / totalDiff));
         }
     }

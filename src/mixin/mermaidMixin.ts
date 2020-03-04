@@ -18,6 +18,7 @@ export default class MermaidMixin extends Vue {
             }
         });
     }
+
     initMermaid () {
         $(".mermaid").each(function (el: any, v: any) {
             mermaid.init(v);

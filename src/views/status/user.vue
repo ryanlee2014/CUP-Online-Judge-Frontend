@@ -106,11 +106,11 @@ const am4themes_animated = require("@amcharts/amcharts4/themes/animated").defaul
 function drawgraph (_data: any, div = 10) {
     div = Math.max(div, 1);
     am4core.useTheme(am4themes_animated);
-    let chart: any = am4core.create("chartdiv", am4charts.XYChart);
+    const chart: any = am4core.create("chartdiv", am4charts.XYChart);
     chart.hiddenState.properties.opacity = 0; // this creates initial fade-in
-    let mx = _data[0];
-    let mn = _data[_data.length - 1];
-    let diff = Math.trunc((mx - mn) / div);
+    const mx = _data[0];
+    const mn = _data[_data.length - 1];
+    const diff = Math.trunc((mx - mn) / div);
     let gap = mx - diff;
     let target: any = [];
     for (let i = 0; i < div - 1; ++i) {
@@ -152,18 +152,18 @@ function drawgraph (_data: any, div = 10) {
     });
     target = target.reverse();
     chart.data = target;
-    let categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
+    const categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
     categoryAxis.renderer.grid.template.location = 0;
     categoryAxis.dataFields.category = "part";
     categoryAxis.renderer.minGridDistance = 40;
     categoryAxis.fontSize = 11;
 
-    let valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+    const valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
     valueAxis.min = 0;
     valueAxis.max = mxcnt;
     valueAxis.strictMinMax = true;
     valueAxis.renderer.minGridDistance = 30;
-    let series = chart.series.push(new am4charts.ColumnSeries());
+    const series = chart.series.push(new am4charts.ColumnSeries());
     series.dataFields.categoryX = "part";
     series.dataFields.valueY = "count";
     series.columns.template.tooltipText = "{valueY.value}";
@@ -217,7 +217,7 @@ export default class UserStatus extends Mixins(mixins) {
 
     @Watch("lower")
     onLowerChanged (newVal: any, oldVal: any) {
-        let that = this;
+        const that = this;
         this.$nextTick(function () {
             that.rangeChange();
         });
@@ -225,7 +225,7 @@ export default class UserStatus extends Mixins(mixins) {
 
     @Watch("greater")
     onGreaterChanged (newVal: any, oldVal: any) {
-        let that = this;
+        const that = this;
         this.$nextTick(function () {
             that.rangeChange();
         });
@@ -234,14 +234,15 @@ export default class UserStatus extends Mixins(mixins) {
     @Watch("range")
     onRangeChanged (newVal: any, oldVal: any) {
         if (!newVal) {
-            let that = this;
+            const that = this;
             this.$nextTick(function () {
                 that.generate(that.raw_data);
             });
         }
     }
+
     mounted () {
-        let that = this;
+        const that = this;
         this.loading = true;
         this.axios.get("/api/contest/list")
             .then(response => {
@@ -269,9 +270,10 @@ export default class UserStatus extends Mixins(mixins) {
         this.cidArray = cidArray;
         this.header = cidArray;
     }
+
     getData () {
-        let that = this;
-        let promiseArray: any = [];
+        const that = this;
+        const promiseArray: any = [];
         _.forEach(this.cidArray, (val) => {
             promiseArray.push(new Promise((resolve, reject) => {
                 this.axios.get(`/api/scoreboard/${val}/line`)
@@ -291,9 +293,10 @@ export default class UserStatus extends Mixins(mixins) {
                 that.generate(val);
             });
     }
+
     sortOrder (type: any) {
-        let target = this.status_data;
-        let order = this.order;
+        const target = this.status_data;
+        const order = this.order;
         switch (type) {
         case 1:
             target.sort(function (a: any, b: any) {
@@ -332,8 +335,9 @@ export default class UserStatus extends Mixins(mixins) {
             break;
         }
     }
+
     sort (type: any) {
-        let current_type = this.type;
+        const current_type = this.type;
         if (current_type != type) {
             this.order = 1;
         }
@@ -343,6 +347,7 @@ export default class UserStatus extends Mixins(mixins) {
         this.type = type;
         this.sortOrder(type);
     }
+
     rangeChange () {
         if (!isNaN(this.lower) || !isNaN(this.greater)) {
             this.lower = parseInt(this.lower);
@@ -363,26 +368,27 @@ export default class UserStatus extends Mixins(mixins) {
         }
         if (this.ranged) { this.generate(this.raw_data); }
     }
+
     generate (data: any) {
-        let that = this;
+        const that = this;
         new Promise(function (resolve, reject) {
             resolve(data);
         }).then(function (val: any) {
-            let greater = that.greater;
-            let lower = that.lower;
+            const greater = that.greater;
+            const lower = that.lower;
             let newArray: any = [];
             _.forEach(val, function (v: any) {
                 let concatArray = _.values(v.map);
-                let user = v.user.map(function (el: any) { return el.user_id; });
+                const user = v.user.map(function (el: any) { return el.user_id; });
                 if (user.length > 0) {
-                    let tempArray: any = [];
+                    const tempArray: any = [];
                     _.forEach(concatArray, function (value) {
                         if (user.includes(value.user_id)) {
                             if (that.ranged) {
                                 if (isNaN(value.user_id)) {
                                     return;
                                 }
-                                let user_id_num = parseInt(value.user_id);
+                                const user_id_num = parseInt(value.user_id);
                                 if (user_id_num < greater || user_id_num > lower) {
                                     return;
                                 }
@@ -397,7 +403,7 @@ export default class UserStatus extends Mixins(mixins) {
             return newArray;
         })
             .then(function (val) {
-                let map: any = {};
+                const map: any = {};
                 _.forEach(val, function (v) {
                     if (typeof map[v.user_id] === "undefined") {
                         map[v.user_id] = {
@@ -444,7 +450,7 @@ export default class UserStatus extends Mixins(mixins) {
                 return val;
             })
             .then(function (val: any) {
-                let tot: any = [];
+                const tot: any = [];
                 _.forEach(val, function (v: any) {
                     tot.push(v.total_line);
                 });
@@ -460,6 +466,7 @@ export default class UserStatus extends Mixins(mixins) {
                 that.loading = false;
             });
     }
+
     run (type: any) {
         this.updatecidArrayFromSelect();
         this.getData();

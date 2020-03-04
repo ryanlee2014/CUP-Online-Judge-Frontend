@@ -54,7 +54,7 @@ export default class RuntimeInfo extends Mixins(mixins) {
             this.axios.get(`/api/status/runtime_info/${this.solution_id}`)
                 .then(({ data }) => {
                     if (data.status === "OK") {
-                        let text = data.data.info;
+                        const text = data.data.info;
                         this.initContext(text);
                     }
                     else {
@@ -99,9 +99,9 @@ export default class RuntimeInfo extends Mixins(mixins) {
                     break;
                 }
             }
-            let files: any = text.match(/[0-9A-Za-z]+\.out/g);
-            let left_array = left;
-            let right_array = right;
+            const files: any = text.match(/[0-9A-Za-z]+\.out/g);
+            const left_array = left;
+            const right_array = right;
             left = "";
             right = "";
             let idx = 0;
@@ -116,8 +116,8 @@ export default class RuntimeInfo extends Mixins(mixins) {
                 this.diffmode = true;
                 left = left.split("[TestRunOut]").join("");
                 right = right.split("[UserOut]").join("");
-                let originalModel = monaco.editor.createModel(left, "plain/text");
-                let modifiedModel = monaco.editor.createModel(right, "plain/text");
+                const originalModel = monaco.editor.createModel(left, "plain/text");
+                const modifiedModel = monaco.editor.createModel(right, "plain/text");
                 this.$forceUpdate();
                 this.$nextTick(() => {
                     const diffEditor = this.diffEditor = monaco.editor.createDiffEditor(document.getElementById("container")!, { scrollBeyondLastLine: false });

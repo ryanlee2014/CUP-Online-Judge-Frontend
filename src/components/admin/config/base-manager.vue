@@ -71,6 +71,7 @@ export default class BaseManager extends Mixins(mixins) {
                 this.configList = configList;
             });
     }
+
     activateModal (act: string, payload: any) {
         if (act === "add") {
             this.$refs.modal.activate();
@@ -79,6 +80,7 @@ export default class BaseManager extends Mixins(mixins) {
             this.$refs.modal.activate(payload);
         }
     }
+
     updateConfig (payload: any) {
         this.axios.post(`/api/setting/devconfig/${this.prefix}/update`, payload)
             .then(({ data }) => {
@@ -92,6 +94,7 @@ export default class BaseManager extends Mixins(mixins) {
                 }
             });
     }
+
     removeConfig (key: any) {
         this.axios.post(`/api/setting/devconfig/${this.prefix}/delete`, { key })
             .then(({ data }) => {

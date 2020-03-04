@@ -67,18 +67,18 @@ export default class StatusViewMixin extends Vue {
     }
 
     setQuery () {
-        let queryobject: any = {};
+        const queryobject: any = {};
         if (this.user_id && this.user_id!.length > 0) {
-            queryobject["user_id"] = this.user_id;
+            queryobject.user_id = this.user_id;
         }
         if (this.problem_result && this.problem_result !== -1) {
-            queryobject["result"] = this.problem_result;
+            queryobject.result = this.problem_result;
         }
         if (this.problem_id && this.problem_id !== 0) {
-            queryobject["problem_id"] = this.problem_id;
+            queryobject.problem_id = this.problem_id;
         }
         if (this.language && this.language !== -1) {
-            queryobject["language"] = this.language;
+            queryobject.language = this.language;
         }
         this.$router.push({ path: this.$route.path, query: queryobject });
     }
@@ -88,7 +88,7 @@ export default class StatusViewMixin extends Vue {
     }
 
     list_self_only () {
-        let selfUserId = this.$store.getters.user_id;
+        const selfUserId = this.$store.getters.user_id;
         if (this.user_id == null || this.user_id !== selfUserId) {
             this.user_id = selfUserId;
         }

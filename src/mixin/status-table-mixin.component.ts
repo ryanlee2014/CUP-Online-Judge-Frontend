@@ -55,6 +55,7 @@ export class StatusTableMixin extends Vue {
         }
         return time.toString().substring(0, 5) + unit[cnt];
     }
+
     detect_place (ip: string) {
         if (!ip) {
             return "未知";
@@ -66,6 +67,7 @@ export class StatusTableMixin extends Vue {
         utils.detectIP(tmp);
         return tmp.place;
     }
+
     infoRoute (result: string) {
         if (parseInt(result) === 11) {
             return "compile";
@@ -79,7 +81,7 @@ export class StatusTableMixin extends Vue {
         });
         const doc = document.createElement("div");
         let temp;
-        for (let i in this.problem_list) {
+        for (const i in this.problem_list) {
             doc.innerHTML = this.problem_list[i].nick;
             temp = this.problem_list[i];
             temp.nick = doc.innerText;

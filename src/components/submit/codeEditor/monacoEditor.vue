@@ -104,6 +104,7 @@ export default class MonacoEditor extends Vue {
         monaco.editor.setTheme(this.getThemeFromStorage());
         this.modelEventRegistry();
     }
+
     modelEventRegistry () {
         const currentModel = this.editor.getModel();
         currentModel.onDidChangeContent(() => {
@@ -113,6 +114,7 @@ export default class MonacoEditor extends Vue {
             });
         });
     }
+
     getDataFromStorage (defaultValue: any, key: string) {
         let data;
         try {
@@ -123,9 +125,11 @@ export default class MonacoEditor extends Vue {
         }
         return data;
     }
+
     getThemeFromStorage () {
         return this.getDataFromStorage("vs-dark", "theme");
     }
+
     getFontSizeFromStorage () {
         return this.getDataFromStorage(16, "fontSize");
     }

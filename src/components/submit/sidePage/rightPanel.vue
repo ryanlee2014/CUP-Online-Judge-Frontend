@@ -154,11 +154,13 @@ export default class RightPanel extends Vue {
                 return {};
             }
         }) prepend!: any;
+
         @Prop({
             default: () => {
                 return {};
             }
         }) append!: any;
+
         @Prop({ default: null }) source_code_language!: number | null;
         @Prop({ default: false }) iscontest!: boolean;
         @Prop({ default: "" }) judgeInfoText!: string;
@@ -168,10 +170,12 @@ export default class RightPanel extends Vue {
             default: () => {
             }
         }) do_submit!: (...arg: any[]) => any;
+
         @Prop({
             default: () => {
             }
         }) pre_test_run!: (...arg: any[]) => any;
+
         @Prop({ default: false }) submitDisabled!: boolean;
         @Prop({ default: false }) hide_warning!: boolean;
         @Prop({ default: "" }) source_code!: string;
@@ -190,8 +194,8 @@ export default class RightPanel extends Vue {
             });
             require(`brace/mode/${this.language[val]}`);
             $("#language").dropdown("set selected", val.toString());
-            let prepend: any = this.prepend;
-            let append: any = this.append;
+            const prepend: any = this.prepend;
+            const append: any = this.append;
             if (prepend && prepend[val] !== this.current_prepend) {
                 this.current_prepend = prepend[val];
                 if (this.prependView) {
@@ -337,7 +341,7 @@ export default class RightPanel extends Vue {
         }
 
         initClipboard () {
-            let obj = document.getElementById("clipbtn");
+            const obj = document.getElementById("clipbtn");
             const that = this;
             if (obj) {
                 const clipboard = new Clipboard(obj, {

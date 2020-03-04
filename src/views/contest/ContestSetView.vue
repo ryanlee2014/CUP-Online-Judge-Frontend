@@ -142,6 +142,7 @@ export default class ContestSetView extends Mixins(mixins, TimerMixin) {
         }
         this.current_page = page;
     }
+
     mounted () {
         document.title = `Contest Set -- ${document.title}`;
         this.axios.get("/api/contest/total")
@@ -153,7 +154,7 @@ export default class ContestSetView extends Mixins(mixins, TimerMixin) {
     }
 
     setQuery (mergeOptions?: any) {
-        let queryString: any = Object.assign({}, this.$route.query);
+        const queryString: any = Object.assign({}, this.$route.query);
         Object.assign(queryString, mergeOptions);
         this.$router.push({ path: this.$route.path, query: queryString });
     }
@@ -202,7 +203,7 @@ export default class ContestSetView extends Mixins(mixins, TimerMixin) {
 
     getParams () {
         const params = this.$route.query;
-        for (let key in params) {
+        for (const key in params) {
             if (!Object.prototype.hasOwnProperty.call(params, key)) {
                 continue;
             }
@@ -221,6 +222,7 @@ export default class ContestSetView extends Mixins(mixins, TimerMixin) {
     init () {
         this.clock();
     }
+
     bindPopup () {
         if (this.admin) {
             $(".ui.padded.table").popup({

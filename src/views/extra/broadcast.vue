@@ -30,6 +30,7 @@ export default class Broadcast extends Mixins(mixins) {
     get renderContents () {
         return markdownIt.render(this.contents);
     }
+
     mounted () {
         document.title = `User broadcase -- ${document.title}`;
     }
@@ -41,6 +42,7 @@ export default class Broadcast extends Mixins(mixins) {
             content: this.renderContents
         });
     }
+
     test () {
         const data = {
             user_id: this.$store.getters.user_id,

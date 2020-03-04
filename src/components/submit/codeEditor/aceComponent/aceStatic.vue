@@ -39,6 +39,7 @@ export default class AceStatic extends Vue {
             }
         });
     }
+
     renderHighlight () {
         const h = this.highlight;
         if (typeof h === "function") {

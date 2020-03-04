@@ -21,7 +21,7 @@ export default class NavbarMixin extends Vue {
     intervalId = -1;
     _connectTry (times: number) {
         (async () => {
-            let Promise = require("bluebird");
+            const Promise = require("bluebird");
             while (times-- > 0) {
                 if (this.$socket && this.$socket.connect && typeof this.$socket.connect === "function") {
                     if (!this.$socket.connected) {
@@ -36,6 +36,7 @@ export default class NavbarMixin extends Vue {
             }
         })();
     }
+
     bindSocketObserver () {
         const that = this;
         Object.defineProperty(this.$socket, "connected", {
@@ -107,7 +108,7 @@ export default class NavbarMixin extends Vue {
                         class: "info",
                         displayTime: 0,
                         closeIcon: true,
-                        message: "<div class='header'>From:" + data["user_id"] + "<br>" + data["nick"] + "</div><div class='content'>" + data["content"] + "</div>"
+                        message: "<div class='header'>From:" + data.user_id + "<br>" + data.nick + "</div><div class='content'>" + data.content + "</div>"
                     }, 500);
             });
         });

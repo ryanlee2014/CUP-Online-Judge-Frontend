@@ -24,7 +24,7 @@ export default class MonacoStatic extends Vue {
         if (fontSize < 6) {
             fontSize = 6;
         }
-        let heightOfEachLine = Math.round((fontSize * 4 + 2) / 3);
+        const heightOfEachLine = Math.round((fontSize * 4 + 2) / 3);
         return heightOfEachLine * this.lines + 10;
     }
 

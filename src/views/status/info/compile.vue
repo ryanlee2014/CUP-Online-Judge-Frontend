@@ -17,6 +17,7 @@ export default class CompileInfo extends Mixins(mixins) {
     created () {
         this.solution_id = this.$route.params.solution_id;
     }
+
     mounted () {
         document.title = `${this.solution_id} Compile Information -- ${document.title}`;
         this.axios.get(`/api/status/compile_info/${this.solution_id}`)
@@ -29,6 +30,7 @@ export default class CompileInfo extends Mixins(mixins) {
                 }
             });
     }
+
     convertHTML (html: string) {
         doc.innerText = html;
         return doc.innerHTML;

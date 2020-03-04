@@ -105,6 +105,7 @@ export default class ContestList extends Mixins(mixins) {
     defunctToBoolean (defunct: string) {
         return defunct === "N";
     }
+
     flushData (page: any) {
         this.axios.get(`/api/admin/contest/list/${page}`)
             .then(({ data }) => {
@@ -112,17 +113,21 @@ export default class ContestList extends Mixins(mixins) {
                 this.total_number = data.data.count;
             });
     }
+
     setQuery () {
-        let queryString: any = {};
+        const queryString: any = {};
         queryString.page = this.current_page;
         this.$router.push({ path: this.$route.path, query: queryString });
     }
+
     remove (problemID: any) {
         // TODO
     }
+
     page (num: any, arrow: any) {
         this.current_page = arrow ? this.current_page + arrow : num;
     }
+
     defunct (contestID: any) {
         this.axios.post("/api/admin/contest/defunct", { id: contestID })
             .then(({ data }) => {

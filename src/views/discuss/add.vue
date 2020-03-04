@@ -70,6 +70,7 @@ export default class DiscussAdd extends Mixins(mixins) {
                 }
             });
     }
+
     mounted () {
         document.title = `Add Thread -- ${document.title}`;
     }

@@ -182,12 +182,12 @@ export default class Home extends Mixins(InitMixin) {
             });
         this.axios.get("/api/update_log/latest")
             .then((response) => {
-                let data = response.data.data[0];
-                let version = data.version;
-                let vj_version = data.vj_version;
-                let frontendVersion = data.frontend_version;
-                let content = data.msg;
-                let time = dayjs(data.mtime).format("YYYY-MM-DD");
+                const data = response.data.data[0];
+                const version = data.version;
+                const vj_version = data.vj_version;
+                const frontendVersion = data.frontend_version;
+                const content = data.msg;
+                const time = dayjs(data.mtime).format("YYYY-MM-DD");
                 $(".maintain").html("Version:" + time).attr("data-html", "<div class='ui header'>" +
                     "升级维护内容" +
                     "<div class='sub header'>引擎版本:" + version +
@@ -224,10 +224,10 @@ export default class Home extends Mixins(InitMixin) {
 
         window.picid = 5;
         this.axios.get("/api/login/").then(({ data }) => {
-            let logined = data.logined;
+            const logined = data.logined;
             setTimeout(function () {
                 $("#main_container").removeClass("unvisible");
-                let maintainTime = anime.timeline({ loop: false })
+                const maintainTime = anime.timeline({ loop: false })
                     .add({
                         targets: ".ml14 .line",
                         scaleX: [0, 1],
@@ -271,7 +271,7 @@ export default class Home extends Mixins(InitMixin) {
                         duration: 500,
                         offset: "-=300",
                         complete: function () {
-                            let $style = $("style");
+                            const $style = $("style");
                             let $html = $style.eq($style.length - 1).html();
                             $html += "\n.gr5::after{\nopacity:0.5;\n}\n";
                             $style.eq($style.length - 1).html($html);

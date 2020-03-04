@@ -22,6 +22,7 @@ export default class ProgressBar extends Mixins(SemanticEnvMixin) {
             this.element!.progress("remove active");
         }
     }
+
     @Prop({ default: "" }) size!: string;
     @Prop({ default: "" }) color!: string;
     @Prop({ default: false }) active!: boolean;
@@ -29,9 +30,11 @@ export default class ProgressBar extends Mixins(SemanticEnvMixin) {
     updated () {
         this.mountFunc();
     }
+
     mounted () {
         this.mountFunc();
     }
+
     mountFunc () {
         if (this.element === null) {
             this.element = $(this.$refs.progressBarElement);
@@ -44,8 +47,9 @@ export default class ProgressBar extends Mixins(SemanticEnvMixin) {
             this.prevPercentage = this.percentage;
         }
     }
+
     get progressBarClass () {
-        let classArray = ["ui", "progress"];
+        const classArray = ["ui", "progress"];
         if (this.size.length > 0) {
             classArray.push(this.size);
         }

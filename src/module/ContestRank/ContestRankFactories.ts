@@ -94,8 +94,8 @@ export function earlyFirstComparator (a: Dayjs, b: Dayjs) {
 }
 
 export function toArray (targetObject: any) {
-    let newArray = [];
-    for (let index in targetObject) {
+    const newArray = [];
+    for (const index in targetObject) {
         if (Object.prototype.hasOwnProperty.call(targetObject, index) && !isNaN(parseInt(index))) {
             newArray.push(targetObject[index]);
         }
@@ -104,7 +104,7 @@ export function toArray (targetObject: any) {
 }
 
 export function ProblemFactory (): Problem {
-    let baseProblem: Problem = {
+    const baseProblem: Problem = {
         submit: [],
         accept: [],
         sim: 0,
@@ -158,7 +158,7 @@ export function ProblemFactory (): Problem {
             this.submit.sort(earlyFirstComparator);
             let diffTime = this.accept[0].diff(startTime, "second");
             this.try_time = 0;
-            for (let submission of this.submit) {
+            for (const submission of this.submit) {
                 if (submission.isBefore(this.accept[0])) {
                     ++this.try_time;
                     diffTime += 1200; // 20min
@@ -186,7 +186,7 @@ export function ProblemFactory (): Problem {
 }
 
 export function ProblemListFactory (total: number): ProblemList {
-    let problem: ProblemList = {
+    const problem: ProblemList = {
         get: emptyFunction,
         toArray: emptyFunction,
         calculatePenaltyTime: emptyFunction,
@@ -212,7 +212,7 @@ export function ProblemListFactory (total: number): ProblemList {
 
     problem.calculatePenaltyTime = function () {
         let penaltyTime = 0;
-        for (let index in problem) {
+        for (const index in problem) {
             if (Object.prototype.hasOwnProperty.call(problem, index) && !isNaN(parseInt(index))) {
                 penaltyTime += problem[index].calculatePenaltyTime();
             }
@@ -222,7 +222,7 @@ export function ProblemListFactory (total: number): ProblemList {
 
     problem.calculateAC = function () {
         let ac = 0;
-        for (let index in problem) {
+        for (const index in problem) {
             if (Object.prototype.hasOwnProperty.call(problem, index) && !isNaN(parseInt(index))) {
                 if (problem[index].accept.length > 0) {
                     ++ac;
@@ -258,8 +258,8 @@ export function UserIDFactory (userId: any) {
 }
 
 export function SetFactory () {
-    let set = new Set<any>();
-    let _add = set.add;
+    const set = new Set<any>();
+    const _add = set.add;
     set.add = function (val: any) {
         if (typeof val !== "undefined") {
             // @ts-ignore
@@ -274,7 +274,7 @@ export function SetFactory () {
 
 export function firstBloodFactory () {
     const INFINITY = 1e11;
-    let firstBloodInfo: FirstBlood = {
+    const firstBloodInfo: FirstBlood = {
         time: INFINITY,
         person: { first_blood: true },
         setFirstBlood: emptyFunction,
@@ -295,7 +295,7 @@ export function firstBloodFactory () {
 }
 
 export function firstBloodListFactory (total?: number) {
-    let firstBlood: FirstBloodList = {
+    const firstBlood: FirstBloodList = {
         get: emptyFunction,
         newInstance: emptyFunction
     };
@@ -342,10 +342,10 @@ export function SubmitterFactory (nick: string, totalProblem: number, userId?: s
             this.ac = this.problem.calculateAC();
         },
         calculateFirstBlood (firstBloodList: FirstBloodList) {
-            for (let index in this.problem) {
+            for (const index in this.problem) {
                 try {
                     if (Object.prototype.hasOwnProperty.call(this.problem, index) && !isNaN(parseInt(index)) && this.problem[index].isAccepted()) {
-                        let difftime = this.problem[index].getAcceptTime().diff(this.problem[index].start_time, "second");
+                        const difftime = this.problem[index].getAcceptTime().diff(this.problem[index].start_time, "second");
                         firstBloodList.get(index).setFirstBlood(difftime, this.problem.get(index));
                     }
                 }

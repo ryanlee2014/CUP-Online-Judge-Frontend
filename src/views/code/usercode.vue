@@ -119,6 +119,7 @@ export default class UserCode extends Mixins(mixins) {
     created () {
         this.user_id = this.$store.getters.user_id;
     }
+
     mounted () {
         const solutionId = this.$route.params.solution_id;
         document.title = `Solution ${solutionId} -- ${document.title}`;
@@ -146,6 +147,7 @@ export default class UserCode extends Mixins(mixins) {
                 }
             });
     }
+
     bindClipboardDOM () {
         clipboard.on("success", function () {
             $("#copy")
@@ -157,6 +159,7 @@ export default class UserCode extends Mixins(mixins) {
                 .popup("show");
         });
     }
+
     ban () {
         this.axios.post("/api/status/ban_submission", { solution_id: this.$route.params.solution_id })
             .then(response => {
@@ -164,6 +167,7 @@ export default class UserCode extends Mixins(mixins) {
                 console.log(response.data);
             });
     }
+
     rejudge () {
         this.axios.post("/api/status/rejudge", { solution_id: this.$route.params.solution_id })
             .then(response => {

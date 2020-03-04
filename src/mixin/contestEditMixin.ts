@@ -27,6 +27,7 @@ export default class ContestEditMixin extends Vue {
     created () {
         this.contest_id = this.$route.params.contest_id;
     }
+
     initData () {
         this.axios.get(`/api/admin/contest/edit/${this.contest_id}`)
             .then(({ data }) => {
@@ -47,6 +48,7 @@ export default class ContestEditMixin extends Vue {
                 }
             });
     }
+
     dataFormat (val: any) {
         val = _.cloneDeep(val);
         delete val.userListText;

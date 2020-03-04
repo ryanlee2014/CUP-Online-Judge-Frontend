@@ -145,6 +145,7 @@ export default class UserInfoModify extends Mixins(mixins) {
         this.avatar = this.$store.getters.avatar;
         this.avatarUrl = util.stringify(this.$store.getters.avatarUrl || "");
     }
+
     mounted () {
         this.axios.get(`/api/user/${this.user_id}`)
             .then(({ data }) => {
@@ -170,9 +171,11 @@ export default class UserInfoModify extends Mixins(mixins) {
                 }
             });
     }
+
     reset () {
         location.reload();
     }
+
     refreshImage () {
         if (this.dirty) {
             this.dirty = false;
@@ -184,6 +187,7 @@ export default class UserInfoModify extends Mixins(mixins) {
             });
         }
     }
+
     @Watch("avatarUrl")
     onAvatarUrlChanged () {
         this.refreshImage();

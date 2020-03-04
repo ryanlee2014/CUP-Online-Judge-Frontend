@@ -199,6 +199,7 @@ export default class BaseManage extends Vue {
     created () {
         this.contest_id = this.$route.params.contest_id;
     }
+
     contest_id = "";
     title = "";
     defunct = false;
@@ -222,21 +223,23 @@ export default class BaseManage extends Vue {
             console.log(value);
         }
     }
+
     /**
      * @return {number}
      */
     LanguageSelectedToLangmask () {
         const byteLength = this.languageSet.length;
         let target = (1 << byteLength) - 1;
-        let languageSet = this.languageSelected.split(",").map(el => parseInt(el));
+        const languageSet = this.languageSelected.split(",").map(el => parseInt(el));
         languageSet.forEach(el => {
             target ^= (1 << el);
         });
         return target;
     }
+
     LangmaskToLanguageSelected (langmask: number) {
         let cnt = 0;
-        let languageSet = Array.from(Array(this.languageSet.length).keys());
+        const languageSet = Array.from(Array(this.languageSet.length).keys());
         while (langmask > 0) {
             if ((langmask & 1) === 1) {
                 languageSet.splice(languageSet.indexOf(cnt), 1);
@@ -246,12 +249,14 @@ export default class BaseManage extends Vue {
         }
         this.languageSelected = languageSet.join(",");
     }
+
     emitData () {
         const tempData = _.cloneDeep(this.$data);
         tempData.langmask = this.LanguageSelectedToLangmask();
         tempData.Public = !tempData.Private;
         this.$emit("postData", tempData);
     }
+
     initjQuery () {
         const that: any = this;
         const $rangeStart = $("#rangestart");
@@ -278,6 +283,7 @@ export default class BaseManage extends Vue {
         $(this.$refs.contest).checkbox(this.ContestMode ? "check" : "uncheck");
         $(this.$refs.defunct).checkbox(this.defunct ? "check" : "uncheck");
     }
+
     mounted () {
         this.initjQuery();
     }

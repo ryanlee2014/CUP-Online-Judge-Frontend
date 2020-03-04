@@ -109,6 +109,7 @@ export default class Submit extends Mixins(mixins) {
         output: "",
         hint: ""
     };
+
     time= 0;
     memory= 0;
     input= "";
@@ -149,12 +150,14 @@ export default class Submit extends Mixins(mixins) {
     created () {
         this.normal_problem = !this.$route.params.contest_id && !this.$route.params.topic_id;
     }
+
     mounted () {
         document.title = `Problem ${this.problem_id} -- ${document.title}`;
         this.$store.commit("setCodeInfo", { code: "" });
         this.asyncFunc();
         this.registerSocketListener();
     }
+
     updated () {
         const that = this;
         this.$nextTick(() => {
@@ -192,6 +195,7 @@ export default class Submit extends Mixins(mixins) {
             }
         });
     }
+
     beforeDestroy () {
         $(".topmenu").css({
             borderBottom: "",
@@ -207,10 +211,12 @@ export default class Submit extends Mixins(mixins) {
         doc.innerText = html;
         return doc.innerHTML.split(" ").join("&nbsp;");
     }
+
     convertText (text: string) {
         doc.innerHTML = text;
         return doc.innerText.split("&nbsp;").join(" ");
     }
+
     bindClipboard () {
         const copyContent = new Clipboard(".copy.context", {
             text (trigger) {
@@ -227,10 +233,11 @@ export default class Submit extends Mixins(mixins) {
                 .popup("show");
         });
     }
+
     async asyncFunc () {
-        let copyParams = JSON.parse(JSON.stringify(this.$route.params));
-        let { problem_id: problemId, contest_id: contestId, topic_id: topicId, num, solution_id: solutionId } = copyParams;
-        let parseData = {
+        const copyParams = JSON.parse(JSON.stringify(this.$route.params));
+        const { problem_id: problemId, contest_id: contestId, topic_id: topicId, num, solution_id: solutionId } = copyParams;
+        const parseData = {
             id: problemId,
             cid: contestId,
             tid: topicId,
@@ -243,6 +250,7 @@ export default class Submit extends Mixins(mixins) {
         this.bindClipboard();
         $modal = $(".ui.basic.confirms.modal");
     }
+
     initData (parseData: any) {
         return this.axios.get("/api/problem/local", { params: parseData })
             .then(({ data }) => {
@@ -274,7 +282,7 @@ export default class Submit extends Mixins(mixins) {
                 const iseditor = data.editor;
                 const isadmin = data.isadmin;
                 this.$store.commit("setCodeInfo", { code: sourceCode });
-                let _data = {
+                const _data = {
                     temp_title: d.title,
                     problem_id: d.problem_id,
                     original_id: d.problem_id,
@@ -342,13 +350,15 @@ export default class Submit extends Mixins(mixins) {
                 $(".not-compile").removeClass("not-compile");
             });
     }
+
     escapeParameter (val: any) {
-        for (let i in val) {
+        for (const i in val) {
             if (Object.prototype.hasOwnProperty.call(val, i) && typeof val[i] === "undefined") {
                 delete val[i];
             }
         }
     }
+
     markdownInitHandler (thisObj: any, url: string, attribute: string) {
         const that: any = this;
         this.axios.get(url).then(({ data }) => {
@@ -361,13 +371,14 @@ export default class Submit extends Mixins(mixins) {
             }
         });
     }
+
     markdownItRender (this: any) {
         const that = this;
         const id = this.original_id;
-        let descriptionMarkdownIt = this.descriptionMarkdownIt = markdownIt.newInstance("description", that.original_id);
-        let inputMarkdownIt = this.inputMarkdownIt = markdownIt.newInstance("input", that.original_id);
-        let outputMarkdownIt = this.outputMarkdownIt = markdownIt.newInstance("output", that.original_id);
-        let hintMarkdownIt = this.hintMarkdownIt = markdownIt.newInstance("hint", that.original_id);
+        const descriptionMarkdownIt = this.descriptionMarkdownIt = markdownIt.newInstance("description", that.original_id);
+        const inputMarkdownIt = this.inputMarkdownIt = markdownIt.newInstance("input", that.original_id);
+        const outputMarkdownIt = this.outputMarkdownIt = markdownIt.newInstance("output", that.original_id);
+        const hintMarkdownIt = this.hintMarkdownIt = markdownIt.newInstance("hint", that.original_id);
         this.markdownInitHandler(descriptionMarkdownIt, `/api/photo/description/${id}`, "description");
         this.markdownInitHandler(inputMarkdownIt, `/api/photo/input/${id}`, "input");
         this.markdownInitHandler(outputMarkdownIt, `/api/photo/output/${id}`, "output");
@@ -389,6 +400,7 @@ export default class Submit extends Mixins(mixins) {
         this.output = outputMarkdownIt.render(this.output || "");
         this.hint = hintMarkdownIt.render(this.hint || "");
     }
+
     switch_screen () {
         this.single_page = !this.single_page;
         document.documentElement.scrollTop = 0;
@@ -401,8 +413,9 @@ export default class Submit extends Mixins(mixins) {
             boxShadow: attribute
         });
     }
+
     codeTooShort (options: any, next: any) {
-        let ret: number = this.$store.getters.code.length;
+        const ret: number = this.$store.getters.code.length;
         if (ret < 15) {
             this.confirm_text += "<h2><div style=\"text-align: center;\">代码过短</div></h2>";
         }
@@ -411,6 +424,7 @@ export default class Submit extends Mixins(mixins) {
         }
         return ret;
     }
+
     isCLanguage (options?: any, next?: any) {
         const languageName = require("../../type/index.json").language_name.local;
         const cRegex = /C[A-Za-z0-9]+$/;
@@ -421,6 +435,7 @@ export default class Submit extends Mixins(mixins) {
         }
         return ret;
     }
+
     checkCppButInCLanguage (options: any, next: any) {
         const code = this.$store.getters.code;
         const cppRegex = /#include[\s]+?[<"][a-zA-Z]{1,20}[>"]/;
@@ -433,12 +448,14 @@ export default class Submit extends Mixins(mixins) {
         }
         return ret;
     }
+
     initConfirms (options: any, next: any) {
         this.confirm_text = "";
         if (typeof next === "function") {
             next();
         }
     }
+
     ModalPopup (options: any, next: any) {
         if (this.confirm_text && this.confirm_text.length && this.confirm_text.length) {
             $modal.modal({
@@ -465,7 +482,7 @@ export default class Submit extends Mixins(mixins) {
     }
 
     presubmit () {
-        let that = this;
+        const that = this;
         const submitLanguage = parseInt(this.$store.getters.language);
         if (!this.checkJava(submitLanguage)) {
             return;
@@ -485,7 +502,7 @@ export default class Submit extends Mixins(mixins) {
             percent: 0
         });
         $progressResult.progress("set active");
-        let postdata = {
+        const postdata = {
             id: this.$route.params.problem_id,
             cid: this.$route.params.contest_id,
             tid: this.$route.params.topic_id,
@@ -504,11 +521,13 @@ export default class Submit extends Mixins(mixins) {
             val: postdata
         });
     }
+
     error_callback (data: any) {
         alert(data.statement);
         this.resume();
         $(".ui.teal.progress").hide();
     }
+
     resume () {
         if (--this.resume_time <= 0) {
             this.submitDisabled = false;
@@ -518,6 +537,7 @@ export default class Submit extends Mixins(mixins) {
             handlerInterval = setTimeout(this.resume, 1000);
         }
     }
+
     checkJava (submitLanguage: number) {
         let code;
         switch (submitLanguage) {
@@ -542,13 +562,13 @@ export default class Submit extends Mixins(mixins) {
             alert("WebSocket服务未启动，请等待服务启动后提交\nWebSocket服务启动标识:\n右上角显示在线人数");
             return;
         }
-        let now = parseInt(dayjs() + "");
+        const now = parseInt(dayjs() + "");
         localStorage.setItem("test_run_time", (now + 300 * 1000).toString());
-        let submitLanguage = parseInt(this.$store.getters.language);
+        const submitLanguage = parseInt(this.$store.getters.language);
         if (!this.checkJava(submitLanguage)) {
             return;
         }
-        let that = this;
+        const that = this;
         if (this.$store.getters.code.length < 15) {
             $(".ui.basic.confirms.modal")
                 .modal({
@@ -566,6 +586,7 @@ export default class Submit extends Mixins(mixins) {
             })
             .modal("show");
     }
+
     test_run () {
         const that = this;
         $("#out").html("样例输出为:\n" + this.sampleoutput);
@@ -680,19 +701,19 @@ export default class Submit extends Mixins(mixins) {
             ""
         ];
         const that = this;
-        let status = parseInt(data["state"]);
+        const status = parseInt(data.state);
         if (status < this.state) {
             return;
         }
         this.state = status;
-        let compileInfo = data["compile_info"];
-        let passPoint = data["pass_point"];
-        let time = data["time"];
-        let memory = data["memory"];
-        let sim = data.sim;
-        let simSourceID = data.sim_s_id;
-        let passRate = (data["pass_rate"] ? data["pass_rate"] : 1) * 100;
-        let $progressResult = $(".progress.result");
+        let compileInfo = data.compile_info;
+        const passPoint = data.pass_point;
+        const time = data.time;
+        const memory = data.memory;
+        const sim = data.sim;
+        const simSourceID = data.sim_s_id;
+        const passRate = (data.pass_rate ? data.pass_rate : 1) * 100;
+        const $progressResult = $(".progress.result");
         if (status > 3) {
             this.submitDisabled = false;
             this.resume();
@@ -732,13 +753,13 @@ export default class Submit extends Mixins(mixins) {
                 percent: 100
             });
             $progressResult.progress("set success");
-            let contestID = parseInt(this.$route.params.contest_id);
+            const contestID = parseInt(this.$route.params.contest_id);
             if (!isNaN(contestID) && contestID > 1000) {
                 that.axios.get(`/api/contest/rest/${contestID}`)
                     .then(({ data }) => {
-                        let json = data.data;
-                        for (let i of json) {
-                            for (let j in i) {
+                        const json = data.data;
+                        for (const i of json) {
+                            for (const j in i) {
                                 if (Object.prototype.hasOwnProperty.call(i, j) && i[j] === null) {
                                     i[j] = 0;
                                 }
@@ -760,17 +781,17 @@ export default class Submit extends Mixins(mixins) {
                         }
                         else {
                             json.sort(function (a: any, b: any) {
-                                if (a["pnum"] > b["pnum"]) return 1;
-                                else if (parseInt(a["pnum"]) === parseInt(b["pnum"])) return 0;
+                                if (a.pnum > b.pnum) return 1;
+                                else if (parseInt(a.pnum) === parseInt(b.pnum)) return 0;
                                 else return -1;
                             });
                         }
-                        for (let i in json) {
+                        for (const i in json) {
                             if (Object.prototype.hasOwnProperty.call(json, i)) {
-                                str += "<a class='item' href='" + `/contest/problem/${contestID}/${json[i].pnum}` + "'><div class='ui small teal label'>通过:&nbsp;" + json[i]["accepted"] + "</div><div class='ui small label'>提交:&nbsp;" + json[i]["submit"] + "</div>" + json[i]["pnum"] + " . " + json[i]["title"] + "</a>";
+                                str += "<a class='item' href='" + `/contest/problem/${contestID}/${json[i].pnum}` + "'><div class='ui small teal label'>通过:&nbsp;" + json[i].accepted + "</div><div class='ui small label'>提交:&nbsp;" + json[i].submit + "</div>" + json[i].pnum + " . " + json[i].title + "</a>";
                             }
                         }
-                        let plainHTML = "<div id=\"next_problem\"><div class=\"ui massive vertical menu\" style=\"position:relative;float:left;margin-left:20px\">" + str + "</div></div>";
+                        const plainHTML = "<div id=\"next_problem\"><div class=\"ui massive vertical menu\" style=\"position:relative;float:left;margin-left:20px\">" + str + "</div></div>";
                         const $acMenu = $(".ui.massive.vertical.menu");
                         if ($acMenu.length === 0) {
                             $("#total_control").append(plainHTML);
@@ -816,14 +837,15 @@ export default class Submit extends Mixins(mixins) {
             $progressResult.progress("set warning");
         }
     }
+
     wsfs_result (data: any) {
         if (typeof data === "undefined" || data === null) {
             console.warn("Function wsfs_result receive illegal data");
             return;
         }
-        let state = data["state"];
-        let testRunResult = data["test_run_result"];
-        let compileInfo = data["compile_info"];
+        const state = data.state;
+        const testRunResult = data.test_run_result;
+        const compileInfo = data.compile_info;
         // let compileInfo = this.convertHTML(data["compile_info"]);
         if (state >= 4) {
             if (testRunResult || compileInfo) {
@@ -831,15 +853,16 @@ export default class Submit extends Mixins(mixins) {
             }
         }
     }
+
     nl2br (str: string, is_xhtml?: boolean) {
-        let breakTag = (is_xhtml || typeof is_xhtml === "undefined") ? "<br />" : "<br>";
+        const breakTag = (is_xhtml || typeof is_xhtml === "undefined") ? "<br />" : "<br>";
         return (str + "").replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, "$1" + breakTag + "$2");
     }
 
     get lang_list () {
         const len = this.language_name.length - 1;
         const _langmask = ~this.langmask;
-        let result = [];
+        const result = [];
         for (let cnt = 0; cnt < len; ++cnt) {
             if (_langmask & (1 << cnt)) {
                 result.push({

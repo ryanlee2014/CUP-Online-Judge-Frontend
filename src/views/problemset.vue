@@ -144,9 +144,9 @@ $("#show_tag")
         onUnchecked () {
         }
     });
-let HEIGHT = 320;
-let MAX_SIZE = 25;
-let MIN_SIZE = 20;
+const HEIGHT = 320;
+const MAX_SIZE = 25;
+const MIN_SIZE = 20;
 
 function getTextAttrs (cfg: any) {
     return _.assign({}, cfg.style, {
@@ -170,15 +170,15 @@ function getParameterByName (name: string, url?: string) {
     }
     // eslint-disable-next-line no-useless-escape
     name = name.replace(/[\[\]]/g, "\\$&");
-    let regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)");
-    let results = regex.exec(url);
+    const regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)");
+    const results = regex.exec(url);
     if (!results) return null;
     if (!results[2]) return "";
     return (_parameterCache[name + url] = decodeURIComponent(results[2].replace(/\+/g, " ")));
 }
 
 function parseQueryString (query: any) {
-    let parsed: any = {};
+    const parsed: any = {};
     query.replace(
         new RegExp("([^?=&]+)(=([^&]*))?", "g"),
         function ($0: any, $1: any, $2: any, $3: any) {
@@ -236,26 +236,26 @@ export default class ProblemSet extends Mixins(mixins) {
         }
 
         setQuery () {
-            let queryObject: any = {};
+            const queryObject: any = {};
             if (this.current_page !== 0) {
-                queryObject["page"] = this.current_page + 1;
+                queryObject.page = this.current_page + 1;
             }
             if (this.search_tag && this.search_tag !== "" && this.search_tag.length > 0) {
-                queryObject["tag"] = this.search_tag;
+                queryObject.tag = this.search_tag;
             }
             if (this.label && this.label !== "" && this.label.length > 0) {
-                queryObject["label"] = this.label;
+                queryObject.label = this.label;
             }
             this.$router.push({ path: this.$route.path, query: queryObject });
         }
 
         page (num: any, arrow: any) {
             // this.dim = true;
-            let page = this.current_page = arrow ? this.current_page + arrow : num;
-            let searchTag = this.search_tag || "none";
-            let order = this.order;
-            let orderTarget = this.order_target;
-            let that = this;
+            const page = this.current_page = arrow ? this.current_page + arrow : num;
+            const searchTag = this.search_tag || "none";
+            const order = this.order;
+            const orderTarget = this.order_target;
+            const that = this;
             this.setQuery();
             this.axios.get("/api/problemset/" + page + "/" + searchTag + "/" + orderTarget + "/" + order + "/?label=" + this.label)
                 .then(({ data }) => {
@@ -265,12 +265,12 @@ export default class ProblemSet extends Mixins(mixins) {
 
         sort (target: any, event: any, defaultOrder = 0) {
             // this.dim = true;
-            let prevTargetEquivToCurrent = this.order_target === target;
+            const prevTargetEquivToCurrent = this.order_target === target;
             this.order_target = target;
-            let page = this.current_page = 0;
-            let searchTag = this.search_tag || "none";
-            let order = this.order = prevTargetEquivToCurrent ? (-this.order + 1) : defaultOrder;
-            let that = this;
+            const page = this.current_page = 0;
+            const searchTag = this.search_tag || "none";
+            const order = this.order = prevTargetEquivToCurrent ? (-this.order + 1) : defaultOrder;
+            const that = this;
             this.axios.get("/api/problemset/" + page + "/" + searchTag + "/" + target + "/" + order + "/?label=" + this.label)
                 .then(({ data }) => {
                     that.dim = false;
@@ -283,12 +283,12 @@ export default class ProblemSet extends Mixins(mixins) {
                 return;
             }
             this.label = label;
-            let searchTag = this.search_tag || "none";
+            const searchTag = this.search_tag || "none";
             // this.dim = true;
-            let orderTarget = this.order_target;
-            let page = this.current_page = 0;
-            let order = this.order;
-            let that = this;
+            const orderTarget = this.order_target;
+            const page = this.current_page = 0;
+            const order = this.order;
+            const that = this;
             this.setQuery();
             this.axios.get("/api/problemset/" + page + "/" + searchTag + "/" + orderTarget + "/" + order + "/?label=" + this.label)
                 .then(({ data }) => {
@@ -303,10 +303,10 @@ export default class ProblemSet extends Mixins(mixins) {
             }
             this.search_tag = label === "none" ? "" : label;
             // this.dim = true;
-            let orderTarget = this.order_target;
-            let page = this.current_page = 0;
-            let order = this.order;
-            let that = this;
+            const orderTarget = this.order_target;
+            const page = this.current_page = 0;
+            const order = this.order;
+            const that = this;
             this.setQuery();
             const problemId = parseInt(label);
             this.axios.get("/api/problemset/" + page + "/" + label + "/" + orderTarget + "/" + order + "/?label=" + this.label)
@@ -327,10 +327,10 @@ export default class ProblemSet extends Mixins(mixins) {
                 this.label = "";
             }
             // this.dim = true;
-            let orderTarget = this.order_target;
-            let page = this.current_page;
-            let order = this.order;
-            let that = this;
+            const orderTarget = this.order_target;
+            const page = this.current_page;
+            const order = this.order;
+            const that = this;
             this.setQuery();
             this.axios.get("/api/problemset/" + page + "/" + (this.search_tag || "none") + "/" + orderTarget + "/" + order + "/?label=" + this.label)
                 .then(({ data }) => {
@@ -358,19 +358,19 @@ export default class ProblemSet extends Mixins(mixins) {
         }
 
         enter (obj: any) {
-            let val = obj.target.value || "none";
+            const val = obj.target.value || "none";
             this.searching(val);
         }
 
         drawLabelCloud () {
             this.has_draw = true;
-            let that = this;
+            const that = this;
             this.axios.get("/api/problem/local/?label=true")
                 .then(response => {
                     const d = response.data;
                     G2.Shape.registerShape("point", "cloud", {
                         drawShape (cfg: any, container: any) {
-                            let attrs = getTextAttrs(cfg);
+                            const attrs = getTextAttrs(cfg);
                             return container.addShape("text", {
                                 attrs: _.assign(attrs, {
                                     x: cfg.x,
@@ -379,17 +379,17 @@ export default class ProblemSet extends Mixins(mixins) {
                             });
                         }
                     });
-                    let data = [];
+                    const data = [];
                     for (let i = 0; i < d.data.length; ++i) {
                         data.push({
                             tag: d.data[i],
                             count: Math.random() * i
                         });
                     }
-                    let dv = new DataSet.View().source(data);
-                    let range = dv.range("count");
-                    let min = range[0];
-                    let max = range[1];
+                    const dv = new DataSet.View().source(data);
+                    const range = dv.range("count");
+                    const min = range[0];
+                    const max = range[1];
                     dv.transform({
                         type: "tag-cloud",
                         fields: ["tag", "count"],
@@ -405,7 +405,7 @@ export default class ProblemSet extends Mixins(mixins) {
                             return ((d.count - min) / (max - min)) * (MAX_SIZE - MIN_SIZE) + MIN_SIZE;
                         }
                     });
-                    let chart = that.chart = new G2.Chart({
+                    const chart = that.chart = new G2.Chart({
                         container: "word-cloud",
                         forceFit: true,
                         height: HEIGHT,
@@ -429,7 +429,7 @@ export default class ProblemSet extends Mixins(mixins) {
 
                     chart.render();
                     chart.on("point:click", function (ev: any) {
-                        that.tag(ev.data._origin["text"]);
+                        that.tag(ev.data._origin.text);
                         // location.href = "?tag=" + encodeURI();
                     });
                 });
@@ -453,8 +453,8 @@ export default class ProblemSet extends Mixins(mixins) {
 
         mounted () {
             document.title = `Problem Set -- ${document.title}`;
-            let that = this;
-            let page = parseInt(getParameterByName("page") || queryString.page || "1") - 1;
+            const that = this;
+            const page = parseInt(getParameterByName("page") || queryString.page || "1") - 1;
             $(document).ready(function () {
                 $("#show_tag").checkbox((that.show_tag ? "" : "un") + "check");
                 $("#hide_currect").checkbox((that.hide_currect ? "" : "un") + "check");

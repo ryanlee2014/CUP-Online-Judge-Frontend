@@ -72,6 +72,7 @@ export default class Privilege extends Mixins(mixins) {
         this.initData();
         this.initjQuery();
     }
+
     basePrivilege (url: string, userId: string, rightstr: string) {
         this.axios.post(url, { user_id: userId, rightstr })
             .then(({ data }) => {
@@ -84,12 +85,15 @@ export default class Privilege extends Mixins(mixins) {
                 this.initData();
             });
     }
+
     addPrivilege () {
         this.basePrivilege("/api/admin/account/privilege/add", this.user_id, this.rightstr);
     }
+
     removePrivilege (userId: string, rightstr: string) {
         this.basePrivilege("/api/admin/account/privilege/remove", userId, rightstr);
     }
+
     initData () {
         this.axios.get("/api/admin/account/privilege")
             .then(({ data }) => {
@@ -102,6 +106,7 @@ export default class Privilege extends Mixins(mixins) {
                 }
             });
     }
+
     initjQuery () {
         $(".ui.dropdown").dropdown();
     }

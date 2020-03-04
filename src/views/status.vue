@@ -224,9 +224,9 @@ const $: any = jquery;
 const am4themes_animated = require("@amcharts/amcharts4/themes/animated").default;
 
 function draw (_result: any) {
-    let result: any = _result.result;
-    let _label: any = _result.label;
-    let row: any = {};
+    const result: any = _result.result;
+    const _label: any = _result.label;
+    const row: any = {};
     _.forEach(result, function (i: any) {
         row[i[_label[0]]] = row[i[_label[0]]] || {};
         row[i[_label[0]]][i[_label[1]]] = {
@@ -235,10 +235,10 @@ function draw (_result: any) {
         };
     });
 
-    let _labels: any = [];
-    let _submits: any = [];
-    let _accepteds: any = [];
-    let _persent: any = [];
+    const _labels: any = [];
+    const _submits: any = [];
+    const _accepteds: any = [];
+    const _persent: any = [];
     _.forEach(row, function (val: any, i: any) {
         _.forEach(row[i], function (val2: any, j: any) {
             _labels.push(i.toString() + "-" + j.toString());
@@ -247,7 +247,7 @@ function draw (_result: any) {
             _persent.push((row[i][j].accepted / row[i][j].submit * 100).toString().substring(0, 5));
         });
     });
-    let config: any = {
+    const config: any = {
         type: "line",
         data: {
             labels: _labels,
@@ -320,7 +320,7 @@ function draw (_result: any) {
             }
         }
     };
-    let ctx = (document!.getElementById!("canvas")! as any).getContext("2d");
+    const ctx = (document!.getElementById!("canvas")! as any).getContext("2d");
     window.myLine = new Chart(ctx, config);
 }
 
@@ -328,8 +328,8 @@ function drawResult (data: any, labelName: any) {
     data.sort(function (a: any, b: any) {
         return b.cnt - a.cnt;
     });
-    let color = window.chartColors;
-    let colorTocolor: any = {
+    const color = window.chartColors;
+    const colorTocolor: any = {
         0: color.blue,
         1: color.blue,
         2: color.blue,
@@ -347,8 +347,8 @@ function drawResult (data: any, labelName: any) {
         14: color.red,
         15: color.red
     };
-    let dataSet: any = [];
-    let labName: any = [];
+    const dataSet: any = [];
+    const labName: any = [];
     dataSet.push({
         label: "提交数",
         backgroundColor: [],
@@ -368,7 +368,7 @@ function drawResult (data: any, labelName: any) {
         datasets: dataSet
     };
     barChartData = JSON.parse(JSON.stringify(barChartData));
-    let ctx = (document!.getElementById("bar")! as any).getContext("2d");
+    const ctx = (document!.getElementById("bar")! as any).getContext("2d");
     window.myBar = new Chart(ctx, {
         type: "bar",
         data: barChartData,
@@ -387,10 +387,10 @@ function drawResult (data: any, labelName: any) {
 }
 
 function drawBar (data: any) {
-    let login = data.login;
+    const login = data.login;
     data = data.submit;
-    let color = Chart.helpers.color;
-    let config: any = {
+    const color = Chart.helpers.color;
+    const config: any = {
         type: "radar",
         data: {
             labels: [] as any[],
@@ -421,7 +421,7 @@ function drawBar (data: any) {
         config.data.labels.push(val.hour + ":00");
         config.data.datasets[0].data.push(val.cnt);
     });
-    let copyconfig = JSON.parse(JSON.stringify(config));
+    const copyconfig = JSON.parse(JSON.stringify(config));
     copyconfig.data.datasets = [{
         label: "登录分布",
         backgroundColor: color(window.chartColors.blue).alpha(0.2).rgbString(),
@@ -439,12 +439,12 @@ function drawBar (data: any) {
     // console.log(config);
 }
 
-let hasRendered: any = {};
+const hasRendered: any = {};
 
 function drawDynamicInteractiveLineChart (dataSets?: any, prefix?: any, target?: any) {
     let adapter_object: any = {};
-    let full_name = prefix + "_name";
-    let full_version = prefix + "_version";
+    const full_name = prefix + "_name";
+    const full_version = prefix + "_version";
     if (hasRendered[target]) {
         return;
     }
@@ -494,7 +494,7 @@ function drawDynamicInteractiveLineChart (dataSets?: any, prefix?: any, target?:
     // Themes end
 
     // create chart
-    let chart = am4core.create(target, am4charts.TreeMap);
+    const chart = am4core.create(target, am4charts.TreeMap);
     chart.hiddenState.properties.opacity = 0; // this makes initial fade in effect
     window.chart_graph = chart;
     chart.data = adapter_object;
@@ -507,11 +507,11 @@ function drawDynamicInteractiveLineChart (dataSets?: any, prefix?: any, target?:
     chart.dataFields.children = "children";
 
     chart.zoomable = true;
-    let bgColor = new am4core.InterfaceColorSet().getFor("background");
+    const bgColor = new am4core.InterfaceColorSet().getFor("background");
 
     // level 0 series template
-    let level0SeriesTemplate = chart.seriesTemplates.create("0");
-    let level0ColumnTemplate = level0SeriesTemplate.columns.template;
+    const level0SeriesTemplate = chart.seriesTemplates.create("0");
+    const level0ColumnTemplate = level0SeriesTemplate.columns.template;
 
     level0ColumnTemplate.column.cornerRadius(10, 10, 10, 10);
     level0ColumnTemplate.fillOpacity = 0;
@@ -519,8 +519,8 @@ function drawDynamicInteractiveLineChart (dataSets?: any, prefix?: any, target?:
     level0ColumnTemplate.strokeOpacity = 0;
 
     // level 1 series template
-    let level1SeriesTemplate: any = chart.seriesTemplates.create("1");
-    let level1ColumnTemplate: any = level1SeriesTemplate.columns.template;
+    const level1SeriesTemplate: any = chart.seriesTemplates.create("1");
+    const level1ColumnTemplate: any = level1SeriesTemplate.columns.template;
 
     level1SeriesTemplate.tooltip.animationDuration = 0;
     level1SeriesTemplate.strokeOpacity = 1;
@@ -530,7 +530,7 @@ function drawDynamicInteractiveLineChart (dataSets?: any, prefix?: any, target?:
     level1ColumnTemplate.strokeWidth = 4;
     level1ColumnTemplate.stroke = bgColor;
 
-    let bullet1 = level1SeriesTemplate.bullets.push(new am4charts.LabelBullet());
+    const bullet1 = level1SeriesTemplate.bullets.push(new am4charts.LabelBullet());
     bullet1.locationY = 0.5;
     bullet1.locationX = 0.5;
     bullet1.label.text = "{name}";
@@ -548,11 +548,11 @@ function drawChordGraph (data: any, prefix = "chord_graph") {
     am4core.useTheme(am4themes_animated);
     // Themes end
 
-    let chart = am4core.create("chord_graph", am4charts.ChordDiagram);
+    const chart = am4core.create("chord_graph", am4charts.ChordDiagram);
 
     _.forEach(data, function (el: any) {
         if (el.from > el.to) {
-            let tmp = el.from;
+            const tmp = el.from;
             el.from = el.to;
             el.to = tmp;
         }
@@ -573,12 +573,12 @@ function drawChordGraph (data: any, prefix = "chord_graph") {
     chart.dataFields.value = "value";
 
     // make nodes draggable
-    let nodeTemplate = chart.nodes.template;
+    const nodeTemplate = chart.nodes.template;
     nodeTemplate.readerTitle = "Click to show/hide or drag to rearrange";
     nodeTemplate.showSystemTooltip = true;
 
-    let nodeLink = chart.links.template;
-    let bullet = nodeLink.bullets.push(new am4charts.CircleBullet());
+    const nodeLink = chart.links.template;
+    const bullet = nodeLink.bullets.push(new am4charts.CircleBullet());
     bullet.fillOpacity = 1;
     bullet.circle.radius = 5;
     bullet.locationX = 0.5;
@@ -586,16 +586,16 @@ function drawChordGraph (data: any, prefix = "chord_graph") {
     // create animations
     chart.events.on("ready", function () {
         for (let i = 0; i < chart.links.length; i++) {
-            let link: any = chart.links.getIndex(i);
-            let bullet = link.bullets.getIndex(0);
+            const link: any = chart.links.getIndex(i);
+            const bullet = link.bullets.getIndex(0);
 
             animateBullet(bullet);
         }
     });
 
     function animateBullet (bullet: any) {
-        let duration = 3000 * Math.random() + 2000;
-        let animation = bullet.animate([{ property: "locationX", from: 0, to: 1 }], duration);
+        const duration = 3000 * Math.random() + 2000;
+        const animation = bullet.animate([{ property: "locationX", from: 0, to: 1 }], duration);
         animation.events.on("animationended", function (event: any) {
             animateBullet(event.target.object);
         });
@@ -603,18 +603,18 @@ function drawChordGraph (data: any, prefix = "chord_graph") {
 }
 
 function drawRegisterTimeline (data: any) {
-    if (hasRendered["timeline"]) {
+    if (hasRendered.timeline) {
         return;
     }
-    hasRendered["timeline"] = true;
+    hasRendered.timeline = true;
     // Themes begin
     am4core.useTheme(am4themes_animated);
     // Themes end
 
     // Create chart instance
-    let chart: any = am4core.create("register_timeline", am4charts.XYChart);
+    const chart: any = am4core.create("register_timeline", am4charts.XYChart);
     chart.paddingRight = 20;
-    let title = chart.titles.create();
+    const title = chart.titles.create();
     title.text = "注册人数变化";
     title.fontSize = 15;
     title.marginBottom = 30;
@@ -622,11 +622,11 @@ function drawRegisterTimeline (data: any) {
     chart.data = data;
 
     // Create axes
-    let dateAxis = chart.xAxes.push(new am4charts.DateAxis());
-    let valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+    const dateAxis = chart.xAxes.push(new am4charts.DateAxis());
+    const valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
 
     // Create series
-    let series: any = chart.series.push(new am4charts.LineSeries());
+    const series: any = chart.series.push(new am4charts.LineSeries());
     series.dataFields.valueY = "value";
     series.dataFields.dateX = "date";
     series.tooltipText = "{value}";
@@ -643,12 +643,12 @@ function drawRegisterTimeline (data: any) {
     series.tooltip.label.textValign = "middle";
 
     // Make bullets grow on hover
-    let bullet = series.bullets.push(new am4charts.CircleBullet());
+    const bullet = series.bullets.push(new am4charts.CircleBullet());
     bullet.circle.strokeWidth = 2;
     bullet.circle.radius = 4;
     bullet.circle.fill = am4core.color("#fff");
 
-    let bullethover = bullet.states.create("hover");
+    const bullethover = bullet.states.create("hover");
     bullethover.properties.scale = 1.3;
 
     // Make a panning cursor
@@ -717,7 +717,7 @@ export default class GeneralStatus extends Mixins(mixins, StatusViewMixin) {
         }
 
         search_func (data: any) {
-            let that = this;
+            const that = this;
             this.setQuery();
             that.problem_list = data.result;
             that.icon_list = data.const_list.icon_list;
@@ -734,13 +734,13 @@ export default class GeneralStatus extends Mixins(mixins, StatusViewMixin) {
         search () {
             this.dim = true;
             this.page_cnt = 0;
-            let problemId = this.problem_id || "null";
-            let userId = this.user_id || "null";
-            let language = this.language == -1 ? "null" : this.language;
-            let result = this.problem_result == -1 ? "null" : this.problem_result;
-            let pageCount = this.page_cnt * 20;
-            let sim = Number(this.sim_checkbox);
-            let pri = Number(this.privilege);
+            const problemId = this.problem_id || "null";
+            const userId = this.user_id || "null";
+            const language = this.language == -1 ? "null" : this.language;
+            const result = this.problem_result == -1 ? "null" : this.problem_result;
+            const pageCount = this.page_cnt * 20;
+            const sim = Number(this.sim_checkbox);
+            const pri = Number(this.privilege);
             return this.axios.get(`/api/status/${problemId}/${userId}/${language}/${result}/${pageCount}/${sim}/${pri}`)
                 .then(({ data }) => {
                     this.dim = false;
@@ -751,13 +751,13 @@ export default class GeneralStatus extends Mixins(mixins, StatusViewMixin) {
         page (num: number) {
             this.dim = true;
             this.page_cnt += num;
-            let problemId = this.problem_id || "null";
-            let userId = this.user_id || "null";
-            let language = this.language == -1 ? "null" : this.language;
-            let result = this.problem_result == -1 ? "null" : this.problem_result;
-            let pageCount = this.page_cnt * 20;
-            let simCheckbox = Number(this.sim_checkbox);
-            let pri = Number(this.privilege);
+            const problemId = this.problem_id || "null";
+            const userId = this.user_id || "null";
+            const language = this.language == -1 ? "null" : this.language;
+            const result = this.problem_result == -1 ? "null" : this.problem_result;
+            const pageCount = this.page_cnt * 20;
+            const simCheckbox = Number(this.sim_checkbox);
+            const pri = Number(this.privilege);
             this.axios.get(`/api/status/${problemId}/${userId}/${language}/${result}/${pageCount}/${simCheckbox}/${pri}`)
                 .then(({ data }) => {
                     this.dim = false;
@@ -781,7 +781,7 @@ export default class GeneralStatus extends Mixins(mixins, StatusViewMixin) {
                 return;
             }
             if ((!this.user_id || this.user_id === data.user_id) && (this.problem_result === -1) && (this.language === -1 || this.language === data.val.language) && !this.page_cnt && (!this.problem_id || parseInt(this.problem_id) === Math.abs(data.val.id))) {
-                let obj: any = {};
+                const obj: any = {};
                 obj.problem_id = Math.abs(data.val.id);
                 obj.solution_id = data.submission_id;
                 obj.nick = data.nick;
@@ -809,20 +809,20 @@ export default class GeneralStatus extends Mixins(mixins, StatusViewMixin) {
             if (!this.auto_refresh) {
                 return;
             }
-            let solution_id = data.solution_id;
-            let status = data.state;
-            let time = data.time;
-            let memory = data.memory;
-            let pass_rate = data.pass_rate;
-            let sim = data.sim;
-            let ip = data.ip;
-            let total_point = parseInt(data.total_point) || 0;
-            let fingerprint = data.fingerprint;
-            let fingerprintRaw = data.fingerprintRaw;
-            let pass_point = data.pass_point;
-            let that = this;
+            const solution_id = data.solution_id;
+            const status = data.state;
+            const time = data.time;
+            const memory = data.memory;
+            const pass_rate = data.pass_rate;
+            const sim = data.sim;
+            const ip = data.ip;
+            const total_point = parseInt(data.total_point) || 0;
+            const fingerprint = data.fingerprint;
+            const fingerprintRaw = data.fingerprintRaw;
+            const pass_point = data.pass_point;
+            const that = this;
             _.forEach(this.problem_list, function (val: any, key: any) {
-                let i = that.problem_list[key];
+                const i = that.problem_list[key];
                 if (i.solution_id == solution_id) {
                     i.result = status;
                     i.time = time;
@@ -860,10 +860,10 @@ export default class GeneralStatus extends Mixins(mixins, StatusViewMixin) {
         }
 
         fetchData () {
-            let problem_id = (this.problem_id = this.getProblemID() || null) || "null";
-            let user_id = (this.user_id = this.getUserId() || null) || "null";
-            let language = (this.language = this.getLanguage() || -1) == -1 ? "null" : this.getLanguage();
-            let result = (this.problem_result = this.getResult() || -1) == -1 ? "null" : this.problem_result;
+            const problem_id = (this.problem_id = this.getProblemID() || null) || "null";
+            const user_id = (this.user_id = this.getUserId() || null) || "null";
+            const language = (this.language = this.getLanguage() || -1) == -1 ? "null" : this.getLanguage();
+            const result = (this.problem_result = this.getResult() || -1) == -1 ? "null" : this.problem_result;
             return this.axios.get(`/api/status/${problem_id}/${user_id}/${language}/${result}/0/`)
                 .then(({ data }) => {
                     this.dim = false;

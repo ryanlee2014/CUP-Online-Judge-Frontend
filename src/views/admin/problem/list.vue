@@ -87,6 +87,7 @@ export default class ProblemList extends Mixins(mixins) {
     defunctToBoolean (defunct: string) {
         return defunct === "N";
     }
+
     flushData (page: any) {
         this.axios.get(`/api/admin/problem/list/${page}`)
             .then(({ data }) => {
@@ -94,17 +95,21 @@ export default class ProblemList extends Mixins(mixins) {
                 this.total_number = data.data.count;
             });
     }
+
     setQuery () {
-        let queryString: any = {};
+        const queryString: any = {};
         queryString.page = this.current_page;
         this.$router.push({ path: this.$route.path, query: queryString });
     }
+
     remove (problemID: any) {
         // TODO
     }
+
     page (num: any, arrow: any) {
         this.current_page = arrow ? this.current_page + arrow : num;
     }
+
     defunct (problemID: any) {
         this.axios.post("/api/admin/problem/defunct", { id: problemID })
             .then(({ data }) => {

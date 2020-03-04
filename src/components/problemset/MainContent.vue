@@ -100,7 +100,7 @@ export default class ProblemSetMainContent extends Vue {
         const data = this.data;
         const color = Object.assign({}, data.color);
         color["标签待整理"] = "black";
-        for (let i in data.problem) {
+        for (const i in data.problem) {
             if (Object.prototype.hasOwnProperty.call(data.problem, i)) {
                 const label = data.problem[i].label;
                 data.problem[i].label = (label ? label.split(" ") : ["标签待整理"]).sort(function (a: any, b: any) {
@@ -124,6 +124,7 @@ export default class ProblemSetMainContent extends Vue {
             problem: problemArray
         };
     }
+
     get filterTableRow () {
         const dim = this.dim;
         const hideCurrent = this.hide_currect;
@@ -133,9 +134,11 @@ export default class ProblemSetMainContent extends Vue {
     sort (target: any, event: any, default_order = 0) {
         this.$parent.sort(target, event, default_order);
     }
+
     tag (label: any, event: any) {
         this.$parent.tag(label, event);
     }
+
     bindSticky () {
         $(".ui.sticky.element")
             .sticky({

@@ -41,6 +41,7 @@ export default class App extends Vue {
         this.contest = this.isContestView(this.$route.fullPath);
         this.adminView = this.$route.fullPath.indexOf("/admin") === 0;
     }
+
     mounted () {
         this.$store.dispatch("NavStatus");
         util.initToTopButton();
@@ -90,7 +91,7 @@ export default class App extends Vue {
             return;
         }
         (async () => {
-            let Promise = require("bluebird");
+            const Promise = require("bluebird");
             while (times-- > 0) {
                 if (this.$socket && this.$socket.connect && typeof this.$socket.connect === "function") {
                     if (!this.$socket.connected) {
