@@ -76,7 +76,7 @@
             </div>
             <div v-if="admin">
             <div class="title">
-                Problem In Contest
+                {{$t("problem in contest")}}
                 <i class="dropdown icon"></i>
             </div>
             <div class="content">

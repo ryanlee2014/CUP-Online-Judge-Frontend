@@ -1,6 +1,6 @@
 {
   "name": "CUP-Online-Judge-NG-Frontend",
-  "version": "1.15.5",
+  "version": "1.15.6",
   "private": false,
   "scripts": {
     "serve": "npx --max_old_space_size=16000 vue-cli-service serve",
@@ -16,9 +16,10 @@
   "dependencies": {
     "@amcharts/amcharts4": "^4.9.5",
     "@antv/data-set": "^0.11.1",
-    "@antv/g2": "^4.0.0",
+    "@antv/g2": "^3.5.13",
     "@ryanlee2014/markdown-it-katex": "^1.0.4",
     "@ryanlee2014/mavon-editor": "^1.0.2",
+    "@types/d3-sankey": "^0.11.0",
     "@types/mermaid": "^8.2.1",
     "animejs": "^3.1.0",
     "auto-textarea": "^1.4.0",

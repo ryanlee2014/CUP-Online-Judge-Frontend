@@ -131,11 +131,9 @@ import { Component, Mixins } from "vue-property-decorator";
 import mixins from "../mixin/init";
 import jquery from "jquery";
 import _ from "lodash";
-
-const DataSet = require("@antv/data-set");
+import G2 from "@antv/g2";
+import DataSet from "@antv/data-set";
 const $: any = jquery;
-const G2 = require("@antv/g2");
-// eslint-disable-next-line no-unused-vars
 $("#show_tag")
     .checkbox()
     .first().checkbox({
@@ -213,7 +211,7 @@ export default class ProblemSet extends Mixins(mixins) {
         recent_one_month = -1;
         hide_currect = localStorage.getItem("hide_currect") === "true";
         show_label_cloud = localStorage.getItem("show_label_cloud") === "true";
-        chart = undefined;
+        chart: G2.Chart | undefined = undefined;
         has_draw = false;
         contest_mode = false;
 
@@ -368,7 +366,7 @@ export default class ProblemSet extends Mixins(mixins) {
             this.axios.get("/api/problem/local/?label=true")
                 .then(response => {
                     const d = response.data;
-                    G2.Shape.registerShape("point", "cloud", {
+                    G2.Shape!.registerShape!("point", "cloud", {
                         drawShape (cfg: any, container: any) {
                             const attrs = getTextAttrs(cfg);
                             return container.addShape("text", {
@@ -393,17 +391,12 @@ export default class ProblemSet extends Mixins(mixins) {
                     dv.transform({
                         type: "tag-cloud",
                         fields: ["tag", "count"],
-                        font: "Lato,Roboto,'Helvetica Neue',Arial,Helvetica,sans-serif",
-                        forceFit: true,
+                        font: () => "Lato,Roboto,'Helvetica Neue',Arial,Helvetica,sans-serif",
                         size: [$("#word-cloud").width(), HEIGHT],
                         padding: 1.5,
                         timeInterval: 5000, // max execute time
-                        rotate () {
-                            return 0;
-                        },
-                        fontSize (d: any) {
-                            return ((d.count - min) / (max - min)) * (MAX_SIZE - MIN_SIZE) + MIN_SIZE;
-                        }
+                        rotate: 0,
+                        fontSize: 14
                     });
                     const chart = that.chart = new G2.Chart({
                         container: "word-cloud",
@@ -417,7 +410,7 @@ export default class ProblemSet extends Mixins(mixins) {
                     chart.tooltip({
                         showTitle: false
                     });
-                    chart.coord().reflect();
+                    chart.coord("rect").reflect();
                     chart.point()
                         .position("x*y")
                         .color("tag", ["#21BA45", "#009c95", "#2185D0", "#6435C9", "#E61A8D"])

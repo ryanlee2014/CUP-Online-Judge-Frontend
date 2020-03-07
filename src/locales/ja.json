@@ -261,5 +261,6 @@
   "post new discussion": "新しい議論を投稿",
   "contest set": "コンテストセット",
   "contest problem set": "コンテスト質問セット",
-  "now": "今"
+  "now": "今",
+  "problem in contest": "含めるコンテスト"
 }
