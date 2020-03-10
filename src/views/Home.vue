@@ -11,14 +11,14 @@
                         <div class="ui text container transition main title eight wide column" id="left">
                             <h1 class="ui inverted header ml14">
   <span class="text-wrapper">
-    <span class="letters" data-content="CUP Online Judge"></span>
+    <span class="letters" :data-content="customConfig.title"></span>
   </span>
 
                             </h1>
                             <div class="column buttonset">
                                 <router-link class="ui inverted large button download basic" to="/about/icpc">
                                     <i class="newspaper outline icon"></i>
-                                    关于ICPC
+                                    {{$t("about icpc")}}
                                 </router-link>
                                 <router-link class="ui inverted large button download basic" to="/about/fame">
                                     <i class="chess queen icon"></i>
@@ -158,8 +158,8 @@ const $: any = jQuery;
 @Component
 export default class Home extends Mixins(InitMixin) {
     mounted () {
-        document.title = `Home -- ${document.title}`;
-        $(document).ready(function () {
+        document.title = `Home -- ${this.customConfig.title}`;
+        $(function () {
             $(".image").visibility({
                 type: "image",
                 transition: "vertical flip in",

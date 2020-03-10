@@ -6,6 +6,7 @@ import config from "../../config/environment.json";
 
 @Component
 export default class InitMixin extends Vue {
+    customConfig = config;
     mounted () {
         util.init(this.$store.getters.homepage);
         document.title = config.title;

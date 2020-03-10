@@ -262,5 +262,6 @@
   "contest set": "コンテストセット",
   "contest problem set": "コンテスト質問セット",
   "now": "今",
-  "problem in contest": "含めるコンテスト"
+  "problem in contest": "含めるコンテスト",
+  "about icpc": "ICPCについて"
 }

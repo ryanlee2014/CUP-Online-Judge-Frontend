@@ -337,7 +337,7 @@
                                             <div class="eight wide column">
                                                 <div class="row">
                                                     <div class="column">
-                                                        <h4 class="ui top attached block header">CUP Online Judge</h4>
+                                                        <h4 class="ui top attached block header">{{$t("local")}}</h4>
                                                         <div class="ui attached segment">
                                                             <router-link :to="`/problem/submit/${row.problem_id}`"
                                                                          :key="row.problem_id"
