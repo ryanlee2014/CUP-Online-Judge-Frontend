@@ -1,37 +1,7 @@
 <template>
     <div class="ui grid">
         <div class="four wide column">
-            <div class="ui link card">
-                <div class="image">
-                    <router-link :src="getAvatarURL(thread_head)" :to="`/user/${thread_head.user_id}`"
-                                 tag="img" v-if="hasAvatarURL(thread_head)">
-                    </router-link>
-                    <img src="@/static/image/white-image.png" v-else>
-                </div>
-                <div class="content">
-                    <div class="header">
-                        <router-link :to="`/user/${thread_head.user_id}`" class="black">
-                            {{thread_head.nick}}
-                        </router-link>
-                    </div>
-                    <div class="meta">
-                        <router-link :to="`/user/${thread_head.user_id}`">
-                            {{thread_head.user_id}}
-                        </router-link>
-                    </div>
-                    <div class="description" v-html="markdownIt.renderRaw(thread_head.biography||'')">
-                    </div>
-                </div>
-                <div class="extra content">
-<span class="right floated">
-
-</span>
-                    <span>
-<i class="user icon"></i>
-Solved {{thread_head.solved}}
-</span>
-                </div>
-            </div>
+            <UserCard :thread_head="thread_head"></UserCard>
             <div class="ui sticky" id="sticky_content" style="left: 50.1429px;">
                 <h3 class="ui header" id="contents" v-show="content">目录</h3>
                 <div id="contentContainer"></div>
@@ -41,7 +11,7 @@ Solved {{thread_head.solved}}
             <div class="ui existing full segment" id="main_context">
                 <router-link :to="`/discuss/edit/${id}`" class="ui blue right ribbon label"
                              v-if="thread_head.user_id + '' === owner">
-                    Edit
+                    {{$t("edit")}}
                 </router-link>
                 <div class="ui info message">
                     <div class="header">
@@ -71,9 +41,14 @@ Solved {{thread_head.solved}}
 import markdownIt from "../../lib/markdownIt/markdownIt";
 import avatarMixin from "../../mixin/avatarMixin";
 import { Mixins, Component, Prop } from "vue-property-decorator";
+import UserCard from "@/components/user/UserCard.vue";
 const doc = document.createElement("div");
 
-@Component
+@Component({
+    components: {
+        UserCard
+    }
+})
 export default class DiscussContent extends Mixins(avatarMixin) {
     @Prop({ default: () => { return {}; } }) thread_head!: any;
     @Prop({ default: false }) content!: boolean;

@@ -28,7 +28,7 @@
                     <div class="actions">
                         <router-link :to="`/discuss/edit/${id}/${row.comment_id}`" class="reply"
                                      v-if="row.user_id + '' === owner">
-                            Edit
+                            {{$t("edit")}}
                         </router-link>
                         <a @click="block_reply(row.comment_id)" class="reply" v-if="isadmin">屏蔽</a>
                         <!--<a class="reply">Reply</a>-->
@@ -37,7 +37,7 @@
 
             </div>
         </div>
-        <h3 class="ui dividing header">Reply</h3>
+        <h3 class="ui dividing header">{{$t("reply")}}</h3>
         <form class="ui reply form">
             <div class="field">
                 <mavon-editor v-model="replyText"></mavon-editor>
@@ -51,7 +51,7 @@
                 </div>
             </div>
             <div @click="replyComment" class="ui blue labeled submit icon button">
-                <i class="icon edit"></i> Add Reply
+                <i class="icon edit"></i> {{$t("add")}}
             </div>
         </form>
     </div>

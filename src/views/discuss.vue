@@ -20,7 +20,7 @@
                 <div class="three wide right aligned column">
                     <router-link to="/discuss/add" class="ui labeled icon blue mini button">
                         <i class="write icon"></i>
-                        {{$t("post")}}
+                        {{$t("post new discussion")}}
                     </router-link>
                 </div>
             </div>

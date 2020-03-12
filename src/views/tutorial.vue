@@ -12,41 +12,17 @@
                 <div class="thirteen wide column">
                 </div>
                 <div class="three wide right aligned column">
-                    <router-link :to="`/tutorial/new/${id}`" class="ui labeled icon blue mini button"><i class="write icon"></i>Post</router-link>
+                    <router-link :to="`/tutorial/new/${id}`" class="ui labeled icon blue mini button"><i class="write icon"></i>{{$t("post")}}</router-link>
                 </div>
             </div>
         </div>
         <div :key="key" class="ui grid" v-for="(thread_head,key) in content">
             <div class="four wide column">
-                <div class="ui link card">
-                    <div class="image">
-                        <router-link tag="img" :src="getAvatarURL(thread_head)" :to="`/user/${thread_head.user_id}`" v-if="hasAvatarURL(thread_head)"></router-link>
-                        <img src="@/static/image/white-image.png" v-else>
-                    </div>
-                    <div class="content">
-                        <div class="header">
-                            <router-link :to="`/user/${thread_head.user_id}`" class="black">{{thread_head.nick}}</router-link>
-                        </div>
-                        <div class="meta">
-                            <router-link :to="`/user/${thread_head.user_id}`">{{thread_head.user_id}}</router-link>
-                        </div>
-                        <div class="description" v-html="markdownIt.renderRaw(thread_head.biography||'')">
-                        </div>
-                    </div>
-                    <div class="extra content">
-      <span class="right floated">
-
-      </span>
-                        <span>
-        <i class="user icon"></i>
-        Solved {{thread_head.solved}}
-      </span>
-                    </div>
-                </div>
+                <UserCard :thread_head="thread_head"></UserCard>
             </div>
             <div class="twelve wide column">
                 <div class="ui existing full segment">
-                    <router-link :to="`/tutorial/edit/${thread_head.tutorial_id}`" class="ui blue right ribbon label" v-if="thread_head.user_id + '' === owner">Edit</router-link>
+                    <router-link :to="`/tutorial/edit/${thread_head.tutorial_id}`" class="ui blue right ribbon label" v-if="thread_head.user_id + '' === owner">{{$t("edit")}}</router-link>
                     <div class="ui vertical segment" v-html="markdownIt.render(thread_head.content||'')"></div>
 
                     <div class="ui raised segment">
@@ -57,7 +33,7 @@
                                     <span class="subscript">ms</span>
                                 </div>
                                 <div class="label none-transform">
-                                    Running Time
+                                    {{$t("time")}}
                                 </div>
                             </div>
                             <div class="statistic">
@@ -66,7 +42,7 @@
                                     <span class="subscript">KB</span>
                                 </div>
                                 <div class="label none-transform">
-                                    Used Memory
+                                    {{$t("memory")}}
                                 </div>
                             </div>
                             <div class="statistic">
@@ -75,7 +51,7 @@
                                     <span class="subscript">&nbsp;</span>
                                 </div>
                                 <div class="label none-transform">
-                                    Language
+                                    {{$t("programming language")}}
                                 </div>
                             </div>
                             <div class="statistic">
@@ -85,13 +61,13 @@
                                     <span class="subscript">&nbsp;</span>
                                 </div>
                                 <div class="label none-transform">
-                                    Result
+                                    {{$t("result")}}
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="ui styled fluid accordion">
-                        <div class="title">AC代码<i class="dropdown icon"></i></div>
+                        <div class="title">{{$t("source code")}}<i class="dropdown icon"></i></div>
                         <div class="content"
                              v-html="markdownIt.render('```' + language_markdown[thread_head.language] + '\n' +thread_head.code + '\n```')"></div>
                     </div>
@@ -110,10 +86,12 @@ import { Component, Mixins } from "vue-property-decorator";
 import markdownIt from "../lib/markdownIt/markdownIt";
 import jquery from "jquery";
 import { mapGetters } from "vuex";
+import UserCard from "@/components/user/UserCard.vue";
 const $: any = jquery;
 const Clipboard = require("clipboard");
 @Component({
     components: {
+        UserCard,
         ContestMode
     },
     computed: mapGetters(["contestMode"])

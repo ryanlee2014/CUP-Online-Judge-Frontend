@@ -13,7 +13,7 @@
                 </div>
                 <div class="eleven wide column">
                     <form method="post">
-                        <div class="ui top attached block header">Update Information</div>
+                        <div class="ui top attached block header">{{$t("update information")}}</div>
                         <div class="ui bottom attached segment">
                             <table style="margin: auto; width: 100%;">
                                 <div class="ui form">
