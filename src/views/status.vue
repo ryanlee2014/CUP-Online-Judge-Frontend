@@ -17,7 +17,7 @@
                 {{$t("user statistic")}}
             </a>
         </div>
-        <div class="ui bottom attached segment" v-show="current_tag == 'status'">
+        <div class="ui bottom attached segment" v-show="current_tag === 'status'">
             <div align=center class="input-append">
                 <form class="ui form segment" id=simform method="get">
                     <div class="four fields">
@@ -133,42 +133,11 @@
                 </div>
             </div>
         </div>
-        <div class="ui attached bottom segment" v-show="current_tag == 'graph'">
-            <div style="width:90%;margin:auto">
-                <canvas id="canvas"></canvas>
-            </div>
-            <div class="ui grid">
-                <div class="row">
-                    <div class="eight wide column">
-                        <div style="width:550px;">
-                            <canvas id="subtime"></canvas>
-                        </div>
-                    </div>
-                    <div class="eigth wide column">
-                        <div style="width:550px;">
-                            <canvas id="logtime"></canvas>
-                        </div>
-                    </div>
-                </div>
-                <div class="row" style="width: 100%">
-                    <div id="register_timeline" style="width: 100%;height:600px"></div>
-                </div>
-            </div>
-
-        </div>
-        <div class="ui attached bottom segment" v-show="current_tag == 'result'">
-            <div style="width:90%;margin:auto">
-                <canvas id="bar"></canvas>
-            </div>
-        </div>
-        <div class="ui attached bottom segment" v-show="current_tag == 'user'">
-            <h2 class="ui dividing header">{{$t("browser")}}</h2>
-            <div class="amcharts" id="browser_statistics">{{$t("loading")}}</div>
-            <h2 class="ui dividing header">{{$t("os")}}</h2>
-            <div class="amcharts" id="os_statistics">{{$t("loading")}}</div>
-            <h2 class="ui dividing header">Chord graph</h2>
-            <div class="amcharts" id="chord_graph">{{$t("loading")}}</div>
-        </div>
+        <keep-alive>
+            <Graph v-if="current_tag === 'graph'" ref="graph"></Graph>
+            <ResultGraph v-if="current_tag === 'result'" :label-name="labelName"></ResultGraph>
+            <UserGraph v-if="current_tag === 'user'"></UserGraph>
+        </keep-alive>
     </div>
 </template>
 <i18n>
@@ -219,456 +188,18 @@ import StatusViewMixin from "@/mixin/StatusViewMixin";
 import AwaitLock from "await-lock";
 import { Lock } from "@/module/Decorator/method";
 import { mapGetters } from "vuex";
+import Graph from "@/components/status/graph.vue";
+import ResultGraph from "@/components/status/ResultGraph.vue";
+import UserGraph from "@/components/status/UserGraph.vue";
 
 const $: any = jquery;
-const am4themes_animated = require("@amcharts/amcharts4/themes/animated").default;
-
-function draw (_result: any) {
-    const result: any = _result.result;
-    const _label: any = _result.label;
-    const row: any = {};
-    _.forEach(result, function (i: any) {
-        row[i[_label[0]]] = row[i[_label[0]]] || {};
-        row[i[_label[0]]][i[_label[1]]] = {
-            submit: i.submit,
-            accepted: i.accepted || 0
-        };
-    });
-
-    const _labels: any = [];
-    const _submits: any = [];
-    const _accepteds: any = [];
-    const _persent: any = [];
-    _.forEach(row, function (val: any, i: any) {
-        _.forEach(row[i], function (val2: any, j: any) {
-            _labels.push(i.toString() + "-" + j.toString());
-            _submits.push(row[i][j].submit);
-            _accepteds.push(row[i][j].accepted);
-            _persent.push((row[i][j].accepted / row[i][j].submit * 100).toString().substring(0, 5));
-        });
-    });
-    const config: any = {
-        type: "line",
-        data: {
-            labels: _labels,
-            datasets: [{
-                label: "总提交",
-                yAxisID: "submit",
-                backgroundColor: window.chartColors.red,
-                borderColor: window.chartColors.red,
-                data: _submits,
-                fill: false
-            }, {
-                label: "正确",
-                yAxisID: "submit",
-                fill: false,
-                backgroundColor: window.chartColors.blue,
-                borderColor: window.chartColors.blue,
-                data: _accepteds
-            }, {
-                label: "正确率",
-                fill: false,
-                yAxisID: "per",
-                backgroundColor: window.chartColors.green,
-                borderColor: window.chartColors.green,
-                data: _persent
-            }]
-        },
-        options: {
-            responsive: true,
-            title: {
-                display: true,
-                text: "统计信息"
-            },
-            tooltips: {
-                mode: "index",
-                intersect: false
-            },
-            hover: {
-                mode: "nearest",
-                intersect: true
-            },
-            scales: {
-                xAxes: [{
-                    display: true,
-                    scaleLabel: {
-                        display: true,
-                        labelString: "月份"
-                    }
-                }],
-                yAxes: [{
-                    id: "submit",
-                    position: "left",
-                    display: true,
-                    scaleLabel: {
-                        display: true,
-                        labelString: "提交"
-                    }
-                }, {
-                    id: "per",
-                    type: "linear",
-                    position: "right",
-                    scaleLabel: {
-                        display: true,
-                        labelString: "正确率"
-                    },
-                    ticks: {
-                        max: 100,
-                        min: 0
-                    }
-                }]
-            }
-        }
-    };
-    const ctx = (document!.getElementById!("canvas")! as any).getContext("2d");
-    window.myLine = new Chart(ctx, config);
-}
-
-function drawResult (data: any, labelName: any) {
-    data.sort(function (a: any, b: any) {
-        return b.cnt - a.cnt;
-    });
-    const color = window.chartColors;
-    const colorTocolor: any = {
-        0: color.blue,
-        1: color.blue,
-        2: color.blue,
-        3: color.blue,
-        4: color.green,
-        5: color.red,
-        6: color.red,
-        7: color.yellow,
-        8: color.yellow,
-        9: color.yellow,
-        10: color.yellow,
-        11: color.grey,
-        12: color.blue,
-        13: color.blue,
-        14: color.red,
-        15: color.red
-    };
-    const dataSet: any = [];
-    const labName: any = [];
-    dataSet.push({
-        label: "提交数",
-        backgroundColor: [],
-        borderColor: [],
-        borderWidth: 1,
-        data: []
-    });
-    // eslint-disable-next-line no-unused-vars
-    _.forEach(data, function (val: any, idx: any) {
-        labName.push(labelName[val.result]);
-        dataSet[0].backgroundColor.push(colorTocolor[val.result]);
-        dataSet[0].borderColor.push("white");
-        dataSet[0].data.push(val.cnt);
-    });
-    let barChartData = {
-        labels: labName,
-        datasets: dataSet
-    };
-    barChartData = JSON.parse(JSON.stringify(barChartData));
-    const ctx = (document!.getElementById("bar")! as any).getContext("2d");
-    window.myBar = new Chart(ctx, {
-        type: "bar",
-        data: barChartData,
-        options: {
-            responsive: true,
-            legend: {
-                display: false,
-                position: "top"
-            },
-            title: {
-                display: false,
-                text: "提交统计"
-            }
-        }
-    });
-}
-
-function drawBar (data: any) {
-    const login = data.login;
-    data = data.submit;
-    const color = Chart.helpers.color;
-    const config: any = {
-        type: "radar",
-        data: {
-            labels: [] as any[],
-            datasets: [{
-                label: "提交分布",
-                backgroundColor: color(window.chartColors.red).alpha(0.2).rgbString(),
-                borderColor: window.chartColors.red,
-                pointBackgroundColor: window.chartColors.red,
-                data: [] as any[]
-            }]
-        },
-        options: {
-            legend: {
-                position: "top"
-            },
-            title: {
-                display: true,
-                text: "提交时间分布"
-            },
-            scale: {
-                ticks: {
-                    beginAtZero: true
-                }
-            }
-        }
-    };
-    _.forEach(data, function (val: any) {
-        config.data.labels.push(val.hour + ":00");
-        config.data.datasets[0].data.push(val.cnt);
-    });
-    const copyconfig = JSON.parse(JSON.stringify(config));
-    copyconfig.data.datasets = [{
-        label: "登录分布",
-        backgroundColor: color(window.chartColors.blue).alpha(0.2).rgbString(),
-        borderColor: window.chartColors.blue,
-        pointBackgroundColor: window.chartColors.blue,
-        data: []
-    }];
-    _.forEach(login, function (val: any) {
-        copyconfig.data.datasets[0].data.push(val.cnt);
-    });
-    copyconfig.options.title.text = "登录时间分布";
-    new Chart(document!.getElementById("subtime")! as any, config);
-    new Chart(document!.getElementById("logtime")! as any, copyconfig);
-    // console.log(data);
-    // console.log(config);
-}
 
 const hasRendered: any = {};
-
-function drawDynamicInteractiveLineChart (dataSets?: any, prefix?: any, target?: any) {
-    let adapter_object: any = {};
-    const full_name = prefix + "_name";
-    const full_version = prefix + "_version";
-    if (hasRendered[target]) {
-        return;
-    }
-    if (window.temp_data_object && window.temp_data_object[target]) {
-        adapter_object = window.temp_data_object[target];
-    }
-    else if (dataSets === undefined) {
-        return;
-    }
-    else {
-        hasRendered[target] = true;
-        _.forEach(dataSets, function (d: any) {
-            if (!adapter_object[d[full_name]]) {
-                adapter_object[d[full_name]] = {
-                    name: d[full_name],
-                    version: {}
-                };
-            }
-            if (!adapter_object[d[full_name]].version[d[full_version]]) {
-                adapter_object[d[full_name]].version[d[full_version]] = 1;
-            }
-            else {
-                ++adapter_object[d[full_name]].version[d[full_version]];
-            }
-        });
-        adapter_object = _.values(adapter_object);
-
-        _.forEach(adapter_object, function (val: any, idx: any) {
-            if (!adapter_object[idx].children) {
-                adapter_object[idx].children = [];
-            }
-            _.forEach(val.version, function (v: any, id: any) {
-                adapter_object[idx].children.push({
-                    name: id,
-                    value: v
-                });
-            });
-        });
-        if (!window.temp_data_object) {
-            window.temp_data_object = {};
-        }
-        window.temp_data_object[target] = adapter_object;
-    }
-
-    // Themes begin
-    am4core.useTheme(am4themes_animated);
-    // Themes end
-
-    // create chart
-    const chart = am4core.create(target, am4charts.TreeMap);
-    chart.hiddenState.properties.opacity = 0; // this makes initial fade in effect
-    window.chart_graph = chart;
-    chart.data = adapter_object;
-
-    chart.colors.step = 2;
-
-    // define data fields
-    chart.dataFields.value = "value";
-    chart.dataFields.name = "name";
-    chart.dataFields.children = "children";
-
-    chart.zoomable = true;
-    const bgColor = new am4core.InterfaceColorSet().getFor("background");
-
-    // level 0 series template
-    const level0SeriesTemplate = chart.seriesTemplates.create("0");
-    const level0ColumnTemplate = level0SeriesTemplate.columns.template;
-
-    level0ColumnTemplate.column.cornerRadius(10, 10, 10, 10);
-    level0ColumnTemplate.fillOpacity = 0;
-    level0ColumnTemplate.strokeWidth = 4;
-    level0ColumnTemplate.strokeOpacity = 0;
-
-    // level 1 series template
-    const level1SeriesTemplate: any = chart.seriesTemplates.create("1");
-    const level1ColumnTemplate: any = level1SeriesTemplate.columns.template;
-
-    level1SeriesTemplate.tooltip.animationDuration = 0;
-    level1SeriesTemplate.strokeOpacity = 1;
-
-    level1ColumnTemplate.column.cornerRadius(10, 10, 10, 10);
-    level1ColumnTemplate.fillOpacity = 1;
-    level1ColumnTemplate.strokeWidth = 4;
-    level1ColumnTemplate.stroke = bgColor;
-
-    const bullet1 = level1SeriesTemplate.bullets.push(new am4charts.LabelBullet());
-    bullet1.locationY = 0.5;
-    bullet1.locationX = 0.5;
-    bullet1.label.text = "{name}";
-    bullet1.label.fill = am4core.color("#ffffff");
-
-    chart.maxLevels = 2;
-}
-
-function drawChordGraph (data: any, prefix = "chord_graph") {
-    if (hasRendered[prefix]) {
-        return;
-    }
-    hasRendered[prefix] = true;
-    // Themes begin
-    am4core.useTheme(am4themes_animated);
-    // Themes end
-
-    const chart = am4core.create("chord_graph", am4charts.ChordDiagram);
-
-    _.forEach(data, function (el: any) {
-        if (el.from > el.to) {
-            const tmp = el.from;
-            el.from = el.to;
-            el.to = tmp;
-        }
-    });
-
-    data.sort(function (a: any, b: any) {
-        return b.value - a.value;
-    });
-
-    while (data.length > 30) {
-        data.pop();
-    }
-
-    chart.data = data;
-
-    chart.dataFields.fromName = "from";
-    chart.dataFields.toName = "to";
-    chart.dataFields.value = "value";
-
-    // make nodes draggable
-    const nodeTemplate = chart.nodes.template;
-    nodeTemplate.readerTitle = "Click to show/hide or drag to rearrange";
-    nodeTemplate.showSystemTooltip = true;
-
-    const nodeLink = chart.links.template;
-    const bullet = nodeLink.bullets.push(new am4charts.CircleBullet());
-    bullet.fillOpacity = 1;
-    bullet.circle.radius = 5;
-    bullet.locationX = 0.5;
-
-    // create animations
-    chart.events.on("ready", function () {
-        for (let i = 0; i < chart.links.length; i++) {
-            const link: any = chart.links.getIndex(i);
-            const bullet = link.bullets.getIndex(0);
-
-            animateBullet(bullet);
-        }
-    });
-
-    function animateBullet (bullet: any) {
-        const duration = 3000 * Math.random() + 2000;
-        const animation = bullet.animate([{ property: "locationX", from: 0, to: 1 }], duration);
-        animation.events.on("animationended", function (event: any) {
-            animateBullet(event.target.object);
-        });
-    }
-}
-
-function drawRegisterTimeline (data: any) {
-    if (hasRendered.timeline) {
-        return;
-    }
-    hasRendered.timeline = true;
-    // Themes begin
-    am4core.useTheme(am4themes_animated);
-    // Themes end
-
-    // Create chart instance
-    const chart: any = am4core.create("register_timeline", am4charts.XYChart);
-    chart.paddingRight = 20;
-    const title = chart.titles.create();
-    title.text = "注册人数变化";
-    title.fontSize = 15;
-    title.marginBottom = 30;
-    // Add data
-    chart.data = data;
-
-    // Create axes
-    const dateAxis = chart.xAxes.push(new am4charts.DateAxis());
-    const valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
-
-    // Create series
-    const series: any = chart.series.push(new am4charts.LineSeries());
-    series.dataFields.valueY = "value";
-    series.dataFields.dateX = "date";
-    series.tooltipText = "{value}";
-    series.strokeWidth = 2;
-    series.minBulletDistance = 15;
-
-    // Drop-shaped tooltips
-    series.tooltip.background.cornerRadius = 20;
-    series.tooltip.background.strokeOpacity = 0;
-    series.tooltip.pointerOrientation = "vertical";
-    series.tooltip.label.minWidth = 40;
-    series.tooltip.label.minHeight = 40;
-    series.tooltip.label.textAlign = "middle";
-    series.tooltip.label.textValign = "middle";
-
-    // Make bullets grow on hover
-    const bullet = series.bullets.push(new am4charts.CircleBullet());
-    bullet.circle.strokeWidth = 2;
-    bullet.circle.radius = 4;
-    bullet.circle.fill = am4core.color("#fff");
-
-    const bullethover = bullet.states.create("hover");
-    bullethover.properties.scale = 1.3;
-
-    // Make a panning cursor
-    chart.cursor = new am4charts.XYCursor();
-    chart.cursor.behavior = "panXY";
-    chart.cursor.xAxis = dateAxis;
-    chart.cursor.snapToSeries = series;
-
-    // Create vertical scrollbar and place it before the value axis
-    chart.scrollbarY = new am4core.Scrollbar();
-    chart.scrollbarY.parent = chart.leftAxesContainer;
-    chart.scrollbarY.toBack();
-
-    // Create a horizontal scrollbar with previe and place it underneath the date axis
-    chart.scrollbarX = new am4charts.XYChartScrollbar();
-    chart.scrollbarX.series.push(series);
-    chart.scrollbarX.parent = chart.bottomAxesContainer;
-} // end am4core.ready()
     @Component({
         components: {
+            UserGraph,
+            ResultGraph,
+            Graph,
             statusTable,
             ContestMode
         },
@@ -690,31 +221,7 @@ export default class GeneralStatus extends Mixins(mixins, StatusViewMixin) {
         dim = false;
         sockets: any;
         prevSolutionId = 0;
-
-        @Watch("current_tag")
-        onCurrentTagChanged (newVal: string) {
-            if (newVal === "user") {
-                this.axios.get("/api/status/device/browser")
-                    .then(({ data }) => {
-                        _.delay(drawDynamicInteractiveLineChart, 0, data.data, "browser", "browser_statistics");
-                        this.axios.get("/api/status/device/os")
-                            .then(({ data }) => {
-                                _.delay(drawDynamicInteractiveLineChart, 0, data.data, "os", "os_statistics");
-                            });
-                        this.axios.get("/api/status/problem/solve_map")
-                            .then(({ data }) => {
-                                _.delay(drawChordGraph, 0, data.data);
-                            });
-                    });
-            }
-            else if (newVal === "graph") {
-                this.drawGraph();
-                this.axios.get("/api/user/register_timeline")
-                    .then(({ data }) => {
-                        _.delay(drawRegisterTimeline, 0, data.data);
-                    });
-            }
-        }
+        labelName = [];
 
         search_func (data: any) {
             const that = this;
@@ -840,22 +347,10 @@ export default class GeneralStatus extends Mixins(mixins, StatusViewMixin) {
             });
         }
 
-        created () {
+        initData () {
             this.fetchData()
                 .then((data) => {
-                    this.axios.get("/api/status/result")
-                        .then(response => {
-                            const dat: any = response.data;
-                            drawResult(dat.data, data.const_list.result.cn);
-                        });
-                    this.axios.get("/api/status/submit_hour")
-                        .then(response => {
-                            const dat: any = response.data;
-                            const sortFunc = (a: any, b: any) => a.hour - b.hour;
-                            dat.data.submit.sort(sortFunc);
-                            dat.data.login.sort(sortFunc);
-                            drawBar(dat.data);
-                        });
+                    this.labelName = data.const_list.result.cn;
                 });
         }
 
@@ -877,20 +372,9 @@ export default class GeneralStatus extends Mixins(mixins, StatusViewMixin) {
             this.sockets.unsubscribe("result");
         }
 
-        drawGraph () {
-            if (this.hasDrawedGraph) {
-                return;
-            }
-            this.hasDrawedGraph = true;
-            this.axios.get("/api/status/graph")
-                .then(({ data }) => {
-                    draw(data);
-                    drawDynamicInteractiveLineChart();
-                });
-        }
-
         mounted () {
             document.title = `Status -- ${document.title}`;
+            this.initData();
             this.sockets.subscribe("submit", (data: any) => {
                 this.Submit(data);
             });

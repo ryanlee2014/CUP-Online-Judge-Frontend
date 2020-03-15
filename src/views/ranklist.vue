@@ -27,6 +27,7 @@ import { mapGetters } from "vuex";
 })
 export default class Rank extends Mixins(InitMixin) {
     ranklist = {};
+    contestMode!: boolean;
     mounted () {
         document.title = `Ranklist -- ${document.title}`;
         this.axios.get(`/api/ranklist/${this.$route.query.page ? `?page=${this.$route.query.page}` : ""}`)
