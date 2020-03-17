@@ -114,7 +114,7 @@ import { Debounce } from "../../../module/Decorator/method";
 
 const $: any = jquery;
 const detectLang = require("../../../lib/langDetector");
-const language_ext = ["c", "cc", "pas", "java", "rb", "sh", "py", "php", "pl", "cs", "m", "bas", "scm", "c", "cc", "lua", "js", "go", "py", "cpp", "cpp", "c", "kt", "java", "java", "python", "python", "java", "c", "cc"];
+const language_ext = ["c", "cc", "pas", "java", "rb", "sh", "py", "php", "pl", "cs", "m", "bas", "scm", "c", "cc", "lua", "js", "go", "py", "cpp", "cpp", "c", "kt", "java", "java", "python", "python", "java", "c", "cc", "cc"];
     @Component({
         components: {
             aceEditor,

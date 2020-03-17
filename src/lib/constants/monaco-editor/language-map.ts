@@ -29,5 +29,6 @@ export default [
     "java",
     "cpp",
     "cpp",
+    "cpp",
     ""
 ];
