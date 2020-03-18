@@ -1,5 +1,5 @@
 <template>
-    <table class='ui padded celled unstackable selectable table' width=90%>
+    <table class='ui padded borderless unstackable selectable table' width=90%>
         <thead>
         <tr align=center class=toprow>
             <th width=55%>{{$t("title")}}</th>

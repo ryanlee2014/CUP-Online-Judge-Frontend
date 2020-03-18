@@ -3,7 +3,7 @@
         <h2 class="ui dividing header">
             Contest Topic
         </h2>
-        <table class="ui padded celled unstackable selectable table">
+        <table class="ui padded borderless unstackable selectable table">
             <thead>
                 <tr>
                     <th width="55%">

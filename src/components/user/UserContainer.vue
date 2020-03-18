@@ -233,20 +233,20 @@
                                                                     <div class="line"></div>
                                                                 </div>
                                                             </div>
-                                                            <h4 class="ui attached block header">
+                                                            <h4 class="ui attached block header" v-if="biography.length > 0">
                                                                 <i class="id badge icon"></i>{{$t("biography")}}
                                                             </h4>
                                                             <div class="ui attached segment"
-                                                                 v-html="markdownIt.renderRaw(biography||'')">
+                                                                 v-html="markdownIt.renderRaw(biography||'')" v-if="biography.length > 0">
                                                                 <div class="ui placeholder" v-cloak>
                                                                     <div class="line"></div>
                                                                     <div class="line"></div>
                                                                 </div>
                                                             </div>
-                                                            <h4 class="ui attached block header"><i
+                                                            <h4 class="ui attached block header" v-if="school.length > 0"><i
                                                                 class="university icon"></i>{{$t("school")}}
                                                             </h4>
-                                                            <div class="ui attached segment">
+                                                            <div class="ui attached segment" v-if="school.length > 0">
                                                                 <div v-cloak>{{school}}</div>
                                                                 <div class="ui placeholder" v-cloak>
                                                                     <div class="line"></div>
@@ -254,8 +254,8 @@
                                                                 </div>
                                                             </div>
                                                             <h4 class="ui attached block header"><i
-                                                                class="mail square icon"></i>{{$t("email")}}</h4>
-                                                            <div class="ui attached segment">
+                                                                class="mail square icon" v-if="email.length > 0"></i>{{$t("email")}}</h4>
+                                                            <div class="ui attached segment" v-if="email.length > 0">
                                                                 <div v-cloak><a
                                                                     :href="'mailto:'+email">{{email}}</a></div>
                                                                 <div class="ui placeholder" v-cloak>
@@ -263,10 +263,10 @@
                                                                     <div class="line"></div>
                                                                 </div>
                                                             </div>
-                                                            <h4 class="ui attached block header">
+                                                            <h4 class="ui attached block header" v-if="blog.length > 0">
                                                                 <i class="newspaper icon"></i>Blog
                                                             </h4>
-                                                            <div class="ui attached segment">
+                                                            <div class="ui attached segment" v-if="blog.length > 0">
                                                                 <div v-cloak>
                                                                     <a :href="blog" target="_blank">{{blog}}</a>
                                                                 </div>
@@ -275,10 +275,10 @@
                                                                     <div class="line"></div>
                                                                 </div>
                                                             </div>
-                                                            <h4 class="ui attached block header">
+                                                            <h4 class="ui attached block header" v-if="github.length > 0">
                                                                 <i class="github icon"></i>GitHub
                                                             </h4>
-                                                            <div class="ui bottom attached segment">
+                                                            <div class="ui bottom attached segment" v-if="github.length > 0">
                                                                 <iframe
                                                                     :src="'https://ghbtns.com/github-btn.html?user='+github+'&type=follow&count=true'"
                                                                     frameborder="0"
@@ -349,8 +349,8 @@
                                                                 <div class="line"></div>
                                                             </div>
                                                         </div>
-                                                        <h4 class="ui attached block header">HDU</h4>
-                                                        <div class="ui attached segment">
+                                                        <h4 class="ui attached block header" v-if="accept.hdu.length > 0">HDU</h4>
+                                                        <div class="ui attached segment" v-if="accept.hdu.length > 0">
                                                             <a :href="'hdusubmitpage.php?id='+row.problem_id"
                                                                :key="row.problem_id"
                                                                v-cloak v-for="row in accept.hdu">
@@ -360,8 +360,8 @@
                                                                 <div class="line"></div>
                                                             </div>
                                                         </div>
-                                                        <h4 class="ui attached block header">POJ</h4>
-                                                        <div class="ui attached segment">
+                                                        <h4 class="ui attached block header" v-if="accept.poj.length > 0">POJ</h4>
+                                                        <div class="ui attached segment" v-if="accept.poj.length > 0">
                                                             <a :href="'pojsubmitpage.php?id='+row.problem_id"
                                                                :key="row.problem_id"
                                                                v-cloak v-for="row in accept.poj">
@@ -371,8 +371,8 @@
                                                                 <div class="line"></div>
                                                             </div>
                                                         </div>
-                                                        <h4 class="ui attached block header">UVA</h4>
-                                                        <div class="ui attached segment">
+                                                        <h4 class="ui attached block header" v-if="accept.uva.length > 0">UVA</h4>
+                                                        <div class="ui attached segment" v-if="accept.uva.length > 0">
                                                             <a :href="'uvasubmitpage.php?id='+row.problem_id"
                                                                :key="row.problem_id"
                                                                v-cloak v-for="row in accept.uva">
@@ -382,8 +382,8 @@
                                                                 <div class="line"></div>
                                                             </div>
                                                         </div>
-                                                        <h4 class="ui attached block header">{{$t("other")}}</h4>
-                                                        <div class="ui bottom attached segment">
+                                                        <h4 class="ui attached block header" v-if="accept.other.length > 0">{{$t("other")}}</h4>
+                                                        <div class="ui bottom attached segment" v-if="accept.other.length > 0">
                                                             <a :key="row.problem_id" href="javascript:void(0)"
                                                                v-cloak v-for="row in accept.other">
                                                                 {{row.oj_name + " " + row.problem_id}}</a>

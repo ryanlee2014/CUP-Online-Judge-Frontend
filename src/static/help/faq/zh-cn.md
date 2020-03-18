@@ -3,7 +3,13 @@
 若您对平台使用方法、OJ模式相关问题不够了解，建议使用Google、百度等搜索引擎搜索后，再阅读本<b>FAQ</b>中的内容(如<a href="https://zh.wikipedia.org/wiki/%E5%9C%A8%E7%BA%BF%E5%88%A4%E9%A2%98%E7%B3%BB%E7%BB%9F" target="_blank">Wikipedia-在线评测系统</a>)。
 <br>平台开发相关信息，请访问<a href="about" target="_blank">关于</a><br>关于本平台使用的开源项目，请访问<a href="opensource" target="_blank">开放源代码声明</a><br>想要了解关于<b>ICPC竞赛</b>的资讯，请善用搜索引擎，并阅读<a href="icpc" target="_blank">什么是ICPC</a>
 </div>
-
+<div class="ui positive message">
+<div class="header">Multiple language support</div>
+This page has multiple language version.<br>
+If you don't familiar with current language, you can select the language you want by hovering "语言/Language" menu and choose the language you want.<br>
+このページは多言語のバージョンで利用できます。<br>
+言語がわからない場合は、右上の言語ボタンを利用して、適当な言語を選択してください。<br>
+</div>
 作者:[Ryan Lee(李昊元)](/user/2016011253)
 
 <div class="ui message">

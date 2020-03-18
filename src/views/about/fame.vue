@@ -2,7 +2,7 @@
     <div class="ui text container" v-lazy-container="{ selector: 'img' }">
         <div class="ui basic segment" id="mainContent" ref="main">
             <h2 class="ui dividing header">
-                Hall of Fame
+                {{$t("hall of fame")}}
                 <div class="sub header">姓名不分先后</div>
             </h2>
             <div class="left ui rail" id="contents">
