@@ -23,41 +23,41 @@ module.exports = {
         proxy: {
             "/api": {
                 secure: false,
-                target: "https://oj.cupacm.com",
+                target: "https://hk.haoyuan.info",
                 changeOrigin: true
             },
             "/socket.io": {
                 secure: false,
-                target: "https://oj.cupacm.com",
+                target: "https://hk.haoyuan.info",
                 changeOrigin: true
             },
             "/avatar": {
-                target: "https://oj.cupacm.com",
+                target: "https://hk.haoyuan.info",
                 secure: false,
                 changeOrigin: true
             },
             "/image": {
-                target: "https://oj.cupacm.com",
+                target: "https://hk.haoyuan.info",
                 secure: false,
                 changeOrigin: true
             },
             "/upload": {
-                target: "https://oj.cupacm.com",
+                target: "https://hk.haoyuan.info",
                 secure: false,
                 changeOrigin: true
             },
             "/img": {
-                target: "https://oj.cupacm.com",
+                target: "https://hk.haoyuan.info",
                 secure: false,
                 changeOrigin: true
             },
             "/assets": {
-                target: "https://oj.cupacm.com",
+                target: "https://hk.haoyuan.info",
                 secure: false,
                 changeOrigin: true
             },
             "/glory_image": {
-                target: "https://oj.cupacm.com",
+                target: "https://hk.haoyuan.info",
                 secure: false,
                 changeOrigin: true
             }

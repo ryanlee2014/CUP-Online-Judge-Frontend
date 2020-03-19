@@ -274,7 +274,7 @@ export default class Submit extends Mixins(mixins) {
                 }
                 const d = data.problem;
                 let sourceCode = data.source;
-                let language = -1;
+                let language = localStorage.getItem("lastlang") && Boolean(1 << parseInt(localStorage.getItem("lastlang")!) & (~d.langmask)) ? parseInt(localStorage.getItem("lastlang")!) : Math.log2(~d.langmask & -~d.langmask);
                 if (typeof sourceCode !== "string") {
                     language = sourceCode.language;
                     sourceCode = sourceCode.source_code;

@@ -110,7 +110,7 @@ import "@/lib/brace/braceMode";
 import "@/lib/brace/braceTheme";
 import { Prop, Watch, Component } from "vue-property-decorator";
 import Vue from "vue";
-import { Debounce } from "../../../module/Decorator/method";
+import { Debounce } from "@/module/Decorator/method";
 
 const $: any = jquery;
 const detectLang = require("../../../lib/langDetector");
@@ -137,7 +137,7 @@ export default class RightPanel extends Vue {
         appendView: any = null;
         editorPackage = false;
         code = "";
-        language = ["c_cpp", "c_cpp", "pascal", "java", "ruby", "bash", "python", "php", "perl", "csharp", "objectivec", "text", "scheme", "c_cpp", "c_cpp", "lua", "javascript", "go", "python", "c_cpp", "c_cpp", "c_cpp", "text", "java", "java", "python", "python", "java", "c_cpp", "c_cpp"];
+        language = ["c_cpp", "c_cpp", "pascal", "java", "ruby", "bash", "python", "php", "perl", "csharp", "objectivec", "text", "scheme", "c_cpp", "c_cpp", "lua", "javascript", "go", "python", "c_cpp", "c_cpp", "c_cpp", "text", "java", "java", "python", "python", "java", "c_cpp", "c_cpp", "c_cpp"];
         title = envConfig.title;
         current_prepend = "";
         current_append = "";
@@ -189,6 +189,10 @@ export default class RightPanel extends Vue {
 
         @Watch("selected_language")
         onSelectedLanguageChanged (val: any) {
+            if (val === undefined || val < 0) {
+                return;
+            }
+            localStorage.setItem("lastlang", val);
             this.$store.commit("setCodeInfo", {
                 language: val
             });
