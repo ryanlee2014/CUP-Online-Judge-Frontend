@@ -4,7 +4,7 @@ export default [
     "pascal",
     "java",
     "ruby",
-    "bash",
+    "shell",
     "python",
     "php",
     "perl",
