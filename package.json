@@ -86,6 +86,7 @@
   },
   "devDependencies": {
     "@cnamts/vue-cli-plugin-proxy": "^2.2.1",
+    "@gfx/zopfli": "^1.0.14",
     "@intlify/vue-i18n-loader": "^0.6.1",
     "@kazupon/vue-i18n-loader": "^0.5.0",
     "@types/animejs": "^3.1.0",
@@ -107,6 +108,7 @@
     "@vue/eslint-config-standard": "^5.1.2",
     "@vue/eslint-config-typescript": "^5.0.2",
     "babel-eslint": "^10.1.0",
+    "brotli-webpack-plugin": "^1.1.0",
     "codecov": "^3.6.5",
     "compression-webpack-plugin": "^3.1.0",
     "cross-env": "^7.0.1",

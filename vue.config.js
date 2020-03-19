@@ -1,6 +1,7 @@
 const MonacoEditorPlugin = require("monaco-editor-webpack-plugin");
 const CompressionPlugin = require("compression-webpack-plugin");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
+const zopfli = require("@gfx/zopfli");
+const BrotliPlugin = require("brotli-webpack-plugin");
 const version = require("./package.json").version;
 const webPath = `https://cdn.jsdelivr.net/gh/ryanlee2014/CUP-Online-Judge-CDN@v${version}/`;
 
@@ -74,6 +75,20 @@ module.exports = {
                 test: /\.js$|\.html$|\.css/,
                 threshold: 10240,
                 deleteOriginalAssets: false
+            }));
+            configs.plugins.push(new CompressionPlugin({
+                algorithm (input, compressionOptions, callback) {
+                    return zopfli.gzip(input, compressionOptions, callback);
+                },
+                compressionOptions: {
+                    numiterations: 15
+                },
+                minRatio: 0.99,
+                test: /\.(js|css|json|txt|html|ico|svg)(\?.*)?$/i
+            }));
+            configs.plugins.push(new BrotliPlugin({
+                test: /\.(js|css|json|txt|html|ico|svg)(\?.*)?$/i,
+                minRatio: 0.99
             }));
         }
         return configs;
