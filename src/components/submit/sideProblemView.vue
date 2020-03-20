@@ -15,7 +15,9 @@
         <rightPanel :append="append" :do_submit="do_submit" :lang_list="lang_list" :pre_test_run="pre_test_run"
                     :prepend="prepend" :source_code="source_code" :submitDisabled="submitDisabled"
                     :judge-info-text="judgeInfoText"
-                    :source_code_language="source_code_language"></rightPanel>
+                    :source_code_language="source_code_language"
+                    :fill_in_blank_problem="fill_in_blank_problem"
+        ></rightPanel>
 
     </div>
 </template>
@@ -61,6 +63,7 @@ export default class SideProblemView extends Vue {
     @Prop({ default: () => { return {}; } }) append!: any;
     @Prop({ default: "" }) judgeInfoText!: string;
     @Prop({ default: null }) source_code_language!: number | null;
+    @Prop({ default: 0 }) fill_in_blank_problem!: number;
 }
 </script>
 

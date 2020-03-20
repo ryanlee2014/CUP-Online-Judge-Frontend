@@ -46,6 +46,7 @@
                              :switch_screen="switch_screen" :time="time" :title="temp_title" :uploader="uploader"
                              :judge-info-text="judgeInfoText"
                              :source_code_language="source_code_language"
+                             :fill_in_blank_problem="fill_in_blank_problem"
                              v-show="!single_page">
             </sideProblemView>
         </div>
@@ -123,6 +124,7 @@ export default class Submit extends Mixins(mixins) {
     hint= "";
     fingerprint= "";
     fingerprintRaw= "";
+    fill_in_blank_problem=0;
     submit= 0;
     accepted= 0;
     source= "";
@@ -298,6 +300,7 @@ export default class Submit extends Mixins(mixins) {
                     time: parseFloat(d.time_limit),
                     memory: parseInt(d.memory_limit),
                     input: d.input,
+                    fill_in_blank_problem: d.fill_in_blank_problem,
                     output: d.output,
                     uploader: d.uploader,
                     sampleinput: d.sample_input,

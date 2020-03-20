@@ -10,6 +10,7 @@ If you don't familiar with current language, you can select the language you wan
 このページは多言語のバージョンで利用できます。<br>
 言語がわからない場合は、右上の言語ボタンを利用して、適当な言語を選択してください。<br>
 </div>
+
 作者:[Ryan Lee(李昊元)](/user/2016011253)
 
 <div class="ui message">
