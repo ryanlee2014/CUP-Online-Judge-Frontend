@@ -103,7 +103,6 @@ module.exports = {
     },
 
     assetsDir: "./static",
-    outputDir: "./test",
     pluginOptions: {
         i18n: {
             locale: "cn",
