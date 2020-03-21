@@ -6,9 +6,9 @@
             <i class="right angle icon divider"></i>
             <div class="active section">Discuss ID:{{id}}</div>
         </div>
-        <h1>{{thread_head.title}}</h1>
-        <MainContent :content="content" :id="id" :owner="owner"
-                     :thread_head="thread_head"></MainContent>
+        <h1>{{thread_head ? thread_head.title : ""}}</h1>
+        <MainContent :id="id" :owner="owner"
+                     :thread_head="thread_head || {}"></MainContent>
         <h3 class="ui dividing header">{{$t("comments")}}</h3>
         <div class="ui comments">
             <div :key="key" class="comment" v-for="(row,key) in reply">
@@ -67,6 +67,8 @@ import jquery from "jquery";
 import _ from "lodash";
 import Clipboard from "clipboard";
 import { Mixins, Component } from "vue-property-decorator";
+import MarkdownWorkerMixin from "@/mixin/MarkdownWorkerMixin";
+import AsyncComputed from "vue-async-computed-decorator";
 
 const $: any = jquery;
 const uslug = require("uslug");
@@ -75,7 +77,7 @@ const uslug = require("uslug");
         MainContent
     }
 })
-export default class Thread extends Mixins(mixins, avatarMixin, mermaidMixin) {
+export default class Thread extends Mixins(mixins, avatarMixin, mermaidMixin, MarkdownWorkerMixin) {
     page = 0;
     table_val: any = {};
     total = 0;
@@ -83,7 +85,6 @@ export default class Thread extends Mixins(mixins, avatarMixin, mermaidMixin) {
     replyText = "";
     captcha = "";
     owner = "";
-    content = false;
     isadmin = false;
     created () {
         this.id = parseInt(this.$route.params.id) || 0;
@@ -94,11 +95,12 @@ export default class Thread extends Mixins(mixins, avatarMixin, mermaidMixin) {
     }
 
     set table (val: any) {
-        _.forEach(val, function (v) {
+        _.forEach(val, (v) => {
             if (v && v.length) {
-                _.forEach(v, function (v) {
+                _.forEach(v, async (v) => {
                     if (v.content) {
-                        v.content = markdownIt.render(v.content);
+                        v.content = await this.renderAsync(v.content);
+                        console.log("finish", v.content);
                     }
                 });
             }
@@ -117,37 +119,11 @@ export default class Thread extends Mixins(mixins, avatarMixin, mermaidMixin) {
             title: ""
         };
         _.assign(context, this.table_val.discuss_header_content);
-        if (context.content) {
-            context.content = markdownIt.render(context.content);
-        }
         return context;
     }
 
     get reply () {
         return this.table_val.discuss;
-    }
-
-    updated () {
-        console.log("updated");
-        const tableOfContents = $(".table-of-contents");
-        let $content = tableOfContents.html();
-        const $container = $("#contentContainer");
-        if (!$content) $content = "";
-        tableOfContents.html("");
-        if ($content) {
-            $container.html("" + $content + "");
-        }
-        $("#sticky_content").sticky({
-            context: "#main_context",
-            offset: 50
-        });
-        $container.find("a").on("click", function (this: any) {
-            $([document.documentElement, document.body]).animate({
-                scrollTop: $(document.getElementById(uslug(this.innerText))).offset().top - 50
-            }, 600);
-            return false;
-        });
-        this.content = ($content && $content.trim && $content.trim().length > 0) || ($container && $container.html() && $container.html().trim().length > 0);
     }
 
     mounted () {

@@ -18,7 +18,7 @@
                         {{$tc("read time cost", readTime(thread_head.content), {n: readTime(thread_head.content)})}}
                     </div>
                 </div>
-                <div v-html="thread_head.content"></div>
+                <div v-html="thread_content"></div>
             </div>
         </div>
     </div>
@@ -38,28 +38,65 @@
     }
 </i18n>
 <script lang="ts">
-import markdownIt from "../../lib/markdownIt/markdownIt";
 import avatarMixin from "../../mixin/avatarMixin";
-import { Mixins, Component, Prop } from "vue-property-decorator";
+import { Mixins, Component, Prop, Watch } from "vue-property-decorator";
 import UserCard from "@/components/user/UserCard.vue";
+import MarkdownWorkerMixin from "@/mixin/MarkdownWorkerMixin";
+import jquery from "jquery";
 const doc = document.createElement("div");
+const $: any = jquery;
+const uslug = require("uslug");
 
 @Component({
     components: {
         UserCard
     }
 })
-export default class DiscussContent extends Mixins(avatarMixin) {
+export default class DiscussContent extends Mixins(avatarMixin, MarkdownWorkerMixin) {
     @Prop({ default: () => { return {}; } }) thread_head!: any;
-    @Prop({ default: false }) content!: boolean;
     @Prop({ default: "" }) owner!: string;
     @Prop({ default: "" }) id!: string;
 
-    markdownIt = markdownIt;
+    thread_content: string = "";
+    content: boolean = false;
+
+    created () {
+        this.thread_content = this.$t("loading") as string;
+    }
+
+    @Watch("thread_head")
+    async onThreadHeadChanged (val: any) {
+        if (val.content) {
+            const ret = await this.renderAsync(val.content);
+            this.thread_content = ret;
+        }
+    }
 
     readTime (content: string) {
         doc.innerHTML = content;
         return Math.trunc(Math.ceil(doc.innerText.length / 300) ** 1.41428579532);
+    }
+
+    updated () {
+        const tableOfContents = $(".table-of-contents");
+        let $content = tableOfContents.html();
+        const $container = $("#contentContainer");
+        if (!$content) $content = "";
+        tableOfContents.html("");
+        if ($content) {
+            $container.html("" + $content + "");
+        }
+        $("#sticky_content").sticky({
+            context: "#main_context",
+            offset: 50
+        });
+        $container.find("a").on("click", function (this: any) {
+            $([document.documentElement, document.body]).animate({
+                scrollTop: $(document.getElementById(uslug(this.innerText))).offset().top - 50
+            }, 600);
+            return false;
+        });
+        this.content = ($content && $content.trim && $content.trim().length > 0) || ($container && $container.html() && $container.html().trim().length > 0);
     }
 }
 </script>

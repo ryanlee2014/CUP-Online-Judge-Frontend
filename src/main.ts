@@ -15,6 +15,7 @@ import i18n from "./i18n";
 import VueSocketIo from "./lib/vue-socketio";
 import Injection from "./injection/index";
 import AxiosInterceptors from "./router/middleware/AxiosInterceptors";
+import AsyncComputedPlugin from "vue-async-computed";
 Injection();
 AxiosInterceptors();
 browserUpdate({ required: { e: -3, f: -3, o: -3, s: -3, c: -6 }, insecure: true, unsupported: true, api: 2019.05 });
@@ -27,6 +28,7 @@ Vue.use(VueLazyload, {
     attempt: 2
 });
 VueSocketIo(Vue);
+Vue.use(AsyncComputedPlugin);
 Vue.config.productionTip = false;
 Vue.config.performance = true;
 

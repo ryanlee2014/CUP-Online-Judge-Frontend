@@ -7,6 +7,12 @@ const webPath = `https://cdn.jsdelivr.net/gh/ryanlee2014/CUP-Online-Judge-CDN@v$
 
 module.exports = {
     chainWebpack: config => {
+        if (process.env.NODE_ENV === "development") {
+            config.output
+                .publicPath("/")
+                .filename("[name].[hash].js")
+                .end();
+        }
         config.module.rule("md")
             .test(/\.md/)
             .use("raw-loader")
@@ -18,6 +24,13 @@ module.exports = {
             .use("i18n")
             .loader("@kazupon/vue-i18n-loader")
             .end();
+        config.module
+            .rule("worker")
+            .test(/\.worker\.js$/)
+            .use("worker-loader")
+            .loader("worker-loader")
+            .end();
+        config.module.rule("js").exclude.add(/\.worker\.js$/);
     },
     devServer: {
         proxy: {
@@ -72,11 +85,6 @@ module.exports = {
         };
         if (process.env.NODE_ENV === "production") {
             configs.plugins.push(new CompressionPlugin({
-                test: /\.js$|\.html$|\.css/,
-                threshold: 10240,
-                deleteOriginalAssets: false
-            }));
-            configs.plugins.push(new CompressionPlugin({
                 algorithm (input, compressionOptions, callback) {
                     return zopfli.gzip(input, compressionOptions, callback);
                 },
@@ -84,10 +92,10 @@ module.exports = {
                     numiterations: 15
                 },
                 minRatio: 0.99,
-                test: /\.(js|css|json|txt|html|ico|svg)(\?.*)?$/i
+                test: /\.(js|css|json|txt|html|ico|svg|png|jpg|eot|woff|woff2|ttf)(\?.*)?$/i
             }));
             configs.plugins.push(new BrotliPlugin({
-                test: /\.(js|css|json|txt|html|ico|svg)(\?.*)?$/i,
+                test: /\.(js|css|json|txt|html|ico|svg|png|jpg|eot|woff|woff2|ttf)(\?.*)?$/i,
                 minRatio: 0.99
             }));
         }
@@ -95,7 +103,7 @@ module.exports = {
     },
 
     assetsDir: "./static",
-
+    outputDir: "./test",
     pluginOptions: {
         i18n: {
             locale: "cn",
