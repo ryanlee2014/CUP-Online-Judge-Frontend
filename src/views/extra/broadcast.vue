@@ -32,7 +32,7 @@ export default class Broadcast extends Mixins(mixins) {
     }
 
     mounted () {
-        document.title = `User broadcase -- ${document.title}`;
+        document.title = `User broadcast -- ${document.title}`;
     }
 
     submit () {

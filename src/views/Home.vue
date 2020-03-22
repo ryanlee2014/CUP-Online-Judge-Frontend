@@ -22,7 +22,11 @@
                                 </router-link>
                                 <router-link class="ui inverted large button download basic" to="/about/fame">
                                     <i class="chess queen icon"></i>
-                                    Hall of Fame
+                                    {{$t("hall of fame")}}
+                                </router-link>
+                                <router-link class="ui inverted large button download basic" to="/discuss">
+                                    <i class="user tie icon"></i>
+                                    {{$t("intern")}}
                                 </router-link>
                             </div>
                             <br>
@@ -144,7 +148,19 @@
     </div>
 
 </template>
-
+<i18n>
+    {
+    "zh-cn": {
+        "intern": "内推信息"
+    },
+    "ja": {
+        "intern": "内部推薦"
+    },
+    "en": {
+        "intern": "Internship"
+    }
+    }
+</i18n>
 <script lang="ts">
 // @ is an alias to /src
 import anime from "animejs";

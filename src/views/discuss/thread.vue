@@ -61,14 +61,12 @@
 import MainContent from "../../components/discuss/MainContent.vue";
 import mixins from "../../mixin/init";
 import avatarMixin from "../../mixin/avatarMixin";
-import markdownIt from "../../lib/markdownIt/markdownIt";
 import mermaidMixin from "../../mixin/mermaidMixin";
 import jquery from "jquery";
 import _ from "lodash";
 import Clipboard from "clipboard";
 import { Mixins, Component } from "vue-property-decorator";
 import MarkdownWorkerMixin from "@/mixin/MarkdownWorkerMixin";
-import AsyncComputed from "vue-async-computed-decorator";
 
 const $: any = jquery;
 const uslug = require("uslug");

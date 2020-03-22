@@ -47,9 +47,9 @@
                                 <td><i class='checkmark icon' v-if="row.ac === 1"></i>
                                     <i class="remove icon" v-else-if="row.ac === -1"></i>
                                     <i class="checkmark icon" style="opacity: 0" v-else></i>
-                                    <router-link v-if="dayjs().isBefore(end_time) && dayjs().isAfter(start_time)" :to="`/contest/problem/${cid}/${row.pnum}`" v-html="contest(markdownIt.renderRaw(row.title), row.pnum)">
+                                    <router-link v-if="dayjs().isBefore(end_time) && dayjs().isAfter(start_time)" :to="`/contest/problem/${cid}/${row.pnum}`" v-html="contest(row.title, row.pnum)">
                                     </router-link>
-                                    <router-link :to="`/problem/submit/${row.pid}`" v-else v-html="contest(markdownIt.renderRaw(row.title), row.pnum)">
+                                    <router-link :to="`/problem/submit/${row.pid}`" v-else v-html="contest(row.title, row.pnum)">
                                     </router-link>
                                 </td>
                                 <td v-if="now.isAfter(end_time)">
@@ -89,12 +89,12 @@ import ContestInfo from "../../components/contest/ContestProblemView/ContestInfo
 import ContestMode from "../../components/contestMode/block.vue";
 import LimitHostname from "../../components/contest/ContestProblemView/LimitHostname.vue";
 import mixins from "../../mixin/init";
-import markdownIt from "../../lib/markdownIt/markdownIt";
 import { mapGetters } from "vuex";
 import _ from "lodash";
 import jquery from "jquery";
 import dayjs from "dayjs";
 import { Mixins, Component } from "vue-property-decorator";
+import MarkdownWorkerMixin from "@/mixin/MarkdownWorkerMixin";
 
 const $: any = jquery;
 @Component({
@@ -109,7 +109,7 @@ const $: any = jquery;
         ...mapGetters(["admin", "contest_manager"])
     }
 })
-export default class ContestProblemView extends Mixins(mixins) {
+export default class ContestProblemView extends Mixins(mixins, MarkdownWorkerMixin) {
     admin!: boolean;
     contest_manager!: boolean;
     cid = 0;
@@ -127,7 +127,6 @@ export default class ContestProblemView extends Mixins(mixins) {
     limit_content = "";
     private_contest = false;
     dayjs = dayjs;
-    markdownIt = markdownIt;
     created () {
         this.cid = parseInt(this.$route.params.contest_id);
     }
@@ -215,7 +214,7 @@ export default class ContestProblemView extends Mixins(mixins) {
                         return;
                     }
                 }
-                _.forEach(_d.data, function (val) {
+                _.forEach(_d.data, (val) => {
                     if (!val.accepted) val.accepted = 0;
                     if (!val.submit) val.submit = 0;
                 });
@@ -231,7 +230,11 @@ export default class ContestProblemView extends Mixins(mixins) {
                     return;
                 }
                 that.problem_table = _d.data;
-
+                this.problem_table.forEach(async (e: any) => {
+                    if (e.title) {
+                        e.title = await this.renderRawAsync(e.title);
+                    }
+                });
                 const info = _d.info;
                 that.start_time = dayjs(info.start_time);
                 that.end_time = dayjs(info.end_time);

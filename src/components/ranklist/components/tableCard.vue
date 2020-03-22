@@ -12,7 +12,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr :key="key" v-for="(row,key,index) in content">
+            <tr :key="key" v-for="(row,key,index) in contentPayload">
                 <td class="center head">{{page*50+key+1}}</td>
                 <td class="center head">
                     <router-link :to="`/user/${row.user_id}`">
@@ -37,14 +37,25 @@
 </template>
 
 <script lang="ts">
-import markdownIt from "../../../lib/markdownIt/markdownIt";
 import avatarMixin from "../../../mixin/avatarMixin";
-import { Component, Mixins, Prop } from "vue-property-decorator";
+import { Component, Mixins, Prop, Watch } from "vue-property-decorator";
+import MarkdownWorkerMixin from "@/mixin/MarkdownWorkerMixin";
 @Component
-export default class TableCard extends Mixins(avatarMixin) {
+export default class TableCard extends Mixins(avatarMixin, MarkdownWorkerMixin) {
     @Prop({ default: () => [] }) content!: any[];
     @Prop({ default: 0 }) page!: number;
-    markdownIt = markdownIt;
+    contentPayload: any[] = [];
+
+    @Watch("content")
+    onContentChanged (val: any[]) {
+        this.contentPayload = val;
+        val.forEach(async (e: any) => {
+            if (e && e.biography) {
+                e.biography = await this.renderRawAsync(e.biography || "");
+            }
+        });
+    }
+
     convertHTML (str: string) {
         const doc = document.createElement("div");
         doc.innerHTML = str;

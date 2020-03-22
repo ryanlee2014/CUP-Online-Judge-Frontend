@@ -83,7 +83,6 @@ import avatarMixin from "../mixin/avatarMixin";
 import mermaidMixin from "../mixin/mermaidMixin";
 import ContestMode from "../components/contestMode/block.vue";
 import { Component, Mixins } from "vue-property-decorator";
-import markdownIt from "../lib/markdownIt/markdownIt";
 import jquery from "jquery";
 import { mapGetters } from "vuex";
 import UserCard from "@/components/user/UserCard.vue";
