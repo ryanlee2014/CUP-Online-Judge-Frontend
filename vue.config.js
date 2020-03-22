@@ -24,15 +24,6 @@ module.exports = {
             .use("i18n")
             .loader("@kazupon/vue-i18n-loader")
             .end();
-        config.module
-            .rule("worker")
-            .test(/\.worker\.js$/)
-            .use("worker-loader")
-            .loader("worker-loader")
-            .options({
-                publicPath: "/"
-            })
-            .end();
         config.module.rule("js").exclude.add(/\.worker\.js$/);
     },
     devServer: {
@@ -81,13 +72,18 @@ module.exports = {
     },
     publicPath: process.env.NODE_ENV === "production" && !process.env.DISABLE_CDN ? webPath : "/",
     configureWebpack: config => {
-        const configs = {
-            plugins: [
-                new MonacoEditorPlugin()
-            ]
-        };
+        config.plugins.push(new MonacoEditorPlugin());
+        config.module.rules.push({
+            test: /\.worker\.js$/,
+            use: {
+                loader: "worker-loader",
+                options: {
+                    inline: true
+                }
+            }
+        });
         if (process.env.NODE_ENV === "production") {
-            configs.plugins.push(new CompressionPlugin({
+            config.plugins.push(new CompressionPlugin({
                 algorithm (input, compressionOptions, callback) {
                     return zopfli.gzip(input, compressionOptions, callback);
                 },
@@ -97,12 +93,12 @@ module.exports = {
                 minRatio: 0.99,
                 test: /\.(js|css|json|txt|html|ico|svg|png|jpg|eot|woff|woff2|ttf)(\?.*)?$/i
             }));
-            configs.plugins.push(new BrotliPlugin({
+            config.plugins.push(new BrotliPlugin({
                 test: /\.(js|css|json|txt|html|ico|svg|png|jpg|eot|woff|woff2|ttf)(\?.*)?$/i,
                 minRatio: 0.99
             }));
         }
-        return configs;
+        return config;
     },
 
     assetsDir: "./static",
