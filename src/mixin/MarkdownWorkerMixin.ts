@@ -2,7 +2,7 @@ import Vue from "vue";
 import { Component } from "vue-property-decorator";
 import PromiseWorker from "promise-worker";
 // eslint-disable-next-line import/no-webpack-loader-syntax
-const Worker = require("worker-loader!@/worker/markdown.worker.ts");
+const Worker = require("worker-loader!@/worker/markdown.worker");
 @Component
 export default class MarkdownWorkerMixin extends Vue {
     worker_ = new PromiseWorker(new Worker());
