@@ -29,10 +29,10 @@ module.exports = {
             .test(/\.worker\.js$/)
             .use("worker-loader")
             .loader("worker-loader")
-            .options({
+            .tap(options => merge(options, {
                 publicPath: "/",
                 inline: true
-            });
+            }));
         config.module.rule("js").exclude.add(/\.worker\.js$/);
     },
     devServer: {
