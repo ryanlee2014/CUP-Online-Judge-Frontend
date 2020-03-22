@@ -132,6 +132,6 @@ module.exports = {
             analyzerMode: "disabled"
         }
     },
-    parallel: true,
+    parallel: false,
     productionSourceMap: false
 };
