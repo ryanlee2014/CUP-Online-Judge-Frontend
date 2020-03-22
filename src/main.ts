@@ -7,8 +7,7 @@ import VueLazyload from "vue-lazyload";
 import App from "./App.vue";
 import router from "./router";
 import store from "./store";
-// @ts-ignore
-import VueWorker from "vue-worker";
+
 import mavonEditor from "./lib/mavon-editor/mavon-editor";
 import VueObserveVisibility from "vue-observe-visibility";
 import i18n from "./i18n";
@@ -20,7 +19,6 @@ Injection();
 AxiosInterceptors();
 browserUpdate({ required: { e: -3, f: -3, o: -3, s: -3, c: -6 }, insecure: true, unsupported: true, api: 2019.05 });
 Vue.use(VueAxios, axios);
-Vue.use(VueWorker);
 Vue.use(VueLazyload, {
     preLoad: 1.3,
     error: require("@/static/image/white-image.png"),

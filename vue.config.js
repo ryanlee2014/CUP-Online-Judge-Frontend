@@ -3,6 +3,7 @@ const CompressionPlugin = require("compression-webpack-plugin");
 const zopfli = require("@gfx/zopfli");
 const BrotliPlugin = require("brotli-webpack-plugin");
 const ParallelUglifyPlugin = require("webpack-parallel-uglify-plugin");
+const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 const merge = require("webpack-merge");
 const version = require("./package.json").version;
 const webPath = `https://cdn.jsdelivr.net/gh/ryanlee2014/CUP-Online-Judge-CDN@v${version}/`;
@@ -117,6 +118,9 @@ module.exports = {
             configs.plugins.push(new BrotliPlugin({
                 test: /\.(js|css|json|txt|html|ico|svg|png|jpg|eot|woff|woff2|ttf)(\?.*)?$/i,
                 minRatio: 0.99
+            }));
+            config.plugins.push(new BundleAnalyzerPlugin({
+                analyzerMode: "static"
             }));
         }
         return configs;
