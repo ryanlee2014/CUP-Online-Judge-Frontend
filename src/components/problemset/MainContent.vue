@@ -100,9 +100,9 @@ export default class ProblemSetMainContent extends Mixins(MarkdownWorkerMixin) {
         if (val) {
             this.payload = val;
             const problem = typeof val.problem === "undefined" ? [] : val.problem;
-            problem.forEach((e: any) => {
+            problem.forEach(async (e: any) => {
                 if (typeof e.title === "string") {
-                    e.title = this.renderRawAsync(e.title);
+                    e.title = await this.renderRawAsync(e.title);
                 }
                 else {
                     e.title = "";
