@@ -3,7 +3,6 @@ const CompressionPlugin = require("compression-webpack-plugin");
 const zopfli = require("@gfx/zopfli");
 const BrotliPlugin = require("brotli-webpack-plugin");
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
-const merge = require("webpack-merge");
 const version = require("./package.json").version;
 const webPath = `https://cdn.jsdelivr.net/gh/ryanlee2014/CUP-Online-Judge-CDN@v${version}/`;
 
@@ -26,17 +25,7 @@ module.exports = {
             .use("i18n")
             .loader("@kazupon/vue-i18n-loader")
             .end();
-        config.module.rule("js").exclude.add(/\.web\.worker\.js$/);
-        config.module
-            .rule("worker")
-            .test(/\.web\.worker\.js$/)
-            .use("worker-loader")
-            .loader("worker-loader")
-            .options({
-                publicPath: "/",
-                inline: true,
-                name: "[name].worker.js"
-            });
+        // config.module.rule("js").exclude.add(/\.web\.worker\.js$/);
     },
     devServer: {
         proxy: {
@@ -87,7 +76,26 @@ module.exports = {
         const configs = {
             plugins: [
                 new MonacoEditorPlugin()
-            ]
+            ],
+            module: {
+                rules: [
+                    {
+                        test: /\.web\.worker\.ts$/,
+                        use: {
+                            loader: "worker-loader",
+                            options: {
+                                inline: true,
+                                publicPath: "/"
+                            }
+                        }
+                    },
+                    {
+                        test: /\.web\.worker\.ts$/,
+                        use: ["ts-loader"],
+                        exclude: /node_modules/
+                    }
+                ]
+            }
         };
         if (process.env.NODE_ENV === "production") {
             configs.plugins.push(new CompressionPlugin({

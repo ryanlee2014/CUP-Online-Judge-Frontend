@@ -2,7 +2,6 @@ import registerPromiseWorker from "promise-worker/register";
 import MarkdownIt from "@/lib/markdownIt/markdownIt";
 
 registerPromiseWorker((message) => {
-    console.log("hallo", message);
     if (message.type === "render") {
         return MarkdownIt.render(message.content);
     }
@@ -11,4 +10,4 @@ registerPromiseWorker((message) => {
     }
 });
 
-// export default {} as typeof Worker & {new (): Worker};
+export default {} as typeof Worker & {new (): Worker};
