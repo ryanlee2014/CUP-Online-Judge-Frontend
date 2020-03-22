@@ -72,18 +72,20 @@ module.exports = {
     },
     publicPath: process.env.NODE_ENV === "production" && !process.env.DISABLE_CDN ? webPath : "/",
     configureWebpack: config => {
-        config.plugins.push(new MonacoEditorPlugin());
+        const configs = {
+            plugins: [
+                new MonacoEditorPlugin()
+            ]
+        };
         config.module.rules.push({
             test: /\.worker\.js$/,
             use: {
                 loader: "worker-loader",
-                options: {
-                    inline: true
-                }
+                options: { inline: true }
             }
         });
         if (process.env.NODE_ENV === "production") {
-            config.plugins.push(new CompressionPlugin({
+            configs.plugins.push(new CompressionPlugin({
                 algorithm (input, compressionOptions, callback) {
                     return zopfli.gzip(input, compressionOptions, callback);
                 },
@@ -93,12 +95,12 @@ module.exports = {
                 minRatio: 0.99,
                 test: /\.(js|css|json|txt|html|ico|svg|png|jpg|eot|woff|woff2|ttf)(\?.*)?$/i
             }));
-            config.plugins.push(new BrotliPlugin({
+            configs.plugins.push(new BrotliPlugin({
                 test: /\.(js|css|json|txt|html|ico|svg|png|jpg|eot|woff|woff2|ttf)(\?.*)?$/i,
                 minRatio: 0.99
             }));
         }
-        return config;
+        return configs;
     },
 
     assetsDir: "./static",
@@ -114,5 +116,6 @@ module.exports = {
             analyzerMode: "disabled"
         }
     },
+    parallel: true,
     productionSourceMap: false
 };

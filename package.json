@@ -1,6 +1,6 @@
 {
   "name": "CUP-Online-Judge-NG-Frontend",
-  "version": "1.16.0-alpha-hotfix-2",
+  "version": "1.16.0-alpha-hotfix-3",
   "private": false,
   "scripts": {
     "serve": "npx --max_old_space_size=16000 vue-cli-service serve",
