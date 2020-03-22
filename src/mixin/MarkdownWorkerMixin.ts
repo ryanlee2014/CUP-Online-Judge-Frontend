@@ -5,7 +5,16 @@ import Worker from "@/worker/markdown.web.worker";
 
 @Component
 export default class MarkdownWorkerMixin extends Vue {
-    worker_ = new PromiseWorker(new Worker());
+    originalWorker = new Worker();
+    worker_!: PromiseWorker;
+
+    created () {
+        this.worker_ = new PromiseWorker(this.originalWorker);
+    }
+
+    beforeDestroy () {
+        this.originalWorker.terminate();
+    }
 
     async renderAsync (content: string) {
         return this.worker_.postMessage({

@@ -45,7 +45,7 @@
                     <div class="left aligned">
                         <router-link :style="show_tag ? 'vertical-align:sub':''"
                                      :to="`/problem/submit/${row.problem_id}`"
-                                     v-html="markdownIt.renderRaw(row.title)"></router-link>
+                                     v-html="row.title"></router-link>
                         <sub v-if="row.new">New</sub>
                         <div class="show_tag_controled" style="float:right;">
                     <span :key="_tag" class="ui header" v-for="_tag in row.label">
@@ -78,15 +78,13 @@
 </template>
 
 <script lang="ts">
-// eslint-disable-next-line no-unused-vars
-import markdownIt from "../../lib/markdownIt/markdownIt";
 import jquery from "jquery";
 import lodash from "lodash";
-import { Component, Prop } from "vue-property-decorator";
-import Vue from "vue";
-const $:any = jquery;
+import { Component, Prop, Watch, Mixins } from "vue-property-decorator";
+import MarkdownWorkerMixin from "@/mixin/MarkdownWorkerMixin";
+const $: any = jquery;
 @Component
-export default class ProblemSetMainContent extends Vue {
+export default class ProblemSetMainContent extends Mixins(MarkdownWorkerMixin) {
     @Prop({ default: () => { return {}; } }) data!: any;
     @Prop({ default: false }) dim!: boolean;
     @Prop({ default: false }) show_tag!: boolean;
@@ -94,10 +92,27 @@ export default class ProblemSetMainContent extends Vue {
     @Prop({ default: "" }) order_target!: string;
     @Prop({ default: false }) hide_currect!: boolean;
     $parent: any;
-    markdownIt = markdownIt;
     lodash = lodash;
+    payload: any;
+
+    @Watch("data")
+    onDataChanged (val: any) {
+        if (val) {
+            this.payload = val;
+            const problem = typeof val.problem === "undefined" ? [] : val.problem;
+            problem.forEach((e: any) => {
+                if (typeof e.title === "string") {
+                    e.title = this.renderRawAsync(e.title);
+                }
+                else {
+                    e.title = "";
+                }
+            });
+        }
+    }
+
     get result () {
-        const data = this.data;
+        const data = this.payload;
         const color = Object.assign({}, data.color);
         color["标签待整理"] = "black";
         for (const i in data.problem) {

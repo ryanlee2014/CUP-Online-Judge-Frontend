@@ -17,7 +17,7 @@
                     {{thread_head.user_id}}
                 </router-link>
             </div>
-            <div class="description" v-html="markdownIt.renderRaw(thread_head.biography||'')">
+            <div class="description" v-html="biography">
             </div>
         </div>
         <div class="extra content">
@@ -34,15 +34,20 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { Component, Mixins, Prop } from "vue-property-decorator";
+import { Component, Mixins, Prop, Watch } from "vue-property-decorator";
 import avatarMixin from "../../mixin/avatarMixin";
 import { IUserCardInfo } from "@/types/user/usercard";
-import markdownMixin from "@/mixin/markdownMixin";
+import MarkdownWorkerMixin from "@/mixin/MarkdownWorkerMixin";
 
 @Component
-export default class UserCard extends Mixins(avatarMixin, markdownMixin) {
+export default class UserCard extends Mixins(avatarMixin, MarkdownWorkerMixin) {
     @Prop({ default: (): IUserCardInfo => { return { biography: "", solved: 0, user_id: "", nick: "" }; } }) thread_head!: IUserCardInfo;
+    biography: string = "";
+
+    @Watch("thread_head")
+    async onThreadHeadChanged (val: IUserCardInfo) {
+        this.biography = await this.renderRawAsync(val.biography);
+    }
 }
 </script>
 

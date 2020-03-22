@@ -77,7 +77,7 @@
                 <td>
                     {{convertHTML(row.nick)}}
                 </td>
-                <td class="center head" v-html="markdownIt.renderRaw(row.biography||'')"></td>
+                <td class="center head" v-html="row.biography"></td>
                 <td class="center head" style="text-align: center">
                     <router-link :to="`/status?user_id=${row.user_id}&jresult=4`">{{row.solved || 0}}</router-link>
                 </td>
@@ -132,11 +132,11 @@
 
 <script lang="ts">
 import { Component, Mixins, Prop, Watch } from "vue-property-decorator";
-import markdownIt from "../../lib/markdownIt/markdownIt";
 import tableCard from "./components/tableCard.vue";
 import avatarMixin from "../../mixin/avatarMixin";
 import SemanticEnvMixin from "@/mixin/SemanticEnvMixin";
 import InitMixin from "@/mixin/init";
+import MarkdownWorkerMixin from "@/mixin/MarkdownWorkerMixin";
 
 interface IRanklistData {
     ranklist: any
@@ -151,7 +151,7 @@ interface IMember {
         tableCard
     }
 })
-export default class RanklistMainContent extends Mixins(SemanticEnvMixin, avatarMixin, InitMixin) {
+export default class RanklistMainContent extends Mixins(SemanticEnvMixin, avatarMixin, InitMixin, MarkdownWorkerMixin) {
     $route: any;
     @Prop({ default: null }) rank!: any;
     registed_user = 0;
@@ -163,7 +163,6 @@ export default class RanklistMainContent extends Mixins(SemanticEnvMixin, avatar
     acmmember: IMember = { ranklist: [] };
     retiremember: IMember = { ranklist: [] };
     recent_register = [];
-    markdownIt = markdownIt;
     ranklistData: IRanklistData | null = null;
 
     created () {
@@ -178,13 +177,25 @@ export default class RanklistMainContent extends Mixins(SemanticEnvMixin, avatar
     }
 
     get ranklist () {
+        let payload: any[];
         if (this.ranklistData && this.ranklistData.ranklist) {
-            return this.ranklistData!.ranklist;
+            payload = this.ranklistData!.ranklist;
         }
         else if (this.rank && this.rank.ranklist) {
-            return this.rank.ranklist;
+            payload = this.rank.ranklist;
         }
-        return [];
+        else {
+            payload = [];
+        }
+        payload.forEach(async (e: any) => {
+            if (typeof e.biography === "string") {
+                e.biography = await this.renderRawAsync(e.biography);
+            }
+            else {
+                e.biography = "";
+            }
+        });
+        return payload;
     }
 
     get acmmem () {
