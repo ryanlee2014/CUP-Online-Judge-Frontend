@@ -26,16 +26,16 @@ module.exports = {
             .use("i18n")
             .loader("@kazupon/vue-i18n-loader")
             .end();
-        config.module.rule("js").exclude.add(/\.worker\.js$/);
-        config.module.rule("ts").exclude.add(/\.worker\.ts$/);
+        config.module.rule("js").exclude.add(/\.web\.worker\.js$/);
         config.module
             .rule("worker")
-            .test(/\.worker\.(js|ts)$/)
+            .test(/\.web\.worker\.js$/)
             .use("worker-loader")
             .loader("worker-loader")
             .options({
                 publicPath: "/",
-                inline: true
+                inline: true,
+                name: "[name].worker.js"
             });
     },
     devServer: {

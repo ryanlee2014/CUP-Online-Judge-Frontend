@@ -1,4 +1,5 @@
 #!/bin/bash
+rm -rf dist
 cd ./semantic/semantic-ui/
 echo 'Curent path:'
 pwd
