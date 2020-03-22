@@ -102,7 +102,7 @@ module.exports = {
                     }
                 },
                 cacheDir: ".cache/", // 用作缓存的可选绝对路径。如果未提供，则不使用缓存。
-                sourceMap: config.build.productionSourceMap// 可选布尔值。是否为压缩后的代码生成对应的Source Map(浏览器可以在调试代码时定位到源码位置了),这会减慢编译速度。默认为false
+                sourceMap: false// 可选布尔值。是否为压缩后的代码生成对应的Source Map(浏览器可以在调试代码时定位到源码位置了),这会减慢编译速度。默认为false
             }));
             configs.plugins.push(new CompressionPlugin({
                 algorithm (input, compressionOptions, callback) {
