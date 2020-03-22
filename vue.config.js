@@ -2,7 +2,6 @@ const MonacoEditorPlugin = require("monaco-editor-webpack-plugin");
 const CompressionPlugin = require("compression-webpack-plugin");
 const zopfli = require("@gfx/zopfli");
 const BrotliPlugin = require("brotli-webpack-plugin");
-const ParallelUglifyPlugin = require("webpack-parallel-uglify-plugin");
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 const merge = require("webpack-merge");
 const version = require("./package.json").version;
@@ -27,16 +26,17 @@ module.exports = {
             .use("i18n")
             .loader("@kazupon/vue-i18n-loader")
             .end();
+        config.module.rule("js").exclude.add(/\.worker\.js$/);
+        config.module.rule("ts").exclude.add(/\.worker\.ts$/);
         config.module
             .rule("worker")
-            .test(/\.worker\.js$/)
+            .test(/\.worker\.(js|ts)$/)
             .use("worker-loader")
             .loader("worker-loader")
-            .tap(options => merge(options, {
+            .options({
                 publicPath: "/",
                 inline: true
-            }));
-        config.module.rule("js").exclude.add(/\.worker\.js$/);
+            });
     },
     devServer: {
         proxy: {
