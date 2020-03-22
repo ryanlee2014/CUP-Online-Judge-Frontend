@@ -29,6 +29,9 @@ module.exports = {
             .test(/\.worker\.js$/)
             .use("worker-loader")
             .loader("worker-loader")
+            .options({
+                publicPath: "/"
+            })
             .end();
         config.module.rule("js").exclude.add(/\.worker\.js$/);
     },
