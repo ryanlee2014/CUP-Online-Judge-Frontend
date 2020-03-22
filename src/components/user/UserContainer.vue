@@ -144,7 +144,7 @@
                                             {{row.problem_id}}
                                         </td>
                                         <td>
-                                            <router-link :to="`/tutorial/${row.problem_id}`" v-html="markdownIt.renderRaw(row.title)">
+                                            <router-link :to="`/tutorial/${row.problem_id}`" v-html="row.title">
                                             </router-link>
                                         </td>
                                     </tr>
@@ -237,7 +237,7 @@
                                                                 <i class="id badge icon"></i>{{$t("biography")}}
                                                             </h4>
                                                             <div class="ui attached segment"
-                                                                 v-html="markdownIt.renderRaw(biography||'')" v-if="biography.length > 0">
+                                                                 v-html="biography" v-if="biography.length > 0">
                                                                 <div class="ui placeholder" v-cloak>
                                                                     <div class="line"></div>
                                                                     <div class="line"></div>
@@ -501,7 +501,6 @@
 
 <script lang="ts">
 import * as d3 from "d3";
-import markdownIt from "../../lib/markdownIt/markdownIt";
 import calendarHeatmap from "../../lib/calendar-heapmap";
 import ContestMode from "../../components/contestMode/block.vue";
 import avatarMixin from "../../mixin/avatarMixin";
@@ -511,6 +510,7 @@ import _ from "lodash";
 import Chart from "chart.js";
 import dayjs from "dayjs";
 import { mapGetters } from "vuex";
+import MarkdownWorkerMixin from "@/mixin/MarkdownWorkerMixin";
 const $: any = jquery;
 @Component({
     components: {
@@ -518,7 +518,7 @@ const $: any = jquery;
     },
     computed: mapGetters(["contestMode"])
 })
-export default class UserContainer extends Mixins(avatarMixin) {
+export default class UserContainer extends Mixins(avatarMixin, MarkdownWorkerMixin) {
     @Prop({ default: "" }) userId!: string;
     award = [];
     dayjs = dayjs;
@@ -528,7 +528,6 @@ export default class UserContainer extends Mixins(avatarMixin) {
     const_variable = {};
     article_publish = [];
     tutorial_publish = [];
-    markdownIt = markdownIt;
     nick = "";
     accepted_details = {};
     reg_time = 0;
@@ -588,7 +587,7 @@ export default class UserContainer extends Mixins(avatarMixin) {
         this.userId = userId;
         const that = this;
         this.axios.get(`/api/user/${userId}`)
-            .then(({ data }) => {
+            .then(async ({ data }) => {
                 if (!Object.prototype.hasOwnProperty.call(data.data, "information")) {
                     this.statement = `The user "${userId}" is not exist.`;
                     this.error = true;
@@ -746,7 +745,7 @@ export default class UserContainer extends Mixins(avatarMixin) {
                 return {
                     award: d.data.award,
                     admin: d.isadmin,
-                    biography: d.data.information.biography,
+                    biography: await this.renderRawAsync(d.data.information.biography),
                     const_variable: d.data.const_variable,
                     article_publish: d.data.article_publish,
                     nick: d.data.information.nick,
@@ -1130,6 +1129,10 @@ export default class UserContainer extends Mixins(avatarMixin) {
             });
         this.axios.get(`/api/user/tutorial/${userId}`)
             .then(({ data }) => {
+                const payloads = data.data;
+                payloads.forEach(async (e: any) => {
+                    e.title = await this.renderRawAsync(e.title);
+                });
                 this.tutorial_publish = data.data;
             });
     }

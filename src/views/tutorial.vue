@@ -23,7 +23,7 @@
             <div class="twelve wide column">
                 <div class="ui existing full segment">
                     <router-link :to="`/tutorial/edit/${thread_head.tutorial_id}`" class="ui blue right ribbon label" v-if="thread_head.user_id + '' === owner">{{$t("edit")}}</router-link>
-                    <div class="ui vertical segment" v-html="markdownIt.render(thread_head.content||'')"></div>
+                    <div class="ui vertical segment" v-html="thread_head.content"></div>
 
                     <div class="ui raised segment">
                         <div class="ui tiny statistics">
@@ -69,7 +69,7 @@
                     <div class="ui styled fluid accordion">
                         <div class="title">{{$t("source code")}}<i class="dropdown icon"></i></div>
                         <div class="content"
-                             v-html="markdownIt.render('```' + language_markdown[thread_head.language] + '\n' +thread_head.code + '\n```')"></div>
+                             v-html="thread_head.code"></div>
                     </div>
                 </div>
             </div>
@@ -87,6 +87,7 @@ import markdownIt from "../lib/markdownIt/markdownIt";
 import jquery from "jquery";
 import { mapGetters } from "vuex";
 import UserCard from "@/components/user/UserCard.vue";
+import MarkdownWorkerMixin from "@/mixin/MarkdownWorkerMixin";
 const $: any = jquery;
 const Clipboard = require("clipboard");
 @Component({
@@ -96,9 +97,9 @@ const Clipboard = require("clipboard");
     },
     computed: mapGetters(["contestMode"])
 })
-export default class Tutorial extends Mixins(mixins, avatarMixin, mermaidMixin) {
+export default class Tutorial extends Mixins(mixins, avatarMixin, mermaidMixin, MarkdownWorkerMixin) {
     $route: any;
-    content = "";
+    content: any = [];
     id = "";
     source = "local";
     judge_color = [];
@@ -107,7 +108,6 @@ export default class Tutorial extends Mixins(mixins, avatarMixin, mermaidMixin) 
     result_name = [];
     owner = "";
     language_markdown = [];
-    markdownIt = markdownIt;
     created () {
         this.id = this.$route.params.problem_id;
         this.source = this.$route.query.from || "local";
@@ -141,8 +141,15 @@ export default class Tutorial extends Mixins(mixins, avatarMixin, mermaidMixin) 
         this.axios.get(`/api/tutorial/${this.source}/${this.id}`)
             .then(({ data }) => {
                 const d = data;
+                const content: any[] = d.data;
+                const language_markdown = d.const_variable.language_common_name;
+                content.forEach(async (e: any) => {
+                    e.content = await this.renderAsync(e.content);
+                    e.code = await this.renderAsync("```" + language_markdown[e.language] + "\n" + e.code + "\n```");
+                });
+
                 Object.assign(this, {
-                    content: d.data,
+                    content: content,
                     id: this.$route.params.problem_id,
                     source: this.$route.query.from || "local",
                     judge_color: d.const_variable.judge_color,
@@ -152,12 +159,6 @@ export default class Tutorial extends Mixins(mixins, avatarMixin, mermaidMixin) 
                     owner: d.self,
                     language_markdown: d.const_variable.language_common_name
                 });
-            });
-        this.axios.get(`/api/tutorial/${this.source}/${this.id}`)
-            .then(({ data }) => {
-                const d = data;
-                this.content = d.data;
-                this.owner = d.self;
             });
         const $title = document.title;
         $("title").html("Tutorial " + this.id + " -- " + $title);

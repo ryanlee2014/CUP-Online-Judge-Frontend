@@ -93,7 +93,7 @@ export default class ProblemSetMainContent extends Mixins(MarkdownWorkerMixin) {
     @Prop({ default: false }) hide_currect!: boolean;
     $parent: any;
     lodash = lodash;
-    payload: any;
+    payload: any = {};
 
     @Watch("data")
     onDataChanged (val: any) {
