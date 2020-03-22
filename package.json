@@ -1,6 +1,6 @@
 {
   "name": "CUP-Online-Judge-NG-Frontend",
-  "version": "1.16.0-alpha-hotfix-5",
+  "version": "1.16.0-alpha-hotfix-6",
   "private": false,
   "scripts": {
     "serve": "npx --max_old_space_size=16000 vue-cli-service serve",
@@ -136,6 +136,8 @@
     "vue-loader": "^15.9.0",
     "vue-markdown-loader": "^2.4.1",
     "vue-template-compiler": "^2.6.11",
+    "webpack-merge": "^4.2.2",
+    "webpack-parallel-uglify-plugin": "^1.1.2",
     "worker-loader": "^2.0.0"
   },
   "eslintConfig": {

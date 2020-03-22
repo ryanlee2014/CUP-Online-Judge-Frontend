@@ -2,6 +2,8 @@ const MonacoEditorPlugin = require("monaco-editor-webpack-plugin");
 const CompressionPlugin = require("compression-webpack-plugin");
 const zopfli = require("@gfx/zopfli");
 const BrotliPlugin = require("brotli-webpack-plugin");
+const ParallelUglifyPlugin = require("webpack-parallel-uglify-plugin");
+const merge = require("webpack-merge");
 const version = require("./package.json").version;
 const webPath = `https://cdn.jsdelivr.net/gh/ryanlee2014/CUP-Online-Judge-CDN@v${version}/`;
 
@@ -87,6 +89,21 @@ module.exports = {
             ]
         };
         if (process.env.NODE_ENV === "production") {
+            configs.plugins.push(new ParallelUglifyPlugin({
+                uglifyJS: {
+                    output: {
+                        comments: false// 是否保留代码中的注释，默认为保留
+                    },
+                    warnings: true, // 是否在UglifyJS删除没有用到的代码时输出警告信息，默认为false
+                    compress: {
+                        drop_console: true, // 是否删除代码中所有的console语句，默认为false
+                        collapse_vars: true, // 是否内嵌虽然已经定义了，但是只用到一次的变量， 默认值false
+                        reduce_vars: true// 是否提取出现了多次但是没有定义成变量去引用的静态值，默认为false
+                    }
+                },
+                cacheDir: ".cache/", // 用作缓存的可选绝对路径。如果未提供，则不使用缓存。
+                sourceMap: config.build.productionSourceMap// 可选布尔值。是否为压缩后的代码生成对应的Source Map(浏览器可以在调试代码时定位到源码位置了),这会减慢编译速度。默认为false
+            }));
             configs.plugins.push(new CompressionPlugin({
                 algorithm (input, compressionOptions, callback) {
                     return zopfli.gzip(input, compressionOptions, callback);
