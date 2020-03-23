@@ -26,7 +26,7 @@
                 <td>
                     {{convertHTML(row.nick)}}
                 </td>
-                <td class="center head" v-html="markdownIt.renderRaw(row.biography||'')"></td>
+                <td class="center head" v-html="row.biography"></td>
                 <td class="center head" style="text-align: center">
                     <router-link :to="`/status?user_id=${row.user_id}&jresult=4`">{{row.solved || 0}}</router-link>
                 </td>
