@@ -4,7 +4,7 @@
         <h2 class="ui dividing header">
             {{$t("tutorial")}}
             <div class="sub header">
-                beta
+                β
             </div>
         </h2>
         <div class="ui grid">
@@ -12,7 +12,7 @@
                 <div class="thirteen wide column">
                 </div>
                 <div class="three wide right aligned column">
-                    <router-link :to="`/tutorial/new/${id}`" class="ui labeled icon blue mini button"><i class="write icon"></i>{{$t("post")}}</router-link>
+                    <router-link :to="`/tutorial/new/${id}`" class="ui labeled icon blue mini button"><i class="write icon"></i>{{$t("post new solution")}}</router-link>
                 </div>
             </div>
         </div>
