@@ -7,7 +7,7 @@ Online Judgeのプラットフォームとルールに慣れていない場合�
 <br>
 プラットフォームを構築するために使用されるオープンソースプロジェクトの詳細については、このリンクにアクセスしてください。:<a href="opensource" target="_blank">Open Source Announcement</a>
 <br>
-ICPCコンテストについては、検索エンジンを使用して、この記事を読んでください: <a href="icpc" target="_blank">What is ICPC</a>
+ICPCコンテストについては、検索エンジンを使用して、この記事を読んでください: <a href="/about/icpc" target="_blank">What is ICPC</a>
 </div>
 
 Author: [Ryan Lee(李昊元)](/user/2016011253)

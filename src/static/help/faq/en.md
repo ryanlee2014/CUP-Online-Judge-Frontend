@@ -7,7 +7,7 @@ Learn more about this platform, please access this link:<a href="about" target="
 <br>
 Learn more about the open source project used to build the platform, please access this link:<a href="opensource" target="_blank">Open Source Announcement</a>
 <br>
-About ICPC Contest, please use search engines, and read this article: <a href="icpc" target="_blank">What is ICPC</a>
+About ICPC Contest, please use search engines, and read this article: <a href="/about/icpc" target="_blank">What is ICPC</a>
 </div>
 
 Author: [Ryan Lee(李昊元)](/user/2016011253)
