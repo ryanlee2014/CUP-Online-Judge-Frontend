@@ -256,7 +256,7 @@
                                                             <h4 class="ui attached block header"><i
                                                                 class="mail square icon" v-if="email.length > 0"></i>{{$t("email")}}</h4>
                                                             <div class="ui attached segment" v-if="email.length > 0">
-                                                                <div v-cloak><a
+                                                                <div><a
                                                                     :href="'mailto:'+email">{{email}}</a></div>
                                                                 <div class="ui placeholder" v-cloak>
                                                                     <div class="line"></div>
@@ -745,7 +745,7 @@ export default class UserContainer extends Mixins(avatarMixin, MarkdownWorkerMix
                 return {
                     award: d.data.award,
                     admin: d.isadmin,
-                    biography: await this.renderRawAsync(d.data.information.biography),
+                    biography: await this.renderRawAsync(d.data.information.biography || ""),
                     const_variable: d.data.const_variable,
                     article_publish: d.data.article_publish,
                     nick: d.data.information.nick,
@@ -1131,7 +1131,7 @@ export default class UserContainer extends Mixins(avatarMixin, MarkdownWorkerMix
             .then(({ data }) => {
                 const payloads = data.data;
                 payloads.forEach(async (e: any) => {
-                    e.title = await this.renderRawAsync(e.title);
+                    e.title = await this.renderRawAsync(e.title || "");
                 });
                 this.tutorial_publish = data.data;
             });
