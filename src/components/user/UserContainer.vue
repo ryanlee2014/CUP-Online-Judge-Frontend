@@ -253,8 +253,8 @@
                                                                     <div class="line"></div>
                                                                 </div>
                                                             </div>
-                                                            <h4 class="ui attached block header"><i
-                                                                class="mail square icon" v-if="email && email.length > 0"></i>{{$t("email")}}</h4>
+                                                            <h4 class="ui attached block header" v-if="email && email.length > 0"><i
+                                                                class="mail square icon"></i>{{$t("email")}}</h4>
                                                             <div class="ui attached segment" v-if="email && email.length > 0">
                                                                 <div><a
                                                                     :href="'mailto:'+email">{{email}}</a></div>

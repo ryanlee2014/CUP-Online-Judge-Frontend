@@ -53,7 +53,7 @@ const o = function (e) {
             var o = e[t], f = o.content.trim();
             if ("mermaid" === o.info) return u(f);
             var c = f.split(/\n/)[0].trim();
-            return "gantt" === c || "sequenceDiagram" === c || c.match(/^graph (?:TB|BT|RL|LR|TD);?$/) ? u(f) : r(e, t, n, a, i)
+            return "gantt" === c || "sequenceDiagram" === c || "stateDiagram" === c || "pie" === c || "classDiagram" === c || c.match(/^graph (?:TB|BT|RL|LR|TD);?$/) ? u(f) : r(e, t, n, a, i)
         }
     };
     r.default = i
