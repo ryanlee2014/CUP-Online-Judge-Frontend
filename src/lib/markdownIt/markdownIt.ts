@@ -1,3 +1,4 @@
+import markdownMermaid from "./markdown-it-mermaid";
 const uslug = require("uslug");
 const uslugify = (s: any) => uslug(s);
 
@@ -19,7 +20,7 @@ function Instance(key = "", problem_id = ""): any {
     md.use(mc, {includeLevel: [1, 2], listType: "div class='ui bulleted link list'"});
     md.use(mi);
     md.use(require("./markdown-it-links"));
-    md.use(require("./markdown-it-mermaid").default.default);
+    md.use(markdownMermaid);
 
     const markdownPack = (html: string) => {
         return `<div class="markdown-body">${html}</div>`

@@ -75,7 +75,7 @@ const uslug = require("uslug");
         MainContent
     }
 })
-export default class Thread extends Mixins(mixins, avatarMixin, mermaidMixin, MarkdownWorkerMixin) {
+export default class Thread extends Mixins(mixins, avatarMixin, MarkdownWorkerMixin) {
     page = 0;
     table_val: any = {};
     total = 0;
@@ -98,7 +98,6 @@ export default class Thread extends Mixins(mixins, avatarMixin, mermaidMixin, Ma
                 _.forEach(v, async (v) => {
                     if (v.content) {
                         v.content = await this.renderAsync(v.content);
-                        console.log("finish", v.content);
                     }
                 });
             }
@@ -107,9 +106,6 @@ export default class Thread extends Mixins(mixins, avatarMixin, mermaidMixin, Ma
         this.table_val = val;
         this.owner = val.owner;
         this.isadmin = val.admin;
-        this.$nextTick(() => {
-            this.initMermaid();
-        });
     }
 
     get thread_head () {

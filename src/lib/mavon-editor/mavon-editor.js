@@ -1,3 +1,4 @@
+const _ = require("lodash");
 !function (t, e) {
     "object" == typeof exports && "object" == typeof module ? module.exports = e.apply(window) : "function" == typeof define && define.amd ? define("mavon-editor", [], e) : "object" == typeof exports ? exports["mavon-editor"] = e.apply(window) : t["mavon-editor"] = e.apply(window)
 }(this, function () {
@@ -54306,7 +54307,7 @@
                     var s = t[n], u = s.content.trim();
                     if ("mermaid" === s.info) return i(u);
                     var c = u.split(/\n/)[0].trim();
-                    return "gantt" === c || "sequenceDiagram" === c || c.match(/^graph (?:TB|BT|RL|LR|TD);?$/) ? i(u) : e(t, n, r, a, o)
+                    return "gantt" === c || c === 'classDiagram' || c === 'gitGraph'|| c.match(/^pie/) || "sequenceDiagram" === c || c.match(/^graph (?:TB|BT|RL|LR|TD);?$/) ? i(u) : e(t, n, r, a, o)
                 }
             }
         }, function (t, e) {

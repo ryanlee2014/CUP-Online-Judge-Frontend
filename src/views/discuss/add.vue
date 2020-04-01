@@ -18,7 +18,7 @@
                 </h2>
             </div>
             <div class="row">
-                <mavon-editor v-model="content"></mavon-editor>
+                <mavon-editor v-model="content" :markInstance="markdownIt"></mavon-editor>
             </div>
             <div class="row">
                 <div class="two field">
@@ -42,6 +42,7 @@
 <script lang="ts">
 import mixins from "../../mixin/init";
 import { Mixins, Component } from "vue-property-decorator";
+import markdownIt from "@/lib/markdownIt/markdownIt";
 import jquery from "jquery";
 const $: any = jquery;
 @Component
@@ -49,7 +50,7 @@ export default class DiscussAdd extends Mixins(mixins) {
     content = "";
     title = "";
     captcha = "";
-
+    markdownIt = markdownIt;
     create_post () {
         const that = this;
         const send = {

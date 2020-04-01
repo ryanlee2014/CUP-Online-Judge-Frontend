@@ -43,6 +43,8 @@ import { Mixins, Component, Prop, Watch } from "vue-property-decorator";
 import UserCard from "@/components/user/UserCard.vue";
 import MarkdownWorkerMixin from "@/mixin/MarkdownWorkerMixin";
 import jquery from "jquery";
+import mermaidMixin from "@/mixin/mermaidMixin";
+import { Debounce } from "@/module/Decorator/method";
 const doc = document.createElement("div");
 const $: any = jquery;
 const uslug = require("uslug");
@@ -52,7 +54,7 @@ const uslug = require("uslug");
         UserCard
     }
 })
-export default class DiscussContent extends Mixins(avatarMixin, MarkdownWorkerMixin) {
+export default class DiscussContent extends Mixins(avatarMixin, MarkdownWorkerMixin, mermaidMixin) {
     @Prop({ default: () => { return {}; } }) thread_head!: any;
     @Prop({ default: "" }) owner!: string;
     @Prop({ default: "" }) id!: string;
@@ -69,7 +71,15 @@ export default class DiscussContent extends Mixins(avatarMixin, MarkdownWorkerMi
         if (val.content) {
             const ret = await this.renderAsync(val.content);
             this.thread_content = ret;
+            this.$nextTick(() => {
+                this.renderMermaid();
+            });
         }
+    }
+
+    @Debounce(100)
+    renderMermaid () {
+        this.initMermaid();
     }
 
     readTime (content: string) {
