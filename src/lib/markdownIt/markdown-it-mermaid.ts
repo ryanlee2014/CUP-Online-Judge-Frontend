@@ -1,45 +1,61 @@
-import Mermaid from 'mermaid'
+import mermaid from 'mermaid'
 
-
-const MermaidChart = (code: string) => {
+const mermaidChart = (code: string) => {
     try {
-        const needsUniqueId = "render" + (Math.floor(Math.random() * 10000)).toString();
-        Mermaid.mermaidAPI.render(needsUniqueId, code, sc => {
-            code = sc
-        });
+        mermaid.parse(code)
         return `<div class="mermaid">${code}</div>`
     } catch ({str, hash}) {
         return `<pre>${str}</pre>`
     }
-};
+}
 
-const MermaidPlugIn = (md: any, opts: any) => {
-    Mermaid.initialize(Object.assign(MermaidPlugIn.default, opts));
-
-    const defaultRenderer = md.renderer.rules.fence.bind(md.renderer.rules);
-
-    md.renderer.rules.fence = (tokens: any, idx: any, opts: any, env: any, self: any) => {
-        const token = tokens[idx];
-        const code = `${token.info} \n ${token.content.trim()}`;
-        if (token.info === 'mermaid' || token.info === 'gantt' || token.info.match(/^pie/) || token.info === 'sequenceDiagram' || token.info === 'classDiagram' || token.info === 'gitGraph' || token.info.match(/^graph (?:TB|BT|RL|LR|TD);?$/)) {
-            return MermaidChart(code)
+const MermaidPlugin = (md: any) => {
+    md.mermaid = mermaid
+    // @ts-ignore
+    mermaid.loadPreferences = (preferenceStore) => {
+        let mermaidTheme = preferenceStore.get('mermaid-theme')
+        if (mermaidTheme === undefined) {
+            mermaidTheme = 'default'
         }
-        // const firstLine = code.split(/\n/)[0].trim()
-        // if (firstLine === 'gantt' || firstLine === 'sequenceDiagram' || firstLine.match(/^graph (?:TB|BT|RL|LR|TD);?$/)) {
-        //   return mermaidChart(code)
-        // }
-        return defaultRenderer(tokens, idx, opts, env, self)
+        let ganttAxisFormat = preferenceStore.get('gantt-axis-format')
+        if (ganttAxisFormat === undefined) {
+            ganttAxisFormat = '%Y-%m-%d'
+        }
+        // @ts-ignore
+        mermaid.initialize({
+            theme: mermaidTheme,
+            gantt: {
+                // @ts-ignore
+                axisFormatter: [
+                    [ganttAxisFormat, (d: any) => {
+                        return d.getDay() === 1
+                    }]
+                ]
+            }
+        })
+        return {
+            'mermaid-theme': mermaidTheme,
+            'gantt-axis-format': ganttAxisFormat
+        }
     }
-};
 
-MermaidPlugIn.default = {
-    startOnLoad: false,
-    securityLevel: 'true',
-    theme: "default",
-    flowchart: {
-        htmlLabels: false,
-        useMaxWidth: true,
+    const temp = md.renderer.rules.fence.bind(md.renderer.rules)
+    md.renderer.rules.fence = (tokens: any, idx: any, options: any, env: any, slf: any) => {
+        const token = tokens[idx]
+        const code = token.content.trim()
+        if (token.info === 'mermaid') {
+            return mermaidChart(code)
+        }
+        const firstLine = code.split(/\n/)[0].trim()
+        if (firstLine === 'gantt' ||
+            firstLine === 'classDiagram' ||
+            firstLine === 'gitGraph' ||
+            firstLine === 'sequenceDiagram' ||
+            firstLine.match(/^graph (?:TB|BT|RL|LR|TD);?$/)) {
+            return mermaidChart(code)
+        }
+        return temp(tokens, idx, options, env, slf)
     }
-};
+}
 
-export default MermaidPlugIn
+export default MermaidPlugin
