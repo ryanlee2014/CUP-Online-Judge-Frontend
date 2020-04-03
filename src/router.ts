@@ -93,6 +93,15 @@ const router = new Router({
             }
         },
         {
+            path: "/init",
+            name: "init",
+            component: () => import("./views/system/init.vue"),
+            meta: {
+                auth: false,
+                init: true
+            }
+        },
+        {
             path: "/faq",
             name: "faq",
             component: () => import("./views/faq.vue")

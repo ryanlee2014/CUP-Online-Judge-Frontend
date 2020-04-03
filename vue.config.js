@@ -5,7 +5,7 @@ const BrotliPlugin = require("brotli-webpack-plugin");
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 const version = require("./package.json").version;
 const webPath = `https://cdn.jsdelivr.net/gh/ryanlee2014/CUP-Online-Judge-CDN@v${version}/`;
-
+const devURL = "https://hk.haoyuan.info";
 module.exports = {
     chainWebpack: config => {
         if (process.env.NODE_ENV === "development") {
@@ -31,41 +31,41 @@ module.exports = {
         proxy: {
             "/api": {
                 secure: false,
-                target: "https://hk.haoyuan.info",
+                target: devURL,
                 changeOrigin: true
             },
             "/socket.io": {
                 secure: false,
-                target: "https://hk.haoyuan.info",
+                target: devURL,
                 changeOrigin: true
             },
             "/avatar": {
-                target: "https://hk.haoyuan.info",
+                target: devURL,
                 secure: false,
                 changeOrigin: true
             },
             "/image": {
-                target: "https://hk.haoyuan.info",
+                target: devURL,
                 secure: false,
                 changeOrigin: true
             },
             "/upload": {
-                target: "https://hk.haoyuan.info",
+                target: devURL,
                 secure: false,
                 changeOrigin: true
             },
             "/img": {
-                target: "https://hk.haoyuan.info",
+                target: devURL,
                 secure: false,
                 changeOrigin: true
             },
             "/assets": {
-                target: "https://hk.haoyuan.info",
+                target: devURL,
                 secure: false,
                 changeOrigin: true
             },
             "/glory_image": {
-                target: "https://hk.haoyuan.info",
+                target: devURL,
                 secure: false,
                 changeOrigin: true
             }

@@ -1,4 +1,4 @@
-import store from "../../store";
+import store from "@/store";
 import Vue from "vue";
 import MiddlewareAdapter from "./middlewareAdapter";
 import platfrom from "../middleware/environmentCollector";
@@ -112,7 +112,10 @@ const Guard = function (to: Route, from: Route, next: NextFunction) {
         }
     }
     else if (to.meta.auth === false) {
-        if (store.getters.logined) {
+        if (to.meta.init === true && !store.getters.init) {
+            next();
+        }
+        else if (store.getters.logined) {
             next({
                 path: `/user/${store.getters.user_id}`
             });

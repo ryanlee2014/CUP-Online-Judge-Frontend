@@ -4,7 +4,7 @@ import { ActionTree, Commit } from "vuex";
 import { IRootState } from "@/store/root";
 import store from "@/store";
 function getInfo (commit: Commit, tryTime: number) {
-    if (tryTime <= 0) {
+    if (tryTime <= 0 || !store.getters.init) {
         return;
     }
     axios.get("/api/user/self")

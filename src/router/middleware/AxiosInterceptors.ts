@@ -1,5 +1,6 @@
 import axios from "axios";
-import router from "../../router";
+import router from "@/router";
+import store from "@/store";
 
 export default function () {
     axios.interceptors.response.use(response => {
@@ -20,6 +21,13 @@ export default function () {
         else if (data.rule === -1) {
             router.replace({
                 path: "/unavailable"
+            });
+            return Promise.reject(response);
+        }
+        else if (data.data && data.data.need_init) {
+            store.commit("setInitState", false);
+            router.replace({
+                path: "/init"
             });
             return Promise.reject(response);
         }

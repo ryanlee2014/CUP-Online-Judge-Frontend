@@ -15,14 +15,14 @@
                         </div>
                     </div>
                     <div class="two fields">
-                    <div class="field">
-                        <label>{{$t("password")}}</label>
-                        <input name="password" v-model="password" id="password" type="password" placeholder="必填">
-                    </div>
-                    <div class="field">
-                        <label>{{$t("repeat password")}}</label>
-                        <input name="rptpassword" v-model="repeatPassword" id="rptpassword" type="password" placeholder="必填">
-                    </div>
+                        <div class="field">
+                            <label>{{$t("password")}}</label>
+                            <input name="password" v-model="password" id="password" type="password" placeholder="必填">
+                        </div>
+                        <div class="field">
+                            <label>{{$t("repeat password")}}</label>
+                            <input name="rptpassword" v-model="repeatPassword" id="rptpassword" type="password" placeholder="必填">
+                        </div>
                     </div>
                     <div class="two fields">
                         <div class="field">
@@ -45,8 +45,8 @@
                         </div>
                         <div class="field">
                             <label style="opacity: 0">Captcha image</label>
-                            <img  alt="click to change" src="/api/captcha?from=register"
-                                  onclick="this.src='/api/captcha?from=register&random='+Math.random()" width="20%">
+                            <img  alt="click to change" src="/api/captcha?from=init"
+                                  onclick="this.src='/api/captcha?from=init&random='+Math.random()" width="20%">
                         </div>
                     </div>
                 </div>
@@ -60,9 +60,9 @@
 
 <script lang="ts">
 import { Component, Mixins } from "vue-property-decorator";
-import InitMixin from "../mixin/init";
+import InitMixin from "../../mixin/init";
 import { ErrorAlert } from "@/module/Decorator/method";
-import { IRegisterPagePayload, IRegisterDTO } from "@/types/user/register";
+import { IRegisterDTO, IRegisterPagePayload } from "@/types/user/register";
 
 const emptyRegisterPagePayload: IRegisterPagePayload = {
     confirmQuestion: "",
@@ -76,7 +76,7 @@ const emptyRegisterPagePayload: IRegisterPagePayload = {
 };
 
 @Component
-export default class RegisterPage extends Mixins(InitMixin) implements IRegisterPagePayload {
+export default class Init extends Mixins(InitMixin) {
     captcha: string = "";
     repeatPassword: string = "";
     confirmAnswer: string = "";
@@ -85,6 +85,7 @@ export default class RegisterPage extends Mixins(InitMixin) implements IRegister
     nick: string = "";
     password: string = "";
     userId: string = "";
+
     mounted () {
 
     }
@@ -107,7 +108,7 @@ export default class RegisterPage extends Mixins(InitMixin) implements IRegister
             userId: this.userId,
             captcha: this.captcha
         };
-        this.axios.post("/api/register", payload)
+        this.axios.post("/api/init/firstrun", payload)
             .then(({ data }) => {
                 if (data.status === "OK") {
                     alert("注册成功");

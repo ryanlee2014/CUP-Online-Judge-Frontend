@@ -1,3 +1,4 @@
 export interface ISystemState {
-    contestMode: boolean
+    contestMode: boolean,
+    init: boolean
 }
