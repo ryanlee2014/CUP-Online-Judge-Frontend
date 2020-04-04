@@ -115,6 +115,11 @@ const Guard = function (to: Route, from: Route, next: NextFunction) {
         if (to.meta.init === true && !store.getters.init) {
             next();
         }
+        else if (to.meta.init === true) {
+            next({
+                path: "/"
+            });
+        }
         else if (store.getters.logined) {
             next({
                 path: `/user/${store.getters.user_id}`

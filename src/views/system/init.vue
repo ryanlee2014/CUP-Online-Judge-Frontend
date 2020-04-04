@@ -2,16 +2,15 @@
     <div class="ui container padding">
         <div class="html ui top attached segment">
             <div class="ui large form">
-                <h4>根据要求，请实名注册账号，非法账号将定期删除，严重者封禁IP</h4>
                 <div class="ui form">
                     <div class="two fields">
                         <div class="field">
                             <label>{{$t("user_id")}}</label>
-                            <input type="text" v-model="userId" placeholder="请填写真实学号"  name="user_id" id="user_id" >
+                            <input type="text" v-model="userId" placeholder=""  name="user_id" id="user_id" >
                         </div>
                         <div class="field">
                             <label>{{$t("nick")}}</label>
-                            <input type="text" v-model="nick" name="nick" placeholder="请填写真实姓名">
+                            <input type="text" v-model="nick" name="nick" placeholder="">
                         </div>
                     </div>
                     <div class="two fields">
@@ -33,10 +32,6 @@
                             <label>{{$t("retrieve password answer")}}</label>
                             <input name="confirmanswer" v-model="confirmAnswer" id="confirmanswer" placeholder="必填">
                         </div>
-                    </div>
-                    <div class="field">
-                        <label>{{$t("invite code")}}</label>
-                        <input name="invite_code" v-model="inviteCode" placeholder="必填">
                     </div>
                     <div class="two fields">
                         <div class="field">
@@ -108,7 +103,7 @@ export default class Init extends Mixins(InitMixin) {
             userId: this.userId,
             captcha: this.captcha
         };
-        this.axios.post("/api/init/firstrun", payload)
+        this.axios.post("/api/init/firstrun/admin", payload)
             .then(({ data }) => {
                 if (data.status === "OK") {
                     alert("注册成功");
@@ -118,7 +113,7 @@ export default class Init extends Mixins(InitMixin) {
                 }
             })
             .catch(reason => {
-                alert(reason.statement);
+                alert(reason.data.statement);
             });
     }
 
