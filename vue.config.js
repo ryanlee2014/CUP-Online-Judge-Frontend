@@ -84,7 +84,6 @@ module.exports = {
                         use: {
                             loader: "worker-loader",
                             options: {
-                                inline: true,
                                 publicPath: "/"
                             }
                         }
