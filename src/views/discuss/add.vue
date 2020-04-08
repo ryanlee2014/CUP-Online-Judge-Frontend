@@ -3,7 +3,7 @@
         <div class="ui grid">
             <div class="row">
                 <h2 class="ui header">
-                    Title
+                    {{$t("title")}}
                 </h2>
             </div>
             <div class="row">
@@ -14,7 +14,7 @@
             </div>
             <div class="row">
                 <h2 class="ui header">
-                    Content
+                    {{$t("content")}}
                 </h2>
             </div>
             <div class="row">
@@ -23,7 +23,7 @@
             <div class="row">
                 <div class="two field">
                     <div class="ui left input" style="width:auto">
-                        <input placeholder="验证码" type="text" v-model="captcha"><img alt="click to change"
+                        <input :placeholder="$t('captcha')" type="text" v-model="captcha"><img alt="click to change"
                                                                                     height="40px"
                                                                                     onclick="this.src='/api/captcha?from=newpost&random='+Math.random()"
                                                                                     src="/api/captcha?from=newpost">
@@ -32,7 +32,7 @@
             </div>
             <div class="row">
                 <div @click="create_post" class="ui blue labeled submit icon button">
-                    <i class="icon edit"></i> Add New Post
+                    <i class="icon edit"></i> {{$t("add")}}
                 </div>
             </div>
         </div>

@@ -13,21 +13,21 @@
                         <div class="field">
                             <div class="ui left icon input">
                                 <i class="user icon"></i>
-                                <input @keyup.enter="login" id="user_id" name="user_id" placeholder="username" type="text"
+                                <input @keyup.enter="login" id="user_id" name="user_id" :placeholder="$t('user_id')" type="text"
                                        v-model="user_id">
                             </div>
                         </div>
                         <div class="field">
                             <div class="ui left icon input">
                                 <i class="lock icon"></i>
-                                <input @keyup.enter="login" id="password" name="password" placeholder="Password"
+                                <input @keyup.enter="login" id="password" name="password" :placeholder="$t('password')"
                                        type="password" v-model="password"
                                 >
                             </div>
                         </div>
                         <div class="field">
                             <div class="ui left input">
-                                <input @keyup.enter="login" id="vcode" name="vcode" placeholder="验证码" style="width:70%"
+                                <input @keyup.enter="login" id="vcode" name="vcode" :placeholder="$t('captcha')" style="width:70%"
                                        type="text" v-model="captcha"
                                 >
                                 <img alt="click to change" height="40px" id="vcode_graph"
