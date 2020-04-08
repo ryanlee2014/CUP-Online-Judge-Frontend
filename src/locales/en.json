@@ -267,5 +267,15 @@
   "solved": "Solved",
   "update information": "Update Information",
   "post new solution": "Post new solution",
-  "content": "Content"
+  "content": "Content",
+  "database hostname": "Database hostname",
+  "database port": "Database port",
+  "database username": "Database username",
+  "database password": "Database password",
+  "database": "Database",
+  "salt": "Salt",
+  "session secret": "Session secret",
+  "judger address": "Judger address",
+  "judger data directory": "Judger data directory",
+  "problem upload directory": "Problem upload directory"
 }

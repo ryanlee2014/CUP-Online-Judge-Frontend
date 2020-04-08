@@ -267,5 +267,15 @@
   "solved": "解決",
   "update information": "情報アップデート",
   "post new solution": "新解答発表",
-  "content": "コンテンツ"
+  "content": "コンテンツ",
+  "database hostname": "データベースホスト名",
+  "database port": "データベースポート",
+  "database username": "データベースユーザー",
+  "database password": "データベースパスワード",
+  "database": "データベース",
+  "salt": "ソルト",
+  "session secret": "会話暗号",
+  "judger address": "ジャージアドレス",
+  "judger data directory": "ジャージ",
+  "problem upload directory": "質問ファイルフォルダ"
 }

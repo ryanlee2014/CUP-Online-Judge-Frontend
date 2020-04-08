@@ -269,5 +269,15 @@
   "about icpc": "关于ICPC",
   "solved": "解决",
   "post new solution": "发布题解",
-  "content": "正文"
+  "content": "正文",
+  "database hostname": "数据库地址",
+  "database port": "数据库端口",
+  "database username": "数据库用户名",
+  "database password": "数据库密码",
+  "database": "数据库名",
+  "salt": "用户信息加密用盐",
+  "session secret": "会话密文",
+  "judger address": "判题机地址",
+  "judger data directory": "判题数据目录",
+  "problem upload directory": "题目文件上传目录"
 }
