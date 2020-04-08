@@ -107,6 +107,7 @@ export default class Init extends Mixins(InitMixin) {
             .then(({ data }) => {
                 if (data.status === "OK") {
                     alert("注册成功");
+                    this.$store.dispatch("NavStatus");
                     this.$router.push({
                         path: "/login"
                     });
