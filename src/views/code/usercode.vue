@@ -76,7 +76,10 @@
             <div class="ui raised segment" v-if="code">
                 <div class="ui top right attached label"><a data-clipboard-target="#code" id="copy">Copy Source Code</a>
                 </div>
-                <div id="code" v-html="code">
+                <div class="ui top left attached label">
+                    <a @click.prevent="show_formatted = !show_formatted">{{ show_formatted ? "Show original code" : "Show formatted code"}}</a>
+                </div>
+                <div id="code" v-html="show_formatted ? formatted_code_html : code_html">
                 </div>
             </div>
             <div class="ui existing segment" v-if="statement" v-text="statement">
@@ -90,18 +93,25 @@
 <script lang="ts">
 import mixins from "../../mixin/init";
 import ContestMode from "../../components/contestMode/block.vue";
-import { Component, Mixins } from "vue-property-decorator";
+import { Component, Mixins, Watch } from "vue-property-decorator";
 import { mapGetters } from "vuex";
+import jquery from "jquery";
+import languageMap from "@/lib/constants/monaco-editor/language-map";
+import { init, format } from "wastyle";
+import markdownIt from "@/lib/markdownIt/markdownIt";
+import MarkdownWorkerMixin from "@/mixin/MarkdownWorkerMixin";
 const Clipboard = require("clipboard");
 const clipboard = new Clipboard("#copy");
-const $ = require("jquery");
+const path = require("wastyle/dist/astyle.wasm").default;
+const $: any = jquery;
+window.markdownIt = markdownIt;
 @Component({
     components: {
         ContestMode: ContestMode
     },
     computed: mapGetters(["contestMode"])
 })
-export default class UserCode extends Mixins(mixins) {
+export default class UserCode extends Mixins(mixins, MarkdownWorkerMixin) {
     code = "";
     time = 0;
     memory = 0;
@@ -109,13 +119,18 @@ export default class UserCode extends Mixins(mixins) {
     result = 0;
     language = 0;
     user_id = "";
+    language_id = 0;
     judge_color = [];
     icon = [];
     from = "";
     statement = false;
     contest_mode = false;
     privilege = false;
+    show_formatted = false;
     error = false;
+    formatted_code_html = "";
+    code_html = "";
+
     created () {
         this.user_id = this.$store.getters.user_id;
     }
@@ -127,12 +142,34 @@ export default class UserCode extends Mixins(mixins) {
         this.initData();
     }
 
+    markdownCSSPack (html: string) {
+        return `<div class="markdown-body">${html}</div>`;
+    }
+
+    async buildSourceCode (code: string, language: number) {
+        return this.markdownCSSPack(markdownIt.renderPlain(this.buildMarkdownCode(code, language)));
+    }
+
+    buildMarkdownCode (code: string, language: number) {
+        const source = ["```" + languageMap[language], code, "```"].join("\n");
+        return source;
+    }
+
+    async renderCode (code: string, language: number) {
+        this.code_html = await this.buildSourceCode(code, this.language_id);
+        await init(path);
+        this.formatted_code_html = await this.buildSourceCode((await format(code, "pad-oper style=google"))[1], this.language_id);
+    }
+
     initData () {
-        this.axios.get(`/api/source/${this.$route.params.from}/${this.$route.params.solution_id}`)
+        this.axios.get(`/api/source/${this.$route.params.from}/${this.$route.params.solution_id}?raw=1`)
             .then(response => {
                 const data = response.data;
                 if (data.status === "OK") {
                     Object.assign(this, data.data);
+                    this.code = data.data.code.source;
+                    this.language_id = data.data.code.language;
+                    this.renderCode(this.code, this.language_id);
                     this.privilege = data.privilege && this.$route.params.from === "local";
                     this.problem_id = Math.abs(data.data.problem);
                 }

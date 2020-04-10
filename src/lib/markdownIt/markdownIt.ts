@@ -37,6 +37,10 @@ function Instance(key = "", problem_id = ""): any {
         return markdownPack(preToSegment(_render.apply(md, arguments)))
     };
 
+    md.renderPlain = function () {
+        return _render.apply(md, arguments);
+    }
+
     md.renderRaw = function () {
         return preToSegment(md.renderInline(...arguments))
     };

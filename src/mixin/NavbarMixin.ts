@@ -18,7 +18,7 @@ export default class NavbarMixin extends Vue {
     user = 1;
     judger = 0;
     socketConnected = true;
-    intervalId = -1;
+    intervalId: any = -1;
     _connectTry (times: number) {
         (async () => {
             const Promise = require("bluebird");

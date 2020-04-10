@@ -92,6 +92,11 @@ module.exports = {
                         test: /\.web\.worker\.ts$/,
                         use: ["ts-loader"],
                         exclude: /node_modules/
+                    },
+                    {
+                        test: /\.wasm$/,
+                        loader: "file-loader",
+                        type: "javascript/auto"
                     }
                 ]
             }

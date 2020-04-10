@@ -186,7 +186,7 @@ export default class ContestRank extends Mixins(mixins) {
     select = $;
     console = console;
     playing = false;
-    playInterval = 0;
+    playInterval: any = 0;
     backup_data: any[] = [];
     firstRender = true;
     userStructure = {};
