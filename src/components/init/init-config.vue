@@ -50,10 +50,12 @@
                     <label>{{$t("problem upload directory")}}</label>
                     <input name="problem_upload_directory" v-model="problem_upload_dest.dir" type="text">
                 </div>
+                <div class="ui buttons">
+                    <button class="ui button" type="reset" @click.prevent="resetConfig" name="reset">{{$t("reset")}}</button>
+                    <div class="or"></div>
+                    <button class="ui positive button" type="submit" @click.prevent="updateConfig" id="submit">{{$t("submit")}}</button>
+                </div>
             </div>
-            <button class="ui primary button" type="submit" @click.prevent="updateConfig" id="submit">{{$t("submit")}}
-            </button>
-            <button class="ui button" type="reset" @click.prevent="resetConfig" name="reset">{{$t("reset")}}</button>
             <div class="ui error message"></div>
             <br><br>
         </div>

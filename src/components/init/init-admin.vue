@@ -45,9 +45,12 @@
                                  onclick="this.src='/api/captcha?from=init&random='+Math.random()" width="20%">
                         </div>
                     </div>
+                    <div class="ui buttons">
+                        <button class="ui button" type="reset" @click.prevent="reset" name="reset">{{$t("reset")}}</button>
+                        <div class="or"></div>
+                        <button class="ui positive button" type="submit" @click.prevent="submit" id="submit">{{$t("submit")}}</button>
+                    </div>
                 </div>
-                <button class="ui primary button" type="submit" @click.prevent="submit" id="submit">Submit</button>
-                <button class="ui button" type="reset" @click.prevent="reset" name="reset">Reset</button>
                 <div class="ui error message"></div>
                 <br><br>
             </div>
