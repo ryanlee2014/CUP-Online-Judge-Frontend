@@ -19,7 +19,11 @@
                 </div>
                 <a :class="'item'" class="not-compile" data-clipboard-action="copy" id="clipbtn"
                    style="float:left;"
-                   v-cloak v-if="prepend||append">{{$t("copy code")}}</a>
+                   v-cloak v-if="prepend||append">{{$t("copy code")}}
+                </a>
+                <a :class="'item'" class="not-compile" style="float:left;" @click="formatCode" v-cloak>
+                    {{$t("format")}}
+                </a>
             </div>
             <div class="right menu">
                 <ace-theme-selector v-if="!editorPackage" v-model="theme"></ace-theme-selector>
@@ -97,12 +101,13 @@
 </template>
 <i18n src="../../../locales/rightPanel.json"></i18n>
 <script lang="ts">
-import aceEditor from "../../../components/submit/codeEditor/aceEditor.vue";
-import aceThemeSelector from "../../../components/submit/codeEditor/aceComponent/aceThemeSelector.vue";
-import aceStatic from "../../../components/submit/codeEditor/aceComponent/aceStatic.vue";
-import monacoEditor from "../../../components/submit/codeEditor/monacoEditor.vue";
-import monacoThemeSelector from "../../../components/submit/codeEditor/monacoComponent/monacoThemeSelector.vue";
-import monacoStatic from "../../../components/submit/codeEditor/monacoComponent/monacoStatic.vue";
+import aceEditor from "@/components/submit/codeEditor/aceEditor.vue";
+import aceThemeSelector from "@/components/submit/codeEditor/aceComponent/aceThemeSelector.vue";
+import aceStatic from "@/components/submit/codeEditor/aceComponent/aceStatic.vue";
+import monacoEditor from "@/components/submit/codeEditor/monacoEditor.vue";
+import monacoThemeSelector from "@/components/submit/codeEditor/monacoComponent/monacoThemeSelector.vue";
+import monacoStatic from "@/components/submit/codeEditor/monacoComponent/monacoStatic.vue";
+import { init, format } from "wastyle";
 import envConfig from "../../../../config/environment.json";
 import Clipboard from "clipboard";
 import jquery from "jquery";
@@ -112,6 +117,7 @@ import { Prop, Watch, Component } from "vue-property-decorator";
 import Vue from "vue";
 import { Debounce } from "@/module/Decorator/method";
 
+const astyle = require("wastyle/dist/astyle.wasm").default;
 const $: any = jquery;
 const detectLang = require("../../../lib/langDetector");
 const language_ext = ["c", "cc", "pas", "java", "rb", "sh", "py", "php", "pl", "cs", "m", "bas", "scm", "c", "cc", "lua", "js", "go", "py", "cpp", "cpp", "c", "kt", "java", "java", "python", "python", "java", "c", "cc", "cc"];
@@ -392,6 +398,11 @@ export default class RightPanel extends Vue {
             if (this.selected_language !== detectedLang) {
                 this.selected_language = detectedLang;
             }
+        }
+
+        async formatCode () {
+            await init(astyle);
+            this.code = await format(this.code, "pad-oper style=google")[1];
         }
 }
 </script>

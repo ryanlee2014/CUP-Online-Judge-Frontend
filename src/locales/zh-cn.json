@@ -14,6 +14,7 @@
   "available": "可见",
   "average length": "平均长度",
   "average plagiarism percentage": "平均判重度",
+  "ban": "封禁",
   "ban end time": "封禁结束时间",
   "ban manage": "封禁管理",
   "ban time": "封禁时间",
@@ -279,5 +280,6 @@
   "session secret": "会话密文",
   "judger address": "判题机地址",
   "judger data directory": "判题数据目录",
-  "problem upload directory": "题目文件上传目录"
+  "problem upload directory": "题目文件上传目录",
+  "format": "格式化"
 }

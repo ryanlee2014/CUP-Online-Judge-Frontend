@@ -15,6 +15,7 @@
   "average length": "平均の長さ",
   "average plagiarism percentage": "平均剽窃度",
   "ban end time": "制限終わり時間",
+  "ban": "バン",
   "ban manage": "バン管理",
   "ban time": "バン時間",
   "biography": "モットー",
@@ -277,5 +278,6 @@
   "session secret": "会話暗号",
   "judger address": "ジャージアドレス",
   "judger data directory": "ジャージ",
-  "problem upload directory": "質問ファイルフォルダ"
+  "problem upload directory": "質問ファイルフォルダ",
+  "format": "フォーマット"
 }

@@ -15,6 +15,7 @@
   "average length": "Average Length",
   "average plagiarism percentage": "Average Plagiarism Percentage",
   "ban end time": "Expired Time",
+  "ban": "Ban",
   "ban manage": "Ban Manage",
   "ban time": "Ban time",
   "biography": "Motto",
@@ -277,5 +278,6 @@
   "session secret": "Session secret",
   "judger address": "Judger address",
   "judger data directory": "Judger data directory",
-  "problem upload directory": "Problem upload directory"
+  "problem upload directory": "Problem upload directory",
+  "format": "Format Code"
 }

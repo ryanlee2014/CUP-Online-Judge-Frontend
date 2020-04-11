@@ -13,7 +13,7 @@
                             <span class="subscript">&nbsp;</span>
                         </div>
                         <div class="label none-transform">
-                            Problem
+                            {{$t("problem")}}
                         </div>
                     </div>
                     <div class="statistic">
@@ -22,7 +22,7 @@
                             <span class="subscript">&nbsp;</span>
                         </div>
                         <div class="label none-transform">
-                            User
+                            {{$t("user_id")}}
                         </div>
                     </div>
                     <div class="statistic">
@@ -31,7 +31,7 @@
                             <span class="subscript">ms</span>
                         </div>
                         <div class="label none-transform">
-                            Running Time
+                            {{$t("time")}}
                         </div>
                     </div>
                     <div class="statistic">
@@ -40,7 +40,7 @@
                             <span class="subscript">KB</span>
                         </div>
                         <div class="label none-transform">
-                            Used Memory
+                            {{$t("memory")}}
                         </div>
                     </div>
                     <div class="statistic">
@@ -49,7 +49,7 @@
                             <span class="subscript">&nbsp;</span>
                         </div>
                         <div class="label none-transform">
-                            Language
+                            {{$t("language")}}
                         </div>
                     </div>
                     <div class="statistic">
@@ -59,25 +59,25 @@
                             <span class="subscript">&nbsp;</span>
                         </div>
                         <div class="label none-transform">
-                            Result
+                            {{$t("result")}}
                         </div>
                     </div>
                     <div class="statistic" v-if="privilege">
                         <div class="value none-transform">
-                            <a @click="rejudge" style="cursor:pointer">重新判题</a>
+                            <a @click="rejudge" style="cursor:pointer">{{$t("rejudge")}}</a>
                             <span class="subscript">&nbsp;</span>
                         </div>
                         <div class="label none-transform">
-                            <a @click="ban" style="cursor:pointer">封禁</a>
+                            <a @click="ban" style="cursor:pointer">{{$t("ban")}}</a>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="ui raised segment" v-if="code">
-                <div class="ui top right attached label"><a data-clipboard-target="#code" id="copy">Copy Source Code</a>
+                <div class="ui top right attached label"><a data-clipboard-target="#code" id="copy">{{$t("copy")}}</a>
                 </div>
                 <div class="ui top left attached label">
-                    <a @click.prevent="show_formatted = !show_formatted">{{ show_formatted ? "Show original code" : "Show formatted code"}}</a>
+                    <a @click.prevent="show_formatted = !show_formatted">{{ show_formatted ? $t("show original code") : $t("show formatted code")}}</a>
                 </div>
                 <div id="code" v-html="show_formatted ? formatted_code_html : code_html">
                 </div>
@@ -89,11 +89,26 @@
 
     </div>
 </template>
-
+<i18n>
+    {
+        "zh-cn": {
+            "show formatted code": "显示格式化代码",
+            "show original code": "显示原代码"
+        },
+        "en": {
+            "show formatted code": "Show formatted code",
+            "show original code": "Show original code"
+        },
+        "ja": {
+            "show formatted code": "フォーマットコード表示",
+            "show original code": "元コード表示"
+        }
+    }
+</i18n>
 <script lang="ts">
 import mixins from "../../mixin/init";
 import ContestMode from "../../components/contestMode/block.vue";
-import { Component, Mixins, Watch } from "vue-property-decorator";
+import { Component, Mixins } from "vue-property-decorator";
 import { mapGetters } from "vuex";
 import jquery from "jquery";
 import languageMap from "@/lib/constants/monaco-editor/language-map";
