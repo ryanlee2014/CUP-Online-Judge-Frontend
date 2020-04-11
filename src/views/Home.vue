@@ -32,12 +32,12 @@
                             <br>
 
                             <div class="column">
-                                <router-link class="ui white basic label maintain" to="/update">
-                                </router-link>
                                 <!-- Place this tag where you want the button to render. -->
                                 <!-- Place this tag where you want the button to render. -->
-                                <github-button class="github_button" href="https://github.com/ryanlee2014/CUP-Online-Judge" data-size="large" data-show-count="true" aria-label="Star ryanlee2014/CUP-Online-Judge on GitHub">Star</github-button>
-
+                                <github-button data-text="Star" style="vertical-align: middle;" class="github_button" data-size="large" href="https://github.com/ryanlee2014/CUP-Online-Judge" data-show-count="true" aria-label="Star ryanlee2014/CUP-Online-Judge on GitHub">Star</github-button>
+                                <!-- Place this tag where you want the button to render. -->
+                                &nbsp;
+                                <github-button data-text="Fork" style="vertical-align: middle;" class="github_button" data-size="large" href="https://github.com/ryanlee2014/CUP-Online-Judge/fork" data-show-count="true" aria-label="Fork ryanlee2014/CUP-Online-Judge on GitHub">Fork</github-button>
                             </div>
                             <br>
                             <a href="https://promotion.aliyun.com/ntms/act/ambassador/sharetouser.html?userCode=1ohno31e&utm_source=1ohno31e"
@@ -187,6 +187,7 @@ export default class Home extends Mixins(InitMixin) {
                 position: "top center",
                 on: "hover"
             });
+        /*
         this.axios.get("/api/update_log/latest")
             .then((response) => {
                 const data = response.data.data[0];
@@ -206,6 +207,8 @@ export default class Home extends Mixins(InitMixin) {
                         on: "hover"
                     });
             });
+
+         */
         $(".support")
             .popup({
                 position: "bottom center",
