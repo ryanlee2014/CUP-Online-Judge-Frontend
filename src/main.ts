@@ -8,7 +8,9 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 
-import mavonEditor from "./lib/mavon-editor/mavon-editor";
+// import mavonEditor from "./lib/mavon-editor/mavon-editor";
+// @ts-ignore
+import mavonEditor from "@ryanlee2014/mavon-editor";
 import VueObserveVisibility from "vue-observe-visibility";
 import i18n from "./i18n";
 import VueSocketIo from "./lib/vue-socketio";
