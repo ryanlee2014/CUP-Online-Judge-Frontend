@@ -35,21 +35,8 @@
                                 <router-link class="ui white basic label maintain" to="/update">
                                 </router-link>
                                 <!-- Place this tag where you want the button to render. -->
-                                <a class="github_button"
-                                   href="https://travis-ci.com/CUP-ACM-Programming-Club/CUP-Online-Judge-Express"
-                                   target="_blank"><img
-                                        src="https://travis-ci.com/CUP-ACM-Programming-Club/CUP-Online-Judge-Express.svg?branch=typescript"
-                                        style="vertical-align: middle;"></a>
-                                <a class="github_button"
-                                   href="https://codebeat.co/projects/github-com-cup-acm-programming-club-cup-online-judge-express-master-7e8760db-7670-4c22-9862-1262dddcb4ec"><img
-                                        alt="codebeat badge"
-                                        src="https://codebeat.co/badges/bf69c0eb-2bdf-4fbe-a6f0-2bf2a98a597a"
-                                        style="vertical-align: middle;"/></a>
-                                <a class="github_button"
-                                   href="https://codecov.io/gh/CUP-ACM-Programming-Club/CUP-Online-Judge-Express">
-                                    <img src="https://codecov.io/gh/CUP-ACM-Programming-Club/CUP-Online-Judge-Express/branch/master/graph/badge.svg"
-                                         style="vertical-align: middle;"/>
-                                </a>
+                                <!-- Place this tag where you want the button to render. -->
+                                <github-button class="github_button" href="https://github.com/ryanlee2014/CUP-Online-Judge" data-size="large" data-show-count="true" aria-label="Star ryanlee2014/CUP-Online-Judge on GitHub">Star</github-button>
 
                             </div>
                             <br>
@@ -169,9 +156,13 @@ import util from "../lib/util";
 import InitMixin from "../mixin/init";
 import dayjs from "dayjs";
 import jQuery from "jquery";
+const GithubButton = require("vue-github-button").default;
 const $: any = jQuery;
-
-@Component
+@Component({
+    components: {
+        GithubButton
+    }
+})
 export default class Home extends Mixins(InitMixin) {
     mounted () {
         document.title = `Home -- ${this.customConfig.title}`;
