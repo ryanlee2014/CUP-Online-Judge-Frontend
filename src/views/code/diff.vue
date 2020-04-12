@@ -49,10 +49,12 @@
 import Vue from "vue";
 import * as monaco from "monaco-editor";
 import mixins from "../../mixin/init";
+import { init, format } from "wastyle";
 import languageMap from "../../lib/constants/monaco-editor/language-map";
 import dayjs, { Dayjs } from "dayjs";
 import { Mixins, Component } from "vue-property-decorator";
 import CodeInfo from "@/components/code/code-info.vue";
+const astyle = require("wastyle/dist/astyle.wasm").default;
 import editor = monaco.editor;
 import IDiffEditor = editor.IDiffEditor;
 interface ICode {
@@ -115,7 +117,8 @@ export default class CodeDiff extends Mixins(mixins) {
         document.title = `Code compare -- ${document.title}`;
         const leftPromise = this.axios.get(`/api/source/local/${this.$route.params.left}?raw=1`).then(({ data }) => data);
         const rightPromise = this.axios.get(`/api/source/local/${this.$route.params.right}?raw=1`).then(({ data }) => data);
-        const [leftData, rightData] = await Promise.all([leftPromise, rightPromise]);
+        const initFormat = init(astyle);
+        const [leftData, rightData] = await Promise.all([leftPromise, rightPromise, initFormat]);
         this.leftUserID = leftData.data.user_id;
         this.left = leftData.data;
         this.left.length = this.left.code.source!.length;
@@ -125,6 +128,8 @@ export default class CodeDiff extends Mixins(mixins) {
         this.right.length = this.right.code.source!.length;
         this.right.trimlength = this.right.code.source!.split(" ").join("").split("\n").join("").length;
         this.problem_id = leftData.data.code.problem_id;
+        leftData.data.code.source = await format(leftData.data.code.source, "pad-oper style=google")[1];
+        rightData.data.code.source = await format(rightData.data.code.source, "pad-oper style=google")[1];
         const originalModel = monaco.editor.createModel(leftData.data.code.source, languageMap[leftData.data.code.language]);
         const modifiedModel = monaco.editor.createModel(rightData.data.code.source, languageMap[rightData.data.code.language]);
         this.$forceUpdate();
