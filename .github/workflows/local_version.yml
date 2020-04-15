@@ -8,6 +8,7 @@ on:
       - 'package.json'
       - 'src/**'
       - 'public/**'
+      - '.github/**'
       - 'vue.config.js'
 
 jobs:
