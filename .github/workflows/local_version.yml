@@ -12,7 +12,7 @@ on:
 
 jobs:
   build:
-    if: github.repository == 'ryanlee2014/CUP-Online-Judge-NG-FrontEnd'
+    if: github.repository == 'ryanlee2014/CUP-Online-Judge-Frontend'
     runs-on: ubuntu-latest
 
     strategy:
