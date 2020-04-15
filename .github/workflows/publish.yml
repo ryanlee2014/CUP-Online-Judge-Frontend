@@ -6,15 +6,14 @@ on:
       - typescript
     paths:
       - 'package.json'
-      - 'src/**/*.ts'
-      - 'src/**/*.vue'
       - 'src/**'
+      - '.github/**'
       - 'public/**'
       - 'vue.config.js'
 
 jobs:
   publish:
-    if: github.repository == 'ryanlee2014/CUP-Online-Judge-NG-FrontEnd'
+    if: github.repository == 'ryanlee2014/CUP-Online-Judge-Frontend'
     runs-on: ubuntu-latest
 
     strategy:
