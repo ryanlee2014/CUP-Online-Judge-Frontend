@@ -140,6 +140,7 @@ const router = new Router({
                 auth: true
             }
         },
+        /*
         {
             path: "/user/register",
             name: "Register",
@@ -148,6 +149,7 @@ const router = new Router({
                 auth: false
             }
         },
+        */
         {
             path: "/user/:user_id",
             name: "user information",
