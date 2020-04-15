@@ -6,6 +6,8 @@ on:
       - typescript
     paths:
       - 'package.json'
+      - 'src/**/*.ts'
+      - 'src/**/*.vue'
       - 'src/**'
       - 'public/**'
       - 'vue.config.js'

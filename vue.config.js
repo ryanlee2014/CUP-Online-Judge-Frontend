@@ -25,7 +25,6 @@ module.exports = {
             .use("i18n")
             .loader("@kazupon/vue-i18n-loader")
             .end();
-        // config.module.rule("js").exclude.add(/\.web\.worker\.js$/);
     },
     devServer: {
         proxy: {
@@ -137,5 +136,5 @@ module.exports = {
         }
     },
     parallel: false,
-    productionSourceMap: false
+    productionSourceMap: true
 };
