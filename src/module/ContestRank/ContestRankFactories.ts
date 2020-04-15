@@ -1,5 +1,4 @@
-import { Dayjs } from "dayjs";
-const dayjs = require("dayjs");
+import { Dayjs, default as dayjs } from "dayjs";
 
 const DEFAULT_TIME = dayjs();
 export interface Problem {

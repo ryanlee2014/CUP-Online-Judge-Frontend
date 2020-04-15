@@ -1,4 +1,4 @@
-import { notUndefinedOrNull } from "../store/util/index";
+import { notUndefinedOrNull } from "@/store/util";
 import jquery from "jquery";
 declare global {
     interface Window {
@@ -11,19 +11,20 @@ window.jQuery = window.$ = $;
 require("../../semantic/semantic-ui/semantic.min");
 function binding_method(homepage?: boolean, finished?: boolean) {
     // fix menu when passed
-    if ($(".fixed.menu").html()) {
+    const $fixedMenu = $(".fixed.menu");
+    if ($fixedMenu.html()) {
         $(".masthead")
             .visibility({
                 once: false,
                 onBottomPassed: function () {
                     // $('.following.bar').addClass('light fixed');
-                    $(".fixed.menu").transition("fade in");
+                    $fixedMenu.transition("fade in");
                     //('.network.menu').addClass('secondary')
                     //$('.network.menu').removeClass('inverted');
                 },
                 onBottomPassedReverse: function () {
                     // $('.following.bar').removeClass('light fixed')
-                    $(".fixed.menu").transition("fade out");
+                    $fixedMenu.transition("fade out");
                     // $('.network.menu').removeClass('secondary');
                     // $('.network.menu').addClass('inverted');
                 }
@@ -31,16 +32,18 @@ function binding_method(homepage?: boolean, finished?: boolean) {
         ;
     }
 
+    const $sidebar = $(".ui.sidebar.mobile");
+
     // create sidebar and attach to menu open
-    if ($(".ui.sidebar.mobile").html()) {
-        $(".ui.sidebar.mobile")
+    if ($sidebar.html()) {
+        $sidebar
             .sidebar("attach events", ".toc.item")
         ;
     }
 
     function lightin () {
         $(".following.bar").addClass("light fixed");
-        $(".fixed.menu").transition("fade in");
+        $fixedMenu.transition("fade in");
         //$('.network.menu').addClass('secondary')
         if (typeof homepage === "boolean" && homepage && finished) {
             $(".network.menu").removeClass("inverted");
@@ -49,7 +52,7 @@ function binding_method(homepage?: boolean, finished?: boolean) {
 
     function lightout () {
         $(".following.bar").removeClass("light fixed");
-        $(".fixed.menu").transition("fade out");
+        $fixedMenu.transition("fade out");
         //('.network.menu').removeClass('secondary');
         if (typeof homepage === "boolean" && homepage && finished) {
             $(".network.menu").addClass("inverted");
@@ -417,15 +420,17 @@ class Util {
         this.bindDropdown();
     }
     bindDropdown () {
-        if ($(".ui.accordion").html()) {
-            $(".ui.accordion")
+        const $accordion = $(".ui.accordion");
+        if ($accordion.html()) {
+            $accordion
                 .accordion({
                     "exclusive": false
                 })
             ;
         }
-        if ($(".ui.menu .ui.dropdown").html()) {
-            $(".ui.menu .ui.dropdown").dropdown({
+        const $menuDropdown = $(".ui.menu .ui.dropdown");
+        if ($menuDropdown.html()) {
+            $menuDropdown.dropdown({
                 on: "hover",
                 onShow: function () {
                     if ($(".following.bar").length > 1) {
@@ -444,13 +449,18 @@ class Util {
             });
         }
 
-        if ($(".ui.search.dropdown").html()) {
-            $(".ui.search.dropdown").dropdown({
+        const $searchDropdown = $(".ui.search.dropdown");
+
+        if ($searchDropdown.html()) {
+            $searchDropdown.dropdown({
                 on: "hover"
             });
         }
-        if ($(".ui.dropdown.selection")) {
-            $(".ui.dropdown.selection").dropdown({
+
+        const $dropdownSelection = $(".ui.dropdown.selection");
+
+        if ($dropdownSelection) {
+            $dropdownSelection.dropdown({
                 on: "hover"
             });
         }
@@ -486,13 +496,11 @@ class Util {
                 });
             };
         })(jQuery);
-        $(document).ready(() => {
-            $(function () {
-                setTimeout(function () {
-                    $("body").prepend("<a href=\"#top\" id=\"toTop\" style=\"z-index:999\"><i class=\"arrow alternate huge circle up icon\"></i></a>");
-                    $("#toTop").scrollToTop();
-                }, 50);
-            });
+        $(function () {
+            setTimeout(function () {
+                $("body").prepend("<a href=\"#top\" id=\"toTop\" style=\"z-index:999\"><i class=\"arrow alternate huge circle up icon\"></i></a>");
+                $("#toTop").scrollToTop();
+            }, 50);
         });
     }
 

@@ -24,7 +24,7 @@
                 <div class="column">
                     <div class="ui labeled input">
                         <div class="ui label">
-                            Time
+                            {{$t("time limit")}}
                         </div>
                         <input type="text" v-model="time">
                     </div>
@@ -32,7 +32,7 @@
                 <div class="column">
                     <div class="ui labeled input">
                         <div class="ui label">
-                            Memory
+                            {{$t("memory")}}
                         </div>
                         <input type="text" v-model="memory">
                     </div>

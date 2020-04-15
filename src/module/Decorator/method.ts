@@ -49,6 +49,18 @@ export function Debuglogging (target: any, propertyName: string, propertyDescrip
     };
 }
 
+export function DebugloggingAsync (target: any, propertyName: string, propertyDescriptor: IPropertyDescriptor) {
+    decoratorLog(`DebugloggingAsync, target:${target.constructor.name}, propertyName:${propertyName}`);
+    const method = propertyDescriptor.value;
+    propertyDescriptor.value = async function (...args: any[]) {
+        const params = args.map(a => JSON.stringify(a)).join();
+        const result = await method.apply(this, args);
+        const r = JSON.stringify(result);
+        log(`Call: ${propertyName}(${params}) => ${r}`);
+        return result;
+    };
+}
+
 export function WebSocketRequest (target: any, propertyName: string, propertyDescriptor: IWebSocketPropertyDescriptor) {
     decoratorLog(`WebSocketRequest, target:${target.constructor.name}, propertyName:${propertyName}`);
     const method = propertyDescriptor.value;

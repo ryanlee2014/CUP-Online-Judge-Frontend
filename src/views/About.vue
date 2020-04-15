@@ -6,8 +6,8 @@
             <div class="ui segment">
                 <h4>Software:</h4>
                 <p>
-                    CUPOJ,CUP Online Judge,CUP Virtual Judge,CUP Online Judge Packer,CUP Online Judge Semantic UI,CUP
-                    Online Judge docker-judger,CUP Online Judge Judger,CUP Online Judge Next Generation Frontend
+                    CUPOJ, CUP Online Judge, CUP Virtual Judge, CUP Online Judge Packer, CUP Online Judge Semantic UI, CUP
+                    Online Judge docker-judger, CUP Online Judge Judger, CUP Online Judge Next Generation Frontend
                 </p>
                 <p>
                     ©️2016-{{dayjs().format("YYYY")}} Ryan Lee <a
@@ -17,7 +17,7 @@
                 </p>
                 <h4>Problem:</h4>
                 <p>
-                    Local Problem,HDOJ,POJ,UVa Online Judge,etc.<br>
+                    Local Problem, HDOJ, POJ, UVa Online Judge, etc.<br>
                     <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.zh">CC BY-NC-ND 4.0</a>
                 </p>
             </div>
@@ -32,10 +32,10 @@
 <script lang="ts">
 import InitMixin from "../mixin/init";
 import dayjs from "dayjs";
-import Component, { mixins } from "vue-class-component";
+import { Component, Mixins } from "vue-property-decorator";
 
 @Component
-export default class About extends mixins(InitMixin) {
+export default class About extends Mixins(InitMixin) {
     dayjs = dayjs;
 }
 

@@ -136,11 +136,14 @@
         <p><i class="github icon"></i>&nbsp;<a href="https://github.com/ryanlee2014/markdown-it-browser" target="_blank">https://github.com/ryanlee2014/markdown-it-browser</a></p>
         <p>Copyright©️<a href="https://github.com/ryanlee2014" target="_blank">Ryan Lee</a></p>
         <h2 class="ui header">Monaco Editor</h2>
-        <p></p>
-        <p></p>
+        <p><i class="github icon"></i><a href="" target="_blank">https://github.com/microsoft/monaco-editor</a> </p>
+        <p>Copyright©<a href="https://github.com/microsoft">Microsoft</a> </p>
         <h2 class="ui header">CUP Online Judge NG FrontEnd</h2>
         <p><i class="github icon"></i><a href="https://github.com/ryanlee2014/CUP-Online-Judge-NG-FrontEnd" target="_blank">https://github.com/ryanlee2014/CUP-Online-Judge-NG-FrontEnd</a></p>
         <p>Copyright© <a href="https://github.com/ryanlee2014" target="_blank">Ryan Lee</a></p>
+        <h2 class="ui header">wastyle</h2>
+        <p><i class="github icon"></i>&nbsp;<a href="https://github.com/Menci/wastyle" target="_blank">https://github.com/Menci/wastyle</a></p>
+        <p>Copyright©️<a href="https://github.com/Menci" target="_blank">Menci</a></p>
         <h1></h1>
     </div>
 </template>

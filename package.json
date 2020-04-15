@@ -1,6 +1,6 @@
 {
   "name": "CUP-Online-Judge-NG-Frontend",
-  "version": "1.18.4",
+  "version": "1.18.5",
   "private": false,
   "scripts": {
     "serve": "npx --max_old_space_size=16000 vue-cli-service serve",
@@ -19,6 +19,7 @@
     "@antv/g2": "^3.5.15",
     "@ryanlee2014/markdown-it-katex": "^1.0.4",
     "@ryanlee2014/mavon-editor": "^1.0.3",
+    "@ryanlee2014/vue-gravatar": "^1.0.0",
     "animejs": "^3.2.0",
     "auto-textarea": "^1.4.0",
     "await-lock": "^2.0.1",
@@ -90,12 +91,12 @@
     "@types/chart.js": "^2.9.19",
     "@types/clipboard": "^2.0.1",
     "@types/d3": "^5.7.2",
+    "@types/d3-sankey": "^0.11.0",
     "@types/file-saver": "^2.0.1",
     "@types/fingerprintjs2": "^2.0.0",
-    "@types/d3-sankey": "^0.11.0",
-    "@types/mermaid": "^8.2.1",
     "@types/jquery": "^3.3.34",
     "@types/lodash": "^4.14.149",
+    "@types/mermaid": "^8.2.1",
     "@types/socket.io-client": "^1.4.32",
     "@typescript-eslint/eslint-plugin": "^2.27.0",
     "@typescript-eslint/parser": "^2.27.0",
@@ -136,10 +137,10 @@
     "vue-loader": "^15.9.1",
     "vue-markdown-loader": "^2.4.1",
     "vue-template-compiler": "^2.6.11",
+    "webpack-bundle-analyzer": "^3.7.0",
     "webpack-merge": "^4.2.2",
     "webpack-parallel-uglify-plugin": "^1.1.2",
-    "worker-loader": "^2.0.0",
-    "webpack-bundle-analyzer": "latest"
+    "worker-loader": "^2.0.0"
   },
   "eslintConfig": {
     "root": true,
@@ -153,7 +154,8 @@
       "@vue/typescript"
     ],
     "parserOptions": {
-      "parser": "@typescript-eslint/parser"
+      "parser": "@typescript-eslint/parser",
+      "ecmaVersion": 2020
     },
     "rules": {
       "vue/no-unused-vars": "off",

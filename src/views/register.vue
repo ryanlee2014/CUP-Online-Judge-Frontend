@@ -117,7 +117,7 @@ export default class RegisterPage extends Mixins(InitMixin) implements IRegister
                 }
             })
             .catch(reason => {
-                alert(reason.statement);
+                alert(JSON.stringify(reason.data));
             });
     }
 

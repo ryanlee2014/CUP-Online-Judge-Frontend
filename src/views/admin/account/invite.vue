@@ -129,7 +129,7 @@ export default class InviteCode extends Mixins(InitMixin) {
                 }
             })
             .catch(reason => {
-                alert(reason);
+                alert(JSON.stringify(reason));
             });
     }
 }
