@@ -136,5 +136,5 @@ module.exports = {
         }
     },
     parallel: false,
-    productionSourceMap: true
+    productionSourceMap: false
 };
