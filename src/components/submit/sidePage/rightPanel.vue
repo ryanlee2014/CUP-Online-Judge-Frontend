@@ -370,8 +370,8 @@ export default class RightPanel extends Vue {
                         return mergetext;
                     }
                 });
-                clipboard.on("success", function (e) {
-                    alert("复制到剪贴板成功!");
+                clipboard.on("success", (e) => {
+                    alert(that.$t("Context is in your clipboard") as string);
                     console.log(e);
                 });
                 clipboard.on("error", function (e) {

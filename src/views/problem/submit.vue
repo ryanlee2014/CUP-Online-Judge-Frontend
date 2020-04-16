@@ -225,11 +225,11 @@ export default class Submit extends Mixins(mixins) {
                 return $(trigger).parent().next().text().trim();
             }
         });
-        copyContent.on("success", function (e) {
+        copyContent.on("success", (e) => {
             $(e.trigger)
                 .popup({
-                    title: "Finished",
-                    content: "Context is in your clipboard",
+                    title: this.$t("finish") as string,
+                    content: this.$t("Context is in your clipboard") as string,
                     on: "click"
                 })
                 .popup("show");

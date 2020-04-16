@@ -135,11 +135,11 @@ export default class Thread extends Mixins(mixins, avatarMixin, MarkdownWorkerMi
                     return $(trigger).parent().next().text();
                 }
             });
-            copyContent.on("success", function (e) {
+            copyContent.on("success", (e) => {
                 $(e.trigger)
                     .popup({
-                        title: "Finished",
-                        content: "Context is in your clipboard",
+                        title: this.$t("finish") as string,
+                        content: this.$t("Context is in your clipboard") as string,
                         on: "click"
                     })
                     .popup("show");

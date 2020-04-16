@@ -113,7 +113,7 @@ export default class Tutorial extends Mixins(mixins, avatarMixin, mermaidMixin, 
     }
 
     updated () {
-        this.$nextTick(function () {
+        this.$nextTick(() => {
             $(".ui.accordion")
                 .accordion({
                     exclusive: false
@@ -123,11 +123,11 @@ export default class Tutorial extends Mixins(mixins, avatarMixin, mermaidMixin, 
                     return $(trigger).parent().next().text();
                 }
             });
-            copyContent.on("success", function (e: any) {
+            copyContent.on("success", (e: any) => {
                 $(e.trigger)
                     .popup({
-                        title: "Finished",
-                        content: "Context is in your clipboard",
+                        title: this.$t("finish") as string,
+                        content: this.$t("Context is in your clipboard") as string,
                         on: "click"
                     })
                     .popup("show");

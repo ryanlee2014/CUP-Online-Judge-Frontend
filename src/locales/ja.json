@@ -279,5 +279,7 @@
   "judger address": "ジャージアドレス",
   "judger data directory": "ジャージ",
   "problem upload directory": "質問ファイルフォルダ",
-  "format": "フォーマット"
+  "format": "フォーマット",
+  "finish": "フィニッシュ",
+  "Context is in your clipboard": "コピー完了"
 }

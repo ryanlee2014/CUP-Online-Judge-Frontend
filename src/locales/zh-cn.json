@@ -281,5 +281,7 @@
   "judger address": "判题机地址",
   "judger data directory": "判题数据目录",
   "problem upload directory": "题目文件上传目录",
-  "format": "格式化"
+  "format": "格式化",
+  "finish": "完成",
+  "Context is in your clipboard": "复制成功"
 }

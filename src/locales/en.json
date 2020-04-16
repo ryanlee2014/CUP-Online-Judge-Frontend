@@ -279,5 +279,7 @@
   "judger address": "Judger address",
   "judger data directory": "Judger data directory",
   "problem upload directory": "Problem upload directory",
-  "format": "Format Code"
+  "format": "Format Code",
+  "finish": "Finish",
+  "Context is in your clipboard": "Context is in your clipboard"
 }

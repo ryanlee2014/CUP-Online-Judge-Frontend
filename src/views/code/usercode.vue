@@ -201,11 +201,11 @@ export default class UserCode extends Mixins(mixins, MarkdownWorkerMixin) {
     }
 
     bindClipboardDOM () {
-        clipboard.on("success", function () {
+        clipboard.on("success", () => {
             $("#copy")
                 .popup({
-                    title: "Finished",
-                    content: "Your code is in your clipboard",
+                    title: this.$t("finish") as string,
+                    content: this.$t("Context is in your clipboard") as string,
                     on: "click"
                 })
                 .popup("show");
