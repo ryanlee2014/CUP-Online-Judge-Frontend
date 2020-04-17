@@ -282,6 +282,18 @@
                 <img data-src="/glory_image/CCPC2019XIAMEN1.jpg" class="ui image">
                 <img data-src="/glory_image/CCPC2019XIAMEN2.jpg" class="ui image">
             </div>
+            <div class="ui segment" id="icpc2019jiangxi">
+                <h3 class="ui header contents">2019 江西(江西师范大学)</h3>
+                <div class="ui right rail">
+                    <div class="ui sticky ICPC2019JIANGXI">
+                        <h3 class="ui header">ICPC2019 江西</h3>
+                        <h4>铜奖</h4>
+                        <p>队名:我当个石油工人多荣耀</p>
+                        <p>成员:吕博枫 李昊元 冯云豪</p>
+                    </div>
+                </div>
+                <img data-src="/glory_image/ICPC2019JIANGXI.jpg" class="ui image">
+            </div>
             <div class="ui segment" id="yourlegend">
                 <h3 class="ui header contents">20XX XX(XX大学)</h3>
                 <div class="ui right rail">
