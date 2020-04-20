@@ -3,7 +3,7 @@
         <div class="ui grid">
             <div class="row" v-if="!reply">
                 <h2 class="ui header">
-                    Title
+                    {{$t("title")}}
                 </h2>
             </div>
             <div class="row" v-if="!reply">
@@ -13,7 +13,7 @@
             </div>
             <div class="row">
                 <h2 class="ui header">
-                    Content
+                    {{$t("content")}}
                 </h2>
             </div>
             <div class="row">
@@ -31,7 +31,7 @@
             </div>
             <div class="row">
                 <div @click="edit_post" class="ui blue labeled submit icon button">
-                    <i class="icon edit"></i> Modify
+                    <i class="icon edit"></i> {{$t("modify")}}
                 </div>
             </div>
         </div>
