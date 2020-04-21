@@ -32,7 +32,7 @@
                                 >
                                 <img alt="click to change" height="40px" id="vcode_graph"
                                      onclick="this.src='/api/captcha?from=login&ramdom='+Math.random()"
-                                     src="/api/captcha?from=login">
+                                     :src="`/api/captcha?from=login&random=${Math.random()}`">
                             </div>
                         </div>
                         <div @click="login" @keyup.enter="login" class="ui fluid large teal button">{{$t("login")}}</div>

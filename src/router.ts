@@ -140,16 +140,6 @@ const router = new Router({
                 auth: true
             }
         },
-        /*
-        {
-            path: "/user/register",
-            name: "Register",
-            component: () => import("./views/user/register.vue"),
-            meta: {
-                auth: false
-            }
-        },
-        */
         {
             path: "/user/:user_id",
             name: "user information",

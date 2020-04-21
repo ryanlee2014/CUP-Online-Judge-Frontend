@@ -16,7 +16,7 @@
                                                                                        placeholder="验证码" type="text"><img
                                         alt="click to change" height="40px" id="vcode_graph"
                                         onclick="this.src='/api/captcha?from=upload&random='+Math.random()"
-                                        src="/api/captcha?from=upload"></div>
+                                        :src="`/api/captcha?from=upload&random=${Math.random()}`"></div>
                             </div>
                             <div class="field">
                                 <input class="ui blue button" type="submit" value="Import">

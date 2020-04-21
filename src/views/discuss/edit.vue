@@ -25,7 +25,7 @@
                         <input placeholder="验证码" type="text" v-model="captcha"><img alt="click to change"
                                                                                     height="40px"
                                                                                     onclick="this.src='/api/captcha?from=edit&random='+Math.random()"
-                                                                                    src="/api/captcha?from=edit">
+                                                                                    :src="`/api/captcha?from=edit&random=${Math.random()}`">
                     </div>
                 </div>
             </div>

@@ -26,7 +26,7 @@
                         <input :placeholder="$t('captcha')" type="text" v-model="captcha"><img alt="click to change"
                                                                                     height="40px"
                                                                                     onclick="this.src='/api/captcha?from=newpost&random='+Math.random()"
-                                                                                    src="/api/captcha?from=newpost">
+                                                                                    :src="`/api/captcha?from=newpost&random=${Math.random()}`">
                     </div>
                 </div>
             </div>

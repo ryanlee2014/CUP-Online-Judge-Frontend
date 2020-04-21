@@ -47,7 +47,7 @@
                     <input id="vcode" name="vcode" placeholder="验证码" type="text" v-model="captcha"><img
                     alt="click to change" height="40px" id="vcode_graph"
                     onclick="this.src='/api/captcha?from=discuss&random='+Math.random()"
-                    src="/api/captcha?from=discuss">
+                    :src="`/api/captcha?from=discuss&random=${Math.random()}`">
                 </div>
             </div>
             <div @click="replyComment" class="ui blue labeled submit icon button">

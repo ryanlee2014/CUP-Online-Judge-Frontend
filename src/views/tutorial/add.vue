@@ -26,7 +26,7 @@
             <div class="row">
                 <div class="two field">
                     <div class="ui left input" style="width:auto">
-                        <input v-model="captcha" type="text" placeholder="验证码"><img alt="click to change" src="/api/captcha?from=tutorial" onclick="this.src='/api/captcha?from=tutorial&random='+Math.random()" height="40px">
+                        <input v-model="captcha" type="text" placeholder="验证码"><img alt="click to change" :src="`/api/captcha?from=tutorial&random=${Math.random()}`" onclick="this.src='/api/captcha?from=tutorial&random='+Math.random()" height="40px">
                     </div>
                 </div>
             </div>
