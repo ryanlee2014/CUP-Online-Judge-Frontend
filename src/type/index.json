@@ -32,6 +32,7 @@
       "Clang11",
       "Clang++17",
       "C++20",
+      "Kotlin Native",
       "Other Language"
     ],
     "common": [
@@ -65,6 +66,8 @@
       "Java",
       "C",
       "C++",
+      "C++",
+      "Kotlin",
       "Other Language",
       "Other Language"
     ],
@@ -167,7 +170,9 @@
       "py",
       "java",
       "c",
-      "cpp"
+      "cpp",
+      "cpp",
+      "kotlin"
     ]
   },
   "markdown_language": {
@@ -202,6 +207,8 @@
       "java",
       "c++",
       "c++",
+      "c++",
+      "kotlin",
       ""
     ],
     "hdu": [
@@ -303,7 +310,9 @@
       "python",
       "java",
       "c_cpp",
-      "c_cpp"
+      "c_cpp",
+      "c_cpp",
+      "java"
     ]
   },
   "langmask": 171440,
@@ -440,7 +449,9 @@
     "devicon-python-plain",
     "devicon-java-plain",
     "devicon-c-plain",
-    "devicon-cplusplus-plain"
+    "devicon-cplusplus-plain",
+    "devicon-cplusplus-plain",
+    "devicon-devicon-plain"
   ],
   "judge_icon": [
     "hourglass half",

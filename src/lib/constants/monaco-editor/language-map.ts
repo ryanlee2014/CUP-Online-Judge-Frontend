@@ -30,5 +30,6 @@ export default [
     "cpp",
     "cpp",
     "cpp",
+    "kotlin",
     ""
 ];
