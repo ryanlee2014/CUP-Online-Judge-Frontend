@@ -486,10 +486,10 @@ class Util {
                 c && a.extend(d, { speed: c });
                 return this.each(function (this: any) {
                     let b = a(this);
-                    a(window).scroll(function (this: any) {
+                    a(window).on("scroll", function (this: any) {
                         100 < a(this).scrollTop() ? b.fadeIn() : b.fadeOut();
                     });
-                    b.click(function (b: { preventDefault: () => void; }) {
+                    b.on("click",function (b: { preventDefault: () => void; }) {
                         b.preventDefault();
                         a("body, html").animate({ scrollTop: 0 }, d.speed);
                     });
