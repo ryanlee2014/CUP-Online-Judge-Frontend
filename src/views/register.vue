@@ -45,7 +45,7 @@
                         </div>
                         <div class="field">
                             <label style="opacity: 0">Captcha image</label>
-                            <img  alt="click to change" :src="`/api/captcha?from=register&random=${Math.random()}`"
+                            <img  alt="click to change" :src="`/api/captcha?from=register&random=${captchaHash}`"
                                   onclick="this.src='/api/captcha?from=register&random='+Math.random()" width="20%">
                         </div>
                     </div>
@@ -63,6 +63,7 @@ import { Component, Mixins } from "vue-property-decorator";
 import InitMixin from "../mixin/init";
 import { ErrorAlert } from "@/module/Decorator/method";
 import { IRegisterPagePayload, IRegisterDTO } from "@/types/user/register";
+import CaptchaMixin from "@/mixin/CaptchaMixin";
 
 const emptyRegisterPagePayload: IRegisterPagePayload = {
     confirmQuestion: "",
@@ -76,7 +77,7 @@ const emptyRegisterPagePayload: IRegisterPagePayload = {
 };
 
 @Component
-export default class RegisterPage extends Mixins(InitMixin) implements IRegisterPagePayload {
+export default class RegisterPage extends Mixins(InitMixin, CaptchaMixin) implements IRegisterPagePayload {
     captcha: string = "";
     repeatPassword: string = "";
     confirmAnswer: string = "";

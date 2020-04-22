@@ -26,7 +26,7 @@
                         <input :placeholder="$t('captcha')" type="text" v-model="captcha"><img alt="click to change"
                                                                                     height="40px"
                                                                                     onclick="this.src='/api/captcha?from=newpost&random='+Math.random()"
-                                                                                    :src="`/api/captcha?from=newpost&random=${Math.random()}`">
+                                                                                    :src="`/api/captcha?from=newpost&random=${captchaHash}`">
                     </div>
                 </div>
             </div>
@@ -44,9 +44,10 @@ import mixins from "../../mixin/init";
 import { Mixins, Component } from "vue-property-decorator";
 import markdownIt from "@/lib/markdownIt/markdownIt";
 import jquery from "jquery";
+import CaptchaMixin from "@/mixin/CaptchaMixin";
 const $: any = jquery;
 @Component
-export default class DiscussAdd extends Mixins(mixins) {
+export default class DiscussAdd extends Mixins(mixins, CaptchaMixin) {
     content = "";
     title = "";
     captcha = "";

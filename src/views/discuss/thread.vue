@@ -47,7 +47,7 @@
                     <input id="vcode" name="vcode" placeholder="验证码" type="text" v-model="captcha"><img
                     alt="click to change" height="40px" id="vcode_graph"
                     onclick="this.src='/api/captcha?from=discuss&random='+Math.random()"
-                    :src="`/api/captcha?from=discuss&random=${Math.random()}`">
+                    :src="`/api/captcha?from=discuss&random=${captchaHash}`">
                 </div>
             </div>
             <div @click="replyComment" class="ui blue labeled submit icon button">
@@ -67,6 +67,7 @@ import _ from "lodash";
 import Clipboard from "clipboard";
 import { Mixins, Component } from "vue-property-decorator";
 import MarkdownWorkerMixin from "@/mixin/MarkdownWorkerMixin";
+import CaptchaMixin from "@/mixin/CaptchaMixin";
 
 const $: any = jquery;
 const uslug = require("uslug");
@@ -75,7 +76,7 @@ const uslug = require("uslug");
         MainContent
     }
 })
-export default class Thread extends Mixins(mixins, avatarMixin, MarkdownWorkerMixin) {
+export default class Thread extends Mixins(mixins, avatarMixin, MarkdownWorkerMixin, CaptchaMixin) {
     page = 0;
     table_val: any = {};
     total = 0;

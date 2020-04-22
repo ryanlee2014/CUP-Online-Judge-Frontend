@@ -26,7 +26,8 @@
             <div class="row">
                 <div class="two field">
                     <div class="ui left input" style="width:auto">
-                        <input v-model="captcha" type="text" placeholder="验证码"><img alt="click to change" :src="`/api/captcha?from=tutorial&random=${Math.random()}`" onclick="this.src='/api/captcha?from=tutorial&random='+Math.random()" height="40px">
+                        <input v-model="captcha" type="text" placeholder="验证码"><img alt="click to change"
+                                                                                    :src="`/api/captcha?from=tutorial&random=${captchaHash}`" onclick="this.src='/api/captcha?from=tutorial&random='+Math.random()" height="40px">
                     </div>
                 </div>
             </div>
@@ -43,8 +44,9 @@
 import { Mixins } from "vue-property-decorator";
 import mixins from "../../mixin/init";
 import Component from "vue-class-component";
+import CaptchaMixin from "@/mixin/CaptchaMixin";
 @Component
-export default class TutorialAdd extends Mixins(mixins) {
+export default class TutorialAdd extends Mixins(mixins, CaptchaMixin) {
     content = "";
     solution_id = 0;
     captcha = "";

@@ -32,7 +32,7 @@
                                 >
                                 <img alt="click to change" height="40px" id="vcode_graph"
                                      onclick="this.src='/api/captcha?from=login&ramdom='+Math.random()"
-                                     :src="`/api/captcha?from=login&random=${Math.random()}`">
+                                     :src="`/api/captcha?from=login&random=${captchaHash}`">
                             </div>
                         </div>
                         <div @click="login" @keyup.enter="login" class="ui fluid large teal button">{{$t("login")}}</div>
@@ -58,11 +58,12 @@
 import mixins from "../mixin/init";
 import { Mixins, Component } from "vue-property-decorator";
 import jquery from "jquery";
+import CaptchaMixin from "@/mixin/CaptchaMixin";
 
 const $: any = jquery;
 
 @Component
-export default class Login extends Mixins(mixins) {
+export default class Login extends Mixins(mixins, CaptchaMixin) {
     sockets: any;
     $socket: any;
     $route: any;

@@ -16,7 +16,7 @@
                                                                                        placeholder="验证码" type="text"><img
                                         alt="click to change" height="40px" id="vcode_graph"
                                         onclick="this.src='/api/captcha?from=upload&random='+Math.random()"
-                                        :src="`/api/captcha?from=upload&random=${Math.random()}`"></div>
+                                        :src="`/api/captcha?from=upload&random=${captchaHash}`"></div>
                             </div>
                             <div class="field">
                                 <input class="ui blue button" type="submit" value="Import">
@@ -32,9 +32,10 @@
 <script lang="ts">
 import mixins from "../../mixin/init";
 import { Component, Mixins } from "vue-property-decorator";
+import CaptchaMixin from "@/mixin/CaptchaMixin";
 
 @Component
-export default class ProblemUpload extends Mixins(mixins) {
+export default class ProblemUpload extends Mixins(mixins, CaptchaMixin) {
     fileStatus = "选择文件";
     $refs!: {
         file: HTMLFormElement
