@@ -282,5 +282,7 @@
   "format": "Format Code",
   "finish": "Finish",
   "Context is in your clipboard": "Context is in your clipboard",
-  "modify": "Modify"
+  "modify": "Modify",
+  "compile information": "Compile Information",
+  "runtime information": "Runtime Information"
 }

@@ -1,10 +1,10 @@
 <template>
     <div class="ui container">
-        <h2 class="ui dividing header">Runtime Information</h2>
+        <h2 class="ui dividing header">{{$t("runtime information")}}</h2>
         <div class="ui segment same_width">
             <div></div>
             <div v-show="!diffmode">
-                <h3 class="ui dividing header">运行结果</h3>
+                <h3 class="ui dividing header">{{$t("result")}}</h3>
                 <div class="plain_text row" v-text="info">
 
                 </div>
@@ -13,12 +13,12 @@
                 <div class="row">
                     <div class="eight wide column">
                         <h3 class="ui header">
-                            标准输出
+                            {{$t("standard output")}}
                         </h3>
                     </div>
                     <div class="eight wide column">
                         <h3 class="ui header">
-                            用户输出
+                            {{$t("user output")}}
                         </h3>
                     </div>
                 </div>
@@ -30,7 +30,25 @@
     </div>
 </template>
 
+<i18n>
+    {
+        "zh-cn": {
+            "standard output": "标准输出",
+            "user output": "用户输出"
+        },
+        "ja": {
+            "standard output": "標準出力",
+            "user output": "ユーザー出力"
+        },
+        "en": {
+            "standard output": "Standard Output",
+            "user output": "User Output"
+        }
+    }
+</i18n>
+
 <script lang="ts">
+
 import mixins from "../../../mixin/init";
 import { Component, Mixins } from "vue-property-decorator";
 import * as monaco from "monaco-editor";

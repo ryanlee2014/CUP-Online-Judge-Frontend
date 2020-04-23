@@ -284,5 +284,7 @@
   "problem upload directory": "题目文件上传目录",
   "format": "格式化",
   "finish": "完成",
-  "Context is in your clipboard": "复制成功"
+  "Context is in your clipboard": "复制成功",
+  "compile information": "编译信息",
+  "runtime information": "运行时(Runtime)信息"
 }

@@ -212,10 +212,7 @@ export default class Home extends Mixins(InitMixin) {
             // eslint-disable-next-line no-control-regex
             $(this).html($(this).attr("data-content").replace(/([^\x00-\x80]|\w)/g, "<span class='letter'>$&</span>"));
         });
-
         // document.getElementById('myVideo').addEventListener('ended',false);
-
-        window.picid = 5;
         this.axios.get("/api/login/").then(({ data }) => {
             const logined = data.logined;
             setTimeout(function () {

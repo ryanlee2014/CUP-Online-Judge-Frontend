@@ -1,6 +1,6 @@
 <template>
     <div class="ui container">
-        <h2 class="ui dividing header">Compile Information</h2>
+        <h2 class="ui dividing header">{{$t("compile information")}}</h2>
         <div class="ui segment same_width" v-html="info">
         </div>
     </div>

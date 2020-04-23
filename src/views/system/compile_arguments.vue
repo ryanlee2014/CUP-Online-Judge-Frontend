@@ -32,7 +32,6 @@ export default class CompileArguments extends Mixins(InitMixin) {
     compileArguments = [];
     languageName = languageName;
     mounted () {
-        console.log("test");
         this.initData();
     }
 
