@@ -1,7 +1,7 @@
 <template>
     <div class="ui padding container">
         <h2 class="ui dividing header">
-            Contest Topic
+            {{$t("contest topic")}}
         </h2>
         <table class="ui padded borderless unstackable selectable table">
             <thead>
