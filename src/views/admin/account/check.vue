@@ -1,7 +1,7 @@
 <template>
     <div class="ui container padding">
         <h2 class="ui dividing header">
-            Account Checker
+            {{$t("account checker")}}
         </h2>
         <div class="ui form">
             <div class="field">
@@ -34,7 +34,19 @@
         </div>
     </div>
 </template>
-
+<i18n>
+    {
+        "zh-cn": {
+            "account checker": "账号检查工具"
+        },
+        "en": {
+            "account checker": "Account Checker"
+        },
+        "ja": {
+            "account checker": "アカウントチェッカー"
+        }
+    }
+</i18n>
 <script lang="ts">
 import mixins from "../../../mixin/init";
 import { Component, Mixins } from "vue-property-decorator";

@@ -1,6 +1,6 @@
 <template>
     <div class="ui container padding">
-        <h2 class="ui dividing header">Modify Password</h2>
+        <h2 class="ui dividing header">{{$t("modify password")}}</h2>
         <div class="ui form">
             <div class="field">
                 <div class="two fields">
@@ -26,7 +26,17 @@
         </div>
     </div>
 </template>
-
+{
+    "zh-cn": {
+        "modify password": "密码修改"
+    },
+    "en": {
+        "modify password": "Modify Password"
+    },
+    "ja": {
+        "modify password": "パスワード変更"
+    }
+}
 <script lang="ts">
 import mixins from "../../../mixin/init";
 import { Component, Mixins } from "vue-property-decorator";

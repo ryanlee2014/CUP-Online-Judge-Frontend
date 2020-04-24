@@ -1,6 +1,6 @@
 <template>
     <div class="ui container padding">
-        <h2 class="ui dividing header">Invite Code Manager</h2>
+        <h2 class="ui dividing header">{{$t("invite code manager")}}</h2>
         <div class="ui form">
             <div class="field">
                 <div class="two fields">
@@ -63,7 +63,19 @@
         </table>
     </div>
 </template>
-
+<i18n>
+{
+    "zh-cn": {
+        "invite code manager": "邀请码管理"
+    },
+    "en": {
+        "invite code manager": "Invite Code Manager"
+    },
+    "ja": {
+        "invite code manager": "招待コード管理"
+    }
+}
+</i18n>
 <script lang="ts">
 import { Component, Mixins } from "vue-property-decorator";
 import InitMixin from "../../../mixin/init";
