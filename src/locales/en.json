@@ -284,5 +284,6 @@
   "Context is in your clipboard": "Context is in your clipboard",
   "modify": "Modify",
   "compile information": "Compile Information",
-  "runtime information": "Runtime Information"
+  "runtime information": "Runtime Information",
+  "contents": "Contents"
 }
