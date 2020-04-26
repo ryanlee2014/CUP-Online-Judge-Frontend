@@ -1,7 +1,7 @@
 <template>
     <div class="ui container padding">
         <h2 class="ui dividing header">
-            Contest User List
+            {{$t("contest user list")}}
         </h2>
         <table class="ui celled structured table">
             <thead>
@@ -31,7 +31,19 @@
         </table>
     </div>
 </template>
-
+<i18n>
+    {
+        "zh-cn": {
+            "contest user list": "竞赛用户列表"
+        },
+        "en": {
+            "contest user list": "Contest User List"
+        },
+        "ja": {
+            "contest user list": "コンテストユーザーリスト"
+        }
+    }
+</i18n>
 <script lang="ts">
 import mixins from "../../../mixin/init";
 import dayjs from "dayjs";

@@ -8,6 +8,9 @@ registerPromiseWorker((message) => {
     else if (message.type === "renderRaw") {
         return MarkdownIt.renderRaw(message.content);
     }
+    else {
+        return "[undefined method]";
+    }
 });
 
 export default {} as typeof Worker & {new (): Worker};

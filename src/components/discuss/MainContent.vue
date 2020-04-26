@@ -3,7 +3,7 @@
         <div class="four wide column">
             <UserCard :thread_head="thread_head"></UserCard>
             <div class="ui sticky" id="sticky_content" style="left: 50.1429px;">
-                <h3 class="ui header" id="contents" v-show="content">目录</h3>
+                <h3 class="ui header" id="contents" v-show="content">{{$t("contents")}}</h3>
                 <div id="contentContainer"></div>
             </div>
         </div>

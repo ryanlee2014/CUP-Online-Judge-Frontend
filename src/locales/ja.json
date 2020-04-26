@@ -284,5 +284,6 @@
   "Context is in your clipboard": "コピー完了",
   "modify": "変更",
   "compile information": "コンパイル情報",
-  "runtime information": "ランタイム情報"
+  "runtime information": "ランタイム情報",
+  "contents": "ディレクトリ"
 }

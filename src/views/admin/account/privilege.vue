@@ -1,6 +1,6 @@
 <template>
     <div class="ui container padding">
-        <h2 class="ui dividing header">User Privilege</h2>
+        <h2 class="ui dividing header">{{$t("user privilege")}}</h2>
         <div class="ui form">
             <div class="field">
                 <div class="two fields">
@@ -56,7 +56,19 @@
         </table>
     </div>
 </template>
-
+<i18n>
+    {
+        "zh-cn": {
+            "user privilege": "用户权限"
+        },
+        "en": {
+            "user privilege": "User Privilege"
+        },
+        "ja": {
+            "user privilege": "ユーザー権限"
+        }
+    }
+</i18n>
 <script lang="ts">
 import mixins from "../../../mixin/init";
 import { Component, Mixins } from "vue-property-decorator";
