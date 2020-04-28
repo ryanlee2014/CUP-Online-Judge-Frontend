@@ -119,10 +119,10 @@ export default class ProblemSetMainContent extends Mixins(MarkdownWorkerMixin) {
             if (Object.prototype.hasOwnProperty.call(data.problem, i)) {
                 const label = data.problem[i].label;
                 data.problem[i].label = (label ? label.split(" ") : ["标签待整理"]).sort(function (a: any, b: any) {
-                    if (a === "简单" || a === "普通" || a === "困难") {
+                    if (a === "简单" || a === "普通" || a === "中等" || a === "困难") {
                         return 1;
                     }
-                    else if (b === "简单" || b === "普通" || b === "困难") {
+                    else if (b === "简单" || b === "普通" || b === "中等" || b === "困难") {
                         return -1;
                     }
                     else {

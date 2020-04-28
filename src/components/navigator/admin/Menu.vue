@@ -20,6 +20,10 @@
                         <i class="add icon"></i>
                         {{$t("addproblem")}}
                     </router-link>
+                    <router-link class="item" exact-active-class="active" to="/admin/export/problem">
+                        <i class="check double icon"></i>
+                        {{$t("export problem")}}
+                    </router-link>
                 </div>
             </div>
             <div class="ui dropdown item">
@@ -71,36 +75,6 @@
             <div class="ui dropdown item">
                 <div class="text">
                     <i class="laptop icon"></i>
-                        {{$t("judge manage")}}
-                </div>
-                <i class="dropdown icon"></i>
-                <div class="menu">
-                    <router-link class="item" exact-active-class="active" to="/admin/judge/rejudge">
-                        <i class="check double icon"></i>
-                        {{$t("rejudge manage")}}
-                    </router-link>
-                    <router-link class="item" exact-active-class="active" to="/admin/judge/compile">
-                        <i class="check icon"></i>
-                        {{$t("compile arguments")}}
-                    </router-link>
-                </div>
-            </div>
-            <div class="ui dropdown item">
-                <div class="text">
-                    <i class="laptop icon"></i>
-                    {{$t("export")}}
-                </div>
-                <i class="dropdown icon"></i>
-                <div class="menu">
-                    <router-link class="item" exact-active-class="active" to="/admin/export/problem">
-                        <i class="check double icon"></i>
-                        {{$t("export problem")}}
-                    </router-link>
-                </div>
-            </div>
-            <div class="ui dropdown item">
-                <div class="text">
-                    <i class="laptop icon"></i>
                     {{$t("global setting")}}
                 </div>
                 <i class="dropdown icon"></i>
@@ -113,6 +87,23 @@
                         <i class="check double icon"></i>
                         {{$t("switch manager")}}
                     </router-link>
+                    <div class="item" tabindex="0">
+                        <i class="right dropdown icon"></i>
+                        <div class="text">
+                            <i class="laptop icon"></i>
+                            {{$t("judge manage")}}
+                        </div>
+                        <div class="menu">
+                            <router-link class="item" exact-active-class="active" to="/admin/judge/rejudge">
+                                <i class="check double icon"></i>
+                                {{$t("rejudge manage")}}
+                            </router-link>
+                            <router-link class="item" exact-active-class="active" to="/admin/judge/compile">
+                                <i class="check icon"></i>
+                                {{$t("compile arguments")}}
+                            </router-link>
+                        </div>
+                    </div>
                 </div>
             </div>
             <SocketMenu :connected="connected" :judger="judger" :logined="logined" :nick="nick"
