@@ -14,13 +14,14 @@
                         <table class='ui basic unstackable table' id='problemset' width='95%'>
                             <thead>
                             <tr class='toprow'>
-                                <th @click="orderBy(0)" style="text-align: center;" width="18%"><a
-                                        style="cursor:pointer">
+                                <th style="text-align: center;" width="18%">
+                                    <a style="cursor:pointer" @click="orderBy(0)">
                                     <i :class="'sort numeric icon ' + (order > 0?'up':'down')" v-if="type === 0"></i>
                                     <i class="checkmark icon" style="opacity: 0" v-else></i>
                                     {{$t("id")}}
                                 </a></th>
-                                <th @click="orderBy(1)" width='44%'><a style="cursor:pointer">
+                                <th width='44%'>
+                                    <a style="cursor:pointer" @click="orderBy(1)">
                                     <i :class="'sort numeric icon ' + (order > 0?'up':'down')" v-if="type === 1"></i>
                                     <i class="checkmark icon" style="opacity: 0" v-else></i>
                                     {{$t("title")}}</a></th>
@@ -32,14 +33,16 @@
                             {{$t("accept")}}</span></a>/<a style="cursor:pointer"><span @click="orderBy(3)">
                                 <i :class="'sort numeric icon ' + (order > 0?'up':'down')"
                                    v-if="type === 3"></i>{{$t("submit")}}</span></a></th>
-                                <th @click="orderBy(4)" style="text-align: center;" width='12%'>
-                                    <a style="cursor:pointer"><i :class="'sort numeric icon ' + (order > 0?'up':'down')"
+                                <th style="text-align: center;" width='12%'>
+                                    <a style="cursor:pointer" @click="orderBy(4)">
+                                        <i :class="'sort numeric icon ' + (order > 0?'up':'down')"
                                                                  v-if="type === 4"></i>
-                                        {{$t("accept percentage")}}</a></th>
+                                        {{$t("accept percentage")}}
+                                    </a></th>
                             </tr>
                             </thead>
-                            <tbody>
-                            <tr :id="'popup' + key" @mouseenter="triggerPopup(key, row.pid)" :key="key" :class="row.ac === 1?'positive':row.ac === -1?'negative':''"
+                            <transition-group mode="out-in" name="list-complete" tag="tbody" >
+                            <tr :id="'popup' + key" @mouseenter="triggerPopup(key, row.pid)" :key="row.pnum" :class="(row.ac === 1?'positive':row.ac === -1?'negative':'') + ' list-complete-item'"
                                 v-for="(row,key) in problem_table">
                                 <td class="center aligned">{{row.oj_name?row.oj_name:row.pid?"LOCAL ":""}}{{row.pid}}<br
                                         v-if="row.pid">Problem {{row.pnum + 1001}}
@@ -51,6 +54,11 @@
                                     </router-link>
                                     <router-link :to="`/problem/submit/${row.pid}`" v-else v-html="contest(row.title, row.pnum)">
                                     </router-link>
+                                    <br>
+                                    <i class="checkmark icon" style="opacity: 0" v-if="admin"></i>
+                                    <router-link :to="`/problemset?label=${lb}`" :class="`ui ${getLabelColor(lb)} label`" :key="lb" v-for="lb in getLabel(row.pid)" v-show="admin">
+                                        {{lb}}
+                                    </router-link>
                                 </td>
                                 <td v-if="now.isAfter(end_time)">
                                     <router-link :to="`/tutorial/${row.pid}`">{{$t("solution")}}</router-link>
@@ -60,7 +68,7 @@
                                     Math.max(row.submit,1)).toString().substring(0,4)}} %
                                 </td>
                             </tr>
-                            </tbody>
+                            </transition-group>
                         </table>
                     </div>
                     <div class="five wide column">
@@ -93,7 +101,7 @@ import { mapGetters } from "vuex";
 import _ from "lodash";
 import jquery from "jquery";
 import dayjs from "dayjs";
-import { Mixins, Component } from "vue-property-decorator";
+import { Component, Mixins } from "vue-property-decorator";
 import MarkdownWorkerMixin from "@/mixin/MarkdownWorkerMixin";
 
 const $: any = jquery;
@@ -112,6 +120,8 @@ const $: any = jquery;
 export default class ContestProblemView extends Mixins(mixins, MarkdownWorkerMixin) {
     admin!: boolean;
     contest_manager!: boolean;
+    colorSet = ["red", "orange", "yellow", "olive", "green", "teal", "blue", "violet", "purple", "pink", "brown", "grey"];
+    colorMap: any = {};
     cid = 0;
     problem_table: any[] = [];
     start_time = dayjs();
@@ -143,24 +153,34 @@ export default class ContestProblemView extends Mixins(mixins, MarkdownWorkerMix
         }
     }
 
-    mounted () {
+    async mounted () {
         const contestID = this.$route.params.contest_id;
         document.title = `Contest ${contestID} -- ${document.title}`;
-        this.getInfo();
+        await this.getInfo();
         this.run(this.run);
     }
 
-    getInfo () {
+    async getInfo () {
         if (!(this.admin || this.contest_manager)) {
             return;
         }
-        this.axios.get(`/api/contest/problem_info/${this.cid}`)
+        await this.axios.get(`/api/contest/problem_info/${this.cid}`)
             .then(({ data }) => {
                 if (data.status === "OK") {
                     const problemList = data.data;
                     problemList.forEach((e: any) => this.problemInfo[e.problem_id] = e);
                 }
             });
+    }
+
+    getLabelColor (labelName: string) {
+        if (Object.prototype.hasOwnProperty.call(this.colorMap, labelName)) {
+            return this.colorMap[labelName];
+        }
+        else {
+            this.colorMap[labelName] = this.colorSet[Math.floor(Math.random() * this.colorSet.length)];
+            return this.colorMap[labelName];
+        }
     }
 
     triggerPopup (key: string, problem_id: any) {
@@ -172,23 +192,37 @@ export default class ContestProblemView extends Mixins(mixins, MarkdownWorkerMix
     }
 
     problemDetail (problem_id: any) {
-        console.log("problem_id", problem_id);
         const problemInfo = this.problemInfo[problem_id];
-        console.log("this.problemInfo", this.problemInfo);
-        console.log("problemInfo", problemInfo);
         if (problemInfo) {
             const accepted = problemInfo.accepted;
             const submit = problemInfo.submit;
-            const passRate = Math.floor(accepted * 100 / submit);
+            const passRate = Math.floor(accepted * 100 / Math.max(submit, 1));
             const label = problemInfo.label;
-            const html = `<div class="content">
-提交: ${submit} 通过:${accepted} 通过率:${passRate}%
-<br>
-标签:${label}
+            return `<div class="content">
+本题历史统计<br>提交: ${submit} 通过:${accepted} 通过率:${passRate}%
 </div>`;
-            return html;
         }
         return "";
+    }
+
+    getLabel (problemId: number) {
+        const problemInfo = this.problemInfo[problemId];
+        if (problemInfo) {
+            const label = problemInfo.label;
+            const lbArray = typeof label === "string" ? label.split(" ") : [];
+            lbArray.sort((a: string, b: string) => {
+                if (a === "简单" || a === "普通" || a === "中等" || a === "困难") {
+                    return -1;
+                }
+                else if (b === "简单" || b === "普通" || b === "中等" || b === "困难") {
+                    return 1;
+                }
+                if (a < b) return -1;
+                else if (a === b) return 0;
+                else return 1;
+            });
+            return lbArray;
+        }
     }
 
     run (resolve?: (...args: any[]) => any) {
@@ -297,5 +331,24 @@ export default class ContestProblemView extends Mixins(mixins, MarkdownWorkerMix
 </script>
 
 <style scoped>
+    .list-complete-item {
+        transition: all 0.5s;
+        display: table-row;
+    }
 
+    .list-complete-enter, .list-complete-leave-to
+        /* .list-complete-leave-active for below version 2.1.8 */
+    {
+        opacity: 0;
+        transform: translateX(31px);
+    }
+
+    .list-complete-leave-active {
+        opacity: 0;
+        transform: translateX(-31px);
+    }
+
+    .list-complete-leave-active .problemTitle {
+        opacity: 0;
+    }
 </style>
