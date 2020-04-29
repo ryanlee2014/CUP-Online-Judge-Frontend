@@ -288,5 +288,7 @@
   "Context is in your clipboard": "复制成功",
   "compile information": "编译信息",
   "runtime information": "运行时(Runtime)信息",
-  "announcement": "公告"
+  "announcement": "公告",
+  "config manager": "配置(Configuration)管理",
+  "switch manager": "开关(Switch)管理"
 }
