@@ -20,7 +20,7 @@
             <td>
                 <p style="margin-bottom: 0.25em" v-html="contestTimeFormat(row)"></p>
                 <progress-bar :active="contestIsRunning(row)" :color="progressBarColor(row)" :percentage="percentageRunning(row)"
-                              :size="'tiny'"></progress-bar>
+                              size="tiny"></progress-bar>
             </td>
             <td>
                 {{row.private ? $t("private") : $t("public")}}

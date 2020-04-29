@@ -1,11 +1,10 @@
 <template>
-    <div :class="progressBarClass" ref="progressBarElement" v-observe-visibility="visibilityChanged">
+    <div :class="progressBarClass" @mouseenter="trigger" ref="progressBarElement" v-observe-visibility="visibilityChanged">
         <div class="bar"></div>
     </div>
 </template>
 
 <script lang="ts">
-import Vue from "vue";
 import SemanticEnvMixin from "@/mixin/SemanticEnvMixin";
 import { Component, Mixins, Prop, Watch } from "vue-property-decorator";
 import jquery from "jquery";
@@ -27,6 +26,7 @@ export default class ProgressBar extends Mixins(SemanticEnvMixin) {
     @Prop({ default: "" }) color!: string;
     @Prop({ default: false }) active!: boolean;
     @Prop({ default: 0 }) percentage!: number;
+    @Prop({ default: (target: any) => undefined }) popupEvent!: (target: any) => void;
     updated () {
         this.mountFunc();
     }
@@ -60,6 +60,10 @@ export default class ProgressBar extends Mixins(SemanticEnvMixin) {
             classArray.push("active");
         }
         return classArray;
+    }
+
+    trigger () {
+        this.popupEvent(this.$refs.progressBarElement);
     }
 
     forceUpdate () {

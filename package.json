@@ -1,6 +1,6 @@
 {
   "name": "CUP-Online-Judge-NG-Frontend",
-  "version": "1.19.0",
+  "version": "1.20.0",
   "private": false,
   "scripts": {
     "serve": "npx --max_old_space_size=16000 vue-cli-service serve",
@@ -14,7 +14,7 @@
     "ui": "vue ui"
   },
   "dependencies": {
-    "@amcharts/amcharts4": "^4.9.17",
+    "@amcharts/amcharts4": "^4.9.18",
     "@antv/data-set": "^0.11.4",
     "@antv/g2": "^3.5.15",
     "@ryanlee2014/markdown-it-katex": "^1.0.4",
@@ -88,7 +88,7 @@
     "@gfx/zopfli": "^1.0.14",
     "@kazupon/vue-i18n-loader": "^0.5.0",
     "@types/animejs": "^3.1.0",
-    "@types/chart.js": "^2.9.19",
+    "@types/chart.js": "^2.9.20",
     "@types/clipboard": "^2.0.1",
     "@types/d3": "^5.7.2",
     "@types/d3-sankey": "^0.11.0",
@@ -122,13 +122,13 @@
     "file-loader": "^6.0.0",
     "html-webpack-plugin": "latest",
     "increase-memory-limit": "^1.0.7",
-    "lint-staged": "^10.1.7",
+    "lint-staged": "^10.2.0",
     "loader-utils": "^2.0.0",
     "monaco-editor-webpack-plugin": "^1.9.0",
     "nyc": "^15.0.1",
     "promise-worker": "^2.0.1",
     "raw-loader": "^4.0.1",
-    "style-loader": "^1.2.0",
+    "style-loader": "^1.2.1",
     "stylus-loader": "^3.0.2",
     "typescript": "^3.8.3",
     "vue-async-computed": "^3.8.2",

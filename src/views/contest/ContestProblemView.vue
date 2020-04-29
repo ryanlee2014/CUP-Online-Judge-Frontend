@@ -6,9 +6,13 @@
         <LimitHostname :content="limit_content" v-if="mode === 4"></LimitHostname>
         <div class="padding" v-if="mode === 0">
             <h2 class="ui dividing header">
-                {{$t("contest problem set")}}
+                {{$t("contest problem set")}} {{cid}} -- {{title}}
             </h2>
             <div class="ui grid">
+                <div class="row">
+                    <div class="sixteen wide column">
+                    </div>
+                </div>
                 <div class="row">
                     <div class="eleven wide column">
                         <table class='ui basic unstackable table' id='problemset' width='95%'>
@@ -54,7 +58,7 @@
                                     </router-link>
                                     <router-link :to="`/problem/submit/${row.pid}`" v-else v-html="contest(row.title, row.pnum)">
                                     </router-link>
-                                    <br>
+                                    <br v-if="admin && getLabel(row.pid).length > 0">
                                     <i class="checkmark icon" style="opacity: 0" v-if="admin"></i>
                                     <router-link :to="`/problemset?label=${lb}`" :class="`ui ${getLabelColor(lb)} label`" :key="lb" v-for="lb in getLabel(row.pid)" v-show="admin">
                                         {{lb}}
@@ -103,10 +107,14 @@ import jquery from "jquery";
 import dayjs from "dayjs";
 import { Component, Mixins } from "vue-property-decorator";
 import MarkdownWorkerMixin from "@/mixin/MarkdownWorkerMixin";
+import ContestProblemProgressBar from "@/components/contest/ContestProblemView/ContestProblemProgressBar.vue";
+
+const labelCache: any = {};
 
 const $: any = jquery;
 @Component({
     components: {
+        ContestProblemProgressBar,
         ContestNotStart,
         LoginForm,
         ContestInfo,
@@ -168,7 +176,7 @@ export default class ContestProblemView extends Mixins(mixins, MarkdownWorkerMix
             .then(({ data }) => {
                 if (data.status === "OK") {
                     const problemList = data.data;
-                    problemList.forEach((e: any) => this.problemInfo[e.problem_id] = e);
+                    problemList.forEach((e: any) => { this.problemInfo[e.problem_id] = e; });
                 }
             });
     }
@@ -183,21 +191,20 @@ export default class ContestProblemView extends Mixins(mixins, MarkdownWorkerMix
         }
     }
 
-    triggerPopup (key: string, problem_id: any) {
-        const html = this.problemDetail(problem_id);
+    triggerPopup (key: string, problemId: any) {
+        const html = this.problemDetail(problemId);
         $("#popup" + key).popup({
             hoverable: true,
             html
         }).popup("show");
     }
 
-    problemDetail (problem_id: any) {
-        const problemInfo = this.problemInfo[problem_id];
+    problemDetail (problemId: any) {
+        const problemInfo = this.problemInfo[problemId];
         if (problemInfo) {
             const accepted = problemInfo.accepted;
             const submit = problemInfo.submit;
             const passRate = Math.floor(accepted * 100 / Math.max(submit, 1));
-            const label = problemInfo.label;
             return `<div class="content">
 本题历史统计<br>提交: ${submit} 通过:${accepted} 通过率:${passRate}%
 </div>`;
@@ -205,11 +212,21 @@ export default class ContestProblemView extends Mixins(mixins, MarkdownWorkerMix
         return "";
     }
 
+    hasLabel (problemId: number) {
+        if (this.getLabel(problemId).length > 0) {
+            return true;
+        }
+        return false;
+    }
+
     getLabel (problemId: number) {
+        if (Object.prototype.hasOwnProperty.call(labelCache, problemId)) {
+            return labelCache[problemId];
+        }
         const problemInfo = this.problemInfo[problemId];
         if (problemInfo) {
             const label = problemInfo.label;
-            const lbArray = typeof label === "string" ? label.split(" ") : [];
+            const lbArray = typeof label === "string" ? label.split(" ").map(e => e.trim()).filter(e => e.length > 0) : [];
             lbArray.sort((a: string, b: string) => {
                 if (a === "简单" || a === "普通" || a === "中等" || a === "困难") {
                     return -1;
@@ -221,6 +238,7 @@ export default class ContestProblemView extends Mixins(mixins, MarkdownWorkerMix
                 else if (a === b) return 0;
                 else return 1;
             });
+            labelCache[problemId] = lbArray;
             return lbArray;
         }
     }
