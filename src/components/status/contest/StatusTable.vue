@@ -4,7 +4,10 @@
         <tr class='toprow'>
             <th width="7%">{{$t("solution_id")}}</th>
             <th width="18%"><div class="ui grid">
-            <div class="four wide column"></div><div class="twelve wide column">{{$t("user")}}</div></div></th>
+            <div class="four wide column"></div>
+                <div class="twelve wide column">{{$t("user_id")}}</div>
+            </div>
+            </th>
             <th width="10%">{{$t("problem_id")}}</th>
             <th width="15%">{{$t("result")}}</th>
             <th width="10%">{{$t("memory")+"/"+$t("time")}}</th>

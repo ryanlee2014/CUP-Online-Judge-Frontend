@@ -59,10 +59,11 @@
                                     <router-link :to="`/problem/submit/${row.pid}`" v-else v-html="contest(row.title, row.pnum)">
                                     </router-link>
                                     <br v-if="admin && getLabel(row.pid).length > 0">
-                                    <i class="checkmark icon" style="opacity: 0" v-if="admin"></i>
-                                    <router-link :to="`/problemset?label=${lb}`" :class="`ui ${getLabelColor(lb)} label`" :key="lb" v-for="lb in getLabel(row.pid)" v-show="admin">
+                                    <div style="margin-left: 20px" v-if="admin">
+                                    <router-link style="margin-top: 4px" :to="`/problemset?label=${lb}`" :class="`ui ${getLabelColor(lb)} label`" :key="lb" v-for="lb in getLabel(row.pid)" v-show="admin">
                                         {{lb}}
                                     </router-link>
+                                    </div>
                                 </td>
                                 <td v-if="now.isAfter(end_time)">
                                     <router-link :to="`/tutorial/${row.pid}`">{{$t("solution")}}</router-link>

@@ -24,10 +24,6 @@
                                     <i class="chess queen icon"></i>
                                     {{$t("hall of fame")}}
                                 </router-link>
-                                <router-link class="ui inverted large button download basic" to="/discuss">
-                                    <i class="user tie icon"></i>
-                                    {{$t("intern")}}
-                                </router-link>
                             </div>
                             <br>
 

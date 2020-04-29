@@ -286,5 +286,7 @@
   "compile information": "Compile Information",
   "runtime information": "Runtime Information",
   "contents": "Contents",
-  "announcement": "Announcement"
+  "announcement": "Announcement",
+  "config manager": "Config Manager",
+  "switch manager": "Switch Manager"
 }
