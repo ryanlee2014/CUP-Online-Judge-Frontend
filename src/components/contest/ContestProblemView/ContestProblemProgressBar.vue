@@ -18,7 +18,7 @@ export default class ContestProblemProgressBar extends Vue {
 
     start: Dayjs = dayjs();
     end: Dayjs = dayjs();
-    period: number = 0;
+    period: number = 1 << 30;
 
     @Watch("startTime")
     onStartTimeChanged (val: string) {
@@ -49,8 +49,8 @@ export default class ContestProblemProgressBar extends Vue {
 
     get percentage () {
         const currentTime = dayjs();
-        const diff = this.end.diff(currentTime);
-        return Math.min(Math.max(diff, 0) / this.period, 100);
+        const diff = currentTime.diff(this.start);
+        return Math.min(Math.max(diff, 0) * 100 / this.period, 100);
     }
 }
 </script>
