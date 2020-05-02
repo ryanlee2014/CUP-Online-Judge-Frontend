@@ -4,7 +4,7 @@
 
 <script lang="ts">
 import mixins from "../../../mixin/init";
-import contestEditMixin from "../../../mixin/contestEditMixin";
+import contestAddMixin from "../../../mixin/contestAddMixin";
 import ContestEditor from "../../../components/contest/manage/edit.vue";
 import { Component, Mixins } from "vue-property-decorator";
 @Component({
@@ -12,7 +12,7 @@ import { Component, Mixins } from "vue-property-decorator";
         ContestEditor
     }
 })
-export default class ContestCopy extends Mixins(mixins, contestEditMixin) {
+export default class ContestCopy extends Mixins(mixins, contestAddMixin) {
 }
 </script>
 

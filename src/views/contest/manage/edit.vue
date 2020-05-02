@@ -5,7 +5,7 @@
 
 <script lang="ts">
 import mixins from "../../../mixin/init";
-import contestEditMixin from "../../../mixin/contestEditMixin";
+import contestAddMixin from "../../../mixin/contestAddMixin";
 import ContestEditor from "../../../components/contest/manage/edit.vue";
 import { Mixins, Component } from "vue-property-decorator";
 @Component({
@@ -13,7 +13,7 @@ import { Mixins, Component } from "vue-property-decorator";
         ContestEditor: ContestEditor
     }
 })
-export default class ContestEdit extends Mixins(mixins, contestEditMixin) {
+export default class ContestEdit extends Mixins(mixins, contestAddMixin) {
     edit (val: any) {
         val = this.dataFormat(val);
         this.axios.post("/api/admin/contest/edit", val)
@@ -24,6 +24,9 @@ export default class ContestEdit extends Mixins(mixins, contestEditMixin) {
                 else {
                     alert(this.$t("error"));
                 }
+            })
+            .catch(reason => {
+                alert(this.$t("error"));
             });
     }
 }

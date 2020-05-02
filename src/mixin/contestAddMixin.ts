@@ -2,7 +2,7 @@ import Vue from "vue";
 import _ from "lodash";
 import { Component } from "vue-property-decorator";
 @Component
-export default class ContestEditMixin extends Vue {
+export default class ContestAddMixin extends Vue {
     contest_id = "0";
     data = {};
     userListText = "";
@@ -21,6 +21,8 @@ export default class ContestEditMixin extends Vue {
                 else {
                     alert(this.$t("error"));
                 }
+            }).catch(reason => {
+                alert(this.$t("error"));
             });
     }
 
