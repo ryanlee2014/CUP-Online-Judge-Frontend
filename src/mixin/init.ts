@@ -6,11 +6,7 @@ import config from "../../config/environment.json";
 import $ from "jquery";
 const Clipboard = require("clipboard");
 
-@Component({
-    i18n: {
-        messages: config.title
-    }
-})
+@Component
 export default class InitMixin extends Vue {
     mounted () {
         util.init(this.$store.getters.homepage);

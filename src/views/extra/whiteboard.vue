@@ -52,11 +52,10 @@ import aceEditor from "../../components/submit/codeEditor/aceEditor.vue";
 import aceThemeSelector from "../../components/submit/codeEditor/aceComponent/aceThemeSelector.vue";
 import monacoEditor from "../../components/submit/codeEditor/monacoEditor.vue";
 import monacoThemeSelector from "../../components/submit/codeEditor/monacoComponent/monacoThemeSelector.vue";
-import mixins from "../../mixin/init";
 import { Component, Mixins, Watch } from "vue-property-decorator";
 import { Debounce } from "@/module/Decorator/method";
 import AwaitLock from "await-lock";
-import Emitter = SocketIOClient.Emitter;
+import InitMixin from "@/mixin/init";
 const langMap = {
     c11: 0,
     cpp17: 1,
@@ -99,13 +98,12 @@ const detectLang = require("../../lib/langDetector");
         monacoThemeSelector
     }
 })
-export default class Whiteboard extends Mixins(mixins) {
+export default class Whiteboard extends Mixins(InitMixin) {
     theme = "ace/theme/monokai";
     code = "";
     editorPackage = true;
     fontSize = "16";
     selected_language = 0;
-    $socket!: Emitter;
     sockets: any;
     remoteData = false;
     lock = new AwaitLock();
