@@ -44,7 +44,7 @@
                     </h3>
                 </div>
                 <div class="five wide column">
-                    <h3 class="ui inverted header">© {{customConfig.title}} 2017-{{ year }}
+                    <h3 class="ui inverted header">© {{$t("oj-name")}} 2017-{{ year }}
                         <div class="sub header">  Impressed by HUSTOJ & SYZOJ & ECNUOJ</div>
                         <div class="sub header">  Powered By Vue.js,Node.js,Semantic-UI</div>
                         <div class="sub header">Software Designer:<a href="https://github.com/ryanlee2014" target="_blank">Ryan Lee(李昊元)</a></div>
@@ -62,9 +62,12 @@ import Vue from "vue";
 import { Component } from "vue-property-decorator";
 import config from "@/../config/environment.json";
 import dayjs from "dayjs";
-@Component
+@Component({
+    i18n: {
+        messages: config.title
+    }
+})
 export default class Bottom extends Vue {
-    customConfig = config;
     year = dayjs().format("YYYY")
 }
 </script>

@@ -1,6 +1,6 @@
 import Vue from "vue";
 import VueI18n from "vue-i18n";
-
+import config from "../config/environment.json";
 Vue.use(VueI18n);
 
 function loadLocaleMessages () {
@@ -15,6 +15,9 @@ function loadLocaleMessages () {
             messages[locale] = locales(key);
         }
     });
+    for (const key in messages) {
+        Object.assign(messages[key], (config.title as any)[key]);
+    }
     return messages;
 }
 

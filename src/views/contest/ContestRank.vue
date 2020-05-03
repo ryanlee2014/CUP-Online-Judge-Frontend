@@ -519,14 +519,6 @@ export default class ContestRank extends Mixins(mixins) {
         window.datas = [];
         submissionCollection = [];
         document.title = `Contest Rank ${this.cid} -- ${document.title}`;
-        const lock = this.popupLock;
-        $(window).on("scroll", function () {
-            lock.tryAcquire();
-            clearTimeout($.data(this, "scrollTimer"));
-            $.data(this, "scrollTimer", setTimeout(function () {
-                lock.release();
-            }, 250));
-        });
         const that = this;
         bindDragEvent();
         (async () => {

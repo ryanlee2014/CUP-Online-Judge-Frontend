@@ -1,3 +1,13 @@
 {
-  "title": "CUP Online Judge"
+  "title": {
+    "zh-cn": {
+      "oj-name": "CUP Online Judge"
+    },
+    "en": {
+      "oj-name": "CUP Online Judge"
+    },
+    "ja": {
+      "oj-name": "CUP Online Judge"
+    }
+  }
 }

@@ -348,7 +348,7 @@ export default class Submit extends Mixins(mixins) {
                 else {
                     _data.problem_id = 1001 + parseInt(this.$route.params.num);
                 }
-                document.title = _data.problem_id + ":" + _data.temp_title + " -- " + this.customConfig.title;
+                document.title = _data.problem_id + ":" + _data.temp_title;
                 Object.assign(this, _data);
                 $(".not-compile").removeClass("not-compile");
             });

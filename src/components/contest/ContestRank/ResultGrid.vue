@@ -1,5 +1,5 @@
 <template>
-    <td :class="gridBackgroundClass" :data-html="generateDataHTML" ref="block" @mouseenter="triggerPopup"
+    <td :class="gridBackgroundClass" :data-html="generateDataHTML" ref="block"
         style="text-align:center">
         <b :class="'text '+ (problem.accept.length > 0 ? problem.first_blood?'first accept':'accept':'red')">
             {{ (problem.accept.length > 0 || problem.submit.length > 0)?"+":""}}
@@ -52,18 +52,22 @@ export default class ResultGrid extends Vue {
         }
     }
 
-    async triggerPopup () {
+    mounted () {
+        this.triggerPopup();
+    }
+
+    triggerPopup () {
         const lock = this.lock;
         const submit = this.problem.submit;
         const accept = this.problem.accept;
         if (submit.length > 0 || accept.length > 0) {
-            const getLock = lock.tryAcquire();
-            if (getLock) {
-                $(this.$refs.block).popup({
-                    hoverable: true
-                }).popup("show");
-                lock.release();
-            }
+            // const getLock = lock.tryAcquire();
+            // if (getLock) {
+            $(this.$refs.block).popup({
+                hoverable: true
+            }).popup();
+            lock.release();
+            // }
         }
     }
 

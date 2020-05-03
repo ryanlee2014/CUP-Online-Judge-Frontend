@@ -6,12 +6,15 @@ import config from "../../config/environment.json";
 import $ from "jquery";
 const Clipboard = require("clipboard");
 
-@Component
+@Component({
+    i18n: {
+        messages: config.title
+    }
+})
 export default class InitMixin extends Vue {
-    customConfig = config;
     mounted () {
         util.init(this.$store.getters.homepage);
-        document.title = config.title;
+        document.title = this.$t("oj-name") as string;
         this.bindCopyTrigger();
     }
 

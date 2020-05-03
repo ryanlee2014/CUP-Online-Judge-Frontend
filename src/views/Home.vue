@@ -2,18 +2,17 @@
     <div>
         <div>
             <div class="ui inverted vertical masthead center aligned segment gr5" id="background">
-                <div class="unvisible" id="main_container">
+                <div id="main_container">
                     <div class="ui container">
                         <div class="ui large secondary inverted pointing menu">
                         </div>
                     </div>
                     <div class="ui grid" id="main_masthead" style="transform: translateX(25%)">
                         <div class="ui text container transition main title eight wide column" id="left">
-                            <h1 class="ui inverted header ml14">
-  <span class="text-wrapper">
-    <span class="letters" :data-content="customConfig.title"></span>
-  </span>
-
+                            <h1 class="ui inverted header text shape">
+                                <div class="sides">
+                                    <div class="ui inverted header side active hometitle">{{$t("oj-name")}}</div>
+                                </div>
                             </h1>
                             <div class="column buttonset">
                                 <router-link class="ui inverted large button download basic" to="/about/icpc">
@@ -129,11 +128,10 @@
 </i18n>
 <script lang="ts">
 // @ is an alias to /src
-import anime from "animejs";
 import { Mixins, Component } from "vue-property-decorator";
 import util from "../lib/util";
 import InitMixin from "../mixin/init";
-import dayjs from "dayjs";
+import config from "@/../config/environment.json";
 import jQuery from "jquery";
 const GithubButton = require("vue-github-button").default;
 const $: any = jQuery;
@@ -144,7 +142,7 @@ const $: any = jQuery;
 })
 export default class Home extends Mixins(InitMixin) {
     mounted () {
-        document.title = `Home -- ${this.customConfig.title}`;
+        document.title = `Home -- ${this.$t("oj-name")}`;
         $(function () {
             $(".image").visibility({
                 type: "image",
@@ -204,67 +202,10 @@ export default class Home extends Mixins(InitMixin) {
             $(".packer").transition("fade down");
             $(".vultr").transition("fade up");
         });
-        $(".ml14 .letters").each(function (this: HTMLElement) {
-            // eslint-disable-next-line no-control-regex
-            $(this).html($(this).attr("data-content").replace(/([^\x00-\x80]|\w)/g, "<span class='letter'>$&</span>"));
-        });
         // document.getElementById('myVideo').addEventListener('ended',false);
         this.axios.get("/api/login/").then(({ data }) => {
             const logined = data.logined;
-            setTimeout(function () {
-                $("#main_container").removeClass("unvisible");
-                const maintainTime = anime.timeline({ loop: false })
-                    .add({
-                        targets: ".ml14 .line",
-                        scaleX: [0, 1],
-                        opacity: [0.5, 1],
-                        easing: "easeInOutExpo",
-                        duration: 900
-                    }).add({
-                        targets: ".ml14 .letter",
-                        opacity: [0, 1],
-                        translateX: [40, 0],
-                        translateZ: 0,
-                        scaleX: [0.3, 1],
-                        textShadow: "3px 3px 3px #555555",
-                        easing: "easeOutExpo",
-                        duration: 800,
-                        offset: "-=600",
-                        delay: function (el: any, i: any) {
-                            return 25 * +i;
-                        }
-                    });
-                // eslint-disable-next-line no-constant-condition
-                if (logined && false) {
-                    maintainTime.add({
-                        targets: "#main_masthead",
-                        translateX: ["25%", 0],
-                        easing: "easeInOutQuart",
-                        duration: 1000,
-                        offset: "-=300",
-                        complete: function () {
-                        }
-                    }).add({
-                        targets: "#right",
-                        opacity: [0, 1],
-                        easing: "easeInOutQuart",
-                        duration: 1000,
-                        offset: "-=300"
-                    }).add({
-                        targets: "#divider",
-                        opacity: [0, 1],
-                        easing: "easeInOutQuart",
-                        duration: 500,
-                        offset: "-=300",
-                        complete: function () {
-                            const $style = $("style");
-                            let $html = $style.eq($style.length - 1).html();
-                            $html += "\n.gr5::after{\nopacity:0.5;\n}\n";
-                            $style.eq($style.length - 1).html($html);
-                        }
-                    });
-                }
-            }, 300);
+            $("#main_container").removeClass("unvisible");
         });
     }
 }
@@ -331,5 +272,9 @@ export default class Home extends Mixins(InitMixin) {
     .ml14 .letter {
         display: inline-block;
         line-height: 1em;
+    }
+    .hometitle {
+        font-weight: normal!important;
+        font-size: 1em!important;
     }
 </style>
