@@ -129,12 +129,11 @@ import ResultGrid from "../../components/contest/ContestRank/ResultGrid.vue";
 import AwaitLock from "await-lock";
 import _ from "lodash";
 import dayjs from "dayjs";
-import * as XLSX from "xlsx";
-import { Mixins, Component, Watch } from "vue-property-decorator";
+import { Component, Mixins, Watch } from "vue-property-decorator";
 import {
-    SubmitterFactory,
     firstBloodListFactory,
-    SubmitterComparator
+    SubmitterComparator,
+    SubmitterFactory
 } from "@/module/ContestRank/ContestRankFactories";
 
 const { reset: bindDragEvent } = require("dragscroll");
@@ -501,10 +500,7 @@ export default class ContestRank extends Mixins(mixins) {
     }
 
     updated () {
-        const newTitle = "ContestRank: " + this.title;
-        if (document.title !== newTitle) {
-            document.title = newTitle;
-        }
+        document.title = "ContestRank: " + this.title;
         $("#rank").find("tr").each(function () {
             $(this).find("td").eq(2).css({
                 position: "sticky",
@@ -524,7 +520,7 @@ export default class ContestRank extends Mixins(mixins) {
         submissionCollection = [];
         document.title = `Contest Rank ${this.cid} -- ${document.title}`;
         const lock = this.popupLock;
-        $(window).scroll(function () {
+        $(window).on("scroll", function () {
             lock.tryAcquire();
             clearTimeout($.data(this, "scrollTimer"));
             $.data(this, "scrollTimer", setTimeout(function () {
@@ -533,7 +529,7 @@ export default class ContestRank extends Mixins(mixins) {
         });
         const that = this;
         bindDragEvent();
-        (() => {
+        (async () => {
             let cid = this.$route.params.contest_id;
             let cidArr: any = [];
             if (cid.indexOf(",") !== -1) {
@@ -546,97 +542,91 @@ export default class ContestRank extends Mixins(mixins) {
             let dataSet: any = [];
             const users = new Set();
 
-            const work = () => {
+            const work = async () => {
                 cid = cidArr.shift();
+                await this.axios.get(`/api/scoreboard/${cid}`);
                 this.axios.get(`/api/scoreboard/${cid}`)
-                    .then(() => {
-                        this.axios.get(`/api/scoreboard/${cid}`)
-                            .then(({ data }) => {
-                                if (data.status !== "OK") {
-                                    that.state = false;
-                                    that.submitter = [];
-                                    let str;
-                                    if (data.contest_mode === true) {
-                                        str = "根据设置，内容非公开";
-                                    }
-                                    else if (data.statement && data.statement.includes && data.statement.includes("denied")) {
-                                        str = "根据设置，您无权访问";
-                                    }
-                                    else {
-                                        str = "Contest " + cid + ":\n" + data.statement;
-                                    }
-                                    str = str.replace(/\n/g, "<br>");
-                                    that.errormsg = str;
-                                    return;
-                                }
-                                _.forEach(data.data, function (val) {
-                                    val.num += cnt;
-                                    val.start_time = dayjs(data.start_time);
-                                });
-                                _.forEach(data.data, function (val) {
-                                    dataSet.push(val);
-                                });
-                                _.forEach(data.users, function (val) {
-                                    users.add(val);
-                                });
+                    .then(({ data }) => {
+                        _.forEach(data.data, function (val) {
+                            val.num += cnt;
+                            val.start_time = dayjs(data.start_time);
+                            dataSet.push(val);
+                        });
+                        _.forEach(data.users, function (val) {
+                            users.add(val);
+                        });
 
-                                cnt += data.total;
+                        cnt += data.total;
 
-                                if (cidArr.length > 0) {
-                                    convertFlag = true;
-                                    work();
-                                }
-                                else {
-                                    this.finished = true;
-                                }
-                                that.total = cnt;
-                                that.users = Array.from(users);
-                                that.scoreboard = dataSet;
-                            });
+                        if (cidArr.length > 0) {
+                            convertFlag = true;
+                            work();
+                        }
+                        else {
+                            this.finished = true;
+                        }
+                        that.total = cnt;
+                        that.users = Array.from(users);
+                        that.scoreboard = dataSet;
+                    })
+                    .catch(({ data }) => {
+                        that.state = false;
+                        that.submitter = [];
+                        let str;
+                        if (data.contest_mode === true) {
+                            str = "根据设置，内容非公开";
+                        }
+                        else if (data.statement && data.statement.includes && data.statement.includes("denied")) {
+                            str = "根据设置，您无权访问";
+                        }
+                        else {
+                            str = "Contest " + cid + ":\n" + data.statement;
+                        }
+                        str = str.replace(/\n/g, "<br>");
+                        that.errormsg = str;
                     });
             };
 
             if (cidArr.length > 1) {
                 that.title = cidArr.join(",");
-                work();
+                await work();
             }
             else {
                 cid = cidArr.shift();
-                this.axios.get(`/api/scoreboard/${cid}`)
-                    .then(() => {
-                        this.axios.get(`/api/scoreboard/${cid}`)
-                            .then(({ data }) => {
-                                if (data.status !== "OK") {
-                                    that.state = false;
-                                    that.submitter = [];
-                                    if (!data.statement) {
-                                        that.errormsg = "根据设置，内容非公开".replace(/\n/g, "<br>");
-                                    }
-                                    if (data.statement.includes && data.statement.includes("denied")) {
-                                        that.errormsg = "根据设置，您无权访问".replace(/\n/g, "<br>");
-                                    }
-                                    else {
-                                        that.errormsg = ("Contest " + cid + ":\n" + data.statement).replace(/\n/g, "<br>");
-                                    }
-                                    return;
-                                }
-                                this.finished = true;
-                                that.total = data.total;
-                                that.users = data.users;
-                                // @ts-ignore
-                                that.start_time = window.start_time = dayjs(data.start_time);
-                                _.forEach(data.data, function (val) {
-                                    val.start_time = dayjs(data.start_time);
-                                });
+                await this.axios.get(`/api/scoreboard/${cid}`);
 
-                                that.scoreboard = data.data;
-                                submissionCollection = data.data;
-                                dataSet = data.data;
-                                if (typeof data.title === "string" && data.title.length === 0) {
-                                    data.title = "未设置标题";
-                                }
-                                that.title = data.title;
-                            });
+                this.axios.get(`/api/scoreboard/${cid}`)
+                    .then(({ data }) => {
+                        if (data.status !== "OK") {
+                            that.state = false;
+                            that.submitter = [];
+                            if (!data.statement) {
+                                that.errormsg = "根据设置，内容非公开".replace(/\n/g, "<br>");
+                            }
+                            if (data.statement.includes && data.statement.includes("denied")) {
+                                that.errormsg = "根据设置，您无权访问".replace(/\n/g, "<br>");
+                            }
+                            else {
+                                that.errormsg = ("Contest " + cid + ":\n" + data.statement).replace(/\n/g, "<br>");
+                            }
+                            return;
+                        }
+                        this.finished = true;
+                        that.total = data.total;
+                        that.users = data.users;
+                        // @ts-ignore
+                        that.start_time = window.start_time = dayjs(data.start_time);
+                        _.forEach(data.data, function (val) {
+                            val.start_time = dayjs(data.start_time);
+                        });
+
+                        that.scoreboard = data.data;
+                        submissionCollection = data.data;
+                        dataSet = data.data;
+                        if (typeof data.title === "string" && data.title.length === 0) {
+                            data.title = "未设置标题";
+                        }
+                        that.title = data.title;
                     });
             }
         })();
