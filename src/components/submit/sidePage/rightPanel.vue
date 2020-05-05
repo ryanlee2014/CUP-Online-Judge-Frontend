@@ -51,7 +51,7 @@
         height: 30px;
         color: black;width:100%">
             <div class="item" style="text-align:center;">
-                {{title}}
+                {{$t("oj-name")}}
                 <div class="item">
                     <div class="ui toggle checkbox" v-cloak v-if="!iscontest">
                         <input name="share" type="checkbox" v-model="share">
@@ -144,7 +144,6 @@ export default class RightPanel extends Vue {
         editorPackage = false;
         code = "";
         language = ["c_cpp", "c_cpp", "pascal", "java", "ruby", "sh", "python", "php", "perl", "csharp", "objectivec", "text", "scheme", "c_cpp", "c_cpp", "lua", "javascript", "go", "python", "c_cpp", "c_cpp", "c_cpp", "text", "java", "java", "python", "python", "java", "c_cpp", "c_cpp", "c_cpp"];
-        title = envConfig.title;
         current_prepend = "";
         current_append = "";
         dirty = false;

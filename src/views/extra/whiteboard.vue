@@ -105,6 +105,7 @@ export default class Whiteboard extends Mixins(InitMixin) {
     fontSize = "16";
     selected_language = 0;
     sockets: any;
+    $socket: any;
     remoteData = false;
     lock = new AwaitLock();
 

@@ -5,10 +5,11 @@
         </h2>
         <div class="ui top attached tabular menu">
             <a :class="(current_tag == 'status'?'active':'')+' item'" @click="tag('status',$event)" id="submitstatus"
-               v-cloak>提交状态</a>
-            <a :class="(current_tag == 'graph'?'active':'')+' item'" @click="tag('graph',$event)" id="graph" v-cloak>提交图表</a>
+               v-cloak>{{$t("submit status")}}</a>
+            <a :class="(current_tag == 'graph'?'active':'')+' item'" @click="tag('graph',$event)" id="graph" v-cloak>
+                {{$t("submit graph")}}</a>
             <a :class="(current_tag == 'statistics'?'active':'')+' item'" @click="tag('statistics',$event)" id="statistics"
-               v-cloak>提交统计</a>
+               v-cloak>{{$t("result statistics")}}</a>
         </div>
         <div class="ui bottom attached segment" v-show="current_tag == 'status'">
             <div align=center class="input-append">
@@ -164,7 +165,7 @@
     "show user only": "仅显示本人提交",
     "submit status": "提交状态",
     "submit graph": "提交图表",
-    "result statistic": "结果统计",
+    "result statistics": "结果统计",
     "user statistic": "用户统计",
     "not selected": "未选择"
     },
@@ -175,7 +176,7 @@
     "submit status": "Submit Status",
     "show user only": "Show Yourself Only",
     "submit graph": "Submission Graph",
-    "result statistic": "Result Statistics",
+    "result statistics": "Result Statistics",
     "user statistic": "User statistics",
     "not selected": "Not Selected"
     },
