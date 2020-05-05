@@ -2,9 +2,9 @@
     <div class="ui container padding">
         <h2 class="ui dividing header">{{$t("discuss")}}</h2>
         <div class="ui breadcrumb">
-            <router-link class="section" to="/discuss">讨论主页</router-link>
+            <router-link class="section" to="/discuss">{{$t("discuss homepage")}}</router-link>
             <i class="right angle icon divider"></i>
-            <div class="active section">Discuss ID:{{id}}</div>
+            <div class="active section">{{$t("discuss")}} ID:{{id}}</div>
         </div>
         <h1>{{thread_head ? thread_head.title : ""}}</h1>
         <MainContent :id="id" :owner="owner"
@@ -30,7 +30,7 @@
                                      v-if="row.user_id + '' === owner">
                             {{$t("edit")}}
                         </router-link>
-                        <a @click="block_reply(row.comment_id)" class="reply" v-if="isadmin">屏蔽</a>
+                        <a @click="block_reply(row.comment_id)" class="reply" v-if="isadmin">{{$t("block")}}</a>
                         <!--<a class="reply">Reply</a>-->
                     </div>
                 </div>
@@ -44,7 +44,7 @@
             </div>
             <div class="two field">
                 <div class="ui left input" style="width:auto">
-                    <input id="vcode" name="vcode" placeholder="验证码" type="text" v-model="captcha"><img
+                    <input id="vcode" name="vcode" :placeholder="$t('captcha')" type="text" v-model="captcha"><img
                     alt="click to change" height="40px" id="vcode_graph"
                     onclick="this.src='/api/captcha?from=discuss&random='+Math.random()"
                     :src="`/api/captcha?from=discuss&random=${captchaHash}`">
@@ -61,7 +61,6 @@
 import MainContent from "../../components/discuss/MainContent.vue";
 import mixins from "../../mixin/init";
 import avatarMixin from "../../mixin/avatarMixin";
-import mermaidMixin from "../../mixin/mermaidMixin";
 import jquery from "jquery";
 import _ from "lodash";
 import Clipboard from "clipboard";
@@ -74,6 +73,19 @@ const uslug = require("uslug");
 @Component({
     components: {
         MainContent
+    },
+    i18n: {
+        messages: {
+            "zh-cn": {
+                "discuss homepage": "讨论主页"
+            },
+            en: {
+                "discuss homepage": "Discussion Homepage"
+            },
+            ja: {
+                "discuss homepage": "掲示板ホームページ"
+            }
+        }
     }
 })
 export default class Thread extends Mixins(mixins, avatarMixin, MarkdownWorkerMixin, CaptchaMixin) {
