@@ -13,23 +13,28 @@
         </div>
         <div class="ui grid">
             <div class="column">
-                <a href="/software/CUP_Online_Judge_Problem_Creator-darwin-x64.zip" class="ui large button download basic">
+                <a href="/software/CUP_Online_Judge_Problem_Creator-darwin-x64.zip"
+                   class="ui large button download basic">
                     <i class="icon apple"></i>
                     macOS 10.9或以上
                 </a>
-                <a href="/software/CUP_Online_Judge_Problem_Creator-win32-x64.zip" class="ui large button download basic">
+                <a href="/software/CUP_Online_Judge_Problem_Creator-win32-x64.zip"
+                   class="ui large button download basic">
                     <i class="icon windows"></i>
                     Windows 7(64位)或以上
                 </a>
-                <a href="/software/CUP_Online_Judge_Problem_Creator-win32-ia32.zip" class="ui large button download basic">
+                <a href="/software/CUP_Online_Judge_Problem_Creator-win32-ia32.zip"
+                   class="ui large button download basic">
                     <i class="icon windows"></i>
                     Windows 7(32位)或以上
                 </a>
-                <a href="/software/CUP_Online_Judge_Problem_Creator-linux-x64.zip" class="ui large button download basic">
+                <a href="/software/CUP_Online_Judge_Problem_Creator-linux-x64.zip"
+                   class="ui large button download basic">
                     <i class="icon linux"></i>
                     Linux(x86-64)
                 </a>
-                <a href="/software/CUP_Online_Judge_Problem_Creator-linux-ia32.zip" class="ui large button download basic">
+                <a href="/software/CUP_Online_Judge_Problem_Creator-linux-ia32.zip"
+                   class="ui large button download basic">
                     <i class="icon linux"></i>
                     Linux(i686)
                 </a>
@@ -141,20 +146,28 @@
         </div>
         <div class="ui grid">
             <div class="column">
-                <h3 class="ui header">Windows X64</h3>
-                <p>Install MinGW:<a href="https://nuwen.net/mingw.html" target="_blank">https://nuwen.net/mingw.html</a></p>
+                <h3 class="ui header">Windows X64(Without WSL)</h3>
+                <p>Install MinGW:<a href="https://nuwen.net/mingw.html" target="_blank">https://nuwen.net/mingw.html</a>
+                </p>
+                <h3 class="ui header">Windows X64(With WSL)</h3>
+                <p>
+                    Follow this manual:
+                    <a href="https://www.jetbrains.com/help/clion/how-to-use-wsl-development-environment-in-clion.html" target="_blank">
+                        How to use WSL development environment in CLion
+                    </a>
+                </p>
                 <h3 class="ui header">macOS(HomeBrew)</h3>
                 <code>brew install gcc</code>
-                <p><b>Important:</b>In macOS,gcc/g++ is the alias of clang/clang++</p>
+                <p><b>Notice:</b>In macOS,gcc/g++ is the alias of clang/clang++.</p>
                 <p>Real gcc which installed from HomeBrew is
                     <code>gcc-${version}</code>
                     <code>g++-${version}</code>
                     (gcc-8 in sample picture below)</p>
                 <img src="@/static/image/mac_install_gcc.svg" class="ui image">
-                <h3 class="ui header">Ubuntu</h3>
-                <code>sudo apt install gcc</code>
+                <h3 class="ui header">Ubuntu(LTS)</h3>
+                <code>sudo apt install build-essential gcc g++ clang clang++</code>
                 <h3 class="ui header">CentOS/Fedora/RHEL</h3>
-                <code>sudo yum install gcc</code>
+                <code>sudo yum install gcc g++ clang clang++</code>
             </div>
         </div>
     </div>

@@ -22,12 +22,10 @@ export default class CompileInfo extends Mixins(mixins) {
         document.title = `${this.solution_id} Compile Information -- ${document.title}`;
         this.axios.get(`/api/status/compile_info/${this.solution_id}`)
             .then(({ data }) => {
-                if (data.status === "OK") {
-                    this.info = this.convertHTML(data.data.info).split(" ").join("&nbsp;");
-                }
-                else {
-                    this.info = "您无权访问";
-                }
+                this.info = this.convertHTML(data.data.info).split(" ").join("&nbsp;");
+            })
+            .catch(({ data }) => {
+                this.info = this.$t("no privilege to access") as string;
             });
     }
 
