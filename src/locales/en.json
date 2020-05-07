@@ -288,5 +288,8 @@
   "contents": "Contents",
   "announcement": "Announcement",
   "config manager": "Config Manager",
-  "switch manager": "Switch Manager"
+  "switch manager": "Switch Manager",
+  "cancel": "Cancel",
+  "confirm": "Confirm",
+  "theme": "Theme"
 }

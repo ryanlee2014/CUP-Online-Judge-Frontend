@@ -1,11 +1,17 @@
 <template>
     <div class="ui container padding">
-        <h2 class="ui dividing header">开放源代码声明</h2>
+        <h2 class="ui dividing header">{{$t("opensource-notice")}}</h2>
+        <h2 class="ui header">CUP Online Judge</h2>
+        <p><i class="github icon"></i>
+            <a href="https://github.com/ryanlee2014/CUP-Online-Judge" target="_blank">https://github.com/ryanlee2014/CUP-Online-Judge</a>
+        </p>
+        <p>Copyright© <a href="https://github.com/ryanlee2014" target="_blank">Ryan Lee</a></p>
+        <p>Licensed under <a href="https://github.com/ryanlee2014/CUP-Online-Judge/blob/master/LICENSE">Apache-2.0</a></p>
         <h2 class="ui header">CUP-Online-Judge-Express</h2>
         <p><i class="github icon"></i>&nbsp;<a href="https://github.com/ryanlee2014/CUP-Online-Judge-Express" target="_blank">https://github.com/ryanlee2014/CUP-Online-Judge-Express</a>
         </p>
         <p>Copyright© <a href="https://github.con/ryanlee2014" target="_blank">Ryan Lee</a></p>
-        <p>Licensed under <a href="https://github.com/ryanlee2014/HUSTOhttps://github.com/ryanlee2014/CUP-Online-Judge-Express/blob/master/LICENSE" target="_blank">Apache-2.0</a>
+        <p>Licensed under <a href="https://github.com/ryanlee2014/CUP-Online-Judge-Express/blob/master/LICENSE" target="_blank">Apache-2.0</a>
         </p>
         <h2 class="ui header">CUP-Online-Judge-Vjudge</h2>
         <p><i class="github icon"></i>&nbsp;<a href="https://github.com/ryanlee2014/CUP-Online-Judge-Vjudge" target="_blank">https://github.com/ryanlee2014/CUP-Online-Judge-Vjudge</a>

@@ -9,7 +9,7 @@
                             <div class="field">
                                 <div class='ui toggle checkbox'>
                                     <input type='checkbox'>
-                                    <label>竞赛模式</label>
+                                    <label>{{$t("contest mode")}}</label>
                                 </div>
                             </div>
                             <div class="field">

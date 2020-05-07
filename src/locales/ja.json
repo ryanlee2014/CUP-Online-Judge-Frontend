@@ -288,5 +288,8 @@
   "contents": "ディレクトリ",
   "announcement": "告知",
   "config manager": "コンフィグ管理",
-  "switch manager": "スイッチ管理"
+  "switch manager": "スイッチ管理",
+  "cancel": "キャンセル",
+  "confirm": "確認",
+  "theme": "テーマ"
 }

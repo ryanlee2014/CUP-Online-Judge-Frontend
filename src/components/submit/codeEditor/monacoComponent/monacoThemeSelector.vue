@@ -1,6 +1,6 @@
 <template>
     <div class="item">
-        <span>主题:</span>
+        <span>{{$t("theme")}}:</span>
     <select class="ui selection dropdown search" size="1" v-model="theme">
         <option value="vs-dark">Visual Studio Dark</option>
         <option value="vs">Visual Studio</option>
