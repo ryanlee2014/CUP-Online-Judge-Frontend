@@ -1,6 +1,6 @@
 <template>
     <div class="ui container">
-        <h2 class="ui dividing header">著作权声明</h2>
+        <h2 class="ui dividing header">著作权声明(Chinese Only)</h2>
         <div class="ui basic segment">
             <h3 class="ui dividing header">您提交的代码</h3>
             <div class="ui segment">

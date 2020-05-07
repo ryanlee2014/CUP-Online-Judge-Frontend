@@ -290,5 +290,8 @@
   "runtime information": "运行时(Runtime)信息",
   "announcement": "公告",
   "config manager": "配置(Configuration)管理",
-  "switch manager": "开关(Switch)管理"
+  "switch manager": "开关(Switch)管理",
+  "cancel": "取消",
+  "confirm": "确认",
+  "theme": "主题"
 }
