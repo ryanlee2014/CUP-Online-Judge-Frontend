@@ -5,13 +5,16 @@
                 <table class="ui celled striped table">
                     <thead>
                         <tr>
-                            <th colspan="6">
+                            <th colspan="7">
                                 {{$t("loginlog")}}
                             </th>
                         </tr>
                         <tr>
                             <th>
                                 {{$t("user_id")}}
+                            </th>
+                            <th>
+                                {{$t("nick")}}
                             </th>
                             <th>
                                 {{$t("login time")}}
@@ -36,6 +39,9 @@
                             <router-link :to="`/user/${dao.user_id}`">
                                 {{dao.user_id}}
                             </router-link>
+                        </td>
+                        <td>
+                            {{dao.nick}}
                         </td>
                         <td>
                             {{dayjs(dao.time).format("YYYY-MM-DD HH:mm:ss")}}
