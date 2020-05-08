@@ -77,13 +77,16 @@ const uslug = require("uslug");
     i18n: {
         messages: {
             "zh-cn": {
-                "discuss homepage": "讨论主页"
+                "discuss homepage": "讨论主页",
+                block: "移除"
             },
             en: {
-                "discuss homepage": "Discussion Homepage"
+                "discuss homepage": "Discussion Homepage",
+                block: "Block"
             },
             ja: {
-                "discuss homepage": "掲示板ホームページ"
+                "discuss homepage": "掲示板ホームページ",
+                block: "リムーブ"
             }
         }
     }
