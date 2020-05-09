@@ -43,18 +43,6 @@ jobs:
           npm i
           npm run modern
 
-      - name: Update dist folder to current repository
-        if: env.NEED_BUILD == 'true'
-        run: |
-          git config --local user.email "gxlhybh@gmail.com"
-          git config --local user.name "Ryan Lee"
-          git add dist
-          git commit -m "Auto commit version $(cat public/VERSION)"
-          git push -f https://ryanlee2014:$GITHUB_TOKEN@github.com/ryanlee2014/CUP-Online-Judge-NG-FrontEnd.git typescript
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_ACTIONS_TOKEN }}
-
-
       - uses: actions/checkout@v2
         name: Checkout CDN Repository
         with:

@@ -106,6 +106,9 @@ export default class InviteCode extends Mixins(InitMixin) {
         this.axios.get("/api/admin/account/invite/all")
             .then(({ data }) => {
                 this.inviteInfoList = data.data;
+            })
+            .catch(({ data }) => {
+                alert(JSON.stringify(data));
             });
     }
 
@@ -132,16 +135,11 @@ export default class InviteCode extends Mixins(InitMixin) {
         };
         this.axios.post("/api/admin/account/invite/add", payload)
             .then(({ data }) => {
-                if (data.status === "OK") {
-                    alert("创建成功");
-                    this.initData();
-                }
-                else {
-                    alert(data.statement);
-                }
+                alert("创建成功");
+                this.initData();
             })
-            .catch(reason => {
-                alert(JSON.stringify(reason));
+            .catch(({ data }) => {
+                alert(JSON.stringify(data));
             });
     }
 }
