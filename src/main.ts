@@ -17,6 +17,8 @@ import VueSocketIo from "./lib/vue-socketio";
 import Injection from "./injection/index";
 import AxiosInterceptors from "./router/middleware/AxiosInterceptors";
 import AsyncComputedPlugin from "vue-async-computed";
+// @ts-ignore
+import Gravatar from "@ryanlee2014/vue-gravatar";
 Injection();
 AxiosInterceptors();
 browserUpdate({ required: { e: -3, f: -3, o: -3, s: -3, c: -6 }, insecure: true, unsupported: true, api: 2019.05 });
@@ -27,6 +29,7 @@ Vue.use(VueLazyload, {
     loading: require("@/static/image/white-image.png"),
     attempt: 2
 });
+Vue.component("v-gravatar", Gravatar);
 VueSocketIo(Vue);
 Vue.use(AsyncComputedPlugin);
 Vue.config.productionTip = false;

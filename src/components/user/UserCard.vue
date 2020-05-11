@@ -1,10 +1,9 @@
 <template>
     <div class="ui link card">
         <div class="image">
-            <router-link :src="getAvatarURL(thread_head)" :to="`/user/${thread_head.user_id}`"
-                         tag="img" v-if="hasAvatarURL(thread_head)">
+            <router-link :to="`/user/${thread_head.user_id}`">
+                <v-gravatar :size="400" style="width: 100%; display: flex" hostname="cn.gravatar.com" :email="thread_head.email"></v-gravatar>
             </router-link>
-            <img src="@/static/image/white-image.png" v-else>
         </div>
         <div class="content">
             <div class="header">
@@ -41,7 +40,7 @@ import MarkdownWorkerMixin from "@/mixin/MarkdownWorkerMixin";
 
 @Component
 export default class UserCard extends Mixins(avatarMixin, MarkdownWorkerMixin) {
-    @Prop({ default: (): IUserCardInfo => { return { biography: "", solved: 0, user_id: "", nick: "" }; } }) thread_head!: IUserCardInfo;
+    @Prop({ default: (): IUserCardInfo => { return { biography: "", solved: 0, user_id: "", nick: "", email: "" }; } }) thread_head!: IUserCardInfo;
     biography: string = "";
 
     @Watch("thread_head")

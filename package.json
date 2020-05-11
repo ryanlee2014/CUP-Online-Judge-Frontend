@@ -1,6 +1,6 @@
 {
   "name": "CUP-Online-Judge-NG-Frontend",
-  "version": "1.20.11",
+  "version": "1.21.0",
   "private": false,
   "scripts": {
     "serve": "npx --max_old_space_size=16000 vue-cli-service serve",
@@ -19,7 +19,7 @@
     "@antv/g2": "^3.5.15",
     "@ryanlee2014/markdown-it-katex": "^1.0.4",
     "@ryanlee2014/mavon-editor": "^1.0.3",
-    "@ryanlee2014/vue-gravatar": "^1.0.0",
+    "@ryanlee2014/vue-gravatar": "^1.1.1",
     "animejs": "^3.2.0",
     "auto-textarea": "^1.4.0",
     "await-lock": "^2.0.1",

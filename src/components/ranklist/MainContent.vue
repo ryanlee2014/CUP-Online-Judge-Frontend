@@ -71,8 +71,8 @@
                     </router-link>
                 </td>
                 <td>
-                    <img :src="getAvatarURL(row)" class="ui avatar image"
-                         style="object-fit: cover;">
+                    <v-gravatar hostname="cn.gravatar.com" :original-src="getAvatarURL(row)" class="ui avatar image" :email="row.email" style="object-fit: cover;"></v-gravatar>
+
                 </td>
                 <td>
                     {{convertHTML(row.nick)}}
@@ -145,6 +145,8 @@ interface IRanklistData {
 interface IMember {
     ranklist: any
 }
+
+const emailSet: any = {};
 
 @Component({
     components: {

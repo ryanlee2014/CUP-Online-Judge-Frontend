@@ -43,6 +43,7 @@ const mutations: MutationTree<IUserInfoState> = {
         state.userInfo.admin = !!payload.admin;
         state.userInfo.editor = !!payload.privilege.editor;
         state.userInfo.avatarUrl = notUndefinedOrNull(payload.avatar) ? payload.avatarUrl : "";
+        state.userInfo.email = payload.email;
         addContestPrivilege(state, payload.privilege.contest);
         addProblemMakerPrivilege(state, payload.privilege.problem_maker);
         addContestMakerPrivilege(state, payload.privilege.contest_maker);

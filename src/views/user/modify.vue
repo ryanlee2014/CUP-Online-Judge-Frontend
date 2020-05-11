@@ -6,7 +6,7 @@
                     <div class="column">
                         <div class="ui card" style="width: 100%">
                             <div class="image">
-                                <img v-lazy="img_src" id="head">
+                                <v-gravatar hostname="cn.gravatar.com" :email="email" :size="324"></v-gravatar>
                             </div>
                         </div>
                     </div>
@@ -19,13 +19,13 @@
                                 <div class="ui form">
                                     <div class="two fields">
                                         <div class="field">
-                                            <label>User ID</label>
+                                            <label>{{$t("user_id")}}</label>
                                             <div class="ui disabled input">
                                                 <input :value="user_id" size=50 type=text>
                                             </div>
                                         </div>
                                         <div class="field">
-                                            <label>Nick Name</label>
+                                            <label>{{$t("nick")}}</label>
                                             <input name="nick" size=50 type=text v-model="nick">
                                         </div>
                                     </div>
@@ -46,11 +46,11 @@
                                     </div>
                                     <div class="two fields">
                                         <div class="field">
-                                            <label>School</label>
+                                            <label>{{$t("school")}}</label>
                                             <input name="school" size=30 type=text v-model="school">
                                         </div>
                                         <div class="field">
-                                            <label>Email</label>
+                                            <label>{{$t("email")}}</label>
                                             <input name="email" size=30 type=text v-model="email">
                                         </div>
                                     </div>
@@ -66,7 +66,7 @@
                                     </div>
                                     <div class="two fields">
                                         <div class="field">
-                                            <label>Blog</label>
+                                            <label>{{$t("blog")}}</label>
                                             <input name="blog" type="text" v-model="blog">
                                         </div>
                                         <div class="field">
@@ -75,11 +75,11 @@
                                         </div>
                                     </div>
                                     <div class="field">
-                                        <label>AvatarURL(可使用外链,若需要自行上传,请参考<router-link to="/discuss/thread/15">如何使用图床</router-link>并将链接贴在下面)</label>
-                                        <input name="avatarUrl" type="text" v-model="avatarUrl">
+                                        <label>头像(请使用邮箱注册 <a href="https://zh-cn.wordpress.com/" target="_blank">WordPress.com</a>，登录 <a href="https://cn.gravatar.com/" target="_blank">Gravatar</a> 并上传头像。头像与你的邮箱绑定)</label>
+                                        <input name="" type="text" :value="email" disabled>
                                     </div>
                                     <div class="field">
-                                        <label>Biography(支持markdown语法)</label>
+                                        <label>{{$t("biography")}}(支持markdown语法)</label>
                                         <mavon-editor v-model="biography" :markInstance="markdownIt"></mavon-editor>
                                         <input name="biography" type="text" v-model="biography">
                                     </div>

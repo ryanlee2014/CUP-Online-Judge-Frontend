@@ -6,6 +6,7 @@ interface IUserInfoDetail {
     user_id: string,
     nick: string,
     avatar: boolean,
+    email: string,
     avatarUrl: string,
     admin: boolean,
     editor: boolean,

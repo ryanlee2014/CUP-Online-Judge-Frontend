@@ -6,7 +6,7 @@
             <Nano :connected="socketConnected" :judger="judger" :logined="logined" :nick="nick" :user="user" v-if="!contest"></Nano>
             <LargeContest :connected="socketConnected" :judger="judger" :logined="logined" :nick="nick" :user="user" v-if="contest"></LargeContest>
         </div>
-        <ProfileCard :admin="admin" :avatar="avatar" :nick="nick" :user_id="user_id"/>
+        <ProfileCard :admin="admin" :avatar="avatar" :nick="nick" :email="email" :user_id="user_id"/>
     </div>
 </template>
 

@@ -13,10 +13,9 @@
         <div class="ui comments">
             <div :key="key" class="comment" v-for="(row,key) in reply">
                 <div class="avatar">
-                    <router-link :src="getAvatarURL(row)" :to="`/user/${row.user_id}`" class="avatar"
-                                 tag="img" v-if="hasAvatarURL(row)"></router-link>
-                    <router-link src="@/static/image/white-image.png" :to="`/user/${row.user_id}`"
-                                 tag="img" v-else></router-link>
+                    <router-link :to="`/user/${row.user_id}`">
+                        <v-gravatar hostname="cn.gravatar.com" class="avatar" :size="400" :email="row.email"></v-gravatar>
+                    </router-link>
                 </div>
                 <div class="content">
                     <router-link :to="`/user/${row.user_id}`" class="author">{{row.nick}}</router-link>
@@ -64,7 +63,7 @@ import avatarMixin from "../../mixin/avatarMixin";
 import jquery from "jquery";
 import _ from "lodash";
 import Clipboard from "clipboard";
-import { Mixins, Component } from "vue-property-decorator";
+import { Component, Mixins } from "vue-property-decorator";
 import MarkdownWorkerMixin from "@/mixin/MarkdownWorkerMixin";
 import CaptchaMixin from "@/mixin/CaptchaMixin";
 
@@ -109,6 +108,7 @@ export default class Thread extends Mixins(mixins, avatarMixin, MarkdownWorkerMi
     }
 
     set table (val: any) {
+        console.log("table", val);
         _.forEach(val, (v) => {
             if (v && v.length) {
                 _.forEach(v, async (v) => {

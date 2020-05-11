@@ -1,9 +1,9 @@
 <template>
     <div id="app">
-        <AdminNavbar :admin="admin" :avatar="avatar" :contest="contest" :homepage="homepage" :logined="logined"
+        <AdminNavbar :admin="admin" :avatar="avatar" :email="email" :contest="contest" :homepage="homepage" :logined="logined"
                      :nick="nick"
                      :user_id="user_id" v-if="adminView"></AdminNavbar>
-        <Navbar :admin="admin" :avatar="avatar" :contest="contest" :homepage="homepage" :logined="logined" :nick="nick"
+        <Navbar :admin="admin" :avatar="avatar" :email="email" :contest="contest" :homepage="homepage" :logined="logined" :nick="nick"
                 :user_id="user_id" v-else></Navbar>
         <transition name="fade">
             <router-view class="router"/>
@@ -28,7 +28,7 @@ import { Route } from "vue-router";
         Bottom: Bottom,
         AdminNavbar: AdminNavbar
     },
-    computed: mapGetters(["logined", "avatar", "admin", "user_id", "nick"])
+    computed: mapGetters(["logined", "avatar", "admin", "user_id", "nick", "email"])
 })
 export default class App extends Vue {
     homepage?: boolean;

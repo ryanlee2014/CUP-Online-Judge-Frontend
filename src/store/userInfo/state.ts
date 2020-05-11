@@ -8,6 +8,7 @@ const states: IUserInfoState = {
         avatar: false,
         avatarUrl: "",
         admin: false,
+        email: "",
         editor: false,
         contest_manager: false,
         contest: {},

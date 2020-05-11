@@ -2,7 +2,8 @@
     <div class="ui flowing popup hidden dropdown_menu_group">
         <div class='ui two column grid'>
             <div class='row'>
-                <div class='column'><img :src="img_url" class='ui small image'>
+                <div class='column'>
+                    <v-gravatar hostname="cn.gravatar.com" class="ui small image" :size="200" :email="email"></v-gravatar>
                     <h4 class='ui header'>{{user_id}}
                         <div class='sub header'>{{nick}}</div>
                     </h4>
@@ -52,6 +53,7 @@ export default class ProfileCard extends Vue {
     @Prop({ default: "" }) nick!: string;
     @Prop({ default: false }) avatar!: boolean;
     @Prop({ default: false }) admin!: boolean;
+    @Prop({ default: "" }) email!: string;
     $socket: any;
     get img_url () {
         return util.getAvatarURL({ user_id: this.user_id, avatar: this.avatar, avatarUrl: this.$store.getters.avatarUrl });

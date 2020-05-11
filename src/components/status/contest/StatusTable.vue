@@ -21,7 +21,7 @@
             <td>{{row.solution_id}}</td>
             <td><div class="ui grid">
             <div class="four wide column" style="margin:auto">
-            <img class="ui avatar image" :src="getAvatarURL(row)" style="object-fit: cover;">
+            <v-gravatar hostname="cn.gravatar.com" :original-src="getAvatarURL(row)" class="ui avatar image" :email="row.email" style="object-fit: cover;"></v-gravatar>
             </div>
             <div class="twelve wide column">
                 <router-link :to="`/user/${row.user_id}`">{{row.user_id}}<br>{{row.nick}}</router-link>

@@ -8,6 +8,7 @@ const getters: GetterTree<IUserInfoState, IRootState> = {
     user_id: state => state.userInfo.user_id,
     nick: state => state.userInfo.nick,
     avatar: state => state.userInfo.avatar,
+    email: state => state.userInfo.email,
     getAvatarURL: state => {
         const hasAvatar = state.userInfo.avatar;
         const avatarUrl = state.userInfo.avatarUrl;
