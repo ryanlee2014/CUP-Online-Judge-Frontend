@@ -20,8 +20,7 @@
                     </router-link>
                 </td>
                 <td>
-                    <img class="ui avatar image" :src="getAvatarURL(row)"
-                         style="object-fit: cover;">
+                    <v-gravatar hostname="cn.gravatar.com" :original-src="getAvatarURL(row)" class="ui avatar image" :email="row.email" style="object-fit: cover;"></v-gravatar>
                 </td>
                 <td>
                     {{convertHTML(row.nick)}}
