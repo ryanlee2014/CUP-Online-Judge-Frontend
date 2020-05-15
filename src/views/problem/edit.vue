@@ -236,9 +236,8 @@
             <div class="row" v-if="from === 'local'">
                 <mavon-editor ref="hint" :markInstance="hintInstance" :test="'1'" v-model="hint"></mavon-editor>
             </div>
-            <a @click="submit" class="ui button">提交</a>
+            <a @click="submit" class="ui button">{{$t("submit")}}</a>
         </div>
-
     </div>
 </template>
 

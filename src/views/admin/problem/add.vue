@@ -3,7 +3,7 @@
         <div class="ui grid">
             <div class="row">
                 <h2 class="ui header">
-                    Title
+                    {{$t("title")}}
                 </h2>
             </div>
             <div class="two column row">
@@ -24,7 +24,7 @@
                 <div class="column">
                     <div class="ui labeled input">
                         <div class="ui label">
-                            Time
+                            {{$t("time limit")}}
                         </div>
                         <input type="text" v-model="time">
                     </div>
@@ -32,7 +32,7 @@
                 <div class="column">
                     <div class="ui labeled input">
                         <div class="ui label">
-                            Memory
+                            {{$t("memory")}}
                         </div>
                         <input type="text" v-model="memory">
                     </div>
@@ -47,7 +47,7 @@
             </div>
             <div class="row">
                 <h2 class="ui header">
-                    Description
+                    {{$t("description")}}
                 </h2>
             </div>
             <div class="row">
@@ -56,7 +56,7 @@
             <br>
             <div class="row">
                 <h2 class="ui header">
-                    Input
+                    {{$t("input")}}
                 </h2>
             </div>
             <div class="row">
@@ -65,7 +65,7 @@
             <br>
             <div class="row">
                 <h2 class="ui header">
-                    Output
+                    {{$t("output")}}
                 </h2>
             </div>
             <div class="row">
@@ -74,7 +74,7 @@
             <br>
             <div class="row">
                 <h2 class="ui header">
-                    Sample Input
+                    {{$t("sampleinput")}}
                 </h2>
             </div>
             <div class="row">
@@ -87,7 +87,7 @@
             <br>
             <div class="row">
                 <h2 class="ui header">
-                    Sample Output
+                    {{$t("sampleoutput")}}
                 </h2>
             </div>
             <div class="row">
@@ -98,14 +98,14 @@
                 </div>
             </div>
             <div class="row">
-                <h2 class="ui header">Files</h2>
+                <h2 class="ui header">{{$t("problem file")}}</h2>
             </div>
             <div class="row">
-                <a :href="makeHref(file_name)" :key="file_name" class="ui label" v-for="file_name in files">{{file_name}}</a>
+                <p>请在题目添加完成后到题目编辑界面添加数据</p>
             </div>
             <div class="row">
                 <h2 class="ui header">
-                    Prepend Code
+                    {{$t("prepend code")}}
                 </h2>
             </div>
             <div class="row">
@@ -155,7 +155,7 @@
             </div>
             <div class="row">
                 <h2 class="ui header">
-                    Append Code
+                    {{$t("append code")}}
                 </h2>
             </div>
             <div class="row">
@@ -205,13 +205,13 @@
             </div>
             <div class="row" v-if="from === 'local'">
                 <h2 class="ui header">
-                    Hint
+                    {{$t("hint")}}
                 </h2>
             </div>
             <div class="row" v-if="from === 'local'">
                 <mavon-editor ref="hint" :markInstance="hintInstance" :test="'1'" v-model="hint"></mavon-editor>
             </div>
-            <a @click="submit" class="ui button">提交</a>
+            <a @click="submit" class="ui button">{{$t("submit")}}</a>
         </div>
 
     </div>
