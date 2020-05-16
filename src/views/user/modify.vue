@@ -3,10 +3,32 @@
         <div class="padding">
             <div class="ui grid">
                 <div class="five wide column">
-                    <div class="column">
+                    <div class="row">
                         <div class="ui card" style="width: 100%">
                             <div class="image">
                                 <v-gravatar hostname="cn.gravatar.com" :email="email" :size="324"></v-gravatar>
+                            </div>
+                            <div class="content">
+                                <div class="header">
+                                    Gravatar头像
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" v-if="img_src.length > 0">
+                        <div class="column">
+                            <div class="ui card" style="width: 100%">
+                                <div class="image">
+                                    <img v-lazy="img_src" id="head">
+                                </div>
+                                <div class="content">
+                                    <div class="header">
+                                        原头像
+                                    </div>
+                                    <div class="meta">
+                                        已停用，请根据提示迁移到Gravatar头像
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -207,7 +229,7 @@ export default class UserInfoModify extends Mixins(mixins) {
             return avatarUrl;
         }
         else {
-            return "https://semantic-ui.com/images/wireframe/square-image.png";
+            return "";
         }
     }
 

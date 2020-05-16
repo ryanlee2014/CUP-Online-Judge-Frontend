@@ -5,7 +5,7 @@ const BrotliPlugin = require("brotli-webpack-plugin");
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 const version = require("./package.json").version;
 const webPath = `https://cdn.jsdelivr.net/gh/ryanlee2014/CUP-Online-Judge-CDN@v${version}/`;
-const devURL = "https://hk.haoyuan.info";
+const devURL = "https://www.cupacm.com";
 module.exports = {
     chainWebpack: config => {
         if (process.env.NODE_ENV === "development") {
