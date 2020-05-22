@@ -30,7 +30,7 @@
                                 <input @keyup.enter="login" id="vcode" name="vcode" :placeholder="$t('captcha')" style="width:70%"
                                        type="text" v-model="captcha"
                                 >
-                                <img alt="click to change" height="40px" id="vcode_graph"
+                                <img alt="click to change" height="40px" id="vcode_graph" class="captcha"
                                      onclick="this.src='/api/captcha?from=login&ramdom='+Math.random()"
                                      :src="`/api/captcha?from=login&random=${captchaHash}`">
                             </div>

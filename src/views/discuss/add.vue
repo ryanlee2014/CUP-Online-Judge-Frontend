@@ -23,7 +23,7 @@
             <div class="row">
                 <div class="two field">
                     <div class="ui left input" style="width:auto">
-                        <input :placeholder="$t('captcha')" type="text" v-model="captcha"><img alt="click to change"
+                        <input :placeholder="$t('captcha')" type="text" v-model="captcha"><img class="captcha" alt="click to change"
                                                                                     height="40px"
                                                                                     onclick="this.src='/api/captcha?from=newpost&random='+Math.random()"
                                                                                     :src="`/api/captcha?from=newpost&random=${captchaHash}`">

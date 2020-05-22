@@ -7,7 +7,12 @@
                     <h4 class='ui header'>{{user_id}}
                         <div class='sub header'>{{nick}}</div>
                     </h4>
-                    <p><i class='yen sign icon'></i>0</p></div>
+                    <p><i class='yen sign icon'></i>0</p>
+                    <div @click="darkmodeSwitch" class="ui toggle checkbox" id="show_tag">
+                        <input type="checkbox">
+                        <label>{{$t("dark mode")}}</label>
+                    </div>
+                </div>
                 <div class='column'>
                     <div class='ui link list'>
                         <router-link class="item" to="/user/self/info/modify">
@@ -69,6 +74,16 @@ export default class ProfileCard extends Vue {
                     location.reload();
                 }
             });
+    }
+
+    darkmodeSwitch () {
+        this.$store.commit("setDarkMode", !this.$store.getters.darkMode);
+        if (this.$store.getters.darkMode) {
+            $("*:not(.not.theme)").addClass("inverted");
+        }
+        else {
+            $("*:not(.not.theme)").removeClass("inverted");
+        }
     }
 
     updated () {

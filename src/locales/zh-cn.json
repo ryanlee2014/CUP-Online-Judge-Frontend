@@ -293,5 +293,6 @@
   "switch manager": "开关(Switch)管理",
   "cancel": "取消",
   "confirm": "确认",
-  "theme": "主题"
+  "theme": "主题",
+  "dark mode": "暗黑模式"
 }

@@ -5,15 +5,9 @@ const BrotliPlugin = require("brotli-webpack-plugin");
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 const version = require("./package.json").version;
 const webPath = `https://cdn.jsdelivr.net/gh/ryanlee2014/CUP-Online-Judge-CDN@v${version}/`;
-const devURL = "https://www.cupacm.com";
+const devURL = "https://hk.haoyuan.info";
 module.exports = {
     chainWebpack: config => {
-        if (process.env.NODE_ENV === "development") {
-            config.output
-                .publicPath("/")
-                .filename("[name].[hash].js")
-                .end();
-        }
         config.module.rule("md")
             .test(/\.md/)
             .use("raw-loader")

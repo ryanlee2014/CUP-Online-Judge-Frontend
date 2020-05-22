@@ -21,6 +21,7 @@ import { mapGetters } from "vuex";
 import $ from "jquery";
 import { Component, Watch } from "vue-property-decorator";
 import { Route } from "vue-router";
+import store from "@/store";
 
 @Component({
     components: {
@@ -49,6 +50,17 @@ export default class App extends Vue {
         setTimeout(() => {
             this.connectTry(10);
         }, 1500);
+    }
+
+    updated () {
+        if (!this.homepage) {
+            if (this.$store.getters.darkMode) {
+                $("*:not(.not.theme)").addClass("inverted");
+            }
+            else {
+                $("*:not(.not.theme)").removeClass("inverted");
+            }
+        }
     }
 
     initWebSocket () {
@@ -81,7 +93,9 @@ export default class App extends Vue {
             }
             else {
                 $("#app").animate({ marginTop: "60px" });
-                $(".ui.borderless.network.secondary.menu").removeClass("inverted");
+                if (!this.$store.getters.darkMode) {
+                    $(".ui.borderless.network.secondary.menu").removeClass("inverted");
+                }
             }
         });
     }

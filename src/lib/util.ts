@@ -1,5 +1,6 @@
 import { notUndefinedOrNull } from "@/store/util";
 import jquery from "jquery";
+import store from "@/store";
 declare global {
     interface Window {
         [id: string]: any
@@ -45,7 +46,7 @@ function binding_method(homepage?: boolean, finished?: boolean) {
         $(".following.bar").addClass("light fixed");
         $fixedMenu.transition("fade in");
         //$('.network.menu').addClass('secondary')
-        if (typeof homepage === "boolean" && homepage && finished) {
+        if (typeof homepage === "boolean" && homepage && finished && !store.getters.darkMode) {
             $(".network.menu").removeClass("inverted");
         }
     }
@@ -418,6 +419,22 @@ class Util {
         }
         binding_method(homepage, finished);
         this.bindDropdown();
+        if (!homepage) {
+            if (store.getters.darkMode) {
+                $("*:not(.not.theme)").addClass("inverted");
+            } else {
+                $("*:not(.not.theme)").removeClass("inverted");
+            }
+        }
+        $(document).on("click", function () {
+            if (!homepage) {
+                if (store.getters.darkMode) {
+                    $("*:not(.not.theme)").addClass("inverted");
+                } else {
+                    $("*:not(.not.theme)").removeClass("inverted");
+                }
+            }
+        });
     }
     bindDropdown () {
         const $accordion = $(".ui.accordion");

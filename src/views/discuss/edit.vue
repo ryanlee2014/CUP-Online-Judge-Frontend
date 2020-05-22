@@ -22,7 +22,7 @@
             <div class="row">
                 <div class="two field">
                     <div class="ui left input" style="width:auto">
-                        <input placeholder="验证码" type="text" v-model="captcha"><img alt="click to change"
+                        <input placeholder="验证码" type="text" v-model="captcha"><img class="captcha" alt="click to change"
                                                                                     height="40px"
                                                                                     onclick="this.src='/api/captcha?from=edit&random='+Math.random()"
                                                                                     :src="`/api/captcha?from=edit&random=${captchaHash}`">

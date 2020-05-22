@@ -1,25 +1,25 @@
 <template>
     <div>
         <div>
-            <div class="ui inverted vertical masthead center aligned segment gr5" id="background">
+            <div class="ui inverted not theme vertical masthead center aligned segment gr5" id="background">
                 <div id="main_container">
                     <div class="ui container">
-                        <div class="ui large secondary inverted pointing menu">
+                        <div class="ui large secondary inverted not theme pointing menu">
                         </div>
                     </div>
                     <div class="ui grid" id="main_masthead" style="transform: translateX(25%)">
                         <div class="ui text container transition main title eight wide column" id="left">
-                            <h1 class="ui inverted header text shape">
+                            <h1 class="ui inverted not theme header text shape">
                                 <div class="sides">
-                                    <div class="ui inverted header side active hometitle">{{$t("oj-name")}}</div>
+                                    <div class="ui inverted not theme header side active hometitle">{{$t("oj-name")}}</div>
                                 </div>
                             </h1>
                             <div class="column buttonset">
-                                <router-link class="ui inverted large button download basic" to="/about/icpc">
+                                <router-link class="ui inverted not theme large button download basic" to="/about/icpc">
                                     <i class="newspaper outline icon"></i>
                                     {{$t("about icpc")}}
                                 </router-link>
-                                <router-link class="ui inverted large button download basic" to="/about/fame">
+                                <router-link class="ui inverted not theme large button download basic" to="/about/fame">
                                     <i class="chess queen icon"></i>
                                     {{$t("hall of fame")}}
                                 </router-link>
@@ -41,7 +41,7 @@
                         </a>
                             <!--<a class="vultr" href="https://www.vultr.com/?ref=7250019" target="_blank"><img src="./image/vultr.png" class="ui small image main title" style="display:inline-block"></a>-->
                             <!--<h4></h4>-->
-                            <!--<a class="ui huge inverted download button" href="cprogrammingcontest">查看复赛情况</a>-->
+                            <!--<a class="ui huge inverted not theme download button" href="cprogrammingcontest">查看复赛情况</a>-->
                         </div>
                         <div class="ui text container transition main title eight wide column" id="right"
                              style="opacity: 0">

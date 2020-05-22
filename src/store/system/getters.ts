@@ -4,7 +4,8 @@ import { IRootState } from "@/store/root";
 import store from "@/store";
 const getters: GetterTree<ISystemState, IRootState> = {
     contestMode: state => !store.getters.admin && state.contestMode,
-    init: state => state.init
+    init: state => state.init,
+    darkMode: state => state.darkMode
 };
 
 export default getters;

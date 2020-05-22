@@ -6,7 +6,7 @@
             <i class="right angle icon divider"></i>
             <div class="active section">{{$t("discuss")}} ID:{{id}}</div>
         </div>
-        <h1>{{thread_head ? thread_head.title : ""}}</h1>
+        <h1 class="ui header">{{thread_head ? thread_head.title : ""}}</h1>
         <MainContent :id="id" :owner="owner"
                      :thread_head="thread_head || {}"></MainContent>
         <h3 class="ui dividing header">{{$t("comments")}}</h3>
@@ -44,7 +44,7 @@
             <div class="two field">
                 <div class="ui left input" style="width:auto">
                     <input id="vcode" name="vcode" :placeholder="$t('captcha')" type="text" v-model="captcha"><img
-                    alt="click to change" height="40px" id="vcode_graph"
+                    alt="click to change" height="40px" id="vcode_graph" class="captcha"
                     onclick="this.src='/api/captcha?from=discuss&random='+Math.random()"
                     :src="`/api/captcha?from=discuss&random=${captchaHash}`">
                 </div>

@@ -14,7 +14,7 @@
                             <div class="two field">
                                 <div class="ui left input" style="width: auto;"><input id="vcode" name="captcha"
                                                                                        :placeholder="$t('captcha')" type="text"><img
-                                        alt="click to change" height="40px" id="vcode_graph"
+                                        alt="click to change" height="40px" id="vcode_graph" class="captcha"
                                         onclick="this.src='/api/captcha?from=upload&random='+Math.random()"
                                         :src="`/api/captcha?from=upload&random=${captchaHash}`"></div>
                             </div>

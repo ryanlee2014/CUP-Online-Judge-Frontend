@@ -7,6 +7,9 @@ const mutations: MutationTree<ISystemState> = {
     },
     setInitState (state, initState) {
         state.init = initState;
+    },
+    setDarkMode (state, mode) {
+        state.darkMode = mode;
     }
 };
 

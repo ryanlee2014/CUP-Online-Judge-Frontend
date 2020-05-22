@@ -41,7 +41,7 @@
                         </div>
                         <div class="field">
                             <label style="opacity: 0">Captcha image</label>
-                            <img alt="click to change" :src="`/api/captcha?from=init&random=${captchaHash}`"
+                            <img class="captcha" alt="click to change" :src="`/api/captcha?from=init&random=${captchaHash}`"
                                  onclick="this.src='/api/captcha?from=init&random='+Math.random()" width="20%">
                         </div>
                     </div>

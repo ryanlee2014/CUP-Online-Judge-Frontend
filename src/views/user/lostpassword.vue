@@ -36,7 +36,7 @@
                     </div>
                     <div class="field">
                         <label>CAPTCHA</label>
-                        <input name="vcode" id="vcode" size="10" style="width:60%" type=text v-model="captcha"><img alt="click to change" onclick="changeCaptcha"
+                        <input name="vcode" id="vcode" size="10" style="width:60%" type=text v-model="captcha"><img alt="click to change" class="captcha"  onclick="changeCaptcha"
                                                                                                   :src="captchaSrc" height="40px">
                     </div>
                 </div>
