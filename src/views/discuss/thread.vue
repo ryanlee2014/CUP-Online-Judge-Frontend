@@ -66,6 +66,7 @@ import Clipboard from "clipboard";
 import { Component, Mixins } from "vue-property-decorator";
 import MarkdownWorkerMixin from "@/mixin/MarkdownWorkerMixin";
 import CaptchaMixin from "@/mixin/CaptchaMixin";
+import DarkModeMixin from "@/mixin/DarkModeMixin";
 
 const $: any = jquery;
 const uslug = require("uslug");
@@ -90,7 +91,7 @@ const uslug = require("uslug");
         }
     }
 })
-export default class Thread extends Mixins(mixins, avatarMixin, MarkdownWorkerMixin, CaptchaMixin) {
+export default class Thread extends Mixins(mixins, avatarMixin, MarkdownWorkerMixin, CaptchaMixin, DarkModeMixin) {
     page = 0;
     table_val: any = {};
     total = 0;
@@ -108,7 +109,7 @@ export default class Thread extends Mixins(mixins, avatarMixin, MarkdownWorkerMi
     }
 
     set table (val: any) {
-        console.log("table", val);
+        // console.log("table", val);
         _.forEach(val, (v) => {
             if (v && v.length) {
                 _.forEach(v, async (v) => {

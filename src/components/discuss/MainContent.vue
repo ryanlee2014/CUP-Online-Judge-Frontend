@@ -45,6 +45,7 @@ import MarkdownWorkerMixin from "@/mixin/MarkdownWorkerMixin";
 import jquery from "jquery";
 import mermaidMixin from "@/mixin/mermaidMixin";
 import { Debounce } from "@/module/Decorator/method";
+import DarkModeMixin from "@/mixin/DarkModeMixin";
 const doc = document.createElement("div");
 const $: any = jquery;
 const uslug = require("uslug");
@@ -54,7 +55,7 @@ const uslug = require("uslug");
         UserCard
     }
 })
-export default class DiscussContent extends Mixins(avatarMixin, MarkdownWorkerMixin, mermaidMixin) {
+export default class DiscussContent extends Mixins(avatarMixin, MarkdownWorkerMixin, mermaidMixin, DarkModeMixin) {
     @Prop({ default: () => { return {}; } }) thread_head!: any;
     @Prop({ default: "" }) owner!: string;
     @Prop({ default: "" }) id!: string;

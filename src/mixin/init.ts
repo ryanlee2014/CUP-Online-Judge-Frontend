@@ -1,13 +1,14 @@
 import Vue from "vue";
-import { Component } from "vue-property-decorator";
+import { Component, Mixins } from "vue-property-decorator";
 import popup from "semantic-ui-popup";
 import util from "../lib/util";
 import config from "../../config/environment.json";
 import $ from "jquery";
+import DarkModeMixin from "@/mixin/DarkModeMixin";
 const Clipboard = require("clipboard");
 
 @Component
-export default class InitMixin extends Vue {
+export default class InitMixin extends Mixins(DarkModeMixin) {
     mounted () {
         util.init(this.$store.getters.homepage);
         document.title = this.$t("oj-name") as string;

@@ -80,9 +80,11 @@ export default class ProfileCard extends Vue {
         this.$store.commit("setDarkMode", !this.$store.getters.darkMode);
         if (this.$store.getters.darkMode) {
             $("*:not(.not.theme)").addClass("inverted");
+            $(".dimmer.inverted").removeClass("inverted");
         }
         else {
             $("*:not(.not.theme)").removeClass("inverted");
+            $(".dimmer").addClass("inverted");
         }
     }
 

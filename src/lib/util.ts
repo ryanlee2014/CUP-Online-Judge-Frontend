@@ -422,16 +422,20 @@ class Util {
         if (!homepage) {
             if (store.getters.darkMode) {
                 $("*:not(.not.theme)").addClass("inverted");
+                $(".dimmer.inverted").removeClass("inverted");
             } else {
                 $("*:not(.not.theme)").removeClass("inverted");
+                $(".dimmer").addClass("inverted");
             }
         }
         $(document).on("click", function () {
             if (!homepage) {
                 if (store.getters.darkMode) {
                     $("*:not(.not.theme)").addClass("inverted");
+                    $(".dimmer.inverted").removeClass("inverted");
                 } else {
                     $("*:not(.not.theme)").removeClass("inverted");
+                    $(".dimmer").addClass("inverted");
                 }
             }
         });

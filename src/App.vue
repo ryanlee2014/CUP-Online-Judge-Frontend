@@ -52,17 +52,6 @@ export default class App extends Vue {
         }, 1500);
     }
 
-    updated () {
-        if (!this.homepage) {
-            if (this.$store.getters.darkMode) {
-                $("*:not(.not.theme)").addClass("inverted");
-            }
-            else {
-                $("*:not(.not.theme)").removeClass("inverted");
-            }
-        }
-    }
-
     initWebSocket () {
         if (this.$socket && this.$socket.connect && this.$store.getters.logined) {
             this.$socket.connect();
