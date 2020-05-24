@@ -654,6 +654,14 @@
     background: #545454 linear-gradient(transparent, rgba(0,0,0,.05));
 }
 
+.inverted.markdown-body table tr:nth-child(2n) {
+    background-color: #2e2f2a
+}
+
+.inverted.markdown-body table tr {
+    background-color: #1b1c1d
+}
+
 .inverted.captcha {
     background: #eee
 }
