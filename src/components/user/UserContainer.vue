@@ -511,6 +511,7 @@ import Chart from "chart.js";
 import dayjs from "dayjs";
 import { mapGetters } from "vuex";
 import MarkdownWorkerMixin from "@/mixin/MarkdownWorkerMixin";
+import DarkModeMixin from "@/mixin/DarkModeMixin";
 const $: any = jquery;
 @Component({
     components: {
@@ -518,7 +519,7 @@ const $: any = jquery;
     },
     computed: mapGetters(["contestMode"])
 })
-export default class UserContainer extends Mixins(avatarMixin, MarkdownWorkerMixin) {
+export default class UserContainer extends Mixins(avatarMixin, MarkdownWorkerMixin, DarkModeMixin) {
     @Prop({ default: "" }) userId!: string;
     award = [];
     dayjs = dayjs;
