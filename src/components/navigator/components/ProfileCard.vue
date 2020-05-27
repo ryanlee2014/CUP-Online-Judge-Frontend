@@ -9,7 +9,7 @@
                     </h4>
                     <p><i class='yen sign icon'></i>0</p>
                     <div @click="darkmodeSwitch" class="ui toggle checkbox" id="show_tag">
-                        <input type="checkbox">
+                        <input type="checkbox" v-model="darkMode">
                         <label>{{$t("dark mode")}}</label>
                     </div>
                 </div>
@@ -52,7 +52,10 @@ import store from "../../../store";
 import util from "../../../lib/util";
 import { Prop, Component } from "vue-property-decorator";
 import Vue from "vue";
-@Component
+import { mapGetters } from "vuex";
+@Component({
+    computed: mapGetters(["darkMode"])
+})
 export default class ProfileCard extends Vue {
     @Prop({ default: "" }) user_id!: string;
     @Prop({ default: "" }) nick!: string;
