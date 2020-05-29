@@ -83,6 +83,7 @@ export default class NavbarMixin extends Vue {
         this.sockets.subscribe = (events: any, callback: (...arg: any[]) => any) => {
             _subscribe.call(this.sockets, events, function () {
                 that.socketConnected = true;
+                // eslint-disable-next-line prefer-rest-params
                 callback.apply(that, arguments as unknown as any[]);
             });
         };

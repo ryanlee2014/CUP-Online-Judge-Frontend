@@ -54,9 +54,9 @@
                     <thead>
                     <tr>
                         <th @click="sort(1)"><a><i v-show="type == 1"
-                                                   :class="'sort numeric icon '+(order > 0 ?'down':'up')"></i>User ID</a></th>
+                                                   :class="'sort numeric icon '+(order > 0 ?'down':'up')"></i>{{$t("user_id")}}</a></th>
                         <th @click="sort(2)"><a><i v-show="type == 2"
-                                                   :class="'sort numeric icon '+(order > 0 ?'down':'up')"></i>Nick</a></th>
+                                                   :class="'sort numeric icon '+(order > 0 ?'down':'up')"></i>{{$t("nick")}}</a></th>
                         <th><a @click="sort(3)"><i v-show="type == 3"
                                                    :class="'sort numeric icon '+(order > 0 ?'down':'up')"></i>通过</a></th>
                         <th><a @click="sort(4)"><i v-show="type == 4"
@@ -67,7 +67,7 @@
                                                    :class="'sort numeric icon '+(order > 0 ?'down':'up')"></i>平均代码长度</a></th>
                         <th><a @click="sort(7)">
                             <i v-show="type == 7"
-                               :class="'sort numeric icon '+(order > 0 ?'down':'up')"></i>总代码长度
+                               :class="'sort numeric icon '+(order > 0 ?'down':'up')"></i>总代码行数
                         </a></th>
                     </tr>
                     </thead>

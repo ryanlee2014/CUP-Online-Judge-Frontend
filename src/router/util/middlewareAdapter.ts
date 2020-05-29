@@ -52,8 +52,8 @@ export default class MiddlewareAdapter {
         this._from = config;
     }
 
-    add (...argument:any[]) {
-        for (const i of arguments) {
+    add (...args:any[]) {
+        for (const i of args) {
             if (typeof i !== "function") {
                 throw argumentNotFunctionError;
             }

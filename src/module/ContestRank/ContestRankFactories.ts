@@ -262,6 +262,7 @@ export function SetFactory () {
     set.add = function (val: any) {
         if (typeof val !== "undefined") {
             // @ts-ignore
+            // eslint-disable-next-line prefer-rest-params
             _add.apply(set, arguments);
         }
         return this;

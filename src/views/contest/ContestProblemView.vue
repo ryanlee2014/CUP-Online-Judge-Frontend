@@ -148,6 +148,7 @@ export default class ContestProblemView extends Mixins(mixins, MarkdownWorkerMix
     dayjs = dayjs;
     created () {
         this.cid = parseInt(this.$route.params.contest_id);
+        this.title = this.$t("loading") as string;
     }
 
     get mode () {

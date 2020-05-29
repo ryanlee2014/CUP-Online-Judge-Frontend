@@ -7,7 +7,9 @@ export default function () {
     Function.prototype.before = function (beforefn: (...arg: any[]) => any) {
         const __self = this;
         return function (this: any) {
+            // eslint-disable-next-line prefer-rest-params
             beforefn.apply(this, <any>arguments);
+            // eslint-disable-next-line prefer-rest-params
             return __self.apply(this, arguments);
         };
     };
@@ -16,7 +18,9 @@ export default function () {
     Function.prototype.after = Function.prototype.then = function (afterfn: (...arg: any[]) => any) {
         const __self = this;
         return function (this: any) {
+            // eslint-disable-next-line prefer-rest-params
             const ret = __self.apply(this, arguments);
+            // eslint-disable-next-line prefer-rest-params
             afterfn.apply(this, <any>arguments);
             return ret;
         };
@@ -26,6 +30,7 @@ export default function () {
     const _post = axios.post;
     // @ts-ignore
     axios.get = function () {
+        // eslint-disable-next-line prefer-rest-params
         return _get.apply(this, <any>arguments).catch(reason => {
             if (axios.isCancel(reason)) {
                 return;
@@ -37,6 +42,7 @@ export default function () {
 
     // @ts-ignore
     axios.post = function () {
+        // eslint-disable-next-line prefer-rest-params
         return _post.apply(this, <any>arguments).catch(reason => {
             console.log("POST ERROR: ", reason);
             return Promise.reject(reason);

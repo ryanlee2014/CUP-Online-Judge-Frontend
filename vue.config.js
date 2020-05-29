@@ -62,6 +62,9 @@ module.exports = {
                 secure: false,
                 changeOrigin: true
             }
+        },
+        overlay: {
+            warnings: false
         }
     },
     publicPath: process.env.NODE_ENV === "production" && !process.env.DISABLE_CDN ? webPath : "/",

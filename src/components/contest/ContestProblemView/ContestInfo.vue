@@ -10,9 +10,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="ui basic segment">
-                    <p>{{description}}</p>
-                </div>
+                <p style="padding: 1em">{{description}}</p>
             </div>
             <!--2018 2019 2020年 中国石油大学（北京）团委 不发ICPC/CCPC奖学金-->
         </div>
