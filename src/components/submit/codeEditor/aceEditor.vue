@@ -7,6 +7,7 @@
 import * as ace from "brace";
 import "@/lib/brace/braceMode";
 import "@/lib/brace/braceTheme";
+import "brace/ext/language_tools";
 import Vue from "vue";
 import { Prop, Component, Watch } from "vue-property-decorator";
 // @ts-ignore
@@ -58,7 +59,13 @@ export default class AceEditor extends Vue {
     }
 
     initEditor () {
+        ace.acequire("ace/ext/language_tools");
         const editor = this.editor = ace.edit(this.$refs.source);
+        this.editor.setOptions({
+            enableBasicAutocompletion: true,
+            enableSnippets: true,
+            enableLiveAutocompletion: true
+        });
         editor.getSession().setValue(this.value);
         editor.on("change", () => {
             this.source_code = this.editor.getSession().getValue();
