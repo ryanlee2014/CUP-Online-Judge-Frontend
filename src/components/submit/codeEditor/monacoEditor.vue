@@ -36,14 +36,14 @@ export default class MonacoEditor extends Vue {
     onValueChanged (val: string) {
         if (val !== this.source_code) {
             this.source_code = val;
-            this.editor.getModel().setValue(val);
+            this.editor!.getModel()!.setValue(val);
         }
     }
 
     @Watch("selected_language")
     onSelectedLanguageChanged (val: any, oldVal: any) {
         if (this.editor && languageMap[val] !== languageMap[oldVal]) {
-            const oldModel = this.editor.getModel();
+            const oldModel = this.editor.getModel()!;
             const newModel = monaco.editor.createModel(oldModel.getValue(), languageMap[parseInt(val)], monaco.Uri.parse(`file:///tmp/cupoj-language-server/${this.languageServerId()}.${languageMap[val]}`));
             this.editor.setModel(newModel);
             if (oldModel) {
