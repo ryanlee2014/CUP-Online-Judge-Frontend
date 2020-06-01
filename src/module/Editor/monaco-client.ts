@@ -62,4 +62,5 @@ export function enableLanguageServer (editor: monaco.editor.IStandaloneCodeEdito
         };
         return new ReconnectingWebSocket(url, [], socketOptions) as WebSocket;
     }
+    return webSocket;
 }

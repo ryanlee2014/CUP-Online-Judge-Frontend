@@ -23,8 +23,9 @@ export default class MonacoEditor extends Vue {
 
     $refs: any;
 
-    editor: any = null;
+    editor: monaco.editor.IStandaloneCodeEditor | null = null;
     source_code = "";
+    languageServer!: WebSocket;
 
     @Watch("source_code")
     onSourceCodeChanged (val: string) {
@@ -40,10 +41,10 @@ export default class MonacoEditor extends Vue {
     }
 
     @Watch("selected_language")
-    onSelectedLanguageChanged (val: string) {
-        if (this.editor) {
+    onSelectedLanguageChanged (val: any, oldVal: any) {
+        if (this.editor && languageMap[val] !== languageMap[oldVal]) {
             const oldModel = this.editor.getModel();
-            const newModel = monaco.editor.createModel(oldModel.getValue(), languageMap[parseInt(val)], monaco.Uri.parse(`file:///tmp/cupoj-language-server/${(+(new Date()))}`));
+            const newModel = monaco.editor.createModel(oldModel.getValue(), languageMap[parseInt(val)], monaco.Uri.parse(`file:///tmp/cupoj-language-server/${this.languageServerId()}.${languageMap[val]}`));
             this.editor.setModel(newModel);
             if (oldModel) {
                 oldModel.dispose();
@@ -77,7 +78,7 @@ export default class MonacoEditor extends Vue {
     onHeightChanged (val: string) {
         if (this.editor) {
             this.$nextTick(() => {
-                this.editor.layout();
+                this.editor!.layout();
             });
         }
     }
@@ -88,8 +89,20 @@ export default class MonacoEditor extends Vue {
         });
     }
 
+    beforeDestroy () {
+        this.languageServer.close();
+        this.editor!.dispose();
+    }
+
+    languageServerId () {
+        const id = `${(+(new Date())).toString()}-${this.$store.getters.user_id}`;
+        console.log("langid:", id);
+        return id;
+    }
+
     initEditor () {
         this.editor = monaco.editor.create(this.$refs.source, {
+            model: monaco.editor.createModel(this.value, languageMap[this.selected_language], monaco.Uri.parse(`file:///tmp/cupoj-language-server/${this.languageServerId()}.${languageMap[this.selected_language]}`)),
             value: this.value,
             language: languageMap[this.selected_language],
             minimap: {
@@ -103,7 +116,7 @@ export default class MonacoEditor extends Vue {
             scrollBeyondLastLine: false,
             readOnly: this.readOnly
         });
-        enableLanguageServer(this.editor, this.value, languageMap[this.selected_language]);
+        this.languageServer = enableLanguageServer(this.editor, this.value, languageMap[this.selected_language]);
         this.editor.updateOptions({
             fontSize: this.getFontSizeFromStorage()
         });
@@ -112,9 +125,9 @@ export default class MonacoEditor extends Vue {
     }
 
     modelEventRegistry () {
-        const currentModel = this.editor.getModel();
-        currentModel.onDidChangeContent(() => {
-            this.source_code = this.editor.getModel().getValue();
+        const currentModel = this.editor!.getModel();
+        currentModel!.onDidChangeContent(() => {
+            this.source_code = this.editor!.getModel()!.getValue();
             this.$store.commit("setCodeInfo", {
                 code: this.source_code
             });
