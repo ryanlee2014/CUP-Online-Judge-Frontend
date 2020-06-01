@@ -9,6 +9,7 @@ import * as monaco from "monaco-editor";
 import languageMap from "../../../lib/constants/monaco-editor/language-map";
 import Vue from "vue";
 import { Prop, Component, Watch } from "vue-property-decorator";
+import { enableLanguageServer } from "@/module/Editor/monaco-client";
 
 @Component
 export default class MonacoEditor extends Vue {
@@ -42,7 +43,7 @@ export default class MonacoEditor extends Vue {
     onSelectedLanguageChanged (val: string) {
         if (this.editor) {
             const oldModel = this.editor.getModel();
-            const newModel = monaco.editor.createModel(oldModel.getValue(), languageMap[parseInt(val)]);
+            const newModel = monaco.editor.createModel(oldModel.getValue(), languageMap[parseInt(val)], monaco.Uri.parse(`file:///tmp/cupoj-language-server/${(+(new Date()))}`));
             this.editor.setModel(newModel);
             if (oldModel) {
                 oldModel.dispose();
@@ -94,10 +95,15 @@ export default class MonacoEditor extends Vue {
             minimap: {
                 enabled: this.minimap
             },
+            glyphMargin: true,
+            lightbulb: {
+                enabled: true
+            },
             fontLigatures: true,
             scrollBeyondLastLine: false,
             readOnly: this.readOnly
         });
+        enableLanguageServer(this.editor, this.value, languageMap[this.selected_language]);
         this.editor.updateOptions({
             fontSize: this.getFontSizeFromStorage()
         });
