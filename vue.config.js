@@ -32,6 +32,11 @@ module.exports = {
                 target: devURL,
                 changeOrigin: true
             },
+            "/language-server": {
+                secure: false,
+                target: devURL,
+                changeOrigin: true
+            },
             "/avatar": {
                 target: devURL,
                 secure: false,
@@ -73,6 +78,11 @@ module.exports = {
             plugins: [
                 new MonacoEditorPlugin()
             ],
+            resolve: {
+                alias: {
+                    vscode: require.resolve("monaco-languageclient/lib/vscode-compatibility")
+                }
+            },
             module: {
                 rules: [
                     {
