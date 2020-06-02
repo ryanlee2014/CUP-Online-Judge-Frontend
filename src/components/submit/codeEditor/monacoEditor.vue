@@ -43,12 +43,17 @@ export default class MonacoEditor extends Vue {
     @Watch("selected_language")
     onSelectedLanguageChanged (val: any, oldVal: any) {
         if (this.editor && languageMap[val] !== languageMap[oldVal]) {
+            console.log("Changed");
+            if (this.languageServer && this.languageServer.close) {
+                this.languageServer.close();
+            }
             const oldModel = this.editor.getModel()!;
-            const newModel = monaco.editor.createModel(oldModel.getValue(), languageMap[parseInt(val)], monaco.Uri.parse(`file:///tmp/cupoj-language-server/${this.languageServerId()}.${languageMap[val]}`));
+            const newModel = monaco.editor.createModel(oldModel.getValue(), languageMap[parseInt(val)], monaco.Uri.parse(`file:///tmp/cupoj-language-server/${this.languageServerId()}/Main.${languageMap[val]}`));
             this.editor.setModel(newModel);
             if (oldModel) {
                 oldModel.dispose();
             }
+            this.languageServer = enableLanguageServer(this.editor, this.value, languageMap[val]);
             this.modelEventRegistry();
         }
     }
@@ -95,14 +100,14 @@ export default class MonacoEditor extends Vue {
     }
 
     languageServerId () {
-        const id = `${(+(new Date())).toString()}-${this.$store.getters.user_id}`;
+        const id = `${(+(new Date())).toString()}${this.$store.getters.user_id}`;
         console.log("langid:", id);
         return id;
     }
 
     initEditor () {
         this.editor = monaco.editor.create(this.$refs.source, {
-            model: monaco.editor.createModel(this.value, languageMap[this.selected_language], monaco.Uri.parse(`file:///tmp/cupoj-language-server/${this.languageServerId()}.${languageMap[this.selected_language]}`)),
+            model: monaco.editor.createModel(this.value, languageMap[this.selected_language], monaco.Uri.parse(`file:///tmp/cupoj-language-server/${this.languageServerId()}/Main.${languageMap[this.selected_language]}`)),
             value: this.value,
             language: languageMap[this.selected_language],
             minimap: {
