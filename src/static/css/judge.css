@@ -1,29 +1,67 @@
 
 .waiting{
-    color:grey!important;
+    color:grey;
 }
+
+.waiting.important {
+    color: grey;
+}
+
 .running{
-    color:#6cf!important;
+    color:#6cf;
+}
+
+.running.important {
+    color: #6cf!important;
 }
 
 .compiling{
+    color:#00b5ad;
+}
+
+.compiling.important{
     color:#00b5ad!important;
 }
-.accepted{
+
+.accepted,.checkmark{
+    color: forestgreen;
+}
+
+.accepted.important,.checkmark.important{
     color: forestgreen!important;
 }
-.wrong_answer{
+.wrong_answer,.remove{
+    color:red;
+}
+
+.wrong_answer.important,.remove.important{
     color:red!important;
 }
+
 .time_limit_exceeded,.memory_limit_exceeded,.output_limit_exceeded{
+    color:sandybrown;
+}
+
+.time_limit_exceeded.important,.memory_limit_exceeded.important,.output_limit_exceeded.important{
     color:sandybrown!important;
 }
+
 .runtime_error{
+    color:darkorchid;
+}
+
+.runtime_error.important{
     color:darkorchid!important;
 }
+
 .compile_error{
+    color: rgb(0,68,136);
+}
+
+.compile_error.important{
     color: rgb(0,68,136)!important;
 }
+
  @keyframes spinner-icon-rotate {
   0% {
     transform: rotate(0deg);

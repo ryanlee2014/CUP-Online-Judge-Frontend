@@ -87,10 +87,10 @@ export default class ResultGrid extends Vue {
         for (const submission of total) {
             let htmlBuilder = "<div class=\"item\">";
             if (!submission.pass) {
-                htmlBuilder += "<i class=\"remove icon\"></i>";
+                htmlBuilder += "<i class=\"remove important icon\"></i>";
             }
             else {
-                htmlBuilder += "<i class=\"checkmark icon\"></i>";
+                htmlBuilder += "<i class=\"checkmark important icon\"></i>";
             }
             htmlBuilder += "<div class=\"content\">";
             htmlBuilder += `<div class="header">${submission.pass ? "Passed" : "Failed"}</div>`;

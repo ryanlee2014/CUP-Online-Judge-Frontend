@@ -21,13 +21,13 @@
                                 <th style="text-align: center;" width="18%">
                                     <a style="cursor:pointer" @click="orderBy(0)">
                                     <i :class="'sort numeric icon ' + (order > 0?'up':'down')" v-if="type === 0"></i>
-                                    <i class="checkmark icon" style="opacity: 0" v-else></i>
+                                    <i class="checkmark important icon" style="opacity: 0" v-else></i>
                                     {{$t("id")}}
                                 </a></th>
                                 <th width='44%'>
                                     <a style="cursor:pointer" @click="orderBy(1)">
                                     <i :class="'sort numeric icon ' + (order > 0?'up':'down')" v-if="type === 1"></i>
-                                    <i class="checkmark icon" style="opacity: 0" v-else></i>
+                                    <i class="checkmark important icon" style="opacity: 0" v-else></i>
                                     {{$t("title")}}</a></th>
                                 <th v-if="now.isAfter(end_time)" width="10%">
                                 </th>
@@ -51,9 +51,9 @@
                                 <td class="center aligned">{{row.oj_name?row.oj_name:row.pid?"LOCAL ":""}}{{row.pid}}<br
                                         v-if="row.pid">Problem {{row.pnum + 1001}}
                                 </td>
-                                <td><i class='checkmark icon' v-if="row.ac === 1"></i>
-                                    <i class="remove icon" v-else-if="row.ac === -1"></i>
-                                    <i class="checkmark icon" style="opacity: 0" v-else></i>
+                                <td><i class='checkmark important icon' v-if="row.ac === 1"></i>
+                                    <i class="remove important icon" v-else-if="row.ac === -1"></i>
+                                    <i class="checkmark important icon" style="opacity: 0" v-else></i>
                                     <router-link v-if="dayjs().isBefore(end_time) && dayjs().isAfter(start_time)" :to="`/contest/problem/${cid}/${row.pnum}`" v-html="contest(row.title, row.pnum)">
                                     </router-link>
                                     <router-link :to="`/problem/submit/${row.pid}`" v-else v-html="contest(row.title, row.pnum)">

@@ -146,10 +146,10 @@ body{
         display: none;
     }
     .checkmark{
-        color:forestgreen!important;
+        color:forestgreen;
     }
     .remove:not(.user){
-        color:red!important;
+        color:red;
     }
     .masthead.segment {
         min-height: 700px;

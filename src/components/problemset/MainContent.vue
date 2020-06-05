@@ -36,9 +36,9 @@
                 <!--<td>
                 </td>-->
                 <td style="width: 12%">
-                    <i class="checkmark icon" v-if="row.ac === true"></i>
-                    <i class="remove icon" v-else-if="row.ac === false"></i>
-                    <i class="checkmark icon" style="opacity: 0" v-else></i>
+                    <i class="checkmark important icon" v-if="row.ac === true"></i>
+                    <i class="remove important icon" v-else-if="row.ac === false"></i>
+                    <i class="checkmark important icon" style="opacity: 0" v-else></i>
                     {{row.problem_id}}
                 </td>
                 <td class="problemTitle">

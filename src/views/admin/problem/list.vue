@@ -126,9 +126,9 @@ export default class ProblemList extends Mixins(mixins) {
 
 <style scoped>
     .checkmark {
-        color: inherit;
+        color: inherit!important;
     }
     .remove {
-        color: inherit;
+        color: inherit!important;
     }
 </style>

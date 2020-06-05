@@ -8,8 +8,8 @@
                         <div class='sub header'>{{nick}}</div>
                     </h4>
                     <p><i class='yen sign icon'></i>0</p>
-                    <div @click="darkmodeSwitch" class="ui toggle checkbox" id="show_tag">
-                        <input type="checkbox" v-model="darkMode">
+                    <div class="ui toggle checkbox" id="show_tag">
+                        <input @change="darkmodeSwitch" type="checkbox" :value="darkMode">
                         <label>{{$t("dark mode")}}</label>
                     </div>
                 </div>
@@ -81,6 +81,7 @@ export default class ProfileCard extends Vue {
 
     darkmodeSwitch () {
         this.$store.commit("setDarkMode", !this.$store.getters.darkMode);
+        console.log("darkmode:", this.$store.getters.darkMode);
         if (this.$store.getters.darkMode) {
             $("*:not(.not.theme)").addClass("inverted");
             $(".dimmer.inverted").removeClass("inverted");
