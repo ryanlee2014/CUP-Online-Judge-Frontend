@@ -9,7 +9,7 @@
                     </h4>
                     <p><i class='yen sign icon'></i>0</p>
                     <div class="ui toggle checkbox" id="show_tag">
-                        <input @change="darkmodeSwitch" type="checkbox" :value="darkMode">
+                        <input @click="darkmodeSwitch" type="checkbox" :value="darkMode">
                         <label>{{$t("dark mode")}}</label>
                     </div>
                 </div>
