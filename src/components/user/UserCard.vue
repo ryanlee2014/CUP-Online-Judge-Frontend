@@ -2,7 +2,7 @@
     <div class="ui link card">
         <div class="image">
             <router-link :to="`/user/${thread_head.user_id}`">
-                <v-gravatar :size="400" style="width: 100%; display: flex" hostname="cn.gravatar.com" :email="thread_head.email"></v-gravatar>
+                <v-gravatar :size="400" style="width: 100%; display: flex" hostname="gravatar.w3tt.com" :email="thread_head.email"></v-gravatar>
             </router-link>
         </div>
         <div class="content">

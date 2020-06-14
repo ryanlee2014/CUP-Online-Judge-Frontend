@@ -48,7 +48,7 @@
                         <div class="row half_padding">
                             <div class="sixteen wide column">
                                 <div @click="check" class="ui toggle checkbox" id="show_tag">
-                                    <input type="checkbox">
+                                    <input type="checkbox" :value="show_tag">
                                     <label>{{$t("labelvisible")}}</label>
                                 </div>
                             </div>
@@ -56,7 +56,7 @@
                         <div class="row half_padding">
                             <div class="sixteen wide column">
                                 <div @click="hide" class="ui toggle checkbox" id="hide_currect">
-                                    <input type="checkbox">
+                                    <input type="checkbox" :value="hide_currect">
                                     <label>{{$t("hidepassedproblem")}}</label>
                                 </div>
                             </div>
@@ -64,7 +64,7 @@
                         <div class="row half_padding">
                             <div class="sixteen wide column">
                                 <div @click="cloud" class="ui toggle checkbox" id="show_cloud">
-                                    <input type="checkbox">
+                                    <input type="checkbox" :value="show_label_cloud">
                                     <label>{{$t("showlabelcloud")}}</label>
                                 </div>
                             </div>
@@ -470,7 +470,8 @@ export default class ProblemSet extends Mixins(mixins) {
                         that.contest_mode = data.contest_mode;
                     }
                 });
-            /* $(".ui.search")
+            /*
+             $(".ui.search")
                 .search({
                     apiSettings: {
                         url: "/api/problem/module/search/{query}"
@@ -485,7 +486,8 @@ export default class ProblemSet extends Mixins(mixins) {
                         "title", "description", "source", "problem_id", "label"
                     ],
                     minCharacters: 2
-                }); */
+                });
+                */
         }
 }
 

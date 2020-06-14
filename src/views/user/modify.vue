@@ -6,7 +6,7 @@
                     <div class="row">
                         <div class="ui card" style="width: 100%">
                             <div class="image">
-                                <v-gravatar hostname="cn.gravatar.com" :email="email" :size="324"></v-gravatar>
+                                <v-gravatar hostname="gravatar.w3tt.com" :email="email" :size="324"></v-gravatar>
                             </div>
                             <div class="content">
                                 <div class="header">
@@ -97,7 +97,7 @@
                                         </div>
                                     </div>
                                     <div class="field">
-                                        <label>头像(请使用邮箱注册 <a href="https://zh-cn.wordpress.com/" target="_blank">WordPress.com</a>，登录 <a href="https://cn.gravatar.com/" target="_blank">Gravatar</a> 并上传头像。头像与你的邮箱绑定)</label>
+                                        <label>头像(请使用邮箱注册 <a href="https://zh-cn.wordpress.com/" target="_blank">WordPress.com</a>，登录 <a href="https://gravatar.w3tt.com/" target="_blank">Gravatar</a> 并上传头像。头像与你的邮箱绑定)</label>
                                         <input name="" type="text" :value="email" disabled>
                                     </div>
                                     <div class="field">
