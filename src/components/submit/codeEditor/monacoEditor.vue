@@ -9,7 +9,7 @@ import * as monaco from "monaco-editor";
 import languageMap from "../../../lib/constants/monaco-editor/language-map";
 import Vue from "vue";
 import { Prop, Component, Watch } from "vue-property-decorator";
-import { enableLanguageServer } from "@/module/Editor/monaco-client";
+import { createLanguageServer } from "@/module/Editor/monaco-client";
 
 @Component
 export default class MonacoEditor extends Vue {
@@ -20,6 +20,7 @@ export default class MonacoEditor extends Vue {
     @Prop({ default: 460 }) height!: number;
     @Prop({ default: false }) readOnly!: boolean;
     @Prop({ default: true }) minimap!: boolean;
+    @Prop({ default: false }) enableLanguageServer!: boolean;
 
     $refs: any;
 
@@ -44,17 +45,29 @@ export default class MonacoEditor extends Vue {
     onSelectedLanguageChanged (val: any, oldVal: any) {
         if (this.editor && languageMap[val] !== languageMap[oldVal]) {
             console.log("Changed");
-            if (this.languageServer && this.languageServer.close) {
-                this.languageServer.close();
-            }
+            this.closeLanguageServer();
             const oldModel = this.editor.getModel()!;
             const newModel = monaco.editor.createModel(oldModel.getValue(), languageMap[parseInt(val)], monaco.Uri.parse(`file:///tmp/cupoj-language-server/${this.languageServerId()}/Main.${languageMap[val]}`));
             this.editor.setModel(newModel);
             if (oldModel) {
                 oldModel.dispose();
             }
-            this.languageServer = enableLanguageServer(this.editor, this.value, languageMap[val]);
+            this.getNewLanguageServer(this.editor, this.value, languageMap[val]);
             this.modelEventRegistry();
+        }
+    }
+
+    getNewLanguageServer (editor: monaco.editor.IStandaloneCodeEditor, value: string, language: string) {
+        if (this.enableLanguageServer) {
+            this.languageServer = createLanguageServer(editor, value, language);
+        }
+    }
+
+    closeLanguageServer () {
+        if (this.enableLanguageServer) {
+            if (this.languageServer && this.languageServer.close) {
+                this.languageServer.close();
+            }
         }
     }
 
@@ -95,7 +108,7 @@ export default class MonacoEditor extends Vue {
     }
 
     beforeDestroy () {
-        this.languageServer.close();
+        this.closeLanguageServer();
         this.editor!.dispose();
     }
 
@@ -121,7 +134,7 @@ export default class MonacoEditor extends Vue {
             scrollBeyondLastLine: false,
             readOnly: this.readOnly
         });
-        this.languageServer = enableLanguageServer(this.editor, this.value, languageMap[this.selected_language]);
+        this.getNewLanguageServer(this.editor, this.value, languageMap[this.selected_language]);
         this.editor.updateOptions({
             fontSize: this.getFontSizeFromStorage()
         });

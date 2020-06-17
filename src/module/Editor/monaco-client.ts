@@ -10,7 +10,7 @@ import ReconnectingWebSocket from "reconnecting-websocket";
 // create Monaco editor
 
 // install Monaco language client services
-export function enableLanguageServer (editor: monaco.editor.IStandaloneCodeEditor, value: string, language: string) {
+export function createLanguageServer (editor: monaco.editor.IStandaloneCodeEditor, value: string, language: string) {
 // create the web socket
     MonacoServices.install(editor, { rootUri: "file:///tmp/cupoj-language-server/" });
     console.log("language:", language);

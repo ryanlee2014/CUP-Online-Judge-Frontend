@@ -38,7 +38,7 @@
         <ace-editor :fontSize="fontSize + ''" :selected_language="selected_language" :theme="theme"
                     v-if="!editorPackage" v-model="code"></ace-editor>
         <monaco-editor :fontSize="fontSize + ''" :selected_language="selected_language" :theme="theme"
-                       v-else v-model="code">
+                       v-else v-model="code" :enable-language-server="true">
 
         </monaco-editor>
         <ace-static :content="current_append" :fontSize="fontSize + ''" :selected_language="selected_language"
