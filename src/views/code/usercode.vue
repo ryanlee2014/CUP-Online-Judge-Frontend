@@ -178,25 +178,22 @@ export default class UserCode extends Mixins(mixins, MarkdownWorkerMixin) {
 
     initData () {
         this.axios.get(`/api/source/${this.$route.params.from}/${this.$route.params.solution_id}?raw=1`)
-            .then(response => {
-                const data = response.data;
-                if (data.status === "OK") {
-                    Object.assign(this, data.data);
-                    this.code = data.data.code.source;
-                    this.language_id = data.data.code.language;
-                    this.renderCode(this.code, this.language_id);
-                    this.privilege = data.privilege && this.$route.params.from === "local";
-                    this.problem_id = Math.abs(data.data.problem);
+            .then(({ data }) => {
+                Object.assign(this, data.data);
+                this.code = data.data.code.source;
+                this.language_id = data.data.code.language;
+                this.renderCode(this.code, this.language_id);
+                this.privilege = data.privilege && this.$route.params.from === "local";
+                this.problem_id = Math.abs(data.data.problem);
+            })
+            .catch(({ data }) => {
+                if (data.contest_mode) {
+                    this.contest_mode = true;
+                    return;
                 }
-                else {
-                    if (data.contest_mode) {
-                        this.contest_mode = true;
-                        return;
-                    }
-                    this.code = "";
-                    this.statement = data.statement;
-                    this.error = true;
-                }
+                this.code = "";
+                this.statement = data.statement;
+                this.error = true;
             });
     }
 

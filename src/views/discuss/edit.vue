@@ -78,18 +78,6 @@ export default class DiscussEdit extends Mixins(mixins, CaptchaMixin) {
         }
     }
 
-    editPostCallback (data: any) {
-        if (data.status === "OK") {
-            alert("更改成功");
-            this.$router.push({
-                path: `/discuss/thread/${this.article_id}`
-            });
-        }
-        else {
-            alert("Error!\n" + data.statement);
-        }
-    }
-
     get editUrl () {
         const isMainContent = !this.reply;
         if (isMainContent) {
@@ -106,8 +94,14 @@ export default class DiscussEdit extends Mixins(mixins, CaptchaMixin) {
             content: this.content,
             captcha: this.captcha
         }).then(({ data }) => {
-            this.editPostCallback(data);
-        });
+            alert("更改成功");
+            this.$router.push({
+                path: `/discuss/thread/${this.article_id}`
+            });
+        })
+            .catch(({ data }) => {
+                alert("Error!\n" + data.statement);
+            });
     }
 }
 </script>

@@ -64,13 +64,11 @@ export default class AdminBanUser extends Mixins(mixins) {
             user_id: userId
         })
             .then(({ data }) => {
-                if (data.status === "OK") {
-                    alert(this.$t("success"));
-                    this.initData();
-                }
-                else {
-                    alert(this.$t("fail"));
-                }
+                alert(this.$t("success"));
+                this.initData();
+            })
+            .catch(({ data }) => {
+                alert(this.$t("fail"));
             });
     }
 

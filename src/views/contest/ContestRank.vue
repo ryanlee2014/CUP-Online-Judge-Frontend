@@ -589,20 +589,6 @@ export default class ContestRank extends Mixins(mixins) {
 
                 this.axios.get(`/api/scoreboard/${cid}`)
                     .then(({ data }) => {
-                        if (data.status !== "OK") {
-                            that.state = false;
-                            that.submitter = [];
-                            if (!data.statement) {
-                                that.errormsg = "根据设置，内容非公开".replace(/\n/g, "<br>");
-                            }
-                            if (data.statement.includes && data.statement.includes("denied")) {
-                                that.errormsg = "根据设置，您无权访问".replace(/\n/g, "<br>");
-                            }
-                            else {
-                                that.errormsg = ("Contest " + cid + ":\n" + data.statement).replace(/\n/g, "<br>");
-                            }
-                            return;
-                        }
                         this.finished = true;
                         that.total = data.total;
                         that.users = data.users;
@@ -619,6 +605,19 @@ export default class ContestRank extends Mixins(mixins) {
                             data.title = "未设置标题";
                         }
                         that.title = data.title;
+                    })
+                    .catch(({ data }) => {
+                        that.state = false;
+                        that.submitter = [];
+                        if (!data.statement) {
+                            that.errormsg = "根据设置，内容非公开".replace(/\n/g, "<br>");
+                        }
+                        if (data.statement.includes && data.statement.includes("denied")) {
+                            that.errormsg = "根据设置，您无权访问".replace(/\n/g, "<br>");
+                        }
+                        else {
+                            that.errormsg = ("Contest " + cid + ":\n" + data.statement).replace(/\n/g, "<br>");
+                        }
                     });
             }
         })();

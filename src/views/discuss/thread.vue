@@ -171,26 +171,22 @@ export default class Thread extends Mixins(mixins, avatarMixin, MarkdownWorkerMi
         };
         this.axios.post(`/api/discuss/reply/${this.id}`, send)
             .then(({ data }) => {
-                if (data.status === "OK") {
-                    alert("回复成功");
-                    location.reload();
-                }
-                else {
-                    alert("回复失败！服务器发生未知错误");
-                }
+                alert("回复成功");
+                location.reload();
+            })
+            .catch(({ data }) => {
+                alert("回复失败！服务器发生未知错误");
             });
     }
 
     block_reply (commentId: string) {
         this.axios.get(`/api/discuss/update/reply/block/${this.id}/${commentId}`)
             .then(({ data }) => {
-                if (data.status === "OK") {
-                    alert("操作成功");
-                }
-                else {
-                    alert("操作失败");
-                }
-            });
+                alert("操作成功");
+            })
+        .catch(({ data }) => {
+            alert("操作失败");
+        });
     }
 
     readTime (content: string) {

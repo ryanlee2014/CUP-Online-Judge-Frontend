@@ -35,6 +35,9 @@ export default function () {
                 else {
                     localStorage.platformInfo = JSON.stringify(PlatformInfo);
                 }
+            })
+            .catch(({ data }) => {
+                console.error("Error occur while post system config");
             });
     }
 }

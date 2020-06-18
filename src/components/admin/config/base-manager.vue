@@ -85,20 +85,22 @@ export default class BaseManager extends Mixins(mixins) {
         this.axios.post(`/api/setting/devconfig/${this.prefix}/update`, payload)
             .then(({ data }) => {
                 this.$refs.modal.deactivate();
-                if (data.status === "OK") {
-                    alert("更新成功");
-                    setTimeout(() => { this.init(); }, 1000);
-                }
-                else {
-                    alert("更新失败");
-                }
+                alert("更新成功");
+                setTimeout(() => { this.init(); }, 1000);
+            })
+            .catch(({ data }) => {
+                alert("更新失败");
             });
     }
 
     removeConfig (key: any) {
         this.axios.post(`/api/setting/devconfig/${this.prefix}/delete`, { key })
-            .then(({ data }) => {
-                alert(data.status === "OK" ? "删除成功" : "删除失败");
+            .then(() => {
+                alert("删除成功");
+                setTimeout(() => { this.init(); }, 1000);
+            })
+            .catch(() => {
+                alert("删除失败");
                 setTimeout(() => { this.init(); }, 1000);
             });
     }

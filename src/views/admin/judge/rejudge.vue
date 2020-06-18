@@ -73,12 +73,10 @@ export default class Rejudge extends Mixins(mixins) {
     rejudge () {
         this.axios.post(`/api/admin/problem/rejudge/${postType[this.rejudgeType]}`, this.makeSendData())
             .then(({ data }) => {
-                if (data.status === "OK") {
-                    alert(this.$t("success"));
-                }
-                else {
-                    alert(data.statement);
-                }
+                alert(this.$t("success"));
+            })
+            .catch(({ data }) => {
+                alert(data.statement);
             });
     }
 }

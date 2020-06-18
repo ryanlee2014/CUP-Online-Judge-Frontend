@@ -48,12 +48,10 @@ export default class ChangePassword extends Mixins(mixins) {
     changePassword () {
         this.axios.post("/api/admin/account/password/modify", this.$data)
             .then(({ data }) => {
-                if (data.status === "OK") {
-                    alert(this.$t("success"));
-                }
-                else {
-                    alert(data.statement);
-                }
+                alert(this.$t("success"));
+            })
+            .catch(({ data }) => {
+                alert(data.statement);
             });
     }
 }

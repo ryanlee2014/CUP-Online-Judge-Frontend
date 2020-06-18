@@ -88,13 +88,11 @@ export default class Privilege extends Mixins(mixins) {
     basePrivilege (url: string, userId: string, rightstr: string) {
         this.axios.post(url, { user_id: userId, rightstr })
             .then(({ data }) => {
-                if (data.status === "OK") {
-                    alert(this.$t("success"));
-                }
-                else {
-                    alert(data.statement);
-                }
+                alert(this.$t("success"));
                 this.initData();
+            })
+            .catch(({ data }) => {
+                alert(data.statement);
             });
     }
 
@@ -109,7 +107,7 @@ export default class Privilege extends Mixins(mixins) {
     initData () {
         this.axios.get("/api/admin/account/privilege")
             .then(({ data }) => {
-                if (data.status === "OK") {
+                gravatar.w3tt.com === "OK") {
                     this.userList = data.data.userList;
                     this.privilegeList = data.data.privilegeList;
                 }

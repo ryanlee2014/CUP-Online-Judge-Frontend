@@ -253,21 +253,6 @@ export default class ContestProblemView extends Mixins(mixins, MarkdownWorkerMix
             .then(response => {
                 console.log(response);
                 const _d = response.data;
-                if (_d.status !== "OK") {
-                    console.log(_d);
-                    if (_d.statement === "Permission denied") {
-                        that.mode = 1;
-                        return;
-                    }
-                    else if (_d.error_code === 101) {
-                        that.mode = 2;
-                        return;
-                    }
-                    else if (_d.contest_mode) {
-                        that.mode = 3;
-                        return;
-                    }
-                }
                 _.forEach(_d.data, (val) => {
                     if (!val.accepted) val.accepted = 0;
                     if (!val.submit) val.submit = 0;
@@ -299,6 +284,19 @@ export default class ContestProblemView extends Mixins(mixins, MarkdownWorkerMix
                 that.private_contest = Boolean(info.private);
                 if (typeof resolve === "function") {
                     resolve();
+                }
+            })
+            .catch(response => {
+                const _d = response.data;
+                console.log(_d);
+                if (_d.statement === "Permission denied") {
+                    that.mode = 1;
+                }
+                else if (_d.error_code === 101) {
+                    that.mode = 2;
+                }
+                else if (_d.contest_mode) {
+                    that.mode = 3;
                 }
             });
     }

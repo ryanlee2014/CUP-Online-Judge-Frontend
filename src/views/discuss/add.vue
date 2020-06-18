@@ -61,15 +61,13 @@ export default class DiscussAdd extends Mixins(mixins, CaptchaMixin) {
         };
         this.axios.post("/api/discuss/newpost", send)
             .then(({ data }) => {
-                if (data.status === "OK") {
-                    alert("添加成功!");
-                    that.$router.push({
-                        path: "/discuss"
-                    });
-                }
-                else {
-                    alert("服务器遇到错误\n" + data.statement);
-                }
+                alert("添加成功!");
+                that.$router.push({
+                    path: "/discuss"
+                });
+            })
+            .catch(({ data }) => {
+                alert("服务器遇到错误\n" + data.statement);
             });
     }
 

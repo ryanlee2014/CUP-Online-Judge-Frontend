@@ -131,12 +131,10 @@ export default class ContestList extends Mixins(mixins) {
     defunct (contestID: any) {
         this.axios.post("/api/admin/contest/defunct", { id: contestID })
             .then(({ data }) => {
-                if (data.status === "OK") {
-                    this.flushData(this.current_page);
-                }
-                else {
-                    alert(data.statement);
-                }
+                this.flushData(this.current_page);
+            })
+            .catch(({ data }) => {
+                alert(data.statement);
             });
     }
 }

@@ -83,15 +83,13 @@ export default class TutorialAdd extends Mixins(mixins, CaptchaMixin) {
         };
         this.axios.post(`/api/tutorial/new/${this.from}/${this.id}`, send)
             .then(({ data }) => {
-                if (data.status === "OK") {
-                    alert("添加成功!");
-                    this.$router.push({
-                        path: `/tutorial/${this.id}`
-                    });
-                }
-                else {
-                    alert("服务器遇到错误\n" + data.statement);
-                }
+                alert("添加成功!");
+                this.$router.push({
+                    path: `/tutorial/${this.id}`
+                });
+            })
+            .catch(({ data }) => {
+                alert("服务器遇到错误\n" + data.statement);
             });
     }
 }

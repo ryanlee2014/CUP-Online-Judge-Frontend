@@ -15,12 +15,7 @@ export default class ContestAddMixin extends Vue {
         val = this.dataFormat(val);
         this.axios.post("/api/admin/contest/add", val)
             .then(({ data }) => {
-                if (data.status === "OK") {
-                    alert(this.$t("success"));
-                }
-                else {
-                    alert(this.$t("error"));
-                }
+                alert(this.$t("success"));
             }).catch(reason => {
                 alert(this.$t("error"));
             });

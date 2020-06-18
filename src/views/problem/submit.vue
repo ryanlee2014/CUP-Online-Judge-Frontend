@@ -351,6 +351,13 @@ export default class Submit extends Mixins(mixins) {
                 document.title = _data.problem_id + ":" + _data.temp_title;
                 Object.assign(this, _data);
                 $(".not-compile").removeClass("not-compile");
+            })
+            .catch(({ data }) => {
+                if (data.statement) {
+                    alert(data.statement);
+                }
+                this.contest_mode = data.contest_mode;
+                this.limit = false;
             });
     }
 

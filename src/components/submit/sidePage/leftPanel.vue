@@ -118,15 +118,13 @@ export default class LeftPanel extends Vue {
         }
         this.axios.get(`/api/problem/contest_list/${originalId}`)
             .then(({ data }) => {
-                if (data.status === "OK") {
-                    const contestList = data.data;
-                    _.uniqWith(contestList, _.isEqual);
-                    contestList.sort((a: any, b: any) => a.contest_id - b.contest_id);
-                    this.contestList = contestList;
-                }
-                else {
-                    console.error(`/api/problem/contest_list/${originalId} caused error: `, data);
-                }
+                const contestList = data.data;
+                _.uniqWith(contestList, _.isEqual);
+                contestList.sort((a: any, b: any) => a.contest_id - b.contest_id);
+                this.contestList = contestList;
+            })
+            .catch(({ data }) => {
+                console.error(`/api/problem/contest_list/${originalId} caused error: `, data);
             });
     }
 

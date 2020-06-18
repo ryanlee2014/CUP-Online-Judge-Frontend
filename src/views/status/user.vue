@@ -278,12 +278,10 @@ export default class UserStatus extends Mixins(mixins) {
             promiseArray.push(new Promise((resolve, reject) => {
                 this.axios.get(`/api/scoreboard/${val}/line`)
                     .then(({ data }) => {
-                        if (data.status == "OK") {
-                            resolve(data.data);
-                        }
-                        else {
-                            reject(val);
-                        }
+                        resolve(data.data);
+                    })
+                    .catch(({ data }) => {
+                        reject(val);
                     });
             }));
         });

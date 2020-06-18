@@ -184,13 +184,11 @@ export default class UserInfoModify extends Mixins(mixins) {
     updateInformation () {
         this.axios.post("/api/user/update/profile", this.$data)
             .then(({ data }) => {
-                if (data.status === "OK") {
-                    this.$store.dispatch("NavStatus");
-                    alert("更改成功");
-                }
-                else {
-                    alert("服务器遇到错误: \n" + data.statement);
-                }
+                this.$store.dispatch("NavStatus");
+                alert("更改成功");
+            })
+            .catch(({ data }) => {
+                alert("服务器遇到错误: \n" + data.statement);
             });
     }
 

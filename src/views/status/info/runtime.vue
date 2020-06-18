@@ -71,13 +71,11 @@ export default class RuntimeInfo extends Mixins(mixins) {
             document.title = `${this.solution_id} Runtime Information -- ${document.title}`;
             this.axios.get(`/api/status/runtime_info/${this.solution_id}`)
                 .then(({ data }) => {
-                    if (data.status === "OK") {
-                        const text = data.data.info;
-                        this.initContext(text);
-                    }
-                    else {
-                        this.info = "您无权访问";
-                    }
+                    const text = data.data.info;
+                    this.initContext(text);
+                })
+                .catch(({ data }) => {
+                    this.info = "您无权访问";
                 });
         }
 

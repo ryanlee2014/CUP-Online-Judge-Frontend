@@ -72,15 +72,13 @@ export default class TutorialEdit extends Mixins(InitMixin, CaptchaMixin) {
             captcha: this.captcha
         })
             .then(({ data }) => {
-                if (data.status === "OK") {
-                    alert("修改成功!");
-                    this.$router.push({
-                        path: `/tutorial/${this.$route.query.problem_id}`
-                    });
-                }
-                else {
-                    alert("服务器遇到错误\n" + data.statement);
-                }
+                alert("修改成功!");
+                this.$router.push({
+                    path: `/tutorial/${this.$route.query.problem_id}`
+                });
+            })
+            .catch(({ data }) => {
+                alert("服务器遇到错误\n" + data.statement);
             });
     }
 }

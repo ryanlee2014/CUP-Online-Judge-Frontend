@@ -27,13 +27,10 @@ export default class LoginForm extends Vue {
                 password: $("#contest_pass").val()
             })
                 .then(({ data }) => {
-                    if (data.status === "OK") {
-                        // FixMe: don't use this shit code
-                        this.$parent.mode = 0;
-                    }
-                    else {
-                        alert(data.statement);
-                    }
+                    this.$parent.mode = 0;
+                })
+                .catch(({ data }) => {
+                    alert(data.statement);
                 });
             return false;
         });
