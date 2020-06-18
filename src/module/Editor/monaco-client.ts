@@ -14,7 +14,7 @@ export function createLanguageServer (editor: monaco.editor.IStandaloneCodeEdito
 // create the web socket
     MonacoServices.install(editor, { rootUri: "file:///tmp/cupoj-language-server/" });
     console.log("language:", language);
-    const url = createUrl(`${location.protocol === "https:" ? "wss" : "ws"}://${location.host}/language-server/${language}`);
+    const url = `${location.protocol === "https:" ? "wss" : "ws"}://${location.host}/language-server/${language}`;
     const webSocket = createWebSocket(url);
     // listen when the web socket is opened
     listen({
