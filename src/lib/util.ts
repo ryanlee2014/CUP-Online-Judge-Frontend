@@ -1,6 +1,8 @@
-import { notUndefinedOrNull } from "@/store/util";
+import {notUndefinedOrNull} from "@/store/util";
 import jquery from "jquery";
 import store from "@/store";
+import axios from "axios";
+
 declare global {
     interface Window {
         [id: string]: any
@@ -10,6 +12,22 @@ const $: any = jquery;
 const jQuery = $;
 window.jQuery = window.$ = $;
 require("../../semantic/semantic-ui/semantic.min");
+
+function generateAPIUrl(ip: string) {
+    return `http://ip-api.com/json/${ip}?lang=zh-CN&fields=status,message,country,countryCode,region,regionName,city,district,zip,lat,lon,timezone,isp,org,as,asname,proxy,hosting,query`;
+}
+
+function getExternalIPInfo (val: any) {
+    const ip = val.internal_ip || val.ip;
+    axios.get(generateAPIUrl(ip))
+        .then(({ data }) => {
+            val.place = `${data.country} ${data.city}`;
+            val.external_info = data;
+            console.log(val.$this);
+            console.log(val.$this.$forceUpdate());
+        })
+}
+
 function binding_method(homepage?: boolean, finished?: boolean) {
     // fix menu when passed
     const $fixedMenu = $(".fixed.menu");
@@ -180,7 +198,7 @@ class Util {
                     tmp.place = "润杰机房六楼";
                 }
                 else {
-                    tmp.place = "未知";
+                    getExternalIPInfo(tmp);
                 }
                 tmp.intranet_ip = temp;
             }
@@ -259,12 +277,14 @@ class Util {
                     tmp.place = "地质楼";
                 }
                 else {
-                    tmp.place = "未知";
+                    getExternalIPInfo(tmp);
+                    // tmp.place = "未知";
                 }
             }
         }
         else {
-            tmp.place = "未知";
+            getExternalIPInfo(tmp);
+            // tmp.place = "未知";
         }
         return tmp.place;
     }

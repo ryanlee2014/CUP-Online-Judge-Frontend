@@ -54,16 +54,17 @@ export default class UserList extends Mixins(TimerMixin) {
     get user () {
         const that = this;
         if (!this.userlist) return [];
-        for (var i = 0; i < this.userlist.length; ++i) {
-            var tmp = this.userlist[i];
+        for (let i = 0; i < this.userlist.length; ++i) {
+            const tmp = this.userlist[i];
             doc.innerHTML = tmp.nick;
             tmp.nick = doc.innerText;
+            tmp.$this = this;
             util.detectIP(tmp);
         }
         if (localStorage.getItem("sort") === "true") {
             that.userlist.sort(function (a: any, b: any) {
-                var a1 = a.user_id;
-                var b1 = b.user_id;
+                const a1 = a.user_id;
+                const b1 = b.user_id;
                 return a1 < b1 ? -1 : a1 === b1 ? 0 : 1;
             });
         }
