@@ -53,7 +53,7 @@
                         </div>
                     </div>
                     <div class="statistic">
-                        <div :class="'value none-transform '+judge_color">
+                        <div :class="'value none-transform important '+judge_color">
                             <i :class="icon+' icon'"></i>
                             {{result}}
                             <span class="subscript">&nbsp;</span>
@@ -132,7 +132,7 @@ export default class UserCode extends Mixins(mixins, MarkdownWorkerMixin) {
     memory = 0;
     problem_id = 0;
     result = 0;
-    language = 0;
+    language = "";
     user_id = "";
     language_id = 0;
     judge_color = [];
