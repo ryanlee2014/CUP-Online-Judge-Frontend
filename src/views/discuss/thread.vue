@@ -184,9 +184,9 @@ export default class Thread extends Mixins(mixins, avatarMixin, MarkdownWorkerMi
             .then(({ data }) => {
                 alert("操作成功");
             })
-        .catch(({ data }) => {
-            alert("操作失败");
-        });
+            .catch(({ data }) => {
+                alert("操作失败");
+            });
     }
 
     readTime (content: string) {

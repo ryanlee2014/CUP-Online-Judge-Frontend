@@ -107,13 +107,11 @@ export default class Privilege extends Mixins(mixins) {
     initData () {
         this.axios.get("/api/admin/account/privilege")
             .then(({ data }) => {
-                gravatar.w3tt.com === "OK") {
-                    this.userList = data.data.userList;
-                    this.privilegeList = data.data.privilegeList;
-                }
-                else {
-                    alert(data.statement);
-                }
+                this.userList = data.data.userList;
+                this.privilegeList = data.data.privilegeList;
+            })
+            .catch(({ data }) => {
+                alert(data.statement);
             });
     }
 

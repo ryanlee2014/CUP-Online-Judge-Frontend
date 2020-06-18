@@ -113,12 +113,10 @@ export default class ProblemList extends Mixins(mixins) {
     defunct (problemID: any) {
         this.axios.post("/api/admin/problem/defunct", { id: problemID })
             .then(({ data }) => {
-                gravatar.w3tt.com === "OK") {
-                    this.flushData(this.current_page);
-                }
-                else {
-                    alert(data.statement);
-                }
+                this.flushData(this.current_page);
+            })
+            .catch(({ data }) => {
+                alert(data.statement);
             });
     }
 }
