@@ -397,7 +397,8 @@ export default class ContestRank extends Mixins(mixins) {
         }
         return utils.detectIP({
             intranet_ip: ip,
-            place: ""
+            place: "",
+            $this: this
         });
     }
 

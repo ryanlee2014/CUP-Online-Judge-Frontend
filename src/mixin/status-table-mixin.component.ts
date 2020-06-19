@@ -1,7 +1,7 @@
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import dayjs from "dayjs";
-import utils from "@/lib/util";
+import utils, { IIPPayload } from "@/lib/util";
 import jquery from "jquery";
 import _ from "lodash";
 const $: any = jquery;
@@ -60,9 +60,10 @@ export class StatusTableMixin extends Vue {
         if (!ip) {
             return "未知";
         }
-        const tmp: any = {
+        const tmp: IIPPayload = {
             intranet_ip: ip,
-            place: ""
+            place: "",
+            $this: this
         };
         utils.detectIP(tmp);
         return tmp.place;

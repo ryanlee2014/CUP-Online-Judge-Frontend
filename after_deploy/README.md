@@ -1,6 +1,6 @@
 # After deploy
 
-| Translation | Chinese |
+| Translation | [Chinese](/after_deploy/README.cn.md) |
 
 ## Nginx http server
 * Move `nginxconfig.io` to `/etc/nginx`

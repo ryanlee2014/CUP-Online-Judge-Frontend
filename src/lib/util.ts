@@ -1,6 +1,7 @@
 import {notUndefinedOrNull} from "@/store/util";
 import jquery from "jquery";
 import store from "@/store";
+import { Vue } from "vue/types/vue";
 import axios from "axios";
 
 declare global {
@@ -8,6 +9,15 @@ declare global {
         [id: string]: any
     }
 }
+
+export interface IIPPayload {
+    ip?: string,
+    intranet_ip?: string,
+    $this: Vue,
+    place?: string,
+    external_info?: string
+}
+
 const $: any = jquery;
 const jQuery = $;
 window.jQuery = window.$ = $;
@@ -17,14 +27,13 @@ function generateAPIUrl(ip: string) {
     return `/geoip/json/${ip}?lang=zh-CN&fields=status,message,country,countryCode,region,regionName,city,district,zip,lat,lon,timezone,isp,org,as,asname,proxy,hosting,query`;
 }
 
-function getExternalIPInfo (val: any) {
-    const ip = val.internal_ip || val.ip;
-    axios.get(generateAPIUrl(ip))
-        .then(({ data }) => {
+function getExternalIPInfo(val: IIPPayload) {
+    const ip = val.intranet_ip || val.ip;
+    axios.get(generateAPIUrl(ip!))
+        .then(({data}) => {
             val.place = `${data.country} ${data.city}`;
             val.external_info = data;
-            console.log(val.$this);
-            console.log(val.$this.$forceUpdate());
+            val.$this.$forceUpdate();
         })
 }
 
@@ -60,7 +69,7 @@ function binding_method(homepage?: boolean, finished?: boolean) {
         ;
     }
 
-    function lightin () {
+    function lightin() {
         $(".following.bar").addClass("light fixed");
         $fixedMenu.transition("fade in");
         //$('.network.menu').addClass('secondary')
@@ -69,7 +78,7 @@ function binding_method(homepage?: boolean, finished?: boolean) {
         }
     }
 
-    function lightout () {
+    function lightout() {
         $(".following.bar").removeClass("light fixed");
         $fixedMenu.transition("fade out");
         //('.network.menu').removeClass('secondary');
@@ -103,7 +112,7 @@ function binding_method(homepage?: boolean, finished?: boolean) {
 }
 
 class Util {
-    detectIP (tmp: any) {
+    detectIP(tmp: IIPPayload) {
         let ip;
         if (tmp.ip && !tmp.intranet_ip) {
             tmp.intranet_ip = tmp.ip;
@@ -114,190 +123,142 @@ class Util {
                 tmp.intranet_ip = tmp.ip || "";
                 if (tmp.intranet_ip.match(/10\.10\.[0-9]{2}\.[0-9]{1,3}/)) {
                     tmp.place = "润杰有线";
-                }
-                else if (tmp.intranet_ip === "10.200.25.101" && tmp.intranet_ip.match(/10\.200\.25\.1[0-9]{2}/) || tmp.intranet_ip === "10.200.25.200") {
+                } else if (tmp.intranet_ip === "10.200.25.101" && tmp.intranet_ip.match(/10\.200\.25\.1[0-9]{2}/) || tmp.intranet_ip === "10.200.25.200") {
                     tmp.place = "403机房";
-                }
-                else if (tmp.intranet_ip.match(/10\.200\.26\./)) {
+                } else if (tmp.intranet_ip.match(/10\.200\.26\./)) {
                     let ip = tmp.intranet_ip.substring(tmp.intranet_ip.lastIndexOf(".") + 1);
                     if (parseInt(ip) <= 100) {
                         tmp.place = "404机房";
-                    }
-                    else {
+                    } else {
                         tmp.place = "405机房";
                     }
-                }
-                else if (tmp.intranet_ip.match(/10\.200\.28\.[0-9]{1,3}/) || tmp.intranet_ip.match(/10\.200\.26\.[0-9]{1,3}/)
+                } else if (tmp.intranet_ip.match(/10\.200\.28\.[0-9]{1,3}/) || tmp.intranet_ip.match(/10\.200\.26\.[0-9]{1,3}/)
                     || tmp.intranet_ip.match(/10\.200\.25\.[0-9]{1,3}/) || tmp.intranet_ip.match(/10\.200\.27\.[0-9]{1,3}/)) {
                     if (tmp.intranet_ip.match(/10\.200\.26\.[0-9]{1,3}/)) {
                         tmp.place = "405机房";
-                    }
-                    else if (tmp.intranet_ip.match(/10\.200\.28\.[0-9]{1,3}/)) {
+                    } else if (tmp.intranet_ip.match(/10\.200\.28\.[0-9]{1,3}/)) {
                         ip = tmp.intranet_ip.substring(tmp.intranet_ip.lastIndexOf(".") + 1);
                         if (parseInt(ip) <= 80) {
                             tmp.place = "502机房";
-                        }
-                        else if (parseInt(ip) === 81) {
+                        } else if (parseInt(ip) === 81) {
                             tmp.place = "502教师机";
-                        }
-                        else if (parseInt(ip) < 172 && parseInt(ip) >= 101) {
+                        } else if (parseInt(ip) < 172 && parseInt(ip) >= 101) {
                             tmp.place = "503机房";
-                        }
-                        else {
+                        } else {
                             tmp.place = "机房";
                         }
-                    }
-                    else if (tmp.intranet_ip.match(/10\.200\.27\.[0-9]{1,3}/)) {
+                    } else if (tmp.intranet_ip.match(/10\.200\.27\.[0-9]{1,3}/)) {
                         ip = tmp.intranet_ip.substring(tmp.intranet_ip.lastIndexOf(".") + 1);
                         ip = parseInt(ip);
                         if (ip >= 1 && ip <= 102) {
                             tmp.place = "504机房";
-                        }
-                        else if (ip === 217) {
+                        } else if (ip === 217) {
                             tmp.place = "504机房教师机";
-                        }
-                        else {
+                        } else {
                             tmp.place = "机房";
                         }
-                    }
-                    else {
+                    } else {
                         tmp.place = "机房";
                     }
-                }
-                else if (tmp.intranet_ip.match(/10\.1[1-2]{1}0\.[0-9]{1,3}\.[0-9]{1,3}/)) {
+                } else if (tmp.intranet_ip.match(/10\.1[1-2]{1}0\.[0-9]{1,3}\.[0-9]{1,3}/)) {
                     tmp.place = "Wi-Fi";
-                }
-                else if (tmp.intranet_ip.match(/10\.102\.[0-9]{1,3}\.[0-9]{1,3}/) || tmp.intranet_ip.match(/10\.120\.[0-9]{1,3}\.[0-9]{1,3}/)) {
+                } else if (tmp.intranet_ip.match(/10\.102\.[0-9]{1,3}\.[0-9]{1,3}/) || tmp.intranet_ip.match(/10\.120\.[0-9]{1,3}\.[0-9]{1,3}/)) {
                     tmp.place = "Wi-Fi";
-                }
-                else if (tmp.intranet_ip.match(/10\.105\.[0-9]{1,3}\.[0-9]{1,3}/)) {
+                } else if (tmp.intranet_ip.match(/10\.105\.[0-9]{1,3}\.[0-9]{1,3}/)) {
                     tmp.place = "Wi-Fi";
-                }
-                else if (tmp.intranet_ip.match(/10\.103\.[0-9]{1,3}\.[0-9]{1,3}/)) {
+                } else if (tmp.intranet_ip.match(/10\.103\.[0-9]{1,3}\.[0-9]{1,3}/)) {
                     tmp.place = "Wi-Fi";
-                }
-                else if (tmp.intranet_ip.match(/10\.116\.[0-9]{1,3}\.[0-9]{1,3}/)) {
+                } else if (tmp.intranet_ip.match(/10\.116\.[0-9]{1,3}\.[0-9]{1,3}/)) {
                     tmp.place = "Wi-Fi";
-                }
-                else if (tmp.intranet_ip.match(/10\.1[0-9]{2}\.[0-9]{1,3}\.[0-9]{1,3}/)) {
+                } else if (tmp.intranet_ip.match(/10\.1[0-9]{2}\.[0-9]{1,3}\.[0-9]{1,3}/)) {
                     tmp.place = "Wi-Fi";
-                }
-                else if (tmp.intranet_ip.match(/172\.16\.[\s\S]+/)) {
+                } else if (tmp.intranet_ip.match(/172\.16\.[\s\S]+/)) {
                     tmp.place = "VPN";
-                }
-                else if (tmp.intranet_ip.match(/2001:[\s\S]+/)) {
+                } else if (tmp.intranet_ip.match(/2001:[\s\S]+/)) {
                     tmp.place = "IPv6";
-                }
-                else if (tmp.intranet_ip.match(/10\.3\.[\s\S]+/)) {
+                } else if (tmp.intranet_ip.match(/10\.3\.[\s\S]+/)) {
                     tmp.place = "地质楼";
-                }
-                else if (tmp.intranet_ip.match(/10\.200\.32\.[0-9]{1,3}/)) {
+                } else if (tmp.intranet_ip.match(/10\.200\.32\.[0-9]{1,3}/)) {
                     tmp.place = "润杰机房五楼";
-                }
-                else if (tmp.intranet_ip.match(/10\.200\.33\.[0-9]{1,3}/)) {
+                } else if (tmp.intranet_ip.match(/10\.200\.33\.[0-9]{1,3}/)) {
                     tmp.place = "润杰机房六楼";
-                }
-                else {
+                } else {
                     getExternalIPInfo(tmp);
                 }
                 tmp.intranet_ip = temp;
-            }
-            else {
+            } else {
                 if (tmp.intranet_ip.match(/10\.10\.[0-9]{2}\.[0-9]{1,3}/)) {
                     tmp.place = "润杰有线";
-                }
-                else if (tmp.intranet_ip.match(/10\.200\.28\.[0-9]{1,3}/) || tmp.intranet_ip.match(/10\.200\.26\.[0-9]{1,3}/)
+                } else if (tmp.intranet_ip.match(/10\.200\.28\.[0-9]{1,3}/) || tmp.intranet_ip.match(/10\.200\.26\.[0-9]{1,3}/)
                     || tmp.intranet_ip.match(/10\.200\.25\.[0-9]{1,3}/) || tmp.intranet_ip.match(/10\.200\.27\.[0-9]{1,3}/)) {
                     if (tmp.intranet_ip.match(/10\.200\.26\.[0-9]{1,3}/)) {
                         tmp.place = "405机房";
-                    }
-                    else if (tmp.intranet_ip.match(/10\.200\.28\.[0-9]{1,3}/)) {
+                    } else if (tmp.intranet_ip.match(/10\.200\.28\.[0-9]{1,3}/)) {
                         ip = tmp.intranet_ip.substring(tmp.intranet_ip.lastIndexOf(".") + 1);
                         if (parseInt(ip) <= 80) {
                             tmp.place = "502机房";
-                        }
-                        else if (parseInt(ip) < 172 && parseInt(ip) >= 101) {
+                        } else if (parseInt(ip) < 172 && parseInt(ip) >= 101) {
                             tmp.place = "503机房";
-                        }
-                        else {
+                        } else {
                             tmp.place = "机房";
                         }
-                    }
-                    else if (tmp.intranet_ip.match(/10\.200\.27\.[0-9]{1,3}/)) {
+                    } else if (tmp.intranet_ip.match(/10\.200\.27\.[0-9]{1,3}/)) {
                         ip = tmp.intranet_ip.substring(tmp.intranet_ip.lastIndexOf(".") + 1);
                         ip = parseInt(ip);
                         if (ip >= 1 && ip <= 102) {
                             tmp.place = "504机房";
-                        }
-                        else if (ip === 217) {
+                        } else if (ip === 217) {
                             tmp.place = "504机房教师机";
-                        }
-                        else {
+                        } else {
                             tmp.place = "机房";
                         }
-                    }
-                    else {
+                    } else {
                         tmp.place = "机房";
                     }
-                }
-                else if (tmp.intranet_ip.match(/10\.1[1-2]{1}0\.[0-9]{1,3}\.[0-9]{1,3}/)) {
+                } else if (tmp.intranet_ip.match(/10\.1[1-2]{1}0\.[0-9]{1,3}\.[0-9]{1,3}/)) {
                     tmp.place = "Wi-Fi";
-                }
-                else if (tmp.intranet_ip.match(/10\.116\.[0-9]{1,3}\.[0-9]{1,3}/)) {
+                } else if (tmp.intranet_ip.match(/10\.116\.[0-9]{1,3}\.[0-9]{1,3}/)) {
                     tmp.place = "Wi-Fi";
-                }
-                else if (tmp.intranet_ip.match(/10\.102\.[0-9]{1,3}\.[0-9]{1,3}/) || tmp.intranet_ip.match(/10\.120\.[0-9]{1,3}\.[0-9]{1,3}/)) {
+                } else if (tmp.intranet_ip.match(/10\.102\.[0-9]{1,3}\.[0-9]{1,3}/) || tmp.intranet_ip.match(/10\.120\.[0-9]{1,3}\.[0-9]{1,3}/)) {
                     tmp.place = "Wi-Fi";
-                }
-                else if (tmp.intranet_ip.match(/10\.105\.[0-9]{1,3}\.[0-9]{1,3}/)) {
+                } else if (tmp.intranet_ip.match(/10\.105\.[0-9]{1,3}\.[0-9]{1,3}/)) {
                     tmp.place = "Wi-Fi";
-                }
-                else if (tmp.intranet_ip.match(/10\.103\.[0-9]{1,3}\.[0-9]{1,3}/)) {
+                } else if (tmp.intranet_ip.match(/10\.103\.[0-9]{1,3}\.[0-9]{1,3}/)) {
                     tmp.place = "Wi-Fi";
-                }
-                else if (tmp.intranet_ip.match(/10\.1[0-9]{2}\.[0-9]{1,3}\.[0-9]{1,3}/)) {
+                } else if (tmp.intranet_ip.match(/10\.1[0-9]{2}\.[0-9]{1,3}\.[0-9]{1,3}/)) {
                     tmp.place = "Wi-Fi";
-                }
-                else if (tmp.intranet_ip.match(/172\.16\.[\s\S]+/)) {
+                } else if (tmp.intranet_ip.match(/172\.16\.[\s\S]+/)) {
                     tmp.place = "VPN";
-                }
-                else if (tmp.intranet_ip.match(/10\.200\.32\.[0-9]{1,3}/)) {
+                } else if (tmp.intranet_ip.match(/10\.200\.32\.[0-9]{1,3}/)) {
                     tmp.place = "润杰机房五楼";
-                }
-                else if (tmp.intranet_ip.match(/10\.200\.33\.[0-9]{1,3}/)) {
+                } else if (tmp.intranet_ip.match(/10\.200\.33\.[0-9]{1,3}/)) {
                     tmp.place = "润杰机房六楼";
-                }
-                else if (tmp.intranet_ip.match(/2001:[\s\S]+/) && tmp.ip && !tmp.ip.match(/[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/)) {
+                } else if (tmp.intranet_ip.match(/2001:[\s\S]+/) && tmp.ip && !tmp.ip.match(/[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/)) {
                     tmp.place = "IPv6";
-                }
-                else if (tmp.intranet_ip && tmp.ip && tmp.intranet_ip != tmp.ip) {
+                } else if (tmp.intranet_ip && tmp.ip && tmp.intranet_ip != tmp.ip) {
                     tmp.place = "外网";
-                }
-                else if (tmp.intranet_ip.match(/10\.3\.[\s\S]+/)) {
+                } else if (tmp.intranet_ip.match(/10\.3\.[\s\S]+/)) {
                     tmp.place = "地质楼";
-                }
-                else {
+                } else {
                     getExternalIPInfo(tmp);
                     // tmp.place = "未知";
                 }
             }
-        }
-        else {
+        } else {
             getExternalIPInfo(tmp);
             // tmp.place = "未知";
         }
         return tmp.place;
     }
 
-    init (homepage?: boolean, finished?: boolean) {
-        $("body, html").animate({ scrollTop: 0 }, 0);
+    init(homepage?: boolean, finished?: boolean) {
+        $("body, html").animate({scrollTop: 0}, 0);
         jQuery.event.special.touchstart = {
             setup: function (_: any, ns: string | string[], handle: any) {
                 if (ns.includes("noPreventDefault")) {
-                    this.addEventListener("touchstart", handle, { passive: false });
-                }
-                else {
-                    this.addEventListener("touchstart", handle, { passive: true });
+                    this.addEventListener("touchstart", handle, {passive: false});
+                } else {
+                    this.addEventListener("touchstart", handle, {passive: true});
                 }
             }
         };
@@ -372,8 +333,7 @@ class Util {
                         value = (from[i] || 0) + this.rand(min, max);
                         if (this.rand() <= continuity) {
                             data.push(Math.round(dfactor * value) / dfactor);
-                        }
-                        else {
+                        } else {
                             data.push(null);
                         }
                     }
@@ -460,7 +420,8 @@ class Util {
             }
         });
     }
-    bindDropdown () {
+
+    bindDropdown() {
         const $accordion = $(".ui.accordion");
         if ($accordion.html()) {
             $accordion
@@ -520,19 +481,19 @@ class Util {
         });
     }
 
-    initToTopButton () {
+    initToTopButton() {
         (function (a) {
             a.fn.scrollToTop = function (c: any) {
-                let d = { speed: 800 };
-                c && a.extend(d, { speed: c });
+                let d = {speed: 800};
+                c && a.extend(d, {speed: c});
                 return this.each(function (this: any) {
                     let b = a(this);
                     a(window).on("scroll", function (this: any) {
                         100 < a(this).scrollTop() ? b.fadeIn() : b.fadeOut();
                     });
-                    b.on("click",function (b: { preventDefault: () => void; }) {
+                    b.on("click", function (b: { preventDefault: () => void; }) {
                         b.preventDefault();
-                        a("body, html").animate({ scrollTop: 0 }, d.speed);
+                        a("body, html").animate({scrollTop: 0}, d.speed);
                     });
                 });
             };
@@ -545,36 +506,32 @@ class Util {
         });
     }
 
-    getAvatarURL (state: any) {
+    getAvatarURL(state: any) {
         const hasAvatar = !!state.avatar;
         const avatarUrl = typeof state.avatarUrl === "string" ? state.avatarUrl.trim() : "";
         if (hasAvatar && avatarUrl.length === 0) {
             return `/avatar/${state.user_id}.jpg`;
-        }
-        else if (avatarUrl.length > 0) {
+        } else if (avatarUrl.length > 0) {
             return avatarUrl;
-        }
-        else {
+        } else {
             return require("@/static/image/default-user.png");
         }
     }
 
-    hasAvatarURL (state: any) {
+    hasAvatarURL(state: any) {
         const hasAvatar = !!state.avatar;
         const avatarUrl = typeof state.avatarUrl === "string" ? state.avatarUrl.trim() : "";
         if (hasAvatar && avatarUrl.length === 0) {
             return true;
-        }
-        else {
+        } else {
             return avatarUrl.length > 0;
         }
     }
 
-    stringify (target: any) {
+    stringify(target: any) {
         if (notUndefinedOrNull(target)) {
             return target + "";
-        }
-        else {
+        } else {
             return "";
         }
     }

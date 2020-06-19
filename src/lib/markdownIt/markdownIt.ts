@@ -1,11 +1,24 @@
 import markdownMermaid from "./markdown-it-mermaid";
+import MarkdownIt from "markdown-it";
+import warning from "@/lib/markdownIt/container/warning";
+import errorFunc from "@/lib/markdownIt/container/error";
+import positiveFunc from "@/lib/markdownIt/container/positive";
 const uslug = require("uslug");
 const uslugify = (s: any) => uslug(s);
+const emptyFunc = (src: string, env?: any) => "";
+
+interface MarkdownItExtend extends MarkdownIt {
+    renderPlain(src: string, env?: any): string;
+    renderRaw (src: string, env?: any): string;
+}
 
 function Instance(key = "", problem_id = ""): any {
-    const md = require("markdown-it")({
+    const md: MarkdownItExtend = Object.assign(MarkdownIt({
         html: true,
         breaks: true
+    }), {
+        renderPlain: emptyFunc,
+        renderRaw: emptyFunc
     });
     const mh = require("markdown-it-highlightjs");
     const mk = require("@ryanlee2014/markdown-it-katex");
@@ -14,6 +27,9 @@ function Instance(key = "", problem_id = ""): any {
     const mi = require("./markdown-it-images-preview");
     md.use(mk);
     md.use(mh);
+    warning(md);
+    errorFunc(md);
+    positiveFunc(md);
     md.use(ma, {
         slugify: uslugify
     });
@@ -33,16 +49,16 @@ function Instance(key = "", problem_id = ""): any {
 
     const _render = md.render;
 
-    md.render = function () {
-        return markdownPack(preToSegment(_render.apply(md, arguments)))
+    md.render = function (src, env) {
+        return markdownPack(preToSegment(_render.call(md, src, env)))
     };
 
-    md.renderPlain = function () {
-        return _render.apply(md, arguments);
+    md.renderPlain = function (src, env) {
+        return _render.call(md, src, env);
     }
 
-    md.renderRaw = function () {
-        return preToSegment(md.renderInline(...arguments))
+    md.renderRaw = function (src: string, env?: any) {
+        return preToSegment(md.renderInline(src, env));
     };
 
     return Object.assign(md, {key, problem_id})
