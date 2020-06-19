@@ -4,7 +4,6 @@ import {
     MonacoServices, createConnection
 } from "monaco-languageclient";
 import * as monaco from "monaco-editor";
-import normalizeUrl from "normalize-url";
 import ReconnectingWebSocket from "reconnecting-websocket";
 
 // create Monaco editor
@@ -46,10 +45,6 @@ export function createLanguageServer (editor: monaco.editor.IStandaloneCodeEdito
                 }
             }
         });
-    }
-
-    function createUrl (path: string): string {
-        return normalizeUrl(path);
     }
 
     function createWebSocket (url: string): WebSocket {
