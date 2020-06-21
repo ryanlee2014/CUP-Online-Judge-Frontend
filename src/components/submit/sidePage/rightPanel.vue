@@ -32,9 +32,9 @@
             </div>
         </div>
         <ace-static :content="trimedCurrentPrepend" :fontSize="fontSize + ''" :selected_language="selected_language"
-                    :static_theme="static_theme" v-if="!editorPackage && prepend"></ace-static>
+                    :static_theme="static_theme" v-if="!editorPackage && trimedCurrentPrepend"></ace-static>
         <monaco-static :content="trimedCurrentPrepend" :fontSize="fontSize + ''" :selected_language="selected_language"
-                       :static_theme="static_theme" v-if="editorPackage && prepend"></monaco-static>
+                       :static_theme="static_theme" v-if="editorPackage && trimedCurrentPrepend"></monaco-static>
         <ace-editor :fontSize="fontSize + ''" :selected_language="selected_language" :theme="theme"
                     v-if="!editorPackage" v-model="code" :prepend-length="codePrependLines"></ace-editor>
         <monaco-editor :fontSize="fontSize + ''" :selected_language="selected_language" :theme="theme"
@@ -42,9 +42,9 @@
 
         </monaco-editor>
         <ace-static :content="trimedCurrentAppend" :fontSize="fontSize + ''" :selected_language="selected_language"
-                    :static_theme="static_theme" v-if="!editorPackage && append" :prepend-length="appendLineStartsWith"></ace-static>
+                    :static_theme="static_theme" v-if="!editorPackage && trimedCurrentAppend" :prepend-length="appendLineStartsWith"></ace-static>
         <monaco-static :content="trimedCurrentAppend" :fontSize="fontSize + ''" :selected_language="selected_language"
-                       :static_theme="static_theme" v-if="editorPackage && append" :prepend-length="appendLineStartsWith"></monaco-static>
+                       :static_theme="static_theme" v-if="editorPackage && trimedCurrentAppend" :prepend-length="appendLineStartsWith"></monaco-static>
         <div class="ui menu borderless" id="statusBar" style="margin: 0;
         padding: 0;
         position: relative;
@@ -108,7 +108,6 @@ import monacoEditor from "@/components/submit/codeEditor/monacoEditor.vue";
 import monacoThemeSelector from "@/components/submit/codeEditor/monacoComponent/monacoThemeSelector.vue";
 import monacoStatic from "@/components/submit/codeEditor/monacoComponent/monacoStatic.vue";
 import { init, format } from "wastyle";
-import envConfig from "../../../../config/environment.json";
 import Clipboard from "clipboard";
 import jquery from "jquery";
 import "@/lib/brace/braceMode";
@@ -120,7 +119,6 @@ import { Debounce } from "@/module/Decorator/method";
 const astyle = require("wastyle/dist/astyle.wasm").default;
 const $: any = jquery;
 const detectLang = require("../../../lib/langDetector");
-const language_ext = ["c", "cc", "pas", "java", "rb", "sh", "py", "php", "pl", "cs", "m", "bas", "scm", "c", "cc", "lua", "js", "go", "py", "cpp", "cpp", "c", "kt", "java", "java", "python", "python", "java", "c", "cc", "cc"];
     @Component({
         components: {
             aceEditor,

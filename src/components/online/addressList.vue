@@ -64,6 +64,9 @@ export default class AddressList extends Vue {
                 doc.innerHTML = tmp.nick;
                 tmp.nick = doc.innerText;
                 tmp.$this = this;
+                tmp.toString = function () {
+                    return this.ip + " " + this.intranet_ip;
+                };
                 utils.detectIP(tmp);
                 newlist.push(tmp);
             }

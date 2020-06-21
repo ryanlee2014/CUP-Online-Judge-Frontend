@@ -2,6 +2,7 @@ import _ from "lodash";
 
 import { log, logFactory } from "@/util/logger";
 import AwaitLock from "await-lock";
+import { parameterHash } from "@/util/util";
 
 const decoratorLog = logFactory("Decorator mounted: ");
 interface IPropertyDescriptor extends PropertyDescriptor {
@@ -87,6 +88,7 @@ export function Lock (lock: AwaitLock) {
 }
 
 export function ErrorAlert (target: any, propertyName: string, propertyDescriptor: PropertyDescriptor) {
+    decoratorLog(`ErrorAlert, target:${target.constructor.name}, propertyName:${propertyName}`);
     const method = propertyDescriptor.value;
     propertyDescriptor.value = function (...args: any) {
         try {
@@ -95,5 +97,16 @@ export function ErrorAlert (target: any, propertyName: string, propertyDescripto
         catch (e) {
             alert(e.message);
         }
+    };
+}
+
+export function Cache (target: any, propertyName: string, propertyDescriptor: PropertyDescriptor) {
+    decoratorLog(`Cache, target:${target.constructor.name}, propertyName:${propertyName}`);
+    const method = propertyDescriptor.value;
+    const cache: any = {};
+    propertyDescriptor.value = function (...args: any) {
+        const keyHash = parameterHash(args);
+        // eslint-disable-next-line no-return-assign
+        return cache[keyHash] ? cache[keyHash] : cache[keyHash] = method.apply(this, args);
     };
 }

@@ -59,7 +59,10 @@ export default class UserList extends Mixins(TimerMixin) {
             doc.innerHTML = tmp.nick;
             tmp.nick = doc.innerText;
             tmp.$this = this;
-            util.detectIP(tmp);
+            tmp.toString = function () {
+                return this.ip + " " + this.intranet_ip;
+            };
+            util.detectIP(tmp, false);
         }
         if (localStorage.getItem("sort") === "true") {
             that.userlist.sort(function (a: any, b: any) {

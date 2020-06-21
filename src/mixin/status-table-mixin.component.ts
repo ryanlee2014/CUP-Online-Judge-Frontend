@@ -57,13 +57,16 @@ export class StatusTableMixin extends Vue {
     }
 
     detect_place (ip: string) {
-        if (!ip) {
+        if (typeof (ip as unknown as any) !== "string" || ip.length < 7) {
             return "未知";
         }
         const tmp: IIPPayload = {
             intranet_ip: ip,
             place: "",
-            $this: this
+            $this: this,
+            toString: function () {
+                return this.intranet_ip + " " + this.place;
+            }
         };
         utils.detectIP(tmp);
         return tmp.place;

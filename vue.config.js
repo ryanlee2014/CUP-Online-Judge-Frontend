@@ -42,6 +42,11 @@ module.exports = {
                 secure: false,
                 changeOrigin: true
             },
+            "/geoip": {
+                target: devURL,
+                secure: false,
+                changeOrigin: true
+            },
             "/image": {
                 target: devURL,
                 secure: false,

@@ -71,7 +71,7 @@ export default class AceEditor extends Vue {
             enableBasicAutocompletion: true,
             enableSnippets: true,
             enableLiveAutocompletion: true,
-            firstLineNumber: Math.min(this.prependLength, 1)
+            firstLineNumber: Math.max(this.prependLength, 1)
         });
         editor.getSession().setValue(this.value);
         editor.on("change", () => {

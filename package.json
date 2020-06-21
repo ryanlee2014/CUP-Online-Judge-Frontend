@@ -1,6 +1,6 @@
 {
   "name": "CUP-Online-Judge-NG-Frontend",
-  "version": "1.23.0-ppe-16",
+  "version": "1.23.0-ppe-17",
   "private": false,
   "scripts": {
     "serve": "npx --max_old_space_size=16000 vue-cli-service serve",
@@ -11,7 +11,8 @@
     "modern": "./before_build/preinstall.sh && npx --max_old_space_size=16000 vue-cli-service build --modern --silent",
     "modern:local": "DISABLE_CDN=1 npm run modern",
     "test": "npx --max_old_space_size=16000 vue-cli-service build",
-    "ui": "vue ui"
+    "ui": "vue ui",
+    "calculate-line": "git ls-files | grep -v \"dist\" | grep -v \"static\" |grep -v \"mavon-editor\"| grep -v \"package-lock.json\" |  xargs wc -l\n"
   },
   "dependencies": {
     "@amcharts/amcharts4": "^4.9.27",

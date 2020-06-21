@@ -3,6 +3,7 @@ import jquery from "jquery";
 import store from "@/store";
 import { Vue } from "vue/types/vue";
 import axios from "axios";
+import { Cache } from "@/module/Decorator/method";
 
 declare global {
     interface Window {
@@ -15,7 +16,8 @@ export interface IIPPayload {
     intranet_ip?: string,
     $this: Vue,
     place?: string,
-    external_info?: string
+    external_info?: string,
+    toString: () => string
 }
 
 const $: any = jquery;
@@ -29,6 +31,7 @@ function generateAPIUrl(ip: string) {
 
 function getExternalIPInfo(val: IIPPayload) {
     const ip = val.intranet_ip || val.ip;
+    console.log("val", val, ip);
     axios.get(generateAPIUrl(ip!))
         .then(({data}) => {
             val.place = `${data.country} ${data.city}`;
@@ -112,7 +115,8 @@ function binding_method(homepage?: boolean, finished?: boolean) {
 }
 
 class Util {
-    detectIP(tmp: IIPPayload) {
+    @Cache
+    detectIP(tmp: IIPPayload, offline: boolean = true) {
         let ip;
         if (tmp.ip && !tmp.intranet_ip) {
             tmp.intranet_ip = tmp.ip;
@@ -182,8 +186,10 @@ class Util {
                     tmp.place = "润杰机房五楼";
                 } else if (tmp.intranet_ip.match(/10\.200\.33\.[0-9]{1,3}/)) {
                     tmp.place = "润杰机房六楼";
-                } else {
+                } else if (!offline) {
                     getExternalIPInfo(tmp);
+                } else {
+                    tmp.place = "未知";
                 }
                 tmp.intranet_ip = temp;
             } else {
@@ -239,14 +245,17 @@ class Util {
                     tmp.place = "外网";
                 } else if (tmp.intranet_ip.match(/10\.3\.[\s\S]+/)) {
                     tmp.place = "地质楼";
-                } else {
+                } else if (!offline) {
                     getExternalIPInfo(tmp);
                     // tmp.place = "未知";
+                } else {
+                    tmp.place = "未知";
                 }
             }
-        } else {
+        } else if (!offline) {
             getExternalIPInfo(tmp);
-            // tmp.place = "未知";
+        } else {
+            tmp.place = "未知";
         }
         return tmp.place;
     }
@@ -499,10 +508,10 @@ class Util {
             };
         })(jQuery);
         $(function () {
-            setTimeout(function () {
+            if (document.getElementById("toTop") === null) {
                 $("body").prepend("<a href=\"#top\" id=\"toTop\" style=\"z-index:999\"><i class=\"arrow alternate huge circle up icon\"></i></a>");
                 $("#toTop").scrollToTop();
-            }, 50);
+            }
         });
     }
 
