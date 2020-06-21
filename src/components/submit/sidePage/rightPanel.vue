@@ -36,13 +36,13 @@
         <monaco-static :content="current_prepend.trim()" :fontSize="fontSize + ''" :selected_language="selected_language"
                        :static_theme="static_theme" v-if="editorPackage && prepend"></monaco-static>
         <ace-editor :fontSize="fontSize + ''" :selected_language="selected_language" :theme="theme"
-                    v-if="!editorPackage" v-model="code"></ace-editor>
+                    v-if="!editorPackage" v-model="code" :prepend-length="codePrependLines"></ace-editor>
         <monaco-editor :fontSize="fontSize + ''" :selected_language="selected_language" :theme="theme"
-                       v-else v-model="code" :enable-language-server="!(prepend || append)" :prepend-length="(current_prepend ? (current_prepend + '').trim().split('\n').length : 0)">
+                       v-else v-model="code" :enable-language-server="!(prepend || append)" :prepend-length="codePrependLines">
 
         </monaco-editor>
         <ace-static :content="current_append" :fontSize="fontSize + ''" :selected_language="selected_language"
-                    :static_theme="static_theme" v-if="!editorPackage && append"></ace-static>
+                    :static_theme="static_theme" v-if="!editorPackage && append" :prepend-length="appendLineStartsWith"></ace-static>
         <monaco-static :content="current_append.trim()" :fontSize="fontSize + ''" :selected_language="selected_language"
                        :static_theme="static_theme" v-if="editorPackage && append" :prepend-length="appendLineStartsWith"></monaco-static>
         <div class="ui menu borderless" id="statusBar" style="margin: 0;
@@ -361,6 +361,11 @@ export default class RightPanel extends Vue {
                 }
             }
             return config;
+        }
+
+        get codePrependLines () {
+            const current_prepend = this.current_prepend;
+            return (current_prepend ? (current_prepend + "").trim().split("\n").length : 0);
         }
 
         initClipboard () {

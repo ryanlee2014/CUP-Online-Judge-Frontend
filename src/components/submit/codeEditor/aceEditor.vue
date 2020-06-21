@@ -20,6 +20,7 @@ export default class AceEditor extends Vue {
     @Prop({ default: "ace/theme/monokai" }) theme!: string;
     @Prop({ default: "" }) value!: string;
     @Prop({ default: 460 }) height!: number;
+    @Prop({ default: 0 }) prependLength!: number;
 
     $refs: any;
 
@@ -43,6 +44,11 @@ export default class AceEditor extends Vue {
         }
     }
 
+    @Watch("prependLength")
+    onPrependLengthChanged (val: number) {
+        this.editor!.setOption("firstLineNumber", val + 1);
+    }
+
     @Watch("selected_language")
     onSelectedLanguageChanged (val: string) {
         this.editor!.getSession().setMode(`ace/mode/${language[parseInt(val)]}`);
@@ -64,7 +70,8 @@ export default class AceEditor extends Vue {
         this.editor.setOptions({
             enableBasicAutocompletion: true,
             enableSnippets: true,
-            enableLiveAutocompletion: true
+            enableLiveAutocompletion: true,
+            firstLineNumber: Math.min(this.prependLength, 1)
         });
         editor.getSession().setValue(this.value);
         editor.on("change", () => {
