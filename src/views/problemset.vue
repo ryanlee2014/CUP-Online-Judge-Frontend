@@ -47,8 +47,8 @@
                     <div class="three wide column">
                         <div class="row half_padding">
                             <div class="sixteen wide column">
-                                <div @click="check" class="ui toggle checkbox" id="show_tag">
-                                    <input type="checkbox" :value="show_tag">
+                                <div class="ui toggle checkbox" id="show_tag">
+                                    <input @change="check" type="checkbox" v-model="show_tag">
                                     <label>{{$t("labelvisible")}}</label>
                                 </div>
                             </div>
@@ -338,7 +338,6 @@ export default class ProblemSet extends Mixins(mixins) {
         }
 
         check () {
-            this.show_tag = Boolean(-this.show_tag + 1);
             localStorage.setItem("show_tag", "" + Boolean(this.show_tag));
         }
 

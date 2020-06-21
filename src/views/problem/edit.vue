@@ -530,6 +530,7 @@ export default class ProblemEdit extends Mixins(mixins) implements IKeyValue {
 
         uploadFile () {
             this.baseUploadFile(`/api/admin/problem/data/set/${this.id}`, "upload_file_form");
+            this.uploadFileName = "";
         }
 
         baseUploadFile (url: string, refKey: string) {
@@ -540,7 +541,7 @@ export default class ProblemEdit extends Mixins(mixins) implements IKeyValue {
                     console.log(percentCompleted);
                 }
             };
-            this.axios.post(url, data, config)
+            return this.axios.post(url, data, config)
                 .then(({ data }) => {
                     alert("上传成功");
                     this.initFiles();
@@ -549,6 +550,7 @@ export default class ProblemEdit extends Mixins(mixins) implements IKeyValue {
 
         uploadMultipleFiles () {
             this.baseUploadFile(`/api/admin/problem/data/set/multiple/${this.id}`, "upload_multiple_file_form");
+            this.uploadMultipleFileName = [];
         }
 
         removeFile (fileName: string) {
