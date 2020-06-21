@@ -34,7 +34,7 @@
         <ace-static :content="trimedCurrentPrepend" :fontSize="fontSize + ''" :selected_language="selected_language"
                     :static_theme="static_theme" v-if="!editorPackage && trimedCurrentPrepend"></ace-static>
         <monaco-static :content="trimedCurrentPrepend" :fontSize="fontSize + ''" :selected_language="selected_language"
-                       :static_theme="static_theme" v-if="editorPackage && trimedCurrentPrepend"></monaco-static>
+                       :static_theme="static_theme" v-show="editorPackage && !!trimedCurrentPrepend"></monaco-static>
         <ace-editor :fontSize="fontSize + ''" :selected_language="selected_language" :theme="theme"
                     v-if="!editorPackage" v-model="code" :prepend-length="codePrependLines"></ace-editor>
         <monaco-editor :fontSize="fontSize + ''" :selected_language="selected_language" :theme="theme"
@@ -44,7 +44,7 @@
         <ace-static :content="trimedCurrentAppend" :fontSize="fontSize + ''" :selected_language="selected_language"
                     :static_theme="static_theme" v-if="!editorPackage && trimedCurrentAppend" :prepend-length="appendLineStartsWith"></ace-static>
         <monaco-static :content="trimedCurrentAppend" :fontSize="fontSize + ''" :selected_language="selected_language"
-                       :static_theme="static_theme" v-if="editorPackage && trimedCurrentAppend" :prepend-length="appendLineStartsWith"></monaco-static>
+                       :static_theme="static_theme" v-show="editorPackage && !!trimedCurrentAppend" :prepend-length="appendLineStartsWith"></monaco-static>
         <div class="ui menu borderless" id="statusBar" style="margin: 0;
         padding: 0;
         position: relative;
