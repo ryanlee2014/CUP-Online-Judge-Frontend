@@ -108,24 +108,40 @@
                     <i class="delete icon" @click="removeFile(file_name)"></i>
                 </div>
             </div>
+
             <div class="row">
-                <div class="four wide column">
+                <div class="ten wide column">
                     <div class="ui grid">
                         <div class="row">
                             <div class="eight wide column">
                                 <form ref="upload_file_form">
-                                    <a @click="selectFile" class="ui button">{{uploadFileName}}</a>
                                     <input @change="fileChanged" ref="file_input" name="upload_file" style="display: none" type="file">
                                 </form>
+                                <form ref="upload_multiple_file_form">
+                                    <input @change="multipleFileChanged" ref="file_multiple_input" name="upload_multiple_file" style="display: none" multiple="multiple" type="file">
+                                </form>
+                                <a @click="selectFile" class="ui button">{{uploadFileName}}</a>
+                                <a @click="uploadFile" class="ui primary button">{{$t("submit")}}</a>
                             </div>
                             <div class="eight wide column">
-                                <a @click="uploadFile" class="ui primary button">{{$t("submit")}}</a>
+                                <a @click="selectMultipleFiles" class="ui button">{{$t("select multiple files")}}</a>
+                                <a @click="uploadMultipleFiles" class="ui primary button">{{$t("submit multiple files")}}</a>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="twelve wide column">
+                <div class="six wide column">
                     <p></p>
+                </div>
+            </div>
+            <div class="row" v-if="uploadMultipleFileName && uploadMultipleFileName.length > 0">
+                <div class="ui header">
+                    {{$t("upload waiting list")}}
+                </div>
+            </div>
+            <div class="row" v-if="uploadMultipleFileName && uploadMultipleFileName.length > 0">
+                <div class="ui label" :key="i" v-for="(filename, i) in uploadMultipleFileName">
+                    <a>{{filename}}</a>
                 </div>
             </div>
             <div class="row">
@@ -255,6 +271,25 @@ const $: any = jquery;
 @Component({
     components: {
         monacoEditor
+    },
+    i18n: {
+        messages: {
+            "zh-cn": {
+                "submit multiple files": "上传多个文件",
+                "select multiple files": "选择多个文件",
+                "upload waiting list": "等待上传列表"
+            },
+            en: {
+                "submit multiple files": "Submit multiple files",
+                "select multiple files": "Select multiple files",
+                "upload waiting list": "Waiting list"
+            },
+            ja: {
+                "submit multiple files": "複数のファイルアップロード",
+                "select multiple files": "複数のファイル選択",
+                "upload waiting list": "待ちリスト"
+            }
+        }
     }
 })
 export default class ProblemEdit extends Mixins(mixins) implements IKeyValue {
@@ -268,6 +303,7 @@ export default class ProblemEdit extends Mixins(mixins) implements IKeyValue {
         sampleinput = "";
         sampleoutput = "";
         uploadFileName = "";
+        uploadMultipleFileName: string[] = [];
         descriptionInstance = markdownIt.newInstance();
         inputInstance = markdownIt.newInstance();
         outputInstance = markdownIt.newInstance();
@@ -480,23 +516,39 @@ export default class ProblemEdit extends Mixins(mixins) implements IKeyValue {
             (this.$refs.file_input as any).click();
         }
 
+        selectMultipleFiles () {
+            (this.$refs.file_multiple_input as any).click();
+        }
+
         fileChanged (event: any) {
             this.uploadFileName = event.target.files[0].name;
         }
 
+        multipleFileChanged (event: any) {
+            this.uploadMultipleFileName = Array.from(event.target.files).map((e: any) => e.name);
+        }
+
         uploadFile () {
-            const data = new FormData(this.$refs.upload_file_form as any);
+            this.baseUploadFile(`/api/admin/problem/data/set/${this.id}`, "upload_file_form");
+        }
+
+        baseUploadFile (url: string, refKey: string) {
+            const data = new FormData(this.$refs[refKey] as any);
             const config = {
                 onUploadProgress: function (progressEvent: any) {
                     const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
                     console.log(percentCompleted);
                 }
             };
-            this.axios.post(`/api/admin/problem/data/set/${this.id}`, data, config)
+            this.axios.post(url, data, config)
                 .then(({ data }) => {
                     alert("上传成功");
                     this.initFiles();
                 });
+        }
+
+        uploadMultipleFiles () {
+            this.baseUploadFile(`/api/admin/problem/data/set/multiple/${this.id}`, "upload_multiple_file_form");
         }
 
         removeFile (fileName: string) {
