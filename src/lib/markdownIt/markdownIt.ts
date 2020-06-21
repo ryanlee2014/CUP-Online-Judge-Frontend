@@ -3,6 +3,7 @@ import MarkdownIt from "markdown-it";
 import warning from "@/lib/markdownIt/container/warning";
 import errorFunc from "@/lib/markdownIt/container/error";
 import positiveFunc from "@/lib/markdownIt/container/positive";
+import messageFunc from "@/lib/markdownIt/container/message";
 const uslug = require("uslug");
 const uslugify = (s: any) => uslug(s);
 const emptyFunc = (src: string, env?: any) => "";
@@ -30,6 +31,7 @@ function Instance(key = "", problem_id = ""): any {
     warning(md);
     errorFunc(md);
     positiveFunc(md);
+    messageFunc(md);
     md.use(ma, {
         slugify: uslugify
     });

@@ -33,18 +33,18 @@
         </div>
         <ace-static :content="current_prepend" :fontSize="fontSize + ''" :selected_language="selected_language"
                     :static_theme="static_theme" v-if="!editorPackage && prepend"></ace-static>
-        <monaco-static :content="current_prepend" :fontSize="fontSize + ''" :selected_language="selected_language"
+        <monaco-static :content="current_prepend.trim()" :fontSize="fontSize + ''" :selected_language="selected_language"
                        :static_theme="static_theme" v-if="editorPackage && prepend"></monaco-static>
         <ace-editor :fontSize="fontSize + ''" :selected_language="selected_language" :theme="theme"
                     v-if="!editorPackage" v-model="code"></ace-editor>
         <monaco-editor :fontSize="fontSize + ''" :selected_language="selected_language" :theme="theme"
-                       v-else v-model="code" :enable-language-server="true">
+                       v-else v-model="code" :enable-language-server="!(prepend || append)" :prepend-length="(current_prepend ? (current_prepend + '').trim().split('\n').length : 0)">
 
         </monaco-editor>
         <ace-static :content="current_append" :fontSize="fontSize + ''" :selected_language="selected_language"
                     :static_theme="static_theme" v-if="!editorPackage && append"></ace-static>
-        <monaco-static :content="current_append" :fontSize="fontSize + ''" :selected_language="selected_language"
-                       :static_theme="static_theme" v-if="editorPackage && append"></monaco-static>
+        <monaco-static :content="current_append.trim()" :fontSize="fontSize + ''" :selected_language="selected_language"
+                       :static_theme="static_theme" v-if="editorPackage && append" :prepend-length="appendLineStartsWith"></monaco-static>
         <div class="ui menu borderless" id="statusBar" style="margin: 0;
         padding: 0;
         position: relative;
@@ -143,6 +143,7 @@ export default class RightPanel extends Vue {
         appendView: any = null;
         editorPackage = false;
         code = "";
+        codeLine = 0;
         language = ["c_cpp", "c_cpp", "pascal", "java", "ruby", "sh", "python", "php", "perl", "csharp", "objectivec", "text", "scheme", "c_cpp", "c_cpp", "lua", "javascript", "go", "python", "c_cpp", "c_cpp", "c_cpp", "text", "java", "java", "python", "python", "java", "c_cpp", "c_cpp", "c_cpp"];
         current_prepend = "";
         current_append = "";
@@ -309,9 +310,21 @@ export default class RightPanel extends Vue {
         }
 
         @Watch("code")
-        onCodeChanged (val: any) {
+        onCodeChanged (val: string) {
             if (val && this.auto_detect) {
                 this.detectLanguageDebouncer();
+            }
+            else if (val) {
+                this.codeLine = val.split("\n").length;
+            }
+        }
+
+        get appendLineStartsWith () {
+            if (this.current_prepend) {
+                return this.current_prepend.trim().split("\n").length + this.codeLine;
+            }
+            else {
+                return 0;
             }
         }
 

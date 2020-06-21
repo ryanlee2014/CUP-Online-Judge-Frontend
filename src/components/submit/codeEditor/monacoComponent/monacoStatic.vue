@@ -1,5 +1,5 @@
 <template>
-    <monaco-editor v-if="render" :fontSize="fontSize" :selected_language="selected_language" :theme="static_theme" v-model="content" :readOnly="true" :height="height" :minimap="false"></monaco-editor>
+    <monaco-editor v-if="render" :fontSize="fontSize" :enable-language-server="false" :prepend-length="prependLength" :selected_language="selected_language" :theme="static_theme" v-model="content" :readOnly="true" :height="height" :minimap="false"></monaco-editor>
 </template>
 
 <script lang="ts">
@@ -17,6 +17,7 @@ export default class MonacoStatic extends Vue {
     @Prop({ default: 0 }) selected_language!: number;
     @Prop({ default: "vs-dark" }) static_theme!: string;
     @Prop({ default: "16" }) fontSize!: string;
+    @Prop({ default: 0 }) prependLength!: number;
     render = false;
     lines = 0;
     get height () {

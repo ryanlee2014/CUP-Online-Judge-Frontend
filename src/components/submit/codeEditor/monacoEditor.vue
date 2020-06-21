@@ -21,6 +21,7 @@ export default class MonacoEditor extends Vue {
     @Prop({ default: false }) readOnly!: boolean;
     @Prop({ default: true }) minimap!: boolean;
     @Prop({ default: false }) enableLanguageServer!: boolean;
+    @Prop({ default: 0 }) prependLength!: number;
 
     $refs: any;
 
@@ -41,13 +42,19 @@ export default class MonacoEditor extends Vue {
         }
     }
 
+    getMonacoUri (languageSuffix: string) {
+        const uri = `file:///tmp/cupoj-language-server${this.readOnly ? "" : "/intellisense"}/${this.languageServerId()}/Main.${languageSuffix}`;
+        console.log(uri);
+        return monaco.Uri.parse(uri);
+    }
+
     @Watch("selected_language")
     onSelectedLanguageChanged (val: any, oldVal: any) {
         if (this.editor && languageMap[val] !== languageMap[oldVal]) {
             console.log("Changed");
             this.closeLanguageServer();
             const oldModel = this.editor.getModel()!;
-            const newModel = monaco.editor.createModel(oldModel.getValue(), languageMap[parseInt(val)], monaco.Uri.parse(`file:///tmp/cupoj-language-server/${this.languageServerId()}/Main.${languageMap[val]}`));
+            const newModel = monaco.editor.createModel(oldModel.getValue(), languageMap[parseInt(val)], this.getMonacoUri(languageMap[val]));
             this.editor.setModel(newModel);
             if (oldModel) {
                 oldModel.dispose();
@@ -101,6 +108,17 @@ export default class MonacoEditor extends Vue {
         }
     }
 
+    @Watch("prependLength")
+    onPrependLengthChanged (val: number) {
+        if (this.editor) {
+            this.$nextTick(() => {
+                this.editor!.updateOptions({
+                    lineNumbers: (line: number) => (val + line).toString()
+                });
+            });
+        }
+    }
+
     mounted () {
         this.$nextTick(() => {
             this.initEditor();
@@ -113,15 +131,16 @@ export default class MonacoEditor extends Vue {
     }
 
     languageServerId () {
-        const id = `${(+(new Date())).toString()}${this.$store.getters.user_id}`;
+        const id = `${(+(new Date())).toString()}${this.$store.getters.user_id}${Math.trunc(Math.random() * 1000).toString()}`;
         console.log("langid:", id);
         return id;
     }
 
     initEditor () {
         this.editor = monaco.editor.create(this.$refs.source, {
-            model: monaco.editor.createModel(this.value, languageMap[this.selected_language], monaco.Uri.parse(`file:///tmp/cupoj-language-server/${this.languageServerId()}/Main.${languageMap[this.selected_language]}`)),
+            model: monaco.editor.createModel(this.value, languageMap[this.selected_language], this.getMonacoUri(languageMap[this.selected_language])),
             value: this.value,
+            lineNumbers: (line: number) => (this.prependLength + line).toString(),
             language: languageMap[this.selected_language],
             minimap: {
                 enabled: this.minimap
@@ -149,7 +168,12 @@ export default class MonacoEditor extends Vue {
             this.$store.commit("setCodeInfo", {
                 code: this.source_code
             });
+            this.valueChanged(this.source_code);
         });
+    }
+
+    valueChanged (newVal: string) {
+        this.$emit("input", newVal);
     }
 
     getDataFromStorage (defaultValue: any, key: string) {
