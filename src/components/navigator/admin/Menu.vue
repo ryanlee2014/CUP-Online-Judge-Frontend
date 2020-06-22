@@ -41,6 +41,10 @@
                         <i class="list icon"></i>
                         {{$t("contest set list")}}
                     </router-link>
+                    <router-link class="item" exact-active-class="active" to="/admin/contest/assistant">
+                        <i class="list icon"></i>
+                        {{$t("contest assistant manage")}}
+                    </router-link>
                 </div>
             </div>
             <div class="ui dropdown item">

@@ -46,6 +46,10 @@ function checkAdmin (to: Route, admin: boolean, next: NextFunction) {
                 });
             }
 
+            if (store.getters.admin) {
+                next();
+            }
+
             let needPrivilege = false;
             for (const key in meta) {
                 if (!Object.prototype.hasOwnProperty.call(meta, key)) {
@@ -58,8 +62,11 @@ function checkAdmin (to: Route, admin: boolean, next: NextFunction) {
                     next();
                 }
             }
-            if (store.getters.admin) {
-                next();
+
+            if (meta.checkPrivilege && typeof meta.checkPrivilege === "function") {
+                meta.checkPrivilege(to).then(() => next()).catch(() => next({
+                    path: "/forbidden/privilege"
+                }));
             }
             else if (needPrivilege) {
                 next({

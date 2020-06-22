@@ -1,5 +1,6 @@
 import Vue from "vue";
-import Router, { RouterOptions } from "vue-router";
+import Router, { Route, RouterOptions } from "vue-router";
+import axios from "axios";
 import adminAuth from "./lib/router";
 import Guard from "./router/util/guard";
 
@@ -483,7 +484,29 @@ const router = new Router({
             meta: {
                 auth: true,
                 admin: true,
-                contest_manager: true
+                contest_manager: true,
+                checkPrivilege (to: Route) {
+                    return new Promise((resolve, reject) => {
+                        axios.get(`/api/contest/assistant/${to.params.contest_id}`)
+                            .then(({ data }) => {
+                                if (data.data) {
+                                    resolve();
+                                }
+                                else {
+                                    reject(new Error("No privilege"));
+                                }
+                            });
+                    });
+                }
+            }
+        },
+        {
+            path: "/admin/contest/assistant",
+            name: "Contest assistant manage",
+            component: () => import("./views/admin/contest/assistant.vue"),
+            meta: {
+                auth: true,
+                admin: true
             }
         },
         {

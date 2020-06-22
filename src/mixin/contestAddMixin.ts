@@ -1,8 +1,8 @@
-import Vue from "vue";
 import _ from "lodash";
-import { Component } from "vue-property-decorator";
+import { Component, Mixins } from "vue-property-decorator";
+import RouterBackMixin from "@/mixin/router/RouterBackMixin";
 @Component
-export default class ContestAddMixin extends Vue {
+export default class ContestAddMixin extends Mixins(RouterBackMixin) {
     contest_id = "0";
     data = {};
     userListText = "";
@@ -16,6 +16,7 @@ export default class ContestAddMixin extends Vue {
         this.axios.post("/api/admin/contest/add", val)
             .then(({ data }) => {
                 alert(this.$t("success"));
+                this.routerBack();
             }).catch(reason => {
                 alert(this.$t("error"));
             });

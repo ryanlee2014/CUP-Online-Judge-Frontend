@@ -256,14 +256,6 @@ export default class Submit extends Mixins(mixins) {
     initData (parseData: any) {
         return this.axios.get("/api/problem/local", { params: parseData })
             .then(({ data }) => {
-                if (data.status === "error") {
-                    if (data.statement) {
-                        alert(data.statement);
-                    }
-                    this.contest_mode = data.contest_mode;
-                    this.limit = false;
-                    return;
-                }
                 let addr = data.limit_hostname;
                 if (data.isadmin) {
                     addr = null;

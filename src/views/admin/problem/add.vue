@@ -225,6 +225,7 @@ import monacoEditor from "@/components/submit/codeEditor/monacoEditor.vue";
 import { unique } from "@/lib/ts-util";
 import _ from "lodash";
 import jquery from "jquery";
+import RouterBackMixin from "@/mixin/router/RouterBackMixin";
 const $: any = jquery;
 
 @Component({
@@ -232,7 +233,7 @@ const $: any = jquery;
         monacoEditor
     }
 })
-export default class AddProblem extends Mixins(InitMixin) implements IKeyValue {
+export default class AddProblem extends Mixins(InitMixin, RouterBackMixin) implements IKeyValue {
     title = "";
     description = "";
     time = "";
@@ -342,15 +343,20 @@ export default class AddProblem extends Mixins(InitMixin) implements IKeyValue {
         const labels = this.label;
 
         sendObj.label = unique(labels).join(" ");
-        this.axios.post(`/api/problem/${this.source}/${id}`, { json: sendObj })
+        const promiseArray: Promise<any>[] = [];
+        const pushProblemPromise = this.axios.post(`/api/problem/${this.source}/${id}`, { json: sendObj })
             .then(({ data }) => {
                 if (data.status === "OK") {
                     this.axios.get(`/api/problem/${from}?id=${id}`);
                     alert("提交成功");
                 }
             });
-        this.axios.post("/api/problem/prefile/prepend", prependDTO);
-        this.axios.post("/api/problem/prefile/append", appendDTO);
+        const prependPromise = this.axios.post("/api/problem/prefile/prepend", prependDTO);
+        const appendPromise = this.axios.post("/api/problem/prefile/append", appendDTO);
+        promiseArray.push(pushProblemPromise, prependPromise, appendPromise);
+        Promise.all(promiseArray).then(() => {
+            this.routerBack();
+        });
     }
 
     initData () {

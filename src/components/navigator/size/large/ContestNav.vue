@@ -97,12 +97,20 @@ import Vue from "vue";
 export default class ContestNav extends Vue {
     get hasPrivilege () {
         const contestId = this.contest_id;
-        return !!(this.contest_maker[`m${contestId}`] || this.contest_manager || this.admin);
+        return !!(this.contest_maker[`m${contestId}`] || this.contest_manager || this.admin || this.contest_assistant);
     }
 
     contest_maker: any;
     contest_manager: any;
+    contest_assistant: boolean = false;
     admin: any;
+
+    mounted () {
+        this.axios.get(`/api/contest/assistant/${this.contest_id}`)
+            .then(({ data }) => {
+                this.contest_assistant = data.data;
+            });
+    }
 
     @Prop({ default: "" }) nick!: string;
     @Prop({ default: false }) logined!: boolean;
