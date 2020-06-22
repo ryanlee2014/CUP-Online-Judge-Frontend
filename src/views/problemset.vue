@@ -134,14 +134,6 @@ import _ from "lodash";
 import G2 from "@antv/g2";
 import DataSet from "@antv/data-set";
 const $: any = jquery;
-$("#show_tag")
-    .checkbox()
-    .first().checkbox({
-        onChecked () {
-        },
-        onUnchecked () {
-        }
-    });
 const HEIGHT = 320;
 const MAX_SIZE = 25;
 const MIN_SIZE = 20;

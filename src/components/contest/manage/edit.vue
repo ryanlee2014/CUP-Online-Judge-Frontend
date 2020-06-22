@@ -279,7 +279,7 @@ export default class BaseManage extends Vue {
         $("#limitClassroom").dropdown("set selected", this.classroomSelected.split(","));
         $("#limitHostname").dropdown("set selected", this.hostname.split(","));
         $("#selectedLanguage").dropdown("set selected", this.languageSelected.split(","));
-        $(this.$refs.public).checkbox((!this.Private) ? "check" : "uncheck");
+        $(this.$refs.public).checkbox((this.Private) ? "check" : "uncheck");
         $(this.$refs.contest).checkbox(this.ContestMode ? "check" : "uncheck");
         $(this.$refs.defunct).checkbox(this.defunct ? "check" : "uncheck");
     }
