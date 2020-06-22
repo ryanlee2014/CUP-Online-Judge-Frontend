@@ -12,7 +12,7 @@ type NextFunction = (...arg: any[]) => any;
 function errorHandler (next: NextFunction, to: Route) {
     return function (reason: any) {
         if (reason.data.statement === "not login") {
-            next({
+            return next({
                 path: "/login",
                 query: {
                     redirect: to.fullPath
@@ -28,7 +28,7 @@ function errorHandler (next: NextFunction, to: Route) {
 function checkAdmin (to: Route, admin: boolean, next: NextFunction) {
     const meta = to.meta;
     if (meta.admin && admin) {
-        next();
+        return next();
     }
     else {
         getSelfInfo().then(({ data }) => {
@@ -38,7 +38,7 @@ function checkAdmin (to: Route, admin: boolean, next: NextFunction) {
                 store.commit("loginMutate", { login: true });
             }
             else {
-                next({
+                return next({
                     path: "/login",
                     query: {
                         redirect: to.fullPath
@@ -47,7 +47,7 @@ function checkAdmin (to: Route, admin: boolean, next: NextFunction) {
             }
 
             if (store.getters.admin) {
-                next();
+                return next();
             }
 
             let needPrivilege = false;
@@ -59,22 +59,24 @@ function checkAdmin (to: Route, admin: boolean, next: NextFunction) {
 
                 if (meta[key] && store.getters[key]) {
                     needPrivilege = false;
-                    next();
+                    return next();
                 }
             }
 
             if (meta.checkPrivilege && typeof meta.checkPrivilege === "function") {
-                meta.checkPrivilege(to).then(() => next()).catch(() => next({
-                    path: "/forbidden/privilege"
-                }));
+                meta.checkPrivilege(to).then(() => next()).catch(() => {
+                    return next({
+                        path: "/forbidden/privilege"
+                    });
+                });
             }
             else if (needPrivilege) {
-                next({
+                return next({
                     path: "/forbidden/privilege"
                 });
             }
             else {
-                next();
+                return next();
             }
         }).catch(errorHandler(next, to));
     }
@@ -89,7 +91,7 @@ function getLoginInfo (to: Route, next: NextFunction) {
             checkAdmin(to, store.getters.admin, next);
         }
         else {
-            next({
+            return next({
                 path: "/login",
                 query: {
                     redirect: to.fullPath
@@ -120,24 +122,24 @@ const Guard = function (to: Route, from: Route, next: NextFunction) {
     }
     else if (to.meta.auth === false) {
         if (to.meta.init === true && !store.getters.init) {
-            next();
+            return next();
         }
         else if (to.meta.init === true) {
-            next({
+            return next({
                 path: "/"
             });
         }
         else if (store.getters.logined) {
-            next({
+            return next({
                 path: `/user/${store.getters.user_id}`
             });
         }
         else {
-            next();
+            return next();
         }
     }
     else {
-        next();
+        return next();
     }
 };
 

@@ -55,16 +55,16 @@
                         </div>
                         <div class="row half_padding">
                             <div class="sixteen wide column">
-                                <div @click="hide" class="ui toggle checkbox" id="hide_currect">
-                                    <input type="checkbox" :value="hide_currect">
+                                <div class="ui toggle checkbox" id="hide_currect">
+                                    <input @change="hide" type="checkbox" v-model="hide_currect">
                                     <label>{{$t("hidepassedproblem")}}</label>
                                 </div>
                             </div>
                         </div>
                         <div class="row half_padding">
                             <div class="sixteen wide column">
-                                <div @click="cloud" class="ui toggle checkbox" id="show_cloud">
-                                    <input type="checkbox" :value="show_label_cloud">
+                                <div class="ui toggle checkbox" id="show_cloud">
+                                    <input @change="cloud" type="checkbox" v-model="show_label_cloud">
                                     <label>{{$t("showlabelcloud")}}</label>
                                 </div>
                             </div>
@@ -127,7 +127,7 @@ import selectedTag from "../components/problemset/selected-tag.vue";
 import mainContent from "../components/problemset/MainContent.vue";
 import ContestMode from "../components/contestMode/block.vue";
 import { mapGetters } from "vuex";
-import { Component, Mixins } from "vue-property-decorator";
+import { Component, Mixins, Watch } from "vue-property-decorator";
 import mixins from "../mixin/init";
 import jquery from "jquery";
 import _ from "lodash";
@@ -329,21 +329,22 @@ export default class ProblemSet extends Mixins(mixins) {
                 });
         }
 
-        check () {
-            localStorage.setItem("show_tag", "" + Boolean(this.show_tag));
+        @Watch("show_tag")
+        check (val: boolean) {
+            localStorage.setItem("show_tag", "" + val);
         }
 
-        hide () {
-            this.hide_currect = Boolean(!this.hide_currect);
-            localStorage.setItem("hide_currect", "" + Boolean(this.hide_currect));
+        @Watch("hide_current")
+        hide (val: boolean) {
+            localStorage.setItem("hide_currect", "" + val);
         }
 
-        cloud () {
+        @Watch("show_label_cloud")
+        cloud (val: boolean) {
             if (!this.has_draw) {
                 this.drawLabelCloud();
             }
-            this.show_label_cloud = Boolean(!this.show_label_cloud);
-            localStorage.setItem("show_label_cloud", "" + Boolean(this.show_label_cloud));
+            localStorage.setItem("show_label_cloud", "" + val);
         }
 
         enter (obj: any) {
@@ -439,15 +440,6 @@ export default class ProblemSet extends Mixins(mixins) {
             document.title = `Problem Set -- ${document.title}`;
             const that = this;
             const page = parseInt(getParameterByName("page") || queryString.page || "1") - 1;
-            $(document).ready(function () {
-                $("#show_tag").checkbox((that.show_tag ? "" : "un") + "check");
-                $("#hide_currect").checkbox((that.hide_currect ? "" : "un") + "check");
-                $("#show_cloud").checkbox((that.show_label_cloud ? "" : "un") + "check");
-            });
-            $("#show_tag").checkbox((this.show_tag ? "" : "un") + "check");
-            $("#hide_currect").checkbox((that.hide_currect ? "" : "un") + "check");
-            $("#show_cloud").checkbox((that.show_label_cloud ? "" : "un") + "check");
-
             this.current_page = page;
             this.axios.get("/api/problemset/" + page + "/" + (this.search_tag || "none") + "/" + this.order_target + "/" + this.order + "/?label=" + this.label)
                 .then(({ data }) => {

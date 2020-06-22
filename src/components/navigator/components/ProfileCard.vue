@@ -9,7 +9,7 @@
                     </h4>
                     <p><i class='yen sign icon'></i>0</p>
                     <div class="ui toggle checkbox" id="show_tag">
-                        <input @click="darkmodeSwitch" type="checkbox" :value="darkMode">
+                        <input type="checkbox" v-model="dark">
                         <label>{{$t("dark mode")}}</label>
                     </div>
                 </div>
@@ -50,7 +50,7 @@
 <script lang="ts">
 import store from "../../../store";
 import util from "../../../lib/util";
-import { Prop, Component } from "vue-property-decorator";
+import { Prop, Component, Watch } from "vue-property-decorator";
 import Vue from "vue";
 import { mapGetters } from "vuex";
 @Component({
@@ -63,6 +63,9 @@ export default class ProfileCard extends Vue {
     @Prop({ default: false }) admin!: boolean;
     @Prop({ default: "" }) email!: string;
     $socket: any;
+
+    dark = false;
+
     get img_url () {
         return util.getAvatarURL({ user_id: this.user_id, avatar: this.avatar, avatarUrl: this.$store.getters.avatarUrl });
     }
@@ -79,9 +82,17 @@ export default class ProfileCard extends Vue {
             });
     }
 
-    darkmodeSwitch () {
-        this.$store.commit("setDarkMode", !this.$store.getters.darkMode);
-        console.log("darkmode:", this.$store.getters.darkMode);
+    mounted () {
+        this.dark = this.$store.getters.darkMode;
+    }
+
+    @Watch("dark")
+    onDarkChanged (val: boolean) {
+        this.darkmodeSwitch(val);
+    }
+
+    darkmodeSwitch (val: boolean) {
+        this.$store.commit("setDarkMode", val);
         if (this.$store.getters.darkMode) {
             $("*:not(.not.theme)").addClass("inverted");
             $(".dimmer.inverted").removeClass("inverted");
