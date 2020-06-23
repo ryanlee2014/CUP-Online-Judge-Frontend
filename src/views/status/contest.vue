@@ -204,6 +204,8 @@ import StatusTable from "../../components/status/contest/StatusTable.vue";
 import Chart from "chart.js";
 import jquery from "jquery";
 import StatusViewMixin from "@/mixin/StatusViewMixin";
+import { Lock, RunOnceEachKey } from "@/module/Decorator/method";
+import AwaitLock from "await-lock";
 
 const $: any = jquery;
 const am4themes_animated = require("@amcharts/amcharts4/themes/animated").default;
@@ -583,6 +585,8 @@ export default class ContestStatus extends Mixins(mixins, StatusViewMixin) {
                 });
         }
 
+        @Lock(new AwaitLock())
+        @RunOnceEachKey
         Submit (data: any) {
             if (!this.auto_refresh) {
                 return;

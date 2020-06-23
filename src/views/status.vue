@@ -186,7 +186,7 @@ import _ from "lodash";
 import { Component, Mixins, Watch } from "vue-property-decorator";
 import StatusViewMixin from "@/mixin/StatusViewMixin";
 import AwaitLock from "await-lock";
-import { Lock } from "@/module/Decorator/method";
+import { Lock, RunOnceEachKey } from "@/module/Decorator/method";
 import { mapGetters } from "vuex";
 import Graph from "@/components/status/graph.vue";
 import ResultGraph from "@/components/status/ResultGraph.vue";
@@ -273,6 +273,7 @@ export default class GeneralStatus extends Mixins(mixins, StatusViewMixin) {
         }
 
         @Lock(new AwaitLock())
+        @RunOnceEachKey
         async Submit (data: any) {
             if (!this.auto_refresh) {
                 return;

@@ -1,4 +1,5 @@
 import _ from "lodash";
+import md5 from "md5";
 
 import { log, logFactory } from "@/util/logger";
 import AwaitLock from "await-lock";
@@ -108,5 +109,18 @@ export function Cache (target: any, propertyName: string, propertyDescriptor: Pr
         const keyHash = parameterHash(args);
         // eslint-disable-next-line no-return-assign
         return cache[keyHash] ? cache[keyHash] : cache[keyHash] = method.apply(this, args);
+    };
+}
+
+export function RunOnceEachKey (target: any, propertyName: string, propertyDescriptor: PropertyDescriptor) {
+    decoratorLog(`RunOnceEachKey, target:${target.constructor.name}, propertyName:${propertyName}`);
+    const method = propertyDescriptor.value;
+    const cache: any = {};
+    propertyDescriptor.value = function (...args: any[]) {
+        const keyHash = md5(parameterHash(args));
+        if (!cache[keyHash]) {
+            cache[keyHash] = true;
+            return method.apply(this, args);
+        }
     };
 }

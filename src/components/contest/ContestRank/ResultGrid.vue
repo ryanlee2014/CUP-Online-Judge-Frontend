@@ -66,7 +66,7 @@ export default class ResultGrid extends Vue {
             $(this.$refs.block).popup({
                 hoverable: true
             }).popup();
-            lock.release();
+            // lock.release();
             // }
         }
     }

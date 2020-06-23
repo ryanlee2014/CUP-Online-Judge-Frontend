@@ -1,6 +1,6 @@
 {
   "name": "CUP-Online-Judge-NG-Frontend",
-  "version": "1.24.1",
+  "version": "1.24.2",
   "private": false,
   "scripts": {
     "serve": "npx --max_old_space_size=16000 vue-cli-service serve",
@@ -63,6 +63,7 @@
     "markdown-it-sup": "^1.0.0",
     "markdown-it-task-lists": "^2.1.1",
     "markdown-it-toc": "^1.1.0",
+    "md5": "^2.2.1",
     "mermaid": "^8.5.2",
     "moment": "^2.27.0",
     "monaco-editor": "^0.20.0",
@@ -101,6 +102,7 @@
     "@types/jquery": "^3.3.38",
     "@types/lodash": "^4.14.155",
     "@types/markdown-it": "^10.0.1",
+    "@types/md5": "^2.2.0",
     "@types/mermaid": "^8.2.1",
     "@types/semantic-ui": "^2.2.7",
     "@types/socket.io-client": "^1.4.33",

@@ -217,6 +217,7 @@ export default class ContestRank extends Mixins(mixins) {
                 this.fillSubmitterList(submitter, val);
                 val.forEach((el: any) => typeof submitter[el.user_id.toLowerCase()] !== "undefined" ? lazyUpdateSet.add(submitter[el.user_id.toLowerCase()]) : "");
                 lazyUpdateSet.forEach(this.updateSubmitter);
+                this.submitter = submitter = Object.values(submitter);
             }
             this.calculateRank();
             // @ts-ignore
