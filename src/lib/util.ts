@@ -29,17 +29,6 @@ function generateAPIUrl(ip: string) {
     return `/geoip/json/${ip}?lang=zh-CN&fields=status,message,country,countryCode,region,regionName,city,district,zip,lat,lon,timezone,isp,org,as,asname,proxy,hosting,query`;
 }
 
-function getExternalIPInfo(val: IIPPayload) {
-    const ip = val.intranet_ip || val.ip;
-    console.log("val", val, ip);
-    axios.get(generateAPIUrl(ip!))
-        .then(({data}) => {
-            val.place = `${data.country} ${data.city}`;
-            val.external_info = data;
-            val.$this.$forceUpdate();
-        })
-}
-
 function binding_method(homepage?: boolean, finished?: boolean) {
     // fix menu when passed
     const $fixedMenu = $(".fixed.menu");
@@ -115,7 +104,29 @@ function binding_method(homepage?: boolean, finished?: boolean) {
 }
 
 class Util {
-    @Cache
+
+    private __cache: any = {};
+
+    getExternalIPInfo (val: IIPPayload) {
+        const ip = val.intranet_ip || val.ip;
+        if (ip !== undefined && ip !== null) {
+            if (this.__cache[ip]) {
+                const data = this.__cache[ip];
+                val.place = `${data.country} ${data.city}`;
+                val.external_info = data;
+            }
+            else {
+                axios.get(generateAPIUrl(ip!))
+                    .then(({data}) => {
+                        this.__cache[ip] = data;
+                        val.place = `${data.country} ${data.city}`;
+                        val.external_info = data;
+                        val.$this.$forceUpdate();
+                    })
+            }
+        }
+    }
+
     detectIP(tmp: IIPPayload, offline: boolean = true) {
         let ip;
         if (tmp.ip && !tmp.intranet_ip) {
@@ -187,7 +198,7 @@ class Util {
                 } else if (tmp.intranet_ip.match(/10\.200\.33\.[0-9]{1,3}/)) {
                     tmp.place = "润杰机房六楼";
                 } else if (!offline) {
-                    getExternalIPInfo(tmp);
+                    this.getExternalIPInfo(tmp);
                 } else {
                     tmp.place = "未知";
                 }
@@ -246,14 +257,14 @@ class Util {
                 } else if (tmp.intranet_ip.match(/10\.3\.[\s\S]+/)) {
                     tmp.place = "地质楼";
                 } else if (!offline) {
-                    getExternalIPInfo(tmp);
+                    this.getExternalIPInfo(tmp);
                     // tmp.place = "未知";
                 } else {
                     tmp.place = "未知";
                 }
             }
         } else if (!offline) {
-            getExternalIPInfo(tmp);
+            this.getExternalIPInfo(tmp);
         } else {
             tmp.place = "未知";
         }
