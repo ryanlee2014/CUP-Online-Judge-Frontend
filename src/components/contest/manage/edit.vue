@@ -229,10 +229,10 @@ export default class BaseManage extends Vue {
      */
     LanguageSelectedToLangmask () {
         const byteLength = this.languageSet.length;
-        let target = (1 << byteLength) - 1;
+        let target = (2 ** byteLength) - 1;
         const languageSet = this.languageSelected.split(",").map(el => parseInt(el));
         languageSet.forEach(el => {
-            target ^= (1 << el);
+            target ^= (2 ** el);
         });
         return target;
     }

@@ -268,7 +268,7 @@ export default class Submit extends Mixins(mixins) {
                 }
                 const d = data.problem;
                 let sourceCode = data.source;
-                let language = localStorage.getItem("lastlang") && Boolean(1 << parseInt(localStorage.getItem("lastlang")!) & (~d.langmask)) ? parseInt(localStorage.getItem("lastlang")!) : Math.log2(~d.langmask & -~d.langmask);
+                let language = localStorage.getItem("lastlang") && Boolean(2 ** parseInt(localStorage.getItem("lastlang")!) & (~d.langmask)) ? parseInt(localStorage.getItem("lastlang")!) : Math.log2(~d.langmask & -~d.langmask);
                 if (typeof sourceCode !== "string") {
                     language = sourceCode.language;
                     sourceCode = sourceCode.source_code;
@@ -319,7 +319,7 @@ export default class Submit extends Mixins(mixins) {
                     isadmin: isadmin,
                     iseditor: iseditor,
                     share: false,
-                    selected_language: localStorage.getItem("lastlang") && Boolean(1 << parseInt(localStorage.getItem("lastlang")!) & (~d.langmask)) ? parseInt(localStorage.getItem("lastlang")!) : Math.log2(~d.langmask & -~d.langmask),
+                    selected_language: localStorage.getItem("lastlang") && Boolean(2 ** parseInt(localStorage.getItem("lastlang")!) & (~d.langmask)) ? parseInt(localStorage.getItem("lastlang")!) : Math.log2(~d.langmask & -~d.langmask),
                     language_template: d.language_template,
                     fontSize: 18,
                     hide_warning: true,
@@ -866,7 +866,7 @@ export default class Submit extends Mixins(mixins) {
         const _langmask = ~this.langmask;
         const result = [];
         for (let cnt = 0; cnt < len; ++cnt) {
-            if (_langmask & (1 << cnt)) {
+            if (_langmask & (2 ** cnt)) {
                 result.push({
                     num: cnt,
                     name: this.language_name[cnt]
