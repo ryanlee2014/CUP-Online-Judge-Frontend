@@ -133,6 +133,9 @@ export default class ContestSetEditor extends Mixins(Vue) implements IContestSet
             this.axios.get("/api/contest/list/all")
                 .then(({ data }) => {
                     this.totalContestList = data.data;
+                    this.$nextTick(() => {
+                        this.initJQuery();
+                    });
                 });
         }
 
