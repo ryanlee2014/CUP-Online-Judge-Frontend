@@ -116,7 +116,7 @@ class Util {
                 val.external_info = data;
             }
             else {
-                axios.get(generateAPIUrl(ip!))
+                axios.cacheGet(generateAPIUrl(ip!))
                     .then(({data}) => {
                         this.__cache[ip] = data;
                         val.place = `${data.country} ${data.city}`;

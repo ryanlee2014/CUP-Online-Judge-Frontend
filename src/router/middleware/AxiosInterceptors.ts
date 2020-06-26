@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosRequestConfig } from "axios";
 import router from "@/router";
 import store from "@/store";
 
@@ -35,4 +35,15 @@ export default function () {
             return Promise.resolve(response);
         }
     });
+    const _get: any = axios.get;
+    const cache: {[x: string]: Promise<any>} = {};
+    axios.cacheGet = function (url: string, config?: AxiosRequestConfig) {
+        if (cache[url]) {
+            return cache[url];
+        }
+        else {
+            const response = cache[url] = _get.call(this, url, config);
+            return response;
+        }
+    };
 }
