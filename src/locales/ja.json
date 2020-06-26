@@ -294,5 +294,12 @@
   "theme": "テーマ",
   "dark mode": "ブラックモード",
   "contest assistant manage": "コンテストアシスタント管理",
-  "contest ranklist": "コンテストランキング"
+  "contest ranklist": "コンテストランキング",
+  "frontend module version": "フロントエンドモジュールバージョン",
+  "backend module version": "バックエンドモジュールバージョン",
+  "current version": "現在のバージョン",
+  "repo branch version": "リポジトリブランチバージョン",
+  "server frontend version": "サーバーページバージョン",
+  "update": "アップデート",
+  "web application update": "ページアップデート"
 }

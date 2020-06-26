@@ -89,7 +89,7 @@
                         </h3>
                         <p>ICPC World Final 指定IDE:<b>CLion,PyCharm,Intellij IDEA</b><br><br>基于CMake与GNU Compile
                             Collection的CLion,业界推荐的Intellij Idea,简单容易上手的PyCharm，这些跨平台IDE将会减少许多做题过程中不必要的麻烦，更加集中精力打出AK</p>
-                        <h3 class="ui header">推荐使用高效的<a class="chrome" href="software/63.0.3239.84_chrome_installer.exe"
+                        <h3 class="ui header">推荐使用高效的<a class="chrome" href="https://www.iplaysoft.com/tools/chrome/"
                                                         target="_blank">Chrome浏览器</a>使用评测系统
                         </h3>
                         <p>一个优秀的浏览器可以更加完美高效的绘制页面，提升使用的舒适度。基于V8引擎的Chrome浏览器能够让每一个题目的启动和提交都能行云流水。</p>

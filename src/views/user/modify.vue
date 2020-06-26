@@ -97,7 +97,7 @@
                                         </div>
                                     </div>
                                     <div class="field">
-                                        <label>头像(请使用邮箱注册 <a href="https://zh-cn.wordpress.com/" target="_blank">WordPress.com</a>，登录 <a href="https://gravatar.w3tt.com/" target="_blank">Gravatar</a> 并上传头像。头像与你的邮箱绑定)</label>
+                                        <label>头像(请使用邮箱注册 <a href="https://zh-cn.wordpress.com/" target="_blank">WordPress.com</a>，登录 <a href="https://cn.gravatar.com/" target="_blank">Gravatar</a> 并上传头像。头像与你的邮箱绑定。该邮箱在右上“邮箱”输入框修改。)</label>
                                         <input name="" type="text" :value="email" disabled>
                                     </div>
                                     <div class="field">

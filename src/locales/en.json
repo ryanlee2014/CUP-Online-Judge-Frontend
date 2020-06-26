@@ -294,5 +294,12 @@
   "theme": "Theme",
   "dark mode": "Dark Mode",
   "contest assistant manage": "Contest Assistant Manage",
-  "contest ranklist": "Contest Ranklist"
+  "contest ranklist": "Contest Ranklist",
+  "frontend module version": "Frontend Module Version",
+  "backend module version": "Backend Module Version",
+  "current version": "Current Version",
+  "repo branch version": "Repository Branch Version",
+  "server frontend version": "Server frontend version",
+  "update": "Update",
+  "web application update": "Web Application Update"
 }

@@ -296,5 +296,12 @@
   "theme": "主题",
   "dark mode": "暗黑模式",
   "contest assistant manage": "竞赛助教管理",
-  "contest ranklist": "竞赛排名"
+  "contest ranklist": "竞赛排名",
+  "frontend module version": "前端模块版本",
+  "backend module version": "后端模块版本",
+  "current version": "当前版本",
+  "repo branch version": "仓库模块版本",
+  "server frontend version": "服务器前端页面版本",
+  "update": "升级",
+  "web application update": "页面程序升级"
 }

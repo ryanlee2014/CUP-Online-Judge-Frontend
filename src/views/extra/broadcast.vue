@@ -51,10 +51,10 @@ export default class Broadcast extends Mixins(mixins) {
         };
         $("body")
             .toast({
-                class: "info",
                 displayTime: 0,
                 closeIcon: true,
-                message: `From:${data.nick}<br>(${data.user_id}): <br>${data.content}`
+                message: `From:${data.nick}<br>(${data.user_id}): <br>${data.content}`,
+                title: "Push"
             });
         /* $(".item.online_num").attr("data-html", "<div class='header'>From:" + data["user_id"] + "<br>" + data["nick"] + "</div><div class='content'>" + data["content"] + "</div>")
             .popup("show").popup("set position", "bottom center"); */

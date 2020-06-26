@@ -1,12 +1,12 @@
 {
   "name": "CUP-Online-Judge-NG-Frontend",
-  "version": "1.25.1",
+  "version": "1.25.2",
   "private": false,
   "scripts": {
-    "serve": "npx --max_old_space_size=16000 vue-cli-service serve",
-    "build": "npx --max_old_space_size=16000 vue-cli-service build",
+    "serve": "npx --max_old_space_size=32000 vue-cli-service serve",
+    "build": "npx --max_old_space_size=32000 vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "fix-memory-limit": "cross-env LIMIT=16000 increase-memory-limit",
+    "fix-memory-limit": "cross-env LIMIT=32000 increase-memory-limit",
     "i18n:report": "vue-cli-service i18n:report --src './src/**/*.?(js|vue)' --locales './src/locales/**/*.json'",
     "modern": "./before_build/preinstall.sh && npx --max_old_space_size=16000 vue-cli-service build --modern --silent",
     "modern:local": "DISABLE_CDN=1 npm run modern",
@@ -127,6 +127,7 @@
     "eslint-plugin-standard": "^4.0.1",
     "eslint-plugin-vue": "^6.2.2",
     "file-loader": "^6.0.0",
+    "fork-ts-checker-webpack-plugin": "^5.0.5",
     "html-webpack-plugin": "latest",
     "increase-memory-limit": "^1.0.7",
     "lint-staged": "^10.2.11",
@@ -221,5 +222,9 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/ryanlee2014/CUP-Online-Judge-NG-FrontEnd"
-  }
+  },
+  "engines": {
+    "node": ">=12.0.0"
+  },
+  "license": "Apache-2.0"
 }

@@ -1,8 +1,9 @@
 import store from "@/store";
 import Vue from "vue";
 import MiddlewareAdapter from "./middlewareAdapter";
-import platfrom from "../middleware/environmentCollector";
+import platform from "../middleware/environmentCollector";
 import { NavigationGuard, Route } from "vue-router/types/router";
+import checkVersion from "@/router/middleware/checkVersion";
 function getSelfInfo () {
     return Vue.axios.get("/api/user/self");
 }
@@ -106,7 +107,8 @@ const Guard = function (to: Route, from: Route, next: NextFunction) {
     middlewareAdapter.setFrom(from);
     middlewareAdapter.setTo(to);
     middlewareAdapter.setNext(next);
-    middlewareAdapter.add(platfrom);
+    middlewareAdapter.add(platform);
+    middlewareAdapter.add(checkVersion);
     next = middlewareAdapter.getNextFn();
     if (to.meta.auth) {
         if (store.getters.logined) {

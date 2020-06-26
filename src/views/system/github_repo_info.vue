@@ -90,24 +90,12 @@
 <i18n>
     {
         "zh-cn": {
-        "frontend module version": "前端模块版本",
-        "backend module version": "后端模块版本",
-        "current version": "当前版本",
-        "repo branch version": "仓库模块版本",
         "version control": "版本管理"
     },
         "en": {
-    "frontend module version": "Frontend Module Version",
-    "backend module version": "Backend Module Version",
-    "current version": "Current Version",
-    "repo branch version": "Repository Branch Version",
     "version control": "Version Control"
     },
         "ja": {
-    "frontend module version": "フロントエンドモジュールバージョン",
-    "backend module version": "バックエンドモジュールバージョン",
-    "current version": "現在のバージョン",
-    "repo branch version": "リポジトリブランチバージョン",
     "version control": "バージョン管理"
     }
     }

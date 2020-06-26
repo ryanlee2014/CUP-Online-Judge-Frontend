@@ -4,6 +4,7 @@ const zopfli = require("@gfx/zopfli");
 const BrotliPlugin = require("brotli-webpack-plugin");
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 const version = require("./package.json").version;
+const os = require("os");
 const webPath = `https://cdn.jsdelivr.net/gh/ryanlee2014/CUP-Online-Judge-CDN@v${version}/`;
 const devURL = "https://hk.haoyuan.info";
 module.exports = {
@@ -19,6 +20,13 @@ module.exports = {
             .use("i18n")
             .loader("@kazupon/vue-i18n-loader")
             .end();
+        config
+            .plugin("fork-ts-checker")
+            .tap(args => {
+                const totalmem = Math.floor(os.totalmem() / 1024 / 1024); // get OS mem size
+                args[0].memoryLimit = totalmem > 8192 * 2 ? 8192 * 2 : 2048;
+                return args;
+            });
     },
     devServer: {
         proxy: {
