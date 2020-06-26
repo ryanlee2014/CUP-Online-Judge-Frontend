@@ -8,7 +8,7 @@
                         <input name="title" placeholder="contest title" type="text" v-model="title">
                     </div>
                     <div class="field">
-                        <div class="three fields">
+                        <div class="four fields">
                             <div class="field">
                                 <div class="ui toggle checkbox" ref="public">
                                     <input @click="Private = !Private" class="hidden" tabindex="0" type="checkbox"
@@ -28,6 +28,12 @@
                                     <input @click="ContestMode = !ContestMode" class="hidden" tabindex="0"
                                            type="checkbox" v-model="ContestMode">
                                     <label>{{$t("contest mode available only")}}</label>
+                                </div>
+                            </div>
+                            <div class="field">
+                                <div class="ui toggle checkbox" ref="show_all_ranklist">
+                                    <input class="hidden" tabindex="0" type="checkbox" v-model="showAllRanklist">
+                                    <label>{{$t("show_all_ranklist")}}</label>
                                 </div>
                             </div>
                         </div>
@@ -191,7 +197,21 @@ import { Prop, Component, Watch } from "vue-property-decorator";
 import Vue from "vue";
 const $: any = jquery;
 
-@Component
+@Component({
+    i18n: {
+        messages: {
+            "zh-cn": {
+                show_all_ranklist: "显示详细排行信息"
+            },
+            en: {
+                show_all_ranklist: "Show All Rank Detail"
+            },
+            ja: {
+                show_all_ranklist: "ランキング詳しく内容表示"
+            }
+        }
+    }
+})
 export default class BaseManage extends Vue {
     @Prop({ default: () => { return {}; } }) contestInfo!: any;
     @Prop({ default: "" }) externalUserListText!: string;
@@ -212,6 +232,7 @@ export default class BaseManage extends Vue {
     languageSelected = "";
     classroomSelected = "";
     problemSelected = "";
+    showAllRanklist = false;
     languageSet = Type.language_name.local;
     hostname = "";
     userListText = "";
@@ -282,6 +303,7 @@ export default class BaseManage extends Vue {
         $(this.$refs.public).checkbox((this.Private) ? "check" : "uncheck");
         $(this.$refs.contest).checkbox(this.ContestMode ? "check" : "uncheck");
         $(this.$refs.defunct).checkbox(this.defunct ? "check" : "uncheck");
+        $(this.$refs.show_all_ranklist).checkbox(this.showAllRanklist ? "check" : "uncheck");
     }
 
     mounted () {
@@ -329,6 +351,7 @@ export default class BaseManage extends Vue {
             this.LangmaskToLanguageSelected(res.langmask);
             this.password = res.password;
             this.classroomSelected = res.ip_policy;
+            this.showAllRanklist = !!res.show_all_ranklist;
             this.hostname = res.limit_hostname ? res.limit_hostname : "";
             this.$nextTick(() => {
                 this.initjQuery();

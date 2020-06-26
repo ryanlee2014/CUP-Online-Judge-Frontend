@@ -2,7 +2,7 @@
     <ErrorView :errormsg="errormsg" v-if="!state"></ErrorView>
     <div class="contestrank scoreboard padding" v-else>
         <h2 class="ui dividing header">
-            {{total === -1 || !finished ?"计算中,请稍后":"Contest Rank"}}
+            {{total === -1 || !finished ?"计算中,请稍后":$t("contest ranklist")}} {{!finished || hasPrivilege ? "" : $t("lite mode")}}
             <div class="sub header">
                 {{title}}
             </div>
@@ -47,7 +47,7 @@
                         </thead>
                         <transition-group name="list-complete" tag="tbody">
                             <tr :key="row.user_id" class="list-complete-item" style="cursor: grab!important;"
-                                v-for="(row,key) in submitter">
+                                v-for="(row,key) in submitter" v-show="row.rank <= 3 || row.user_id === user_id || hasPrivilege">
                                 <td :class="rankClass(key)"
                                     style="text-align:center;font-weight:bold;position: sticky; left: 0">{{row.rank}}
                                 </td>
@@ -135,6 +135,8 @@ import {
     SubmitterComparator,
     SubmitterFactory
 } from "@/module/ContestRank/ContestRankFactories";
+import { mapGetters } from "vuex";
+import axios from "axios";
 
 const { reset: bindDragEvent } = require("dragscroll");
 let submissionCollection: any[] = [];
@@ -147,6 +149,22 @@ let convertFlag = false;
         ErrorView,
         TimeView,
         ResultGrid
+    },
+    i18n: {
+        messages: {
+            "zh-cn": {
+                "lite mode": "简洁模式"
+            },
+            en: {
+                "lite mode": "Lite Mode"
+            },
+            ja: {
+                "lite mode": "簡略モード"
+            }
+        }
+    },
+    computed: {
+        ...mapGetters(["admin", "contest_manager", "user_id"])
     }
 })
 export default class ContestRank extends Mixins(mixins) {
@@ -171,6 +189,7 @@ export default class ContestRank extends Mixins(mixins) {
     total = -1;
     start_time = dayjs();
     title = "";
+    assistant = false;
     finished = false;
     users: any[] = [];
     add_name = false;
@@ -519,11 +538,24 @@ export default class ContestRank extends Mixins(mixins) {
         });
     }
 
+    checkContestAssistant () {
+        this.axios.get(`/api/contest/assistant/${this.cid}`)
+            .then(({ data }) => {
+                this.assistant = data.data;
+            });
+    }
+
+    get hasPrivilege () {
+        console.log("123", this.$store.getters.admin, this.$store.getters.contest_maker, this.$store.getters.contest_manager, this.assistant);
+        return this.$store.getters.admin || this.$store.getters.contest_maker[this.cid] || this.$store.getters.contest_manager || this.assistant;
+    }
+
     mounted () {
         // @ts-ignore
         window.datas = [];
         submissionCollection = [];
         document.title = `Contest Rank ${this.cid} -- ${document.title}`;
+        this.checkContestAssistant();
         const that = this;
         bindDragEvent();
         (async () => {

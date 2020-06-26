@@ -1,7 +1,7 @@
 import Axios from "axios";
 import store from "@/store";
+import _ from "lodash";
 const platform = require("platform");
-const _ = require("lodash");
 
 function trimMinorVersion (version: string) {
     return version.split(".")[0];

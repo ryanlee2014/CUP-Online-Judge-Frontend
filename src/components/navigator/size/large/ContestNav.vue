@@ -65,18 +65,15 @@
     {
         "zh-cn": {
             "contest problem": "竞赛问题",
-            "contest history": "竞赛提交历史",
-            "contest ranklist": "竞赛排名"
+            "contest history": "竞赛提交历史"
         },
         "en": {
             "contest problem": "Contest ProblemSet",
-            "contest history": "Contest Submit History",
-            "contest ranklist": "Contest Ranklist"
+            "contest history": "Contest Submit History"
         },
         "ja": {
             "contest problem": "コンテスト問題セット",
-            "contest history": "コンテスト提出記録",
-            "contest ranklist": "コンテストランキング"
+            "contest history": "コンテスト提出記録"
         }
     }
 </i18n>
