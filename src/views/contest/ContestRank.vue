@@ -4,7 +4,7 @@
         <h2 class="ui dividing header">
             {{total === -1 || !finished ?"计算中,请稍后":$t("contest ranklist")}} {{!finished || hasPrivilege ? "" : $t("lite mode")}}
             <div class="sub header">
-                {{title}}
+                {{title}} 总人数: {{this.totalNumber}}
             </div>
         </h2>
 
@@ -47,7 +47,7 @@
                         </thead>
                         <transition-group name="list-complete" tag="tbody">
                             <tr :key="row.user_id" class="list-complete-item" style="cursor: grab!important;"
-                                v-for="(row,key) in submitter" v-show="row.rank <= 3 || row.user_id === user_id || hasPrivilege">
+                                v-for="(row,key) in submitter" v-show="row.rank <= Math.trunc(totalNumber * 0.3) || row.user_id === user_id || hasPrivilege">
                                 <td :class="rankClass(key)"
                                     style="text-align:center;font-weight:bold;position: sticky; left: 0">{{row.rank}}
                                 </td>
