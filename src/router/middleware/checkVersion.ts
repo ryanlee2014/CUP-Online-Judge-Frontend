@@ -5,7 +5,7 @@ import Version from "@/module/Version";
 import Package from "../../../package.json";
 const $: any = jquery;
 export default function () {
-    axios.get("/VERSION")
+    axios.noCacheGet("/VERSION")
         .then(({ data }) => {
             const version = new Version(data);
             const currentVersion = new Version(Package.version);

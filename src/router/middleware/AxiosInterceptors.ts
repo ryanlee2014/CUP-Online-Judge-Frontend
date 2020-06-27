@@ -1,6 +1,8 @@
 import axios, { AxiosRequestConfig } from "axios";
 import router from "@/router";
 import store from "@/store";
+import UrlParser from "url-parse";
+import queryString from "query-string";
 
 export default function () {
     axios.interceptors.response.use(response => {
@@ -45,5 +47,13 @@ export default function () {
             const response = cache[url] = _get.call(this, url, config);
             return response;
         }
+    };
+
+    axios.noCacheGet = function (url: string, config?: AxiosRequestConfig) {
+        const parsedUrl = new UrlParser(url, false);
+        const parsedObject = queryString.parse(parsedUrl.query as unknown as string);
+        parsedObject.timeHash = (Math.random() * 100 * Date.now().valueOf()).toString();
+        parsedUrl.set("query", parsedObject);
+        return _get.call(this, parsedUrl.toString(), config);
     };
 }
