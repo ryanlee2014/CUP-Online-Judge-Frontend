@@ -40,9 +40,9 @@ If you don't familiar with current language, you can select the language you wan
 - CPU:Intel(R) Xeon(R) CPU E5-2609 0 @ 2.40GHz
 - RAM:16GB
 - OS:CentOS 7
-- GCC:9.1.0
+- GCC:10.0.0
 - Clang:LLVM 6.0.0
-- Java:6/7/8/10(OpenJDK)
+- Java:6/7/8/14(OpenJDK)
 - JavaScript:Node.JS Latest
 - Python:CPython/PyPy
 ## 我的编译环境是什么？
@@ -185,3 +185,8 @@ print(sum(map(int,input().split()))
 
 ## 我明明本地跑样例过了，为什么提交没有AC?
 样例只是题目所有测试点中的一个例子，不代表你的代码能够通过所有测试点的测试。请认真思考后修改你的代码
+
+## 我的代码在本地能够正常运行，为什么提交以后说我的代码运行错误?
+这与你使用的系统调用有关系。比如本地测试环境使用的`system("pause")`不被判题程序所允许。
+若你的程序没有涉及被禁止的系统调用，请检查你是否出现了非法内存地址访问。
+

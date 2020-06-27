@@ -16,6 +16,7 @@ export default function () {
                         displayTime: 0,
                         title: i18n.t("web application update"),
                         position: "bottom right",
+                        closeIcon: true,
                         classActions: "basic left",
                         actions: [{
                             text: i18n.t("update"),

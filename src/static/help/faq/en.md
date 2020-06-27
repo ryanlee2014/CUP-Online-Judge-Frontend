@@ -40,9 +40,9 @@ This system is based on the latest version of the Chrome browser for front-end d
 - CPU:Intel(R) Xeon(R) CPU E5-2609 0 @ 2.40GHz
 - RAM:16GB
 - OS:CentOS 7
-- GCC:9.1.0
+- GCC:10.0.0
 - Clang:LLVM 6.0.0
-- Java:6/7/8/10(OpenJDK)
+- Java:6/7/8/14(OpenJDK)
 - JavaScript:Node.JS Latest
 - Python:CPython/PyPy
 ## What is my compiling environment?
@@ -158,3 +158,8 @@ The time limit and memory limit of other languages (including Java) is generally
 ## Why my submission don't get "Accept" while my code can output currectly answer in my PC?
 
 The sample problem show is just one of possible test data in server. Maybe you should consider about other possibilities you unexpected and recheck your code.
+
+## I got "Runtime Error" after submit my code to system, which can run on my own computer.
+The reason you got "Runtime Error" is that forbidden system call is used in your program.
+For example, you can't use `system("pause")` in your source code.
+In some cases, you should check pointer using in your code which may caused illegal system call.

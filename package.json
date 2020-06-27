@@ -1,6 +1,6 @@
 {
   "name": "CUP-Online-Judge-NG-Frontend",
-  "version": "1.25.4",
+  "version": "1.25.5",
   "private": false,
   "scripts": {
     "serve": "npx --max_old_space_size=32000 vue-cli-service serve",
