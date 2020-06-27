@@ -301,5 +301,6 @@
   "repo branch version": "Repository Branch Version",
   "server frontend version": "Server frontend version",
   "update": "Update",
-  "web application update": "Web Application Update"
+  "web application update": "Web Application Update",
+  "penalty": "Penalty"
 }

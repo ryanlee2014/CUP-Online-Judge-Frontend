@@ -26,7 +26,7 @@
                         <label>暂停自动更新排名</label></div>
                     <div class="ui toggle checkbox"><input @click="add_name=!add_name" type="checkbox">
                         <label>加入学号</label></div>
-                    <a @click="exportXLS" class="ui primary mini button">Save to XLS</a>
+                    <a @click="exportXLS" class="ui primary mini button">保存表格到本地</a>
                 </div>
             </div>
             <div class="row">
@@ -34,12 +34,12 @@
                     <table class="ui small celled table" id='rank'>
                         <thead>
                         <tr align=center class=toprow>
-                            <th class="{sorter:'false'}" width=5%>Rank
-                            <th width=5%>User</th>
-                            <th style="min-width:90px">Nick</th>
+                            <th class="{sorter:'false'}" width=5%>{{$t("rank")}}</th>
+                            <th width=5%>{{ $t("user_id") }}</th>
+                            <th style="min-width:90px">{{ $t("nick") }}</th>
                             <th v-if="add_name" width=5%>Id</th>
-                            <th width=5%>Solved</th>
-                            <th width=5%>Penalty</th>
+                            <th width=5%>{{$t("accept")}}</th>
+                            <th width=5%>{{$t("penalty")}}</th>
                             <th :key="i" style="min-width: 85.71px;"
                                 v-for="i in Array.from(Array(Math.max(0,total)).keys())">{{1001 + i}}
                             </th>
@@ -76,12 +76,12 @@
                     <table :style="'display:none;vnd.ms-excel.numberformat:@'" id="save">
                         <tbody>
                         <tr align=center class=toprow>
-                            <td width=5%>Rank
-                            <td width=5%>User</td>
-                            <td>Nick</td>
+                            <td width=5%>{{$t("rank")}}</td>
+                            <td width=5%>{{$t("user_id")}}</td>
+                            <td>{{$t("nick")}}</td>
                             <td v-if="add_name" width=5%>学号</td>
-                            <td width=5%>Solved</td>
-                            <td width=5%>Penalty</td>
+                            <td width=5%>{{$t("accept")}}</td>
+                            <td width=5%>{{$t("penalty")}}</td>
                             <td>环境指纹数</td>
                             <td>硬件指纹数</td>
                             <td>IP总数</td>

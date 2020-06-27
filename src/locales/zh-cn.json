@@ -303,5 +303,6 @@
   "repo branch version": "仓库模块版本",
   "server frontend version": "服务器前端页面版本",
   "update": "升级",
-  "web application update": "页面程序升级"
+  "web application update": "页面程序升级",
+  "penalty": "罚时"
 }

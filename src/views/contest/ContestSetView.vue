@@ -195,9 +195,12 @@ export default class ContestSetView extends Mixins(mixins, TimerMixin) {
             params: Object.assign(this.getParams(), mergeOptions),
             cancelToken: (this.prevGetPageCancelToken = this.axios.CancelToken.source()).token
         })
-            .then(({ data }) => {
-                this.prevGetPageCancelToken = null;
-                this.contest_list = data.data;
+            .then(response => {
+                if (response && response.data) {
+                    const data = response.data;
+                    this.prevGetPageCancelToken = null;
+                    this.contest_list = data.data;
+                }
             });
     }
 

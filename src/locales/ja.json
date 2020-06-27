@@ -301,5 +301,6 @@
   "repo branch version": "リポジトリブランチバージョン",
   "server frontend version": "サーバーページバージョン",
   "update": "アップデート",
-  "web application update": "ページアップデート"
+  "web application update": "ページアップデート",
+  "penalty": "ペナルティタイム"
 }

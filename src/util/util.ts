@@ -6,9 +6,6 @@ export function parameterHash (args: any[]) {
         else if (typeof e === "string") {
             return e;
         }
-        else if (typeof e.toString === "function") {
-            return e.toString();
-        }
         else {
             return JSON.stringify(e);
         }
