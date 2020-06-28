@@ -1,5 +1,33 @@
 <template>
     <div class="ui container padding">
+        <div class="ui form">
+            <div class="field">
+                <div class="two fields">
+                    <div class="field">
+                        <label>{{$t("user_id")}}</label>
+                        <input type="text" v-model="userId">
+                    </div>
+                    <div class="field">
+                        <label>{{$t("ban end time")}}</label>
+                        <div class="ui calendar" id="ban_end_time" ref="ban_end_time">
+                            <div class="ui input left icon">
+                                <i class="calendar icon"></i>
+                                <input id="banTime" placeholder="Ban end time" type="text" autocomplete="off"
+                                       v-model="banTime">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="field">
+                <div class="two fields">
+                    <div class="field"></div>
+                    <div class="field">
+                        <a @click="addBanTime" class="ui primary button">{{$t("add")}}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
         <table class="ui celled structured table">
             <thead>
             <tr>
@@ -46,8 +74,12 @@ const $: any = jquery;
 export default class AdminBanUser extends Mixins(mixins) {
     banList = [];
     dayjs = dayjs;
+    userId = "";
+    banTime: any = "";
+
     mounted () {
         this.initData();
+        this.initJQuery();
     }
 
     initData () {
@@ -56,6 +88,40 @@ export default class AdminBanUser extends Mixins(mixins) {
                 if (data.status === "OK") {
                     this.banList = data.data;
                 }
+            });
+    }
+
+    initJQuery () {
+        const that = this;
+        const $banTime = $(this.$refs.ban_end_time);
+        $banTime.calendar({
+            initialDate: null,
+            onChange (value: any) {
+                that.banTime = new Date(value);
+            }
+        });
+    }
+
+    addBanTime () {
+        if (!this.userId || this.userId.length === 0 || this.userId.trim().length === 0) {
+            alert("请输入用户ID");
+            return;
+        }
+        if (!this.banTime) {
+            alert("请输入封禁结束时间");
+            return;
+        }
+        this.userId = this.userId.trim();
+        this.axios.post("/api/admin/account/ban", {
+            user_id: this.userId,
+            datetime: this.banTime
+        })
+            .then(({ data }) => {
+                alert(this.$t("success"));
+                this.initData();
+            })
+            .catch(({ data }) => {
+                alert(this.$t("error"));
             });
     }
 
