@@ -13,11 +13,29 @@ export interface Problem {
     _accept: Set<number>,
     set: (...arg: any[]) => any,
     update: (...arg: any[]) => any,
-    addSubmit: (...arg: any[]) => any,
+    addSubmit: (submission: IContestRankSubmissionDTO) => any,
     calculatePenaltyTime: (...arg: any[]) => any,
     isAccepted: (...arg: any[]) => any,
     getAcceptTime: (...arg: any[]) => any,
     newInstance: (...arg: any[]) => any
+}
+
+export interface IContestRankSubmissionDTO {
+    avatar: number,
+    avatarUrl: string | null,
+    code_length: number,
+    fingerprint: string | null,
+    fingerprintRaw: string | null,
+    in_date: string,
+    ip: string,
+    nick: string,
+    num: number,
+    problem_id: number,
+    result: number,
+    sim: number | null,
+    solution_id: number,
+    user_id: string,
+    start_time: Dayjs
 }
 
 export interface ISet<T> extends Set<T> {
@@ -54,13 +72,20 @@ export type Submitter = {
     fingerprintSet: Set<any>,
     hardwareFingerprintSet: Set<any>,
     ipSet: Set<any>,
+    totalSubmitTime: number,
+    totalTestRun: number,
     real_name: string,
     user_id: string,
     addData: (...arg: any[]) => any,
     calculatePenaltyTime: (...arg: any[]) => any,
     calculateAC: (...arg: any[]) => any,
+    submissionIncrement: () => void,
+    testRunIncrement: (val: IContestRankSubmissionDTO) => void,
     calculateFirstBlood: (firstBloodList: FirstBloodList) => any,
-    newInstance: (...arg: any[]) => any
+    addSubmission: (val: IContestRankSubmissionDTO) => void,
+    newInstance: (...arg: any[]) => any,
+    rank: number,
+    submissions: IContestRankSubmissionDTO[]
 };
 
 export function hashCode (str: String) {
@@ -114,7 +139,21 @@ export function ProblemFactory (): Problem {
         _accept: new Set<number>(),
         set: emptyFunction,
         update: emptyFunction,
-        addSubmit: emptyFunction,
+        addSubmit (submission: IContestRankSubmissionDTO) {
+            switch (submission.result) {
+            case 4:
+                this.update("accept", dayjs(submission.in_date));
+                break;
+            case 5:
+            case 6:
+            case 7:
+            case 8:
+            case 9:
+            case 10:
+                this.update("submit", dayjs(submission.in_date));
+                break;
+            }
+        },
         calculatePenaltyTime: emptyFunction,
         isAccepted: emptyFunction,
         getAcceptTime: emptyFunction,
@@ -134,21 +173,6 @@ export function ProblemFactory (): Problem {
             this[index] = data;
         }
         return this;
-    };
-    baseProblem.addSubmit = function (submission) {
-        switch (parseInt(submission.result)) {
-        case 4:
-            this.update("accept", dayjs(submission.in_date));
-            break;
-        case 5:
-        case 6:
-        case 7:
-        case 8:
-        case 9:
-        case 10:
-            this.update("submit", dayjs(submission.in_date));
-            break;
-        }
     };
     baseProblem.calculatePenaltyTime = function () {
         const startTime = this.start_time;
@@ -319,6 +343,7 @@ export function firstBloodListFactory (total?: number) {
 export function SubmitterFactory (nick: string, totalProblem: number, userId?: string): Submitter {
     return {
         ac: 0,
+        rank: -1,
         nick: NickFactory(nick),
         problem: ProblemListFactory(totalProblem),
         penalty_time: 0,
@@ -326,14 +351,29 @@ export function SubmitterFactory (nick: string, totalProblem: number, userId?: s
         hardwareFingerprintSet: SetFactory(),
         ipSet: SetFactory(),
         real_name: "",
+        totalSubmitTime: 0,
+        totalTestRun: 0,
         user_id: UserIDFactory(userId),
-        addData (val: any) {
+        submissions: [],
+        addSubmission (val: IContestRankSubmissionDTO) {
+            this.submissions.push(val);
+        },
+        submissionIncrement () {
+            ++this.totalSubmitTime;
+        },
+        testRunIncrement (val: IContestRankSubmissionDTO) {
+            this.totalTestRun += Number(val.problem_id < 0);
+        },
+        addData (val: IContestRankSubmissionDTO) {
             this.fingerprintSet.add(val.fingerprint);
             this.hardwareFingerprintSet.add(val.fingerprintRaw);
             this.ipSet.add(val.ip);
             this.problem.get(val.num).update("sim", val.sim);
             this.problem.get(val.num).set({ start_time: val.start_time });
             this.problem.get(val.num).addSubmit(val);
+            this.submissionIncrement();
+            this.testRunIncrement(val);
+            this.addSubmission(val);
         },
         calculatePenaltyTime () {
             this.penalty_time = this.problem.calculatePenaltyTime();

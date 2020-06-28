@@ -38,6 +38,8 @@
                             <th width=5%>{{ $t("user_id") }}</th>
                             <th style="min-width:90px">{{ $t("nick") }}</th>
                             <th v-if="add_name" width=5%>Id</th>
+                            <th v-if="hasPrivilege" width="5%">通过/测试比</th>
+                            <th v-if="hasPrivilege" width="5%">通过/提交比</th>
                             <th width=5%>{{$t("accept")}}</th>
                             <th width=5%>{{$t("penalty")}}</th>
                             <th :key="i" style="min-width: 85.71px;"
@@ -58,6 +60,8 @@
                                     <router-link :to="`/user/${row.user_id}`">{{convertHTML(row.nick)}}</router-link>
                                 </td>
                                 <td style="text-align:center" v-if="add_name">{{convertHTML(row.real_name)}}</td>
+                                <td style="text-align: center" v-if="hasPrivilege">{{row.totalTestRun === 0 ? "无测试运行" : `${Math.trunc(row.ac * 10000 / row.totalTestRun) / 100}%`}}</td>
+                                <td style="text-align: center" v-if="hasPrivilege">{{Math.trunc(row.ac * 10000 / row.totalSubmitTime) / 100}}%</td>
                                 <td style="text-align:center">
                                     <router-link :to="`/contest/status/${cid}?user_id=${row.user_id}`">{{row.ac}}
                                     </router-link>
@@ -80,6 +84,8 @@
                             <td width=5%>{{$t("user_id")}}</td>
                             <td>{{$t("nick")}}</td>
                             <td v-if="add_name" width=5%>学号</td>
+                            <td v-if="hasPrivilege" width="5%">通过/测试比</td>
+                            <td v-if="hasPrivilege" width="5%">通过/提交比</td>
                             <td width=5%>{{$t("accept")}}</td>
                             <td width=5%>{{$t("penalty")}}</td>
                             <td>环境指纹数</td>
@@ -93,6 +99,8 @@
                             <td align="center">{{row.user_id}}</td>
                             <td align="center">{{convertHTML(row.nick)}}</td>
                             <td align="center" v-if="add_name">{{convertHTML(row.real_name)}}</td>
+                            <td align="center" v-if="hasPrivilege">{{row.totalTestRun === 0 ? "无测试运行" : `${Math.trunc(row.ac * 10000 / row.totalTestRun) / 100}%`}}</td>
+                            <td align="center" v-if="hasPrivilege">{{Math.trunc(row.ac * 10000 / row.totalSubmitTime) / 100}}%</td>
                             <td align="center">{{row.ac}}</td>
                             <td>{{format_date(row.penalty_time)}}</td>
                             <td>{{row.fingerprintSet.size}}</td>
@@ -131,12 +139,13 @@ import _ from "lodash";
 import dayjs from "dayjs";
 import { Component, Mixins, Watch } from "vue-property-decorator";
 import {
-    firstBloodListFactory,
+    firstBloodListFactory, IContestRankSubmissionDTO, Submitter,
     SubmitterComparator,
     SubmitterFactory
 } from "@/module/ContestRank/ContestRankFactories";
 import { mapGetters } from "vuex";
 import axios from "axios";
+import { isContestAssistant } from "@/util/util";
 
 const { reset: bindDragEvent } = require("dragscroll");
 let submissionCollection: any[] = [];
@@ -185,7 +194,7 @@ export default class ContestRank extends Mixins(mixins) {
         this.sockets.unsubscribe("result");
     }
 
-    submitter: any = {};
+    submitter: Submitter[] = [];
     total = -1;
     start_time = dayjs();
     title = "";
@@ -227,16 +236,16 @@ export default class ContestRank extends Mixins(mixins) {
                 this.initUserTable(submitter);
                 this.fillSubmitterList(submitter, val);
                 this.userStructure = submitter;
-                this.submitter = submitter = Object.values(submitter);
+                this.submitter = submitter = Object.values(submitter) as Submitter[];
                 submitter.forEach(this.updateSubmitter);
             }
             else {
                 submitter = this.userStructure;
-                const lazyUpdateSet = new Set();
+                const lazyUpdateSet = new Set<Submitter>();
                 this.fillSubmitterList(submitter, val);
                 val.forEach((el: any) => typeof submitter[el.user_id.toLowerCase()] !== "undefined" ? lazyUpdateSet.add(submitter[el.user_id.toLowerCase()]) : "");
                 lazyUpdateSet.forEach(this.updateSubmitter);
-                this.submitter = submitter = Object.values(submitter);
+                this.submitter = submitter = Object.values(submitter) as Submitter[];
             }
             this.calculateRank();
             // @ts-ignore
@@ -262,13 +271,13 @@ export default class ContestRank extends Mixins(mixins) {
         return val;
     }
 
-    updateSubmitter (el: any) {
+    updateSubmitter (el: Submitter) {
         el.calculatePenaltyTime();
         el.calculateAC();
         el.calculateFirstBlood(this.firstBloodList);
     }
 
-    fillSubmitterList (submitter: any, val: any) {
+    fillSubmitterList (submitter: {[x: string]: Submitter | undefined }, val: IContestRankSubmissionDTO[]) {
         const len = val.length;
         for (let i = 0; i < len; ++i) {
             const privateContest = this.users.length > 0;
@@ -279,12 +288,12 @@ export default class ContestRank extends Mixins(mixins) {
                 submitter[val[i].user_id.toLowerCase()] = SubmitterFactory(val[i].nick, this.total, val[i].user_id);
             }
             if (val[i].num < this.total) {
-                submitter[val[i].user_id.toLowerCase()].addData(val[i]);
+                submitter[val[i].user_id.toLowerCase()]!.addData(val[i]);
             }
         }
     }
 
-    initUserTable (submitter: any) {
+    initUserTable (submitter: {[x: string]: Submitter | undefined }) {
         _.forEach(this.users, (val: any) => {
             if (!submitter[val.user_id.toLowerCase()]) {
                 submitter[val.user_id.toLowerCase()] = SubmitterFactory(val.nick, this.total, val.user_id);
@@ -539,14 +548,10 @@ export default class ContestRank extends Mixins(mixins) {
     }
 
     checkContestAssistant () {
-        this.axios.get(`/api/contest/assistant/${this.cid}`)
-            .then(({ data }) => {
-                this.assistant = data.data;
-            });
+        isContestAssistant(this.cid).then(e => { this.assistant = e; });
     }
 
     get hasPrivilege () {
-        console.log("123", this.$store.getters.admin, this.$store.getters.contest_maker, this.$store.getters.contest_manager, this.assistant);
         return this.$store.getters.admin || this.$store.getters.contest_maker[this.cid] || this.$store.getters.contest_manager || this.assistant;
     }
 

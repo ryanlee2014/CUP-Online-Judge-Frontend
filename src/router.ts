@@ -3,6 +3,7 @@ import Router, { Route, RouterOptions } from "vue-router";
 import axios from "axios";
 import adminAuth from "./lib/router";
 import Guard from "./router/util/guard";
+import { isContestAssistant } from "@/util/util";
 
 // eslint-disable-next-line no-unused-vars
 const emptyFunc = (...arg: any[]) => {
@@ -487,9 +488,9 @@ const router = new Router({
                 contest_manager: true,
                 checkPrivilege (to: Route) {
                     return new Promise((resolve, reject) => {
-                        axios.get(`/api/contest/assistant/${to.params.contest_id}`)
-                            .then(({ data }) => {
-                                if (data.data) {
+                        isContestAssistant(to.params.contest_id)
+                            .then(result => {
+                                if (result) {
                                     resolve();
                                 }
                                 else {

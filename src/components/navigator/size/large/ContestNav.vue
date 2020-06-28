@@ -82,6 +82,7 @@ import SocketMenu from "../../components/SocketMenu.vue";
 import { mapGetters } from "vuex";
 import { Component, Prop } from "vue-property-decorator";
 import Vue from "vue";
+import { isContestAssistant } from "@/util/util";
 
 @Component({
     components: {
@@ -103,10 +104,7 @@ export default class ContestNav extends Vue {
     admin: any;
 
     mounted () {
-        this.axios.get(`/api/contest/assistant/${this.contest_id}`)
-            .then(({ data }) => {
-                this.contest_assistant = data.data;
-            });
+        isContestAssistant(this.contest_id).then(e => { this.contest_assistant = e; });
     }
 
     @Prop({ default: "" }) nick!: string;

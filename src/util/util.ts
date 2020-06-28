@@ -1,3 +1,4 @@
+import axios from "axios";
 export function parameterHash (args: any[]) {
     return args.map(e => {
         if (typeof e === "number") {
@@ -10,4 +11,9 @@ export function parameterHash (args: any[]) {
             return JSON.stringify(e);
         }
     }).reduce((accumulator, currentValue) => accumulator + currentValue);
+}
+
+export function isContestAssistant (contestId: number | string): Promise<boolean> {
+    return axios.get(`/api/contest/assistant/${contestId}`)
+        .then(({ data }) => data.data);
 }
