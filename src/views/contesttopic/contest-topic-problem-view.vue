@@ -5,8 +5,15 @@
         </h2>
         <div class="ui grid">
             <div class="row">
-                <div class="ui top attached segment block header">{{$t("description")}}</div>
-                <div class="ui bottom attached segment" v-html="descriptionHtml"></div>
+                <div class="ui card" style="width: 100%">
+                    <div class="content">
+                        <div class="header">{{$t("description")}}</div>
+                    </div>
+                    <div class="content">
+                        <div class="ui small feed" v-html="descriptionHtml">
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="row">
                 <ContestView :contest_list="contest_list"></ContestView>
