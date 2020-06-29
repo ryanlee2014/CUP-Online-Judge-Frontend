@@ -38,14 +38,26 @@ export default class Version {
         if (this.majorVersion < version.majorVersion) {
             return true;
         }
-        else if (this.minorVersion < version.minorVersion) {
+        if (this.majorVersion > version.majorVersion) {
+            return false;
+        }
+        if (this.minorVersion < version.minorVersion) {
             return true;
         }
-        else if (this.patchVersion < version.patchVersion) {
+        if (this.minorVersion > version.minorVersion) {
+            return false;
+        }
+        if (this.patchVersion < version.patchVersion) {
             return true;
         }
-        else if (Version.stageLevel(this.stage) < Version.stageLevel(version.stage)) {
+        if (this.patchVersion > version.patchVersion) {
+            return false;
+        }
+        if (Version.stageLevel(this.stage) < Version.stageLevel(version.stage)) {
             return true;
+        }
+        if (Version.stageLevel(this.stage) > Version.stageLevel(version.stage)) {
+            return false;
         }
         else return this.stageVersion < version.stageVersion;
     }

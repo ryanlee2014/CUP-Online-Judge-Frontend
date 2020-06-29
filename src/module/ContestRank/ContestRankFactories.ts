@@ -5,6 +5,9 @@ export interface Problem {
     [id: string]: any,
     submit: Dayjs[],
     accept: Dayjs[],
+    simRate: number[],
+    setSim: (sim: number | null) => void,
+    highestSim: number,
     sim: number,
     try_time: number,
     start_time: Dayjs,
@@ -57,8 +60,8 @@ export type FirstBlood = {
 
 export type ProblemList = {
     [id: string]: any,
-    get: (...arg: any[]) => any,
-    toArray: (...arg: any[]) => any,
+    get: (idx: number) => Problem,
+    toArray: () => Problem[],
     calculatePenaltyTime: (...arg: any[]) => any,
     calculateAC: (...arg: any[]) => any,
     newInstance: (...arg: any[]) => any
@@ -117,8 +120,8 @@ export function earlyFirstComparator (a: Dayjs, b: Dayjs) {
     }
 }
 
-export function toArray (targetObject: any) {
-    const newArray = [];
+export function toArray<T> (targetObject: any) {
+    const newArray: T[] = [];
     for (const index in targetObject) {
         if (Object.prototype.hasOwnProperty.call(targetObject, index) && !isNaN(parseInt(index))) {
             newArray.push(targetObject[index]);
@@ -131,14 +134,36 @@ export function ProblemFactory (): Problem {
     const baseProblem: Problem = {
         submit: [],
         accept: [],
+        simRate: [],
         sim: 0,
         try_time: 0,
         start_time: DEFAULT_TIME,
         first_blood: false,
+        highestSim: 0,
         _submit: new Set<number>(),
         _accept: new Set<number>(),
-        set: emptyFunction,
-        update: emptyFunction,
+        setSim (sim: number | null) {
+            if (sim !== null) {
+                this.simRate.push(sim);
+                this.sim = sim;
+                this.highestSim = Math.max(this.highestSim, sim);
+            }
+        },
+        set (data) {
+            Object.assign(baseProblem, data);
+        },
+        update (index, data) {
+            if (this[index] !== null && typeof this[index] === "object" && typeof this[index].push === "function") {
+                if (!this["_" + index].has(hashCode(data.toString()))) {
+                    this["_" + index].add(hashCode(data.toString()));
+                    this[index].push(data);
+                }
+            }
+            else if (typeof this[index] === "number") {
+                this[index] = data;
+            }
+            return this;
+        },
         addSubmit (submission: IContestRankSubmissionDTO) {
             switch (submission.result) {
             case 4:
@@ -154,109 +179,78 @@ export function ProblemFactory (): Problem {
                 break;
             }
         },
-        calculatePenaltyTime: emptyFunction,
-        isAccepted: emptyFunction,
-        getAcceptTime: emptyFunction,
-        newInstance: emptyFunction
-    };
-    baseProblem.set = function (data) {
-        Object.assign(baseProblem, data);
-    };
-    baseProblem.update = function (index, data) {
-        if (this[index] !== null && typeof this[index] === "object" && typeof this[index].push === "function") {
-            if (!this["_" + index].has(hashCode(data.toString()))) {
-                this["_" + index].add(hashCode(data.toString()));
-                this[index].push(data);
-            }
-        }
-        else if (typeof this[index] === "number") {
-            this[index] = data;
-        }
-        return this;
-    };
-    baseProblem.calculatePenaltyTime = function () {
-        const startTime = this.start_time;
-        if (this.accept.length > 0) {
-            this.accept.sort(earlyFirstComparator);
-            this.submit.sort(earlyFirstComparator);
-            let diffTime = this.accept[0].diff(startTime, "second");
-            this.try_time = 0;
-            for (const submission of this.submit) {
-                if (submission.isBefore(this.accept[0])) {
-                    ++this.try_time;
-                    diffTime += 1200; // 20min
+        calculatePenaltyTime () {
+            const startTime = this.start_time;
+            if (this.accept.length > 0) {
+                this.accept.sort(earlyFirstComparator);
+                this.submit.sort(earlyFirstComparator);
+                let diffTime = this.accept[0].diff(startTime, "second");
+                this.try_time = 0;
+                for (const submission of this.submit) {
+                    if (submission.isBefore(this.accept[0])) {
+                        ++this.try_time;
+                        diffTime += 1200; // 20min
+                    }
+                    else {
+                        break;
+                    }
                 }
-                else {
-                    break;
-                }
+                return diffTime;
             }
-            return diffTime;
-        }
-        else {
-            return 0;
-        }
+            else {
+                return 0;
+            }
+        },
+        isAccepted () {
+            return this.accept.length > 0;
+        },
+        getAcceptTime () {
+            return this.accept[0];
+        },
+        newInstance: ProblemFactory
     };
-    baseProblem.isAccepted = function () {
-        return this.accept.length > 0;
-    };
-    baseProblem.getAcceptTime = function () {
-        return this.accept[0];
-    };
-
-    baseProblem.newInstance = ProblemFactory;
-
     return baseProblem;
 }
 
 export function ProblemListFactory (total: number): ProblemList {
     const problem: ProblemList = {
-        get: emptyFunction,
-        toArray: emptyFunction,
-        calculatePenaltyTime: emptyFunction,
-        calculateAC: emptyFunction,
-        newInstance: emptyFunction
+        get (i: number) {
+            if (typeof problem[i] !== "undefined") {
+                return problem[i];
+            }
+            else {
+                total = Math.max(i, total);
+                return (problem[i] = ProblemFactory());
+            }
+        },
+        toArray () {
+            return toArray<Problem>(problem);
+        },
+        calculatePenaltyTime () {
+            let penaltyTime = 0;
+            for (const index in problem) {
+                if (Object.prototype.hasOwnProperty.call(problem, index) && !isNaN(parseInt(index))) {
+                    penaltyTime += problem[index].calculatePenaltyTime();
+                }
+            }
+            return penaltyTime;
+        },
+        calculateAC () {
+            let ac = 0;
+            for (const index in problem) {
+                if (Object.prototype.hasOwnProperty.call(problem, index) && !isNaN(parseInt(index))) {
+                    if (problem[index].accept.length > 0) {
+                        ++ac;
+                    }
+                }
+            }
+            return ac;
+        },
+        newInstance: ProblemListFactory
     };
     for (let i = 0; i < total; ++i) {
         problem[i] = ProblemFactory();
     }
-    problem.get = function (i: number) {
-        if (typeof problem[i] !== "undefined") {
-            return problem[i];
-        }
-        else {
-            total = Math.max(i, total);
-            return (problem[i] = ProblemFactory());
-        }
-    };
-
-    problem.toArray = function () {
-        return toArray(problem);
-    };
-
-    problem.calculatePenaltyTime = function () {
-        let penaltyTime = 0;
-        for (const index in problem) {
-            if (Object.prototype.hasOwnProperty.call(problem, index) && !isNaN(parseInt(index))) {
-                penaltyTime += problem[index].calculatePenaltyTime();
-            }
-        }
-        return penaltyTime;
-    };
-
-    problem.calculateAC = function () {
-        let ac = 0;
-        for (const index in problem) {
-            if (Object.prototype.hasOwnProperty.call(problem, index) && !isNaN(parseInt(index))) {
-                if (problem[index].accept.length > 0) {
-                    ++ac;
-                }
-            }
-        }
-        return ac;
-    };
-
-    problem.newInstance = ProblemListFactory;
-
     return problem;
 }
 
@@ -368,7 +362,7 @@ export function SubmitterFactory (nick: string, totalProblem: number, userId?: s
             this.fingerprintSet.add(val.fingerprint);
             this.hardwareFingerprintSet.add(val.fingerprintRaw);
             this.ipSet.add(val.ip);
-            this.problem.get(val.num).update("sim", val.sim);
+            this.problem.get(val.num).setSim(val.sim);
             this.problem.get(val.num).set({ start_time: val.start_time });
             this.problem.get(val.num).addSubmit(val);
             this.submissionIncrement();
@@ -386,7 +380,7 @@ export function SubmitterFactory (nick: string, totalProblem: number, userId?: s
                 try {
                     if (Object.prototype.hasOwnProperty.call(this.problem, index) && !isNaN(parseInt(index)) && this.problem[index].isAccepted()) {
                         const difftime = this.problem[index].getAcceptTime().diff(this.problem[index].start_time, "second");
-                        firstBloodList.get(index).setFirstBlood(difftime, this.problem.get(index));
+                        firstBloodList.get(index).setFirstBlood(difftime, this.problem.get(parseInt(index)));
                     }
                 }
                 catch (e) {

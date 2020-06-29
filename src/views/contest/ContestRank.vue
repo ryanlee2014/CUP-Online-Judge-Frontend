@@ -109,12 +109,12 @@
                             <td>{{row.ipSet.size === 1 ? detectPlace(Array.from(row.ipSet)[0]) : row.ipSet.size ===
                                 0?"无":"略"}}
                             </td>
-                            <td :bgcolor="'#FF' + (formatColor(Math.max(Math.floor((1 << 8) - (256 * Math.max(p.sim - 69,0) / 31.0)) - 1, 0)))"
+                            <td :bgcolor="'#FF' + (formatColor(Math.max(Math.floor((1 << 8) - (256 * Math.max(p.highestSim - 69,0) / 31.0)) - 1, 0)))"
                                 :key="key"
                                 align="left" v-for="(p,key) in row.problem.toArray()">
                                 {{ (p.submit.length > 0)?"(-":""}}{{p.try_time > 0 ? p.try_time + ")" : p.submit.length
                                 > 0?p.submit.length + ")" : ""}}{{p.accept.length > 0 ?
-                                format_date(p.accept[0].diff(p.start_time,"second")):""}}{{p.sim > 0?"("+p.sim +
+                                format_date(p.accept[0].diff(p.start_time,"second")):""}}{{p.highestSim > 0?"("+p.highestSim +
                                 "%)":""}}
                             </td>
                         </tr>

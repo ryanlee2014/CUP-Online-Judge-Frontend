@@ -38,7 +38,7 @@
         <ace-editor :fontSize="fontSize + ''" :selected_language="selected_language" :theme="theme"
                     v-if="!editorPackage" v-model="code" :prepend-length="codePrependLines"></ace-editor>
         <monaco-editor :fontSize="fontSize + ''" :selected_language="selected_language" :theme="theme"
-                       v-else v-model="code" :enable-language-server="!(prepend || append)" :prepend-length="codePrependLines">
+                       v-else v-model="code" :enable-language-server="enableLanguageServerForEditor" :prepend-length="codePrependLines">
 
         </monaco-editor>
         <ace-static :content="trimedCurrentAppend" :fontSize="fontSize + ''" :selected_language="selected_language"
@@ -324,6 +324,11 @@ export default class RightPanel extends Vue {
             else {
                 return 0;
             }
+        }
+
+        get enableLanguageServerForEditor () {
+            const resp = !(this.trimedCurrentPrepend || this.trimedCurrentAppend);
+            return resp;
         }
 
         get trimedCurrentPrepend () {

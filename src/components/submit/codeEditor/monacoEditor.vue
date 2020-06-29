@@ -70,8 +70,8 @@ export default class MonacoEditor extends Vue {
         }
     }
 
-    closeLanguageServer () {
-        if (this.enableLanguageServer) {
+    closeLanguageServer (enableServer: boolean = false) {
+        if (this.enableLanguageServer || enableServer) {
             if (this.languageServer && this.languageServer.close) {
                 this.languageServer.close();
             }
@@ -119,10 +119,29 @@ export default class MonacoEditor extends Vue {
         }
     }
 
-    mounted () {
+    buildEditor () {
         this.$nextTick(() => {
             this.initEditor();
         });
+    }
+
+    mounted () {
+        this.buildEditor();
+    }
+
+    @Watch("enableLanguageServer")
+    onEnableLanguageServerChanged (val: boolean) {
+        if (!val) {
+            console.log("val", val);
+            this.$nextTick(() => {
+                this.editor!.dispose();
+                this.closeLanguageServer(true);
+                this.buildEditor();
+            });
+        }
+        else {
+            this.getNewLanguageServer(this.editor!, this.value, languageMap[this.selected_language]);
+        }
     }
 
     beforeDestroy () {
