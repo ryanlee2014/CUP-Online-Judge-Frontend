@@ -73,6 +73,7 @@ import jquery from "jquery";
 import _ from "lodash";
 import { mapGetters } from "vuex";
 import { CancelTokenSource } from "axios";
+import { ContestShowSimMixin } from "@/mixin/contest/ContestShowSimMixin";
 const $: any = jquery;
 const doc = document.createElement("div");
 let $modal: any;
@@ -88,7 +89,7 @@ let handlerInterval: any;
     },
     computed: mapGetters(["contestMode"])
 })
-export default class Submit extends Mixins(mixins) {
+export default class Submit extends Mixins(mixins, ContestShowSimMixin) {
     $socket: any;
     $route: any;
     sockets: any;
@@ -247,6 +248,9 @@ export default class Submit extends Mixins(mixins) {
             sid: solutionId
         };
         this.escapeParameter(parseData);
+        if (parseData.cid && !isNaN(parseInt(parseData.cid))) {
+            this.initContestConfig(parseData.cid);
+        }
         await this.initData(parseData);
         this.markdownItRender();
         this.bindClipboard();
@@ -747,7 +751,7 @@ export default class Submit extends Mixins(mixins) {
         else if (status === 4) {
             // count=0;
             let str = judgeResult[status] + " 内存使用:" + memory + "KB 运行时间:" + time + "ms";
-            if (sim) {
+            if (sim && this.showSim) {
                 str += " 触发判重 与运行号: " + simSourceID + "代码重复 重复率:" + sim + "%";
             }
             this.judgeInfoText = str;

@@ -11,7 +11,7 @@
             <a :class="(current_tag == 'statistics'?'active':'')+' item'" @click="tag('statistics',$event)" id="statistics"
                v-cloak>{{$t("result statistics")}}</a>
         </div>
-        <div class="ui bottom attached segment" v-show="current_tag == 'status'">
+        <div class="ui bottom attached segment" v-show="current_tag === 'status'">
             <div align=center class="input-append">
                 <form class="ui form segment" method="get">
                     <div class="four fields">
@@ -117,6 +117,7 @@
                              :problem_list="problem_list"
                              :result="result"
                              :self="self"
+                             :contest-id="cid"
                              :target="target"></StatusTable>
                 <div class="ui active inverted dimmer" v-if="dim">
                     <div class="ui large text loader">Loading</div>

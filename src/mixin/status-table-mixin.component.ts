@@ -16,6 +16,7 @@ export class StatusTableMixin extends Vue {
     @Prop({ default: () => [] }) result!: any[];
     @Prop({ default: "" }) self!: string;
     @Prop({ default: false }) isadmin!: boolean;
+    @Prop({ default: 0 }) contestId!: number;
     @Prop() end!: boolean;
     @Prop() finish!: boolean;
     user: any = {};

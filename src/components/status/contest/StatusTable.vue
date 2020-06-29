@@ -17,7 +17,7 @@
         </tr>
         </thead>
         <transition-group name="list-complete" tag="tbody">
-        <tr :key="row.solution_id" v-for="row in problem_lists" :class="(row.sim?'warning need_popup':'need_popup') + ' list-complete-item'" :data-html="'<b>IP:'+row.ip+'</b><br><p>类型:'+detect_place(row.ip)+'</p><p>用户指纹:<br>'+row.fingerprint+'<br>硬件指纹:<br>'+row.fingerprintRaw+'</p>'">
+        <tr :key="row.solution_id" v-for="row in problem_lists" :class="((row.sim  && ((isadmin) || showSim))?'warning need_popup':'need_popup') + ' list-complete-item'" :data-html="'<b>IP:'+row.ip+'</b><br><p>类型:'+detect_place(row.ip)+'</p><p>用户指纹:<br>'+row.fingerprint+'<br>硬件指纹:<br>'+row.fingerprintRaw+'</p>'">
             <td>{{row.solution_id}}</td>
             <td><div class="ui grid">
             <div class="four wide column" style="margin:auto">
@@ -38,9 +38,9 @@
                     <i v-cloak :class="answer_icon[row.result]+' important icon'"></i>
                     {{$t(result[row.result])}}
                 </router-link>
-                    <router-link v-if="row.sim" :to="`/compare/${row.solution_id}/${row.sim_id}`" :class="answer_class[row.result]">
+                    <router-link v-if="row.sim && ((isadmin) || showSim)" :to="`/compare/${row.solution_id}/${row.sim_id}`" :class="answer_class[row.result]">
                         <br>
-                        <i :class="answer_icon[row.result]+' important icon'" style="opacity:0" v-if="!!row.sim"></i>{{(Boolean(row.sim) === false?'':row.sim_id+' ('+row.sim+'%)')}}
+                        <i :class="answer_icon[row.result]+' important icon'" style="opacity:0" v-if="!!row.sim && ((isadmin) || showSim)"></i>{{(Boolean(row.sim) === false?'':row.sim_id+' ('+row.sim+'%)')}}
                     </router-link>
                    <br>
                    <a :class="answer_class[row.result]" v-if="row.result !== 4 && row.pass_rate > 0.05"><i :class="answer_icon[row.result]+' important icon'" style="opacity:0"></i>Passed:{{(row.pass_rate*100).toString().substring(0,4)}}%</a>
@@ -73,9 +73,20 @@
 import avatarMixin from "../../../mixin/avatarMixin";
 import { Mixins, Component } from "vue-property-decorator";
 import { StatusTableMixin } from "@/mixin/status-table-mixin.component";
+import { ContestShowSimMixin } from "@/mixin/contest/ContestShowSimMixin";
+import { isContestAssistant } from "@/util/util";
 @Component
-export default class StatusTable extends Mixins(avatarMixin, StatusTableMixin) {
+export default class StatusTable extends Mixins(avatarMixin, StatusTableMixin, ContestShowSimMixin) {
+    mounted () {
+        if (this.contestId !== 0) {
+            this.initContestConfig(this.contestId);
+            this.contestAssistantPrivilegeGrant();
+        }
+    }
 
+    contestAssistantPrivilegeGrant () {
+        isContestAssistant(this.contestId).then(resp => { this.showSim = this.showSim || resp; });
+    }
 }
 </script>
 

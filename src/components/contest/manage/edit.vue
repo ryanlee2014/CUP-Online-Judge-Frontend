@@ -39,6 +39,20 @@
                         </div>
                     </div>
                 </div>
+                <div class="two fields">
+                    <div class="field"></div>
+                    <div class="field">
+                        <div class="four fields">
+                            <div class="field">
+                                <div class="ui toggle checkbox" ref="showSim">
+                                    <input @click="showSim = !showSim" class="hidden" tabindex="0" type="checkbox"
+                                           v-model="showSim">
+                                    <label>{{$t("show sim")}}</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="field">
                 <div class="two fields">
@@ -201,13 +215,16 @@ const $: any = jquery;
     i18n: {
         messages: {
             "zh-cn": {
-                show_all_ranklist: "显示详细排行信息"
+                show_all_ranklist: "显示详细排行信息",
+                "show sim": "显示判重信息"
             },
             en: {
-                show_all_ranklist: "Show All Rank Detail"
+                show_all_ranklist: "Show All Rank Detail",
+                "show sim": "Show sim information"
             },
             ja: {
-                show_all_ranklist: "ランキング詳しく内容表示"
+                show_all_ranklist: "ランキング詳しく内容表示",
+                "show sim": "剽窃表示"
             }
         }
     }
@@ -233,6 +250,7 @@ export default class BaseManage extends Vue {
     classroomSelected = "";
     problemSelected = "";
     showAllRanklist = false;
+    showSim = true;
     languageSet = Type.language_name.local;
     hostname = "";
     userListText = "";
@@ -300,10 +318,15 @@ export default class BaseManage extends Vue {
         $("#limitClassroom").dropdown("set selected", this.classroomSelected.split(","));
         $("#limitHostname").dropdown("set selected", this.hostname.split(","));
         $("#selectedLanguage").dropdown("set selected", this.languageSelected.split(","));
-        $(this.$refs.public).checkbox((this.Private) ? "check" : "uncheck");
-        $(this.$refs.contest).checkbox(this.ContestMode ? "check" : "uncheck");
-        $(this.$refs.defunct).checkbox(this.defunct ? "check" : "uncheck");
-        $(this.$refs.show_all_ranklist).checkbox(this.showAllRanklist ? "check" : "uncheck");
+        $(this.$refs.public).checkbox(this.checkbox(this.Private));
+        $(this.$refs.contest).checkbox(this.checkbox(this.ContestMode));
+        $(this.$refs.defunct).checkbox(this.checkbox(this.defunct));
+        $(this.$refs.show_all_ranklist).checkbox(this.checkbox(this.showAllRanklist));
+        $(this.$refs.showSim).checkbox(this.checkbox(this.showSim));
+    }
+
+    checkbox (flag: boolean) {
+        return flag ? "check" : "uncheck";
     }
 
     mounted () {
@@ -352,6 +375,7 @@ export default class BaseManage extends Vue {
             this.password = res.password;
             this.classroomSelected = res.ip_policy;
             this.showAllRanklist = !!res.show_all_ranklist;
+            this.showSim = !!res.show_sim;
             this.hostname = res.limit_hostname ? res.limit_hostname : "";
             this.$nextTick(() => {
                 this.initjQuery();
