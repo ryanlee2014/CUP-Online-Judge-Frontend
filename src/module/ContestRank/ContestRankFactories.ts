@@ -60,8 +60,10 @@ export type FirstBlood = {
 
 export type ProblemList = {
     [id: string]: any,
+    total: number,
     get: (idx: number) => Problem,
     toArray: () => Problem[],
+    updateTotal: (total: number) => void,
     calculatePenaltyTime: (...arg: any[]) => any,
     calculateAC: (...arg: any[]) => any,
     newInstance: (...arg: any[]) => any
@@ -87,6 +89,7 @@ export type Submitter = {
     calculateFirstBlood: (firstBloodList: FirstBloodList) => any,
     addSubmission: (val: IContestRankSubmissionDTO) => void,
     newInstance: (...arg: any[]) => any,
+    updateTotal: (total: number) => void,
     rank: number,
     submissions: IContestRankSubmissionDTO[]
 };
@@ -214,6 +217,7 @@ export function ProblemFactory (): Problem {
 
 export function ProblemListFactory (total: number): ProblemList {
     const problem: ProblemList = {
+        total: 0,
         get (i: number) {
             if (typeof problem[i] !== "undefined") {
                 return problem[i];
@@ -246,11 +250,17 @@ export function ProblemListFactory (total: number): ProblemList {
             }
             return ac;
         },
+        updateTotal (total: number) {
+            total = this.total = Math.max(total, this.total);
+            for (let i = 0; i < total; ++i) {
+                if (this[i] === undefined || this[i] === null) {
+                    this[i] = ProblemFactory();
+                }
+            }
+        },
         newInstance: ProblemListFactory
     };
-    for (let i = 0; i < total; ++i) {
-        problem[i] = ProblemFactory();
-    }
+    problem.updateTotal(total);
     return problem;
 }
 
@@ -368,6 +378,9 @@ export function SubmitterFactory (nick: string, totalProblem: number, userId?: s
             this.submissionIncrement();
             this.testRunIncrement(val);
             this.addSubmission(val);
+        },
+        updateTotal (total: number) {
+            this.problem.updateTotal(total);
         },
         calculatePenaltyTime () {
             this.penalty_time = this.problem.calculatePenaltyTime();

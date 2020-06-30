@@ -216,7 +216,7 @@ export default class ContestRank extends Mixins(mixins) {
     playInterval: any = 0;
     backup_data: any[] = [];
     firstRender = true;
-    userStructure = {};
+    userStructure: {[x: string]: Submitter} = {};
     firstBloodList: any = undefined;
     worker: any = null;
     get scoreboard () {
@@ -246,6 +246,7 @@ export default class ContestRank extends Mixins(mixins) {
                 val.forEach((el: any) => typeof submitter[el.user_id.toLowerCase()] !== "undefined" ? lazyUpdateSet.add(submitter[el.user_id.toLowerCase()]) : "");
                 lazyUpdateSet.forEach(this.updateSubmitter);
                 this.submitter = submitter = Object.values(submitter) as Submitter[];
+                this.updateSubmitterTotalProblemNumber(submitter);
             }
             this.calculateRank();
             // @ts-ignore
@@ -262,6 +263,7 @@ export default class ContestRank extends Mixins(mixins) {
             that.errormsg = str;
         }
         this.auto_update = true;
+        window.userStructure = this.userStructure;
     }
 
     toArray (val: any) {
@@ -308,6 +310,10 @@ export default class ContestRank extends Mixins(mixins) {
         window.submitter = this.submitter;
         this.totalNumber = 0;
         _.forEach(this.submitter, val => (val.rank = val.ac > 0 ? (++this.totalNumber, rnk++) : rnk));
+    }
+
+    updateSubmitterTotalProblemNumber (submitter: Submitter[]) {
+        submitter.forEach(e => e.updateTotal(this.total));
     }
 
     rankClass (rank: any) {
