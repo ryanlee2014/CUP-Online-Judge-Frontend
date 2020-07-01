@@ -250,7 +250,7 @@ export default class BaseManage extends Vue {
     classroomSelected = "";
     problemSelected = "";
     showAllRanklist = false;
-    showSim = true;
+    showSim = false;
     languageSet = Type.language_name.local;
     hostname = "";
     userListText = "";
