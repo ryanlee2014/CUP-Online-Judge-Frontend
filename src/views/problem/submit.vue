@@ -150,7 +150,7 @@ export default class Submit extends Mixins(mixins, ContestShowSimMixin) {
     resume_time= 0;
     finished= false;
     source_code_language: any = null;
-    timeInterval: number = 0;
+    timeInterval: any = 0;
     created () {
         this.normal_problem = !this.$route.params.contest_id && !this.$route.params.topic_id;
     }
@@ -730,8 +730,10 @@ export default class Submit extends Mixins(mixins, ContestShowSimMixin) {
         }
         else {
             const timeLimit = this.time;
-            setTimeout(() => {
-                this.judgeInfoText += "超出两倍时限，你的程序可能已经超时。请稍后再来查看结果，或到“历史”查询你的提交。";
+            this.timeInterval = setTimeout(() => {
+                if (this.state < 4 && !this.judgeInfoText.includes("超出两倍时限，你的程序可能已经超时。请稍后再来查看结果，或到“历史”查询你的提交。")) {
+                    this.judgeInfoText += "超出两倍时限，你的程序可能已经超时。请稍后再来查看结果，或到“历史”查询你的提交。";
+                }
             }, timeLimit * 1000 * 2);
         }
         if (status > 4 && status !== 13) {
