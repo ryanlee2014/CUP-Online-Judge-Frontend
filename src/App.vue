@@ -4,7 +4,7 @@
                      :nick="nick"
                      :user_id="user_id" v-if="adminView"></AdminNavbar>
         <Navbar :admin="admin" :avatar="avatar" :email="email" :contest="contest" :homepage="homepage" :logined="logined" :nick="nick"
-                :user_id="user_id" v-else></Navbar>
+                :user_id="user_id" :topic="topic" v-else></Navbar>
         <transition name="fade">
             <router-view class="router"/>
         </transition>
@@ -33,14 +33,15 @@ import store from "@/store";
 })
 export default class App extends Vue {
     homepage?: boolean;
-    contest?: boolean;
+    contest!: boolean;
+    topic!: boolean;
     adminView?: boolean;
     $socket: any;
     sockets: any;
     created () {
-        this.homepage = this.$route.path === "/";
-        this.contest = this.isContestView(this.$route.fullPath);
-        this.adminView = this.$route.fullPath.indexOf("/admin") === 0;
+        const fullPath = this.$route.fullPath;
+        const path = this.$route.path;
+        this.updateRouteFlags(path, fullPath);
     }
 
     mounted () {
@@ -58,20 +59,39 @@ export default class App extends Vue {
         }
     }
 
+    isViewOf (path: string, name: string) {
+        const idx = path.indexOf(name);
+        return idx >= 0 && idx <= 1;
+    }
+
     isContestView (path: string) {
-        return path.includes("contest\/");
+        return this.isViewOf(path, "contest\/");
+    }
+
+    isTopicView (path: string) {
+        return this.isViewOf(path, "topic\/");
+    }
+
+    isAdminView (path: string) {
+        return this.isViewOf(path, "admin\/");
+    }
+
+    updateRouteFlags (path: string, fullPath: string) {
+        this.homepage = path === "/";
+        this.contest = this.isContestView(fullPath);
+        this.topic = this.isTopicView(fullPath);
+        this.adminView = this.isAdminView(fullPath);
+        this.$store.commit("setRouteInfo", { path, fullPath });
+        this.$store.commit("setHomepage", { homepage: this.homepage });
+        this.$socket.emit("updateURL", { url: fullPath });
+        this.initForRouter();
     }
 
     @Watch("$route")
     onRouteChange (to: Route) {
-        this.homepage = to.path === "/";
-        this.adminView = to.fullPath.indexOf("/admin") === 0;
-        const matchedPath = to.matched[0].path.substring(1);
-        this.contest = matchedPath !== "contest" && this.isContestView(matchedPath);
-        this.$store.commit("setRouteInfo", { path: to.path, fullPath: to.fullPath });
-        this.$store.commit("setHomepage", { homepage: this.homepage });
-        this.$socket.emit("updateURL", { url: to.fullPath });
-        this.initForRouter();
+        const fullPath = to.fullPath;
+        const path = to.path;
+        this.updateRouteFlags(path, fullPath);
     }
 
     initForRouter () {

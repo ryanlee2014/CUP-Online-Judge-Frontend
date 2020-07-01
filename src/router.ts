@@ -188,6 +188,14 @@ const router = new Router({
             }
         },
         {
+            path: "/topic/rank/:contestSetId",
+            name: "topic contest rank",
+            component: () => import("./views/contesttopic/contest-topic-rank.vue"),
+            meta: {
+                auth: true
+            }
+        },
+        {
             path: "/tutorial/:problem_id",
             name: "problem tutorial/solution manual",
             component: () => import("./views/tutorial.vue"),

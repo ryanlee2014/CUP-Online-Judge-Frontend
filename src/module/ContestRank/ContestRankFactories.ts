@@ -91,6 +91,7 @@ export type Submitter = {
     newInstance: (...arg: any[]) => any,
     updateTotal: (total: number) => void,
     rank: number,
+    solutionIdSet: Set<number>,
     submissions: IContestRankSubmissionDTO[]
 };
 
@@ -359,6 +360,7 @@ export function SubmitterFactory (nick: string, totalProblem: number, userId?: s
         totalTestRun: 0,
         user_id: UserIDFactory(userId),
         submissions: [],
+        solutionIdSet: new Set<number>(),
         addSubmission (val: IContestRankSubmissionDTO) {
             this.submissions.push(val);
         },
@@ -369,15 +371,18 @@ export function SubmitterFactory (nick: string, totalProblem: number, userId?: s
             this.totalTestRun += Number(val.problem_id < 0);
         },
         addData (val: IContestRankSubmissionDTO) {
-            this.fingerprintSet.add(val.fingerprint);
-            this.hardwareFingerprintSet.add(val.fingerprintRaw);
-            this.ipSet.add(val.ip);
-            this.problem.get(val.num).setSim(val.sim);
-            this.problem.get(val.num).set({ start_time: val.start_time });
-            this.problem.get(val.num).addSubmit(val);
-            this.submissionIncrement();
-            this.testRunIncrement(val);
-            this.addSubmission(val);
+            if (!this.solutionIdSet.has(val.solution_id)) {
+                this.solutionIdSet.add(val.solution_id);
+                this.fingerprintSet.add(val.fingerprint);
+                this.hardwareFingerprintSet.add(val.fingerprintRaw);
+                this.ipSet.add(val.ip);
+                this.problem.get(val.num).setSim(val.sim);
+                this.problem.get(val.num).set({ start_time: val.start_time });
+                this.problem.get(val.num).addSubmit(val);
+                this.submissionIncrement();
+                this.testRunIncrement(val);
+                this.addSubmission(val);
+            }
         },
         updateTotal (total: number) {
             this.problem.updateTotal(total);

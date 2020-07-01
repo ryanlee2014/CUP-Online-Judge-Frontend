@@ -33,13 +33,13 @@
                 </div>
                 <div class="ui labeled input">
                     <div class="ui label">
-                        大于等于
+                        {{$t("user_id")}} ID大于等于
                     </div>
                     <input type="text" placeholder="" @change="greater=$event.target.value">
                 </div>
                 <div class="ui labeled input">
                     <div class="ui label">
-                        小于等于
+                        {{$t("user_id")}} ID小于等于
                     </div>
                     <input type="text" placeholder="" @change="lower=$event.target.value">
                 </div>
@@ -244,7 +244,7 @@ export default class UserStatus extends Mixins(mixins) {
     mounted () {
         const that = this;
         this.loading = true;
-        this.axios.get("/api/contest/list")
+        this.axios.get("/api/contest/list/all")
             .then(response => {
                 const d: any = response.data;
                 d.data.sort(function (a: any, b: any) {

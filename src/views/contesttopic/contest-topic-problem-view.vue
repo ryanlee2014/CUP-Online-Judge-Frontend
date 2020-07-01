@@ -1,7 +1,7 @@
 <template>
     <div class="ui container padding">
         <h2 class="ui dividing header">
-            {{$t("contest topic")}} {{contestTopicId}}
+            {{$t("contest topic")}} {{contestTopicId}} {{title}}
         </h2>
         <div class="ui grid">
             <div class="row">
@@ -38,6 +38,7 @@ export default class ContestTopicContestView extends Mixins(InitMixin) {
     contest_list: any[] = [];
     description: string = "";
     descriptionHtml: string = "";
+    title: string = "";
     markdownIt = markdownIt;
     created () {
         this.contestTopicId = this.$route.params.contestSetId;
@@ -52,6 +53,7 @@ export default class ContestTopicContestView extends Mixins(InitMixin) {
             .then(({ data }) => {
                 const contestTopicDTO: IContestSetResponseDTO = data.data;
                 this.description = contestTopicDTO.description;
+                this.title = contestTopicDTO.title;
                 this.descriptionHtml = markdownIt.renderRaw(this.description);
             });
         this.axios.get(`/api/contestset/list/${this.contestTopicId}`)

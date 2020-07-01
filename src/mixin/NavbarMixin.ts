@@ -12,6 +12,7 @@ export default class NavbarMixin extends Vue {
     @Prop({ default: false }) logined!: boolean;
     @Prop({ default: false }) homepage!: boolean;
     @Prop({ default: false }) contest!: boolean;
+    @Prop({ default: false }) topic!: boolean;
     @Prop({ default: "" }) email!: string;
     sockets: any;
     $socket: any;
