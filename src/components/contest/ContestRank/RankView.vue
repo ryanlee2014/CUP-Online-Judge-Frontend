@@ -680,6 +680,9 @@ export default class RankView extends Mixins(mixins) {
             document.title = `Contest Rank ${this.cid} -- ${document.title}`;
             this.checkContestAssistant();
             bindDragEvent();
+            if (this.cid !== "0") {
+                this.initData(this.cid);
+            }
         }
 }
 </script>
