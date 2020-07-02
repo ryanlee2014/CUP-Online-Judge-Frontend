@@ -73,7 +73,7 @@ export default class App extends Vue {
     }
 
     isAdminView (path: string) {
-        return this.isViewOf(path, "admin\/");
+        return this.isViewOf(path, "admin");
     }
 
     updateRouteFlags (path: string, fullPath: string) {
