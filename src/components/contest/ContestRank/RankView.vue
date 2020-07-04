@@ -30,19 +30,19 @@
                 </div>
             </div>
             <div class="row">
-                <div class="ranking dragscroll" style="width:100%;overflow:auto">
+                <div class="ranking" style="width:100%;">
                     <table class="ui small celled table" id='rank'>
                         <thead>
-                        <tr align=center class=toprow>
-                            <th class="{sorter:'false'}" width=5%>{{$t("rank")}}</th>
-                            <th width=5%>{{ $t("user_id") }}</th>
-                            <th style="min-width:90px">{{ $t("nick") }}</th>
-                            <th v-if="add_name" width=5%>Id</th>
-                            <th v-if="hasPrivilege" width="5%">通过/测试比</th>
-                            <th v-if="hasPrivilege" width="5%">通过/提交比</th>
-                            <th width=5%>{{$t("accept")}}</th>
-                            <th width=5%>{{$t("penalty")}}</th>
-                            <th :key="i" style="min-width: 85.71px;"
+                        <tr align=center class="toprow">
+                            <th class="{sorter:'false'}" width=5% style="position: sticky; top: 40px; z-index: 4">{{$t("rank")}}</th>
+                            <th width=5% style="position: sticky; top: 40px;z-index: 4">{{ $t("user_id") }}</th>
+                            <th style="min-width:90px;position: sticky; top: 40px;z-index: 4">{{ $t("nick") }}</th>
+                            <th style="position: sticky; top: 40px;z-index: 4" v-if="add_name" width=5%>Id</th>
+                            <th style="position: sticky; top: 40px;z-index: 4" v-if="hasPrivilege" width="5%">通过/测试比</th>
+                            <th style="position: sticky; top: 40px;z-index: 4" v-if="hasPrivilege" width="5%">通过/提交比</th>
+                            <th style="position: sticky; top: 40px;z-index: 4" width=5%>{{$t("accept")}}</th>
+                            <th style="position: sticky; top: 40px;z-index: 4" width=5%>{{$t("penalty")}}</th>
+                            <th :key="i" style="min-width: 85.71px;position: sticky; top: 40px;z-index: 4"
                                 v-for="i in Array.from(Array(Math.max(0,total)).keys())">{{1001 + i}}
                             </th>
                         </tr>
@@ -71,6 +71,7 @@
                                             :problem="p"
                                             :key="key + 0"
                                             :lock="popupLock"
+                                            :enable-pop-up="enablePopUp"
                                             :format_date="format_date"
                                             v-for="(p,key) in row.problem.toArray()"
                                 ></ResultGrid>
@@ -192,6 +193,11 @@ export default class RankView extends Mixins(mixins) {
         beforeDestroy () {
             this.sockets.unsubscribe("submit");
             this.sockets.unsubscribe("result");
+            const $body = $("body");
+            $body.removeClass("dragscroll");
+            $body.css({
+                overflow: ""
+            });
         }
 
         submitter: Submitter[] = [];
@@ -204,6 +210,7 @@ export default class RankView extends Mixins(mixins) {
         add_name = false;
         auto_update = true;
         totalNumber = 0;
+        enablePopUp = false;
         playingTime = dayjs().format("YYYY-MM-DD HH:mm:ss");
         popupLock = new AwaitLock();
         waiting_queue: any[] = [];
@@ -249,6 +256,7 @@ export default class RankView extends Mixins(mixins) {
                     this.updateSubmitterTotalProblemNumber(submitter);
                 }
                 this.calculateRank();
+                this.enablePopUp = this.totalNumber * this.total < 1000;
                 // @ts-ignore
                 window.temp_data = submissionCollection;
                 // @ts-ignore
@@ -290,9 +298,6 @@ export default class RankView extends Mixins(mixins) {
                     submitter[val[i].user_id.toLowerCase()] = SubmitterFactory(val[i].nick, this.total, val[i].user_id);
                 }
                 if (val[i].num < this.total) {
-                    if (val[i].nick === "刘志强") {
-                        console.log("get", val[i]);
-                    }
                     submitter[val[i].user_id.toLowerCase()]!.addData(val[i]);
                 }
             }
@@ -551,7 +556,7 @@ export default class RankView extends Mixins(mixins) {
 
         updated () {
             document.title = "ContestRank: " + this.title;
-            $("#rank").find("tr").each(function () {
+            $("#rank>tbody").find("tr").each(function () {
                 $(this).find("td").eq(2).css({
                     position: "sticky",
                     left: $(this)!.find("td")!.eq(2)!.prev()!.outerWidth()! + $(this)!.find("td")!.eq(1)!.prev()!.outerWidth()!,
@@ -562,6 +567,17 @@ export default class RankView extends Mixins(mixins) {
                     left: $(this)!.find("td")!.eq(1)!.prev()!.outerWidth()!
                 });
             });
+
+            const platformTypesHeader = $(
+                "#rank thead tr:first-child th"
+            );
+            if (platformTypesHeader !== null && platformTypesHeader.length) {
+                const actualPlatformTypesHeaderHeight = platformTypesHeader.outerHeight();
+                document.documentElement.style.setProperty(
+                    "--first-header-row-height",
+                    String(actualPlatformTypesHeaderHeight) + "px"
+                );
+            }
         }
 
         checkContestAssistant () {
@@ -679,6 +695,11 @@ export default class RankView extends Mixins(mixins) {
             submissionCollection = [];
             document.title = `Contest Rank ${this.cid} -- ${document.title}`;
             this.checkContestAssistant();
+            const $body = $("body");
+            $body.addClass("dragscroll");
+            $body.css({
+                overflow: "auto"
+            });
             bindDragEvent();
             if (this.cid !== "0") {
                 this.initData(this.cid);
@@ -732,12 +753,6 @@ export default class RankView extends Mixins(mixins) {
     td {
         white-space: nowrap !important;
         text-align: center !important;
-    }
-
-    .ui.table thead tr:first-child > th {
-        position: sticky !important;
-        top: 0;
-        z-index: 2;
     }
 
     .ui.yellow {

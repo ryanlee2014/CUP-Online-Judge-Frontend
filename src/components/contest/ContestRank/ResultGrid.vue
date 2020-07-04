@@ -32,6 +32,7 @@ export default class ResultGrid extends Vue {
     }) problem!: any;
 
     @Prop({ default: () => () => {} }) format_date!: (...ang: any[]) => any;
+    @Prop({ default: true }) enablePopUp!: boolean;
     get generateDataHTML () {
         let htmlBuilder = "<div class=\"ui list\">";
         htmlBuilder += this.buildItem();
@@ -53,7 +54,9 @@ export default class ResultGrid extends Vue {
     }
 
     mounted () {
-        this.triggerPopup();
+        if (this.enablePopUp) {
+            this.triggerPopup();
+        }
     }
 
     triggerPopup () {

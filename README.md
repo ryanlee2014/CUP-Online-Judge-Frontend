@@ -7,7 +7,7 @@ CDN版本: [CUP-Online-Judge-CDN](https://github.com/ryanlee2014/CUP-Online-Judg
 
 **Demo: [CUP-Online-Judge](http://oj.cupacm.com)**
 
-**请保证预留至少4GB的内存空间用于打包构建**
+**请保证预留至少7GB的内存空间用于打包构建**
 
 可使用Github Actions进行打包构建
 [GitHub Actions 构建指南]()
