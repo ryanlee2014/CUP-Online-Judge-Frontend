@@ -145,8 +145,8 @@ import {
     SubmitterFactory
 } from "@/module/ContestRank/ContestRankFactories";
 import { mapGetters } from "vuex";
-import axios from "axios";
 import { isContestAssistant } from "@/util/util";
+import { DragScrollHTMLElement } from "@/types/dragscroll";
 
 const { reset: bindDragEvent } = require("dragscroll");
 let submissionCollection: any[] = [];
@@ -198,6 +198,10 @@ export default class RankView extends Mixins(mixins) {
             $body.css({
                 overflow: ""
             });
+            const bodyDom = $body[0] as DragScrollHTMLElement;
+            bodyDom.removeEventListener("mouseup", bodyDom.mu);
+            bodyDom.removeEventListener("mousedown", bodyDom.md);
+            bodyDom.removeEventListener("mousemove", bodyDom.mm);
         }
 
         submitter: Submitter[] = [];
@@ -567,17 +571,6 @@ export default class RankView extends Mixins(mixins) {
                     left: $(this)!.find("td")!.eq(1)!.prev()!.outerWidth()!
                 });
             });
-
-            const platformTypesHeader = $(
-                "#rank thead tr:first-child th"
-            );
-            if (platformTypesHeader !== null && platformTypesHeader.length) {
-                const actualPlatformTypesHeaderHeight = platformTypesHeader.outerHeight();
-                document.documentElement.style.setProperty(
-                    "--first-header-row-height",
-                    String(actualPlatformTypesHeaderHeight) + "px"
-                );
-            }
         }
 
         checkContestAssistant () {
