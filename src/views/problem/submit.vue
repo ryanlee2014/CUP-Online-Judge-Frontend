@@ -719,7 +719,7 @@ export default class Submit extends Mixins(mixins, ContestShowSimMixin) {
         const memory = data.memory;
         const sim = data.sim;
         const simSourceID = data.sim_s_id;
-        const passRate = (data.pass_rate ? data.pass_rate : 1) * 100;
+        const passRate = (data.pass_rate ? data.pass_rate : 0) * 100;
         const $progressResult = $(".progress.result");
         if (this.timeInterval > 0) {
             clearInterval(this.timeInterval);

@@ -1,9 +1,11 @@
-# CUP-Online-Judge Next Generation Frontend
+# CUP Online Judge Frontend
 
 中国石油大学(北京)在线评测系统前端
 
 CDN版本: [CUP-Online-Judge-CDN](https://github.com/ryanlee2014/CUP-Online-Judge-CDN)
+
 离线版本: [CUP-Online-Judge-Frontend-Local](https://github.com/ryanlee2014/CUP-Online-Judge-Frontend-Local)
+
 
 **Demo: [CUP-Online-Judge](http://oj.cupacm.com)**
 

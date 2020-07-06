@@ -81,9 +81,9 @@
             </div>
             <div class="content">
                 <p :key="key" v-for="(row, key) in contestList">
-                    <router-link  :to="`/contest/${row.contest_id}`">
+                    <router-link  :to="`/contest/${row.contestId}`">
                         <a :class="`ui ${isPrivateContestLabel(row.private)} label`">{{isPrivateContest(row.private)}}</a>
-                        Contest {{row.contest_id}}: {{row.title}}
+                        Contest {{row.contestId}}: {{row.title}}
                     </router-link>
                 </p>
             </div>
@@ -120,7 +120,7 @@ export default class LeftPanel extends Vue {
             .then(({ data }) => {
                 const contestList = data.data;
                 _.uniqWith(contestList, _.isEqual);
-                contestList.sort((a: any, b: any) => a.contest_id - b.contest_id);
+                contestList.sort((a: any, b: any) => a.contestId - b.contestId);
                 this.contestList = contestList;
             })
             .catch(({ data }) => {
