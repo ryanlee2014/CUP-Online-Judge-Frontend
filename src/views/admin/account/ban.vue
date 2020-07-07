@@ -85,9 +85,10 @@ export default class AdminBanUser extends Mixins(mixins) {
     initData () {
         this.axios.get("/api/admin/account/ban")
             .then(({ data }) => {
-                if (data.status === "OK") {
-                    this.banList = data.data;
-                }
+                data.data.sort((a: {user_id: string, bantime: string}, b: {user_id: string, bantime: string}) => {
+                    return dayjs(a.bantime).isAfter(b.bantime) ? -1 : dayjs(a.bantime).isBefore(b.bantime) ? 1 : 0;
+                });
+                this.banList = data.data;
             });
     }
 
@@ -139,7 +140,24 @@ export default class AdminBanUser extends Mixins(mixins) {
     }
 
     edit (userId: string) {
-        $(this.$refs[userId]).calendar();
+        const that = this;
+        const $user = $(this.$refs[userId]);
+        $user.calendar({
+            initialDate: null,
+            onChange (value: any) {
+                that.axios.post("/api/admin/account/ban", {
+                    user_id: userId,
+                    datetime: value
+                })
+                    .then(({ data }) => {
+                        alert(that.$t("success"));
+                        that.initData();
+                    })
+                    .catch(({ data }) => {
+                        alert(that.$t("error"));
+                    });
+            }
+        });
     }
 }
 </script>

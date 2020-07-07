@@ -5,14 +5,14 @@ import {
 } from "monaco-languageclient";
 import * as monaco from "monaco-editor";
 import ReconnectingWebSocket from "reconnecting-websocket";
-
+import store from "@/store";
 // create Monaco editor
 
 // install Monaco language client services
 export function createLanguageServer (editor: monaco.editor.IStandaloneCodeEditor, value: string, language: string) {
 // create the web socket
     MonacoServices.install(editor, { rootUri: "file:///tmp/cupoj-language-server/intellisense/" });
-    const url = `${location.protocol === "https:" ? "wss" : "ws"}://${location.host}/language-server/${language}`;
+    const url = `${store.getters.languageServerUrl}/language-server/${language}`;
     const webSocket = createWebSocket(url);
     // listen when the web socket is opened
     listen({

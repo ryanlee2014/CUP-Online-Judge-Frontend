@@ -10,6 +10,10 @@ const mutations: MutationTree<ISystemState> = {
     },
     setDarkMode (state, mode) {
         state.darkMode = mode;
+    },
+    setLanguageServerUrl (state, languageServerUrl) {
+        state.languageServerUrl = languageServerUrl;
+        localStorage.setItem("languageServerUrl", languageServerUrl);
     }
 };
 
