@@ -28,6 +28,8 @@ import InitMixin from "../../mixin/init";
 import ContestView from "@/components/contest/contest-view.vue";
 import { IContestSetResponseDTO } from "@/types/contestset";
 import markdownIt from "@/lib/markdownIt/markdownIt";
+import dayjs from "dayjs";
+import { IContestSetListDTO } from "@/types/topic/TopicContestList";
 @Component({
     components: {
         ContestView
@@ -58,7 +60,29 @@ export default class ContestTopicContestView extends Mixins(InitMixin) {
             });
         this.axios.get(`/api/contestset/list/${this.contestTopicId}`)
             .then(({ data }) => {
-                const list: any[] = data.data;
+                const list: IContestSetListDTO[] = data.data;
+                list.sort((a, b) => {
+                    if (a.start_time === null && b.start_time === null) {
+                        return 0;
+                    }
+                    else if (a.start_time === null) {
+                        return 1;
+                    }
+                    else if (b.start_time === null) {
+                        return -1;
+                    }
+                    else {
+                        const dayjsA = dayjs(a.start_time);
+                        const dayjsB = dayjs(b.start_time);
+                        if (dayjsA.isBefore(dayjsB)) {
+                            return -1;
+                        }
+                        else if (dayjsB.isAfter(dayjsB)) {
+                            return 1;
+                        }
+                        return dayjsA.isBefore(dayjsB) ? -1 : dayjsA.isAfter(dayjsB) ? 1 : 0;
+                    }
+                });
                 list.forEach(e => {
                     e.user_id = e.maker;
                 });
