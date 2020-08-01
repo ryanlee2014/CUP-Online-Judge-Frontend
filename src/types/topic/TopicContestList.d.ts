@@ -6,5 +6,5 @@ export interface IContestSetListDTO {
     start_time: string | null,
     end_time: string | null,
     maker: string,
-    user?: string
+    user_id?: string
 }
