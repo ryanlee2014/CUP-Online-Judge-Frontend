@@ -32,6 +32,7 @@
             <thead>
             <tr>
                 <th>{{$t("user_id")}}</th>
+                <th>{{$t("nick")}}</th>
                 <th>{{$t("ban end time")}}</th>
                 <th>{{$t("edit")}}</th>
                 <th>{{$t("remove")}}</th>
@@ -41,6 +42,9 @@
             <tr :key="row.user_id" v-for="row in banList">
                 <td>
                     <router-link :to="`/user/${row.user_id}`">{{row.user_id}}</router-link>
+                </td>
+                <td>
+                    <router-link :to="`/user/${row.user_id}/`">{{row.nick}}</router-link>
                 </td>
                 <td>
                     {{dayjs(row.bantime).format("YYYY-MM-DD HH:mm:ss")}}

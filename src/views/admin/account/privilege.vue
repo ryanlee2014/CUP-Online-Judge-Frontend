@@ -37,13 +37,19 @@
             <thead>
             <tr>
                 <th>{{$t("user_id")}}</th>
+                <th>{{$t("nick")}}</th>
                 <th>{{$t("privilege")}}</th>
                 <th>{{$t("remove")}}</th>
             </tr>
             </thead>
             <tbody>
             <tr v-for="(row,key) in userList" :key="key">
-                <td>{{row.user_id}}</td>
+                <td>
+                    <router-link :to="`/user/${row.user_id}`">{{row.user_id}}</router-link>
+                </td>
+                <td>
+                    <router-link :to="`/user/${row.user_id}/`">{{row.nick}}</router-link>
+                </td>
                 <td>{{row.rightstr}}</td>
                 <td>
                     <a @click="removePrivilege(row.user_id, row.rightstr)" class="ui labeled icon black button">
