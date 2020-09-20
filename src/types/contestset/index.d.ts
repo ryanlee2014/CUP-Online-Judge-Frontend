@@ -5,6 +5,13 @@ export interface IContestSetRequestDTO {
     visible: boolean,
     contestIdList: (string | number)[],
     contestSetId?: number | string,
+    topicAssistant?: string[]
+}
+
+export interface ITopicAssistant {
+    topic_assistant_id: number,
+    topic_id: number,
+    user_id: string
 }
 
 export interface IContestSetResponseDTO {
@@ -14,7 +21,8 @@ export interface IContestSetResponseDTO {
     description: string,
     visible: boolean,
     defunct: string,
-    create_time: string
+    create_time: string,
+    assistant: ITopicAssistant[]
 }
 
 export interface IContestSetEditDTO extends IContestSetResponseDTO{

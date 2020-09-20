@@ -16,7 +16,7 @@ export default class ContestSetEditMixin extends Vue {
     }
 
     initData () {
-        this.axios.get(`/api/contestset/set/${this.contestSetId}`)
+        this.axios.get(`/api/admin/contestset/${this.contestSetId}`)
             .then(({ data }) => {
                 this.contestSetInfo = data.data;
             });
@@ -35,7 +35,8 @@ export default class ContestSetEditMixin extends Vue {
                 description: this.contestSetInfo!.description,
                 title: this.contestSetInfo!.title,
                 visible: this.contestSetInfo!.visible,
-                create_time: this.contestSetInfo!.create_time
+                create_time: this.contestSetInfo!.create_time,
+                assistant: this.contestSetInfo!.assistant
             };
             return payload;
         }

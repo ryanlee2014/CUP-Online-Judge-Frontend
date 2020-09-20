@@ -27,26 +27,26 @@
                 </div>
             </div>
             <div class="field">
-                <div class="field">
-                    <label>{{$t("contest list")}}</label>
-                    <div class="ui fluid multiple search selection dropdown" ref="contestList">
-                        <input @change="select1 = $event.target.value" type="hidden">
-                        <i class="dropdown icon"></i>
-                        <div class="default text"></div>
-                        <div class="menu">
-                            <div v-for="(row, key) in totalContestList" :key="key" class="item"
-                                 :data-value="row.contest_id">
-                                {{`Contest${row.contest_id} ${row.title}`}}
-                            </div>
+                <label>{{ $t("contest list") }}</label>
+                <div ref="contestList" class="ui fluid multiple search selection dropdown">
+                    <input type="hidden" @change="select1 = $event.target.value">
+                    <i class="dropdown icon"></i>
+                    <div class="default text"></div>
+                    <div class="menu">
+                        <div v-for="(row, key) in totalContestList" :key="key" :data-value="row.contest_id"
+                             class="item">
+                            {{ `Contest${row.contest_id} ${row.title}` }}
                         </div>
                     </div>
                 </div>
             </div>
             <div class="field">
-                <div class="field">
-                    <label>{{$t("description")}}</label>
-                    <mavon-editor ref="description" v-model="description" :markInstance="markdownIt"></mavon-editor>
-                </div>
+                <label>{{$t("assistant")}} 使用","分割不同用户(请区分中英文逗号)</label>
+                <input type="text" v-model="topicAssistant">
+            </div>
+            <div class="field">
+                <label>{{ $t("description") }}</label>
+                <mavon-editor ref="description" v-model="description" :markInstance="markdownIt"></mavon-editor>
             </div>
             <div class="field">
                 <div class="two fields">
@@ -68,16 +68,18 @@ import Vue from "vue";
 import { Component, Mixins, Prop, Watch } from "vue-property-decorator";
 import markdownIt from "@/lib/markdownIt/markdownIt";
 import jquery from "jquery";
-import { IContestSetEditDTO, IContestSetRequestDTO, IContestSetResponseDTO } from "@/types/contestset";
+import { IContestSetEditDTO, IContestSetRequestDTO } from "@/types/contestset";
+
 const $: any = jquery;
 
 @Component
-export default class ContestSetEditor extends Mixins(Vue) implements IContestSetRequestDTO {
+export default class ContestSetEditor extends Mixins(Vue) {
         contestIdList: (string | number)[] = [];
         defunct: string = "N";
         description: string = "";
         title: string = "";
         visible: boolean = true;
+        topicAssistant: string = "";
         select1: any = "";
         totalContestList: any[] = [];
         contestSetId: string = "";
@@ -103,6 +105,7 @@ export default class ContestSetEditor extends Mixins(Vue) implements IContestSet
                 this.defunct = val.defunct;
                 this.description = val.description;
                 this.title = val.title;
+                this.topicAssistant = val.assistant.map(e => e.user_id).join(",");
                 if (val.contestset_id) {
                     this.contestSetId = val.contestset_id + "";
                 }
@@ -169,7 +172,8 @@ export default class ContestSetEditor extends Mixins(Vue) implements IContestSet
                 description: this.description,
                 title: this.title,
                 visible: this.visible,
-                contestSetId: this.contestSetId
+                contestSetId: this.contestSetId,
+                topicAssistant: this.topicAssistant.split(",")
             };
             this.$emit("postData", payload);
         }
