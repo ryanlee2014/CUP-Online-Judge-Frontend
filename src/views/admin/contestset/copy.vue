@@ -1,5 +1,5 @@
 <template>
-    <contest-set-editor @postData="add"></contest-set-editor>
+    <contest-set-editor @postData="add" :contest-set-info="contestSetEditInfo" :contest-list="contestSetList"></contest-set-editor>
 </template>
 
 <script lang="ts">
