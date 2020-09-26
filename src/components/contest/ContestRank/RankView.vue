@@ -50,7 +50,7 @@
                         <transition-group name="list-complete" tag="tbody">
                             <tr :key="row.user_id" class="list-complete-item" style="cursor: grab!important;"
                                 v-for="(row,key) in submitter" v-show="row.rank <= Math.trunc(totalNumber * 0.3) || row.user_id === user_id || hasPrivilege">
-                                <td :class="rankClass(key)"
+                                <td :class="rankClass(key, row)"
                                     style="text-align:center;font-weight:bold;position: sticky; left: 0">{{row.rank}}
                                 </td>
                                 <td class="ui white">
@@ -206,6 +206,7 @@ export default class RankView extends Mixins(mixins) {
 
         submitter: Submitter[] = [];
         total = -1;
+        canGetMetalRank = -1;
         start_time = dayjs();
         title = "";
         assistant = false;
@@ -321,23 +322,25 @@ export default class RankView extends Mixins(mixins) {
             // @ts-ignore
             window.submitter = this.submitter;
             this.totalNumber = 0;
+            const rankBorderProblemNumber = Math.ceil(this.total * 0.6);
             _.forEach(this.submitter, val => (val.rank = val.ac > 0 ? (++this.totalNumber, rnk++) : rnk));
+            _.forEach(this.submitter, val => val.ac > rankBorderProblemNumber ? ++this.canGetMetalRank : 0);
         }
 
         updateSubmitterTotalProblemNumber (submitter: Submitter[]) {
             submitter.forEach(e => e.updateTotal(this.total));
         }
 
-        rankClass (rank: any) {
-            const total = this.totalNumber;
-            rank = parseInt(rank);
-            if (rank <= total * 0.1 + 1) {
+        rankClass (rank: any, row: Submitter) {
+            const total = this.canGetMetalRank;
+            rank = row.rank;
+            if (rank <= Math.ceil(total * 0.25)) {
                 return "ui yellow";
             }
-            else if (rank <= total * 0.3 + 1) {
+            else if (rank <= Math.ceil(total * 0.5)) {
                 return "ui grey";
             }
-            else if (rank <= total * 0.6 + 1) {
+            else if (rank <= total) {
                 return "ui orange";
             }
             else {
