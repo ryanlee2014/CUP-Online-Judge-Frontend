@@ -41,7 +41,7 @@
                             <th style="position: sticky; top: 40px;z-index: 4" v-if="hasPrivilege" width="5%">通过/测试比</th>
                             <th style="position: sticky; top: 40px;z-index: 4" v-if="hasPrivilege" width="5%">通过/提交比</th>
                             <th style="position: sticky; top: 40px;z-index: 4" width=5%>{{$t("accept")}}</th>
-                            <th style="position: sticky; top: 40px;z-index: 4" width=5%>{{$t("penalty")}}</th>
+                            <th style="position: sticky; top: 40px;z-index: 4" width=5%>{{$t("penalty time")}}</th>
                             <th :key="i" style="min-width: 85.71px;position: sticky; top: 40px;z-index: 4"
                                 v-for="i in Array.from(Array(Math.max(0,total)).keys())">{{1001 + i}}
                             </th>
