@@ -42,6 +42,7 @@
                     <th>{{$t("inviter")}}</th>
                     <th>{{$t("rest valid time")}}</th>
                     <th>{{$t("valid date")}}</th>
+                    <th>{{$t("expire")}}</th>
                 </tr>
             </thead>
             <tbody>
@@ -50,13 +51,19 @@
                         {{row.invite_code}}
                     </td>
                     <td>
-                        {{row.user_id}}
+                        <router-link :to="`/user/${row.user_id}`">{{row.user_id}}</router-link>
                     </td>
                     <td>
                         {{row.valid_time}}
                     </td>
                     <td>
                         {{dayjs(row.valid_date).format("YYYY-MM-DD HH:mm:ss")}}
+                    </td>
+                    <td>
+                        <button @click="remove(row.invite_code)" class="ui labeled icon black button">
+                            <i class="trash icon"></i>
+                            {{$t("expire")}}
+                        </button>
                     </td>
                 </tr>
             </tbody>
@@ -140,6 +147,19 @@ export default class InviteCode extends Mixins(InitMixin) {
             })
             .catch(({ data }) => {
                 alert(JSON.stringify(data));
+            });
+    }
+
+    remove (inviteCode: string) {
+        const payload = {
+            inviteCode
+        };
+        this.axios.post("/api/admin/account/invite/expire", payload)
+            .then(({ data }) => {
+                alert(`邀请码:${inviteCode}已设置过期`);
+            })
+            .catch(({ data }) => {
+                alert(`请求出错: ${JSON.stringify(data)}`);
             });
     }
 }

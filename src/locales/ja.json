@@ -303,5 +303,6 @@
   "server frontend version": "サーバーページバージョン",
   "update": "アップデート",
   "web application update": "ページアップデート",
-  "penalty": "ペナルティタイム"
+  "penalty": "ペナルティタイム",
+  "expire": "期限切れ"
 }

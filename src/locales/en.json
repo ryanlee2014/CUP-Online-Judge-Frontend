@@ -303,5 +303,6 @@
   "update": "Update",
   "assistant": "Assistant",
   "web application update": "Web Application Update",
-  "penalty": "Penalty"
+  "penalty": "Penalty",
+  "expire": "Expire"
 }

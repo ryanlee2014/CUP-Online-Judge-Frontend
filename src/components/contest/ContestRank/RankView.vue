@@ -322,9 +322,10 @@ export default class RankView extends Mixins(mixins) {
             // @ts-ignore
             window.submitter = this.submitter;
             this.totalNumber = 0;
+            this.canGetMetalRank = 0;
             const rankBorderProblemNumber = Math.ceil(this.total * 0.6);
             _.forEach(this.submitter, val => (val.rank = val.ac > 0 ? (++this.totalNumber, rnk++) : rnk));
-            _.forEach(this.submitter, val => val.ac > rankBorderProblemNumber ? ++this.canGetMetalRank : 0);
+            _.forEach(this.submitter, val => val.ac >= rankBorderProblemNumber ? ++this.canGetMetalRank : 0);
         }
 
         updateSubmitterTotalProblemNumber (submitter: Submitter[]) {

@@ -131,7 +131,8 @@
 </i18n>
 
 <script lang="ts">
-import { Component, Mixins, Prop, Watch } from "vue-property-decorator";
+import { Component, Prop, Watch } from "vue-property-decorator";
+import { mixins as Mixins } from "vue-class-component";
 import tableCard from "./components/tableCard.vue";
 import avatarMixin from "../../mixin/avatarMixin";
 import SemanticEnvMixin from "@/mixin/SemanticEnvMixin";
@@ -153,7 +154,8 @@ const emailSet: any = {};
         tableCard
     }
 })
-export default class RanklistMainContent extends Mixins(SemanticEnvMixin, avatarMixin, InitMixin, MarkdownWorkerMixin) {
+export default class RanklistMainContent extends Mixins(MarkdownWorkerMixin, SemanticEnvMixin, avatarMixin, InitMixin) {
+    [x: string]: any;
     $route: any;
     @Prop({ default: null }) rank!: any;
     registed_user = 0;

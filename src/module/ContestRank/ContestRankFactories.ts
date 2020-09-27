@@ -1,6 +1,25 @@
 import dayjs, { Dayjs } from "dayjs";
 
 const DEFAULT_TIME = dayjs();
+
+export interface IContestRankSubmissionDTO {
+    avatar: number,
+    avatarUrl: string | null,
+    code_length: number,
+    fingerprint: string | null,
+    fingerprintRaw: string | null,
+    in_date: string,
+    ip: string,
+    nick: string,
+    num: number,
+    problem_id: number,
+    result: number,
+    sim: number | null,
+    solution_id: number,
+    user_id: string,
+    start_time: Dayjs
+}
+
 export interface Problem {
     [id: string]: any,
     submit: Dayjs[],
@@ -21,24 +40,6 @@ export interface Problem {
     isAccepted: (...arg: any[]) => any,
     getAcceptTime: (...arg: any[]) => any,
     newInstance: (...arg: any[]) => any
-}
-
-export interface IContestRankSubmissionDTO {
-    avatar: number,
-    avatarUrl: string | null,
-    code_length: number,
-    fingerprint: string | null,
-    fingerprintRaw: string | null,
-    in_date: string,
-    ip: string,
-    nick: string,
-    num: number,
-    problem_id: number,
-    result: number,
-    sim: number | null,
-    solution_id: number,
-    user_id: string,
-    start_time: Dayjs
 }
 
 export interface ISet<T> extends Set<T> {
