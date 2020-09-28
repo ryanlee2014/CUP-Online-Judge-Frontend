@@ -335,13 +335,13 @@ export default class RankView extends Mixins(mixins) {
         rankClass (rank: any, row: Submitter) {
             const total = this.canGetMetalRank;
             rank = row.rank;
-            if (rank <= Math.ceil(total * 0.25)) {
+            if (row.ac >= Math.ceil(this.total * 0.9)) {
                 return "ui yellow";
             }
-            else if (rank <= Math.ceil(total * 0.5)) {
+            else if (row.ac >= Math.ceil(this.total * 0.8)) {
                 return "ui grey";
             }
-            else if (rank <= total) {
+            else if (row.ac >= Math.ceil(this.total * 0.6)) {
                 return "ui orange";
             }
             else {
