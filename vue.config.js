@@ -156,6 +156,6 @@ module.exports = {
             analyzerMode: "disabled"
         }
     },
-    parallel: process.env.NODE_ENV !== "production",
+    parallel: false,
     productionSourceMap: false
 };
