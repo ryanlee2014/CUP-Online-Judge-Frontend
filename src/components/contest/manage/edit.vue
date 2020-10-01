@@ -164,6 +164,7 @@
                         <label>{{$t("selected user")}}</label>
                         <div class="ui middle aligned animated list">
                             <div :key="key" class="item" v-for="(row,key) in userList">
+                                {{key + 1}}
                                 <img :data-src="`/avatar/${row}.jpg`" class="ui avatar image">
                                 <div class="content">
                                     <div class="header">{{row}}</div>
