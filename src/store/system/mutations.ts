@@ -14,6 +14,11 @@ const mutations: MutationTree<ISystemState> = {
     setLanguageServerUrl (state, languageServerUrl) {
         state.languageServerUrl = languageServerUrl;
         localStorage.setItem("languageServerUrl", languageServerUrl);
+    },
+    setGravatarCDN (state, gravatarCDNUrl) {
+        console.log("gravatarCDN", gravatarCDNUrl);
+        state.gravatarCDN = gravatarCDNUrl;
+        localStorage.setItem("gravatarCDN", gravatarCDNUrl);
     }
 };
 

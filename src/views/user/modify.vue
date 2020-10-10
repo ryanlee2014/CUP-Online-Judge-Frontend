@@ -6,7 +6,7 @@
                     <div class="row">
                         <div class="ui card" style="width: 100%">
                             <div class="image">
-                                <v-gravatar hostname="gravatar.w3tt.com" :email="email" :size="324"></v-gravatar>
+                                <v-gravatar :hostname="$store.getters.gravatarCDN" :email="email" :size="324"></v-gravatar>
                             </div>
                             <div class="content">
                                 <div class="header">

@@ -71,7 +71,7 @@
                     </router-link>
                 </td>
                 <td>
-                    <v-gravatar hostname="gravatar.w3tt.com" :original-src="getAvatarURL(row)" class="ui avatar image" :email="row.email" style="object-fit: cover;"></v-gravatar>
+                    <v-gravatar :hostname="$store.getters.gravatarCDN" :original-src="getAvatarURL(row)" class="ui avatar image" :email="row.email" style="object-fit: cover;"></v-gravatar>
 
                 </td>
                 <td>

@@ -24,7 +24,7 @@
             <td>
                 <div class="ui grid">
                     <div class="four wide column" style="margin:auto">
-                        <v-gravatar hostname="gravatar.w3tt.com" :original-src="getAvatarURL(row)" class="ui avatar image" :email="row.email" style="object-fit: cover;"></v-gravatar>
+                        <v-gravatar :hostname="$store.getters.gravatarCDN" :original-src="getAvatarURL(row)" class="ui avatar image" :email="row.email" style="object-fit: cover;"></v-gravatar>
                     </div>
                     <div class="twelve wide column">
                         <router-link :to="`/user/${row.user_id}`">

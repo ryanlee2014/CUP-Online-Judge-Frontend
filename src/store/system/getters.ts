@@ -6,7 +6,8 @@ const getters: GetterTree<ISystemState, IRootState> = {
     contestMode: state => !store.getters.admin && state.contestMode,
     init: state => state.init,
     darkMode: state => state.darkMode,
-    languageServerUrl: state => state.languageServerUrl
+    languageServerUrl: state => state.languageServerUrl,
+    gravatarCDN: state => state.gravatarCDN
 };
 
 export default getters;

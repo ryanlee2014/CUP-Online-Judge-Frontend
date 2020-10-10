@@ -34,8 +34,9 @@ function checkAdmin (to: Route, admin: boolean, next: NextFunction) {
     else {
         getSelfInfo().then(({ data }) => {
             if (data.data && data.data.user_id) {
-                store.commit("setUserData", data.data);
+                store.commit("setUserData", data.data.userInfo);
                 store.commit("setContestMode", data.data.contest_mode);
+                store.commit("setGravatarCDN", data.data.gravatar);
                 store.commit("loginMutate", { login: true });
             }
             else {
@@ -87,7 +88,8 @@ function getLoginInfo (to: Route, next: NextFunction) {
     getSelfInfo().then(response => {
         if (response.data.data && response.data.data.user_id) {
             store.commit("loginMutate", { login: true });
-            store.commit("setUserData", response.data.data);
+            store.commit("setUserData", response.data.data.userInfo);
+            store.commit("setGravatarCDN", response.data.data.gravatar);
             sessionStorage.isLogined = true;
             checkAdmin(to, store.getters.admin, next);
         }

@@ -14,7 +14,7 @@
             <div :key="key" class="comment" v-for="(row,key) in reply">
                 <div class="avatar">
                     <router-link :to="`/user/${row.user_id}`">
-                        <v-gravatar hostname="gravatar.w3tt.com" class="avatar" :size="400" :email="row.email"></v-gravatar>
+                        <v-gravatar :hostname="$store.getters.gravatarCDN" class="avatar" :size="400" :email="row.email"></v-gravatar>
                     </router-link>
                 </div>
                 <div class="content">

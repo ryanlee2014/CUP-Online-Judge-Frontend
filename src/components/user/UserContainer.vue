@@ -12,7 +12,7 @@
                     <div class="five wide column">
                         <div class="ui card" id="user_card" style="width: 100%; ">
                             <div class="blurring dimmable image" id="avatar_container">
-                                <v-gravatar hostname="gravatar.w3tt.com" :email="email" :size="400"></v-gravatar>
+                                <v-gravatar :hostname="$store.getters.gravatarCDN" :email="email" :size="400"></v-gravatar>
                                 <div class="ui placeholder" v-cloak>
                                     <div class="square image"></div>
                                 </div>

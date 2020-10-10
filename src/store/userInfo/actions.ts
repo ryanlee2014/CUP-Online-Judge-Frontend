@@ -11,8 +11,9 @@ function getInfo (commit: Commit, tryTime: number) {
         .then(response => {
             const data = response.data;
             if (data.status === "OK") {
-                commit("setUserData", data.data);
+                commit("setUserData", data.data.userInfo);
                 store.commit("setContestMode", data.data.contest_mode);
+                store.commit("setGravatarCDN", data.data.gravatar);
                 commit("loginMutate", { login: true });
             }
             else {

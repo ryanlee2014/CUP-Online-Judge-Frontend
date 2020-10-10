@@ -3,7 +3,7 @@
         <div class='ui two column grid'>
             <div class='row'>
                 <div class='column'>
-                    <v-gravatar hostname="gravatar.w3tt.com" class="ui small image" :size="200" :email="email"></v-gravatar>
+                    <v-gravatar :hostname="$store.getters.gravatarCDN" class="ui small image" :size="200" :email="email"></v-gravatar>
                     <h4 class='ui header'>{{user_id}}
                         <div class='sub header'>{{nick}}</div>
                     </h4>
