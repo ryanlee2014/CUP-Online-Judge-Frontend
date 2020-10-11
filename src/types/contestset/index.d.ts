@@ -23,7 +23,8 @@ export interface IContestSetResponseDTO {
     visible: boolean,
     defunct: string,
     create_time: string,
-    assistant: ITopicAssistant[]
+    assistant: ITopicAssistant[],
+    userList: []
 }
 
 export interface IContestSetEditDTO extends IContestSetResponseDTO{

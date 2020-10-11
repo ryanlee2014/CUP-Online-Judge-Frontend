@@ -49,10 +49,26 @@
                 <mavon-editor ref="description" v-model="description" :markInstance="markdownIt"></mavon-editor>
             </div>
             <div class="field">
-                <label>{{$t("selected user input")}}</label>
-                <textarea style="min-height: 100%; height: 100%; box-sizing: border-box;"
-                          v-model="userListText">
+                <div class="two fields">
+                    <div class="field">
+                        <label>{{$t("selected user")}}</label>
+                        <div class="ui middle aligned animated list">
+                            <div :key="key" class="item" v-for="(row,key) in userList">
+                                {{key + 1}}
+                                <img :data-src="`/avatar/${row}.jpg`" class="ui avatar image">
+                                <div class="content">
+                                    <div class="header">{{row}}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label>{{$t("selected user input")}}</label>
+                        <textarea style="min-height: 100%; height: 100%; box-sizing: border-box;"
+                                  v-model="userListText">
                         </textarea>
+                    </div>
+                </div>
             </div>
             <div class="field">
                 <div class="two fields">
@@ -114,6 +130,8 @@ export default class ContestSetEditor extends Mixins(Vue) {
                 this.description = val.description;
                 this.title = val.title;
                 this.topicAssistant = val.assistant.map(e => e.user_id).join(",");
+                this.userListText = val.userList.join("\n");
+                this.userList = val.userList;
                 if (val.contestset_id) {
                     this.contestSetId = val.contestset_id + "";
                 }
@@ -182,7 +200,7 @@ export default class ContestSetEditor extends Mixins(Vue) {
                 visible: this.visible,
                 contestSetId: this.contestSetId,
                 topicAssistant: this.topicAssistant.split(","),
-                userList: this.userListText.split(",")
+                userList: this.userListText.split("\n").map(e => e.trim()).filter(e => e.length > 0)
             };
             this.$emit("postData", payload);
         }

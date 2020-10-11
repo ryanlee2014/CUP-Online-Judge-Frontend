@@ -36,7 +36,8 @@ export default class ContestSetEditMixin extends Vue {
                 title: this.contestSetInfo!.title,
                 visible: this.contestSetInfo!.visible,
                 create_time: this.contestSetInfo!.create_time,
-                assistant: this.contestSetInfo!.assistant
+                assistant: this.contestSetInfo!.assistant,
+                userList: this.contestSetInfo!.userList
             };
             return payload;
         }
