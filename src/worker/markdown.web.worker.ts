@@ -8,6 +8,9 @@ registerPromiseWorker((message) => {
     else if (message.type === "renderRaw") {
         return MarkdownIt.renderRaw(message.content);
     }
+    else if (message.type === "renderPlain") {
+        return MarkdownIt.renderPlain(message.content);
+    }
     else {
         return "[undefined method]";
     }

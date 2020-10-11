@@ -4,6 +4,7 @@ import md5 from "md5";
 import { log, logFactory } from "@/util/logger";
 import AwaitLock from "await-lock";
 import { parameterHash } from "@/util/util";
+import markdownIt from "@/lib/markdownIt/markdownIt";
 
 const decoratorLog = logFactory("Decorator mounted: ");
 interface IPropertyDescriptor extends PropertyDescriptor {
@@ -121,6 +122,28 @@ export function RunOnceEachKey (target: any, propertyName: string, propertyDescr
         if (!cache[keyHash]) {
             cache[keyHash] = true;
             return method.apply(this, args);
+        }
+    };
+}
+
+export function MarkdownDebug (target: any, propertyName: string, propertyDescriptor: PropertyDescriptor) {
+    decoratorLog(`MarkdownDebug, target:${target.constructor.name}, propertyName:${propertyName}`);
+    const method = propertyDescriptor.value;
+    window.markdownIt = markdownIt;
+    propertyDescriptor.value = async function (content: string) {
+        if (process.env.NODE_ENV === "production") {
+            return method.call(this, content);
+        }
+        else {
+            if (propertyName === "renderRawAsync") {
+                return markdownIt.renderRaw(content);
+            }
+            else if (propertyName === "renderPlain") {
+                return markdownIt.renderPlain(content);
+            }
+            else {
+                return markdownIt.render(content);
+            }
         }
     };
 }

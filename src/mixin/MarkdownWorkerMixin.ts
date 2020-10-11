@@ -2,6 +2,7 @@ import Vue from "vue";
 import { Component } from "vue-property-decorator";
 import PromiseWorker from "promise-worker";
 import Worker from "@/worker/markdown.web.worker";
+import { MarkdownDebug } from "@/module/Decorator/method";
 
 @Component
 export default class MarkdownWorkerMixin extends Vue {
@@ -16,6 +17,7 @@ export default class MarkdownWorkerMixin extends Vue {
         this.originalWorker.terminate();
     }
 
+    @MarkdownDebug
     async renderAsync (content: string) {
         return this.worker_.postMessage({
             type: "render",
@@ -23,6 +25,15 @@ export default class MarkdownWorkerMixin extends Vue {
         });
     }
 
+    @MarkdownDebug
+    async renderPlainAsync (content: string) {
+        return this.worker_.postMessage({
+            type: "renderPlain",
+            content
+        });
+    }
+
+    @MarkdownDebug
     async renderRawAsync (content: string) {
         return this.worker_.postMessage({
             type: "renderRaw",

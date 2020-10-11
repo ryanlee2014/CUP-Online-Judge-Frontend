@@ -51,13 +51,11 @@ export default class ContestTopicContestView extends Mixins(InitMixin, MarkdownW
 
     initData () {
         this.axios.get(`/api/contestset/set/${this.contestTopicId}`)
-            .then(({ data }) => {
+            .then(async ({ data }) => {
                 const contestTopicDTO: IContestSetResponseDTO = data.data;
                 this.description = contestTopicDTO.description;
                 this.title = contestTopicDTO.title;
-                this.renderRawAsync(this.description).then(result => {
-                    this.descriptionHtml = result;
-                });
+                this.descriptionHtml = await this.renderPlainAsync(contestTopicDTO.description);
             });
         this.axios.get(`/api/contestset/list/${this.contestTopicId}`)
             .then(({ data }) => {
