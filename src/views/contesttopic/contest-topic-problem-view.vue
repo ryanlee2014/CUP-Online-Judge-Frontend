@@ -27,21 +27,20 @@ import { Component, Mixins } from "vue-property-decorator";
 import InitMixin from "../../mixin/init";
 import ContestView from "@/components/contest/contest-view.vue";
 import { IContestSetResponseDTO } from "@/types/contestset";
-import markdownIt from "@/lib/markdownIt/markdownIt";
 import dayjs from "dayjs";
 import { IContestSetListDTO } from "@/types/topic/TopicContestList";
+import MarkdownWorkerMixin from "@/mixin/MarkdownWorkerMixin";
 @Component({
     components: {
         ContestView
     }
 })
-export default class ContestTopicContestView extends Mixins(InitMixin) {
+export default class ContestTopicContestView extends Mixins(InitMixin, MarkdownWorkerMixin) {
     contestTopicId: number | string = "";
     contest_list: any[] = [];
     description: string = "";
     descriptionHtml: string = "";
     title: string = "";
-    markdownIt = markdownIt;
     created () {
         this.contestTopicId = this.$route.params.contestSetId;
     }
@@ -56,7 +55,9 @@ export default class ContestTopicContestView extends Mixins(InitMixin) {
                 const contestTopicDTO: IContestSetResponseDTO = data.data;
                 this.description = contestTopicDTO.description;
                 this.title = contestTopicDTO.title;
-                this.descriptionHtml = markdownIt.renderRaw(this.description);
+                this.renderRawAsync(this.description).then(result => {
+                    this.descriptionHtml = result;
+                });
             });
         this.axios.get(`/api/contestset/list/${this.contestTopicId}`)
             .then(({ data }) => {
