@@ -5,7 +5,8 @@ export interface IContestSetRequestDTO {
     visible: boolean,
     contestIdList: (string | number)[],
     contestSetId?: number | string,
-    topicAssistant?: string[]
+    topicAssistant?: string[],
+    userList: string[]
 }
 
 export interface ITopicAssistant {

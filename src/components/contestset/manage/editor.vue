@@ -49,6 +49,12 @@
                 <mavon-editor ref="description" v-model="description" :markInstance="markdownIt"></mavon-editor>
             </div>
             <div class="field">
+                <label>{{$t("selected user input")}}</label>
+                <textarea style="min-height: 100%; height: 100%; box-sizing: border-box;"
+                          v-model="userListText">
+                        </textarea>
+            </div>
+            <div class="field">
                 <div class="two fields">
                     <div class="field">
                         <button class="ui primary button" @click="emitData">
@@ -81,6 +87,8 @@ export default class ContestSetEditor extends Mixins(Vue) {
         visible: boolean = true;
         topicAssistant: string = "";
         select1: any = "";
+        userList: any[] = [];
+        userListText: string = "";
         totalContestList: any[] = [];
         contestSetId: string = "";
         markdownIt = markdownIt;
@@ -173,7 +181,8 @@ export default class ContestSetEditor extends Mixins(Vue) {
                 title: this.title,
                 visible: this.visible,
                 contestSetId: this.contestSetId,
-                topicAssistant: this.topicAssistant.split(",")
+                topicAssistant: this.topicAssistant.split(","),
+                userList: this.userListText.split(",")
             };
             this.$emit("postData", payload);
         }
