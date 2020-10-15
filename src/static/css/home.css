@@ -1361,6 +1361,7 @@ pre.console {
 
 .ui.form textarea.auto-textarea-input {
     height: inherit;
+    max-height: inherit;
 }
 
 
