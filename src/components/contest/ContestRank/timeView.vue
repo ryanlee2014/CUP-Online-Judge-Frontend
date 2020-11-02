@@ -1,5 +1,5 @@
 <template>
-    <h3 class="ui header">
+    <h3 class="ui header" style="margin-left: inherit">
         当前时间:{{current_time}}
         <div class="sub header" v-if="start_time">
             起始时间:{{dayjs(start_time).format("YYYY-MM-DD HH:mm:ss")}},

@@ -1,7 +1,15 @@
 <template>
     <ErrorView :errormsg="errormsg" v-if="!state"></ErrorView>
     <div class="contestrank scoreboard padding" v-else>
-        <h2 class="ui dividing header">
+        <div class="following bar title top contest_name" :style="bodyOnTop ? 'opacity: 0' : 'opacity: 1'">
+            <h2 class="ui dividing header" style="margin-left: 15px">
+                {{total === -1 || !finished ?"计算中,请稍后":$t("contest ranklist")}} {{!finished || hasPrivilege ? "" : $t("lite mode")}}
+                <div class="sub header">
+                    {{title}} 总人数: {{this.totalNumber}}
+                </div>
+            </h2>
+        </div>
+        <h2 class="ui dividing header basic contest_name" :style="bodyOnTop ? 'opacity: 1; margin-top: -.14285714em' : 'opacity: 0 margin-top: -.14285714em'">
             {{total === -1 || !finished ?"计算中,请稍后":$t("contest ranklist")}} {{!finished || hasPrivilege ? "" : $t("lite mode")}}
             <div class="sub header">
                 {{title}} 总人数: {{this.totalNumber}}
@@ -34,15 +42,15 @@
                     <table class="ui small celled table" id='rank'>
                         <thead>
                         <tr align=center class="toprow">
-                            <th class="{sorter:'false'}" width=5% style="position: sticky; top: 40px; z-index: 4">{{$t("rank")}}</th>
-                            <th width=5% style="position: sticky; top: 40px;z-index: 4">{{ $t("user_id") }}</th>
-                            <th style="min-width:90px;position: sticky; top: 40px;z-index: 4">{{ $t("nick") }}</th>
-                            <th style="position: sticky; top: 40px;z-index: 4" v-if="add_name" width=5%>Id</th>
-                            <th style="position: sticky; top: 40px;z-index: 4" v-if="hasPrivilege" width="5%">通过/测试比</th>
-                            <th style="position: sticky; top: 40px;z-index: 4" v-if="hasPrivilege" width="5%">通过/提交比</th>
-                            <th style="position: sticky; top: 40px;z-index: 4" width=5%>{{$t("accept")}}</th>
-                            <th style="position: sticky; top: 40px;z-index: 4" width=5%>{{$t("penalty time")}}</th>
-                            <th :key="i" style="min-width: 85.71px;position: sticky; top: 40px;z-index: 4"
+                            <th class="{sorter:'false'}" width=5% style="position: sticky; top: 93px; z-index: 4">{{$t("rank")}}</th>
+                            <th width=5% style="position: sticky; top: 93px;z-index: 4">{{ $t("user_id") }}</th>
+                            <th style="min-width:90px;position: sticky; top: 93px;z-index: 4">{{ $t("nick") }}</th>
+                            <th style="position: sticky; top: 93px;z-index: 4" v-if="add_name" width=5%>Id</th>
+                            <th style="position: sticky; top: 93px;z-index: 4" v-if="hasPrivilege" width="5%">通过/测试比</th>
+                            <th style="position: sticky; top: 93px;z-index: 4" v-if="hasPrivilege" width="5%">通过/提交比</th>
+                            <th style="position: sticky; top: 93px;z-index: 4" width=5%>{{$t("accept")}}</th>
+                            <th style="position: sticky; top: 93px;z-index: 4" width=5%>{{$t("penalty time")}}</th>
+                            <th :key="i" style="min-width: 85.71px;position: sticky; top: 93px;z-index: 4"
                                 v-for="i in Array.from(Array(Math.max(0,total)).keys())">{{1001 + i}}
                             </th>
                         </tr>
@@ -147,7 +155,9 @@ import {
 import { mapGetters } from "vuex";
 import { isContestAssistant } from "@/util/util";
 import { DragScrollHTMLElement } from "@/types/dragscroll";
+import jquery from "jquery";
 
+const $: any = jquery;
 const { reset: bindDragEvent } = require("dragscroll");
 let submissionCollection: any[] = [];
 // @ts-ignore
@@ -208,6 +218,7 @@ export default class RankView extends Mixins(mixins) {
         total = -1;
         canGetMetalRank = -1;
         start_time = dayjs();
+        bodyOnTop = true;
         title = "";
         assistant = false;
         finished = false;
@@ -564,7 +575,7 @@ export default class RankView extends Mixins(mixins) {
 
         updated () {
             document.title = "ContestRank: " + this.title;
-            $("#rank>tbody").find("tr").each(function () {
+            $("#rank>tbody").find("tr").each(() => {
                 $(this).find("td").eq(2).css({
                     position: "sticky",
                     left: $(this)!.find("td")!.eq(2)!.prev()!.outerWidth()! + $(this)!.find("td")!.eq(1)!.prev()!.outerWidth()!,
@@ -583,6 +594,25 @@ export default class RankView extends Mixins(mixins) {
 
         get hasPrivilege () {
             return this.$store.getters.admin || this.$store.getters.contest_maker[this.cid] || this.$store.getters.contest_manager || this.assistant;
+        }
+
+        initBar () {
+            const that = this;
+            $(".following.bar.title.top.contest_name")
+                .visibility({
+                    once: false,
+                    offset: 35,
+                    observeChanges: false,
+                    continuous: true,
+                    refreshOnLoad: true,
+                    refreshOnResize: true,
+                    onTopPassed: _.debounce((val: any) => {
+                        that.bodyOnTop = val.topVisible;
+                    }),
+                    onTopPassedReverse: _.debounce((val: any) => {
+                        that.bodyOnTop = val.topVisible;
+                    })
+                });
         }
 
         async initData (cid: string) {
@@ -626,6 +656,7 @@ export default class RankView extends Mixins(mixins) {
                     });
                     this.$nextTick(() => {
                         this.scoreboard = dataSet;
+                        that.initBar();
                     });
                     this.finished = true;
                 }
@@ -646,6 +677,7 @@ export default class RankView extends Mixins(mixins) {
                     }
                     str = str.replace(/\n/g, "<br>");
                     that.errormsg = str;
+                    that.initBar();
                 }
             }
             else {
@@ -669,6 +701,7 @@ export default class RankView extends Mixins(mixins) {
                             data.title = "未设置标题";
                         }
                         that.title = data.title;
+                        that.initBar();
                     })
                     .catch(({ data }) => {
                         that.state = false;
@@ -682,6 +715,7 @@ export default class RankView extends Mixins(mixins) {
                         else {
                             that.errormsg = ("Contest " + cid + ":\n" + data.statement).replace(/\n/g, "<br>");
                         }
+                        that.initBar();
                     });
             }
         }
@@ -780,6 +814,15 @@ export default class RankView extends Mixins(mixins) {
 
     .list-complete-leave-active {
         position: absolute;
+    }
+
+    .following.bar.top.title {
+        top: 40px;
+        transition: top 0.8s;
+    }
+
+    .basic.contest_name {
+        transition: all 0.8s;
     }
 
 </style>
