@@ -101,11 +101,9 @@ module.exports = {
                 rules: [
                     {
                         test: /\.web\.worker\.ts$/,
-                        use: {
-                            loader: "worker-loader",
-                            options: {
-                                publicPath: "/"
-                            }
+                        loader: "worker-loader",
+                        options: {
+                            publicPath: "/"
                         }
                     },
                     {
