@@ -1,6 +1,6 @@
 {
   "name": "CUP-Online-Judge-NG-Frontend",
-  "version": "1.30.7",
+  "version": "1.30.8",
   "private": false,
   "scripts": {
     "serve": "npx --max_old_space_size=32000 vue-cli-service serve",
@@ -152,7 +152,7 @@
     "vue-template-compiler": "^2.6.12",
     "webpack-bundle-analyzer": "^3.9.0",
     "webpack-parallel-uglify-plugin": "^1.1.2",
-    "worker-loader": "^3.0.5"
+    "worker-loader": "^2.0.0"
   },
   "eslintConfig": {
     "root": true,
