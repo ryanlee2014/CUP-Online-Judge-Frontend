@@ -520,7 +520,8 @@ export default class Submit extends Mixins(mixins, ContestShowSimMixin) {
             share: this.$store.getters.share,
             type: type,
             fingerprintRaw: that.fingerprintRaw,
-            fingerprint: that.fingerprint
+            fingerprint: that.fingerprint,
+            userAgent: window.navigator.userAgent
         };
         this.state = 0;
         this.$socket.emit("submit", {
