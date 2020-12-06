@@ -15,6 +15,16 @@
                     </button>
                 </div>
             </div>
+            <div class="row" v-if="solutionIdList.length > 1">
+                <div class="ui label"  :key="solutionId" v-for="solutionId in solutionIdList">
+                    <a @click="selectSolutionId(solutionId)">
+                        {{solutionId}}
+                    </a>
+                </div>
+            </div>
+            <div class="row">
+                <monaco-editor :read-only="true" v-if="solution_id != '0'" v-model="source"></monaco-editor>
+            </div>
             <div class="row">
                 <h2 class="ui header">
                     题解正文
@@ -41,17 +51,34 @@
 </template>
 
 <script lang="ts">
-import { Mixins } from "vue-property-decorator";
+import { Mixins, Watch } from "vue-property-decorator";
 import mixins from "../../mixin/init";
 import Component from "vue-class-component";
 import CaptchaMixin from "@/mixin/CaptchaMixin";
-@Component
+import MonacoEditor from "@/components/submit/codeEditor/monacoEditor.vue";
+
+@Component({
+    components: { MonacoEditor }
+})
 export default class TutorialAdd extends Mixins(mixins, CaptchaMixin) {
     content = "";
     solution_id = 0;
     captcha = "";
     from = "local";
     id!: any;
+    source = "";
+    language = 0;
+    solutionIdList = [];
+
+    @Watch("solution_id")
+    onSolutionIdChanged (solutionId: string | number) {
+        this.axios.get(`/api/source/local/${solutionId}?raw=1`)
+            .then(({ data }) => {
+                this.language = data.data.code.language;
+                this.source = data.data.code.source;
+            });
+    }
+
     created () {
         this.id = this.$route.params.problem_id;
     }
@@ -69,8 +96,13 @@ export default class TutorialAdd extends Mixins(mixins, CaptchaMixin) {
                 }
                 else {
                     that.solution_id = data.result[0].solution_id;
+                    that.solutionIdList = data.result.map((e: any) => e.solution_id);
                 }
             });
+    }
+
+    selectSolutionId (solutionId: number) {
+        this.solution_id = solutionId;
     }
 
     create_post () {
