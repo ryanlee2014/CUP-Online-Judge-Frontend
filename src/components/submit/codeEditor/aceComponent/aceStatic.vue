@@ -58,7 +58,7 @@ export default class AceStatic extends Vue {
                         firstLineNumber: Math.max(this.prependLength, 0) + 1,
                         showGutter: val.getAttribute("ace-gutter"),
                         trim: true
-                    }, function () { resolve(); });
+                    }, function () { resolve(null); });
                 });
             }
         });

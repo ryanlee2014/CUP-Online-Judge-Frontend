@@ -499,7 +499,7 @@ const router = new Router({
                         isContestAssistant(to.params.contest_id)
                             .then(result => {
                                 if (result) {
-                                    resolve();
+                                    resolve(result);
                                 }
                                 else {
                                     reject(new Error("No privilege"));
