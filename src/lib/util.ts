@@ -127,12 +127,22 @@ class Util {
         }
     }
 
+    splitIP(ip: string | undefined) {
+        if (typeof ip === "string") {
+            return ip.split(".").map(e => parseInt(e))
+        }
+        else {
+            return [0,0,0,0];
+        }
+    }
+
     detectIP(tmp: IIPPayload, offline: boolean = true) {
         let ip;
         if (tmp.ip && !tmp.intranet_ip) {
             tmp.intranet_ip = tmp.ip;
         }
         if (tmp.intranet_ip) {
+            const ipClip = this.splitIP(tmp.intranet_ip);
             if (tmp.intranet_ip.trim().match(/202\.204\.193\.[0-9]{1,3}/)) {
                 let temp = tmp.intranet_ip;
                 tmp.intranet_ip = tmp.ip || "";
@@ -140,7 +150,20 @@ class Util {
                     tmp.place = "润杰有线";
                 } else if (tmp.intranet_ip === "10.200.25.101" && tmp.intranet_ip.match(/10\.200\.25\.1[0-9]{2}/) || tmp.intranet_ip === "10.200.25.200") {
                     tmp.place = "403机房";
-                } else if (tmp.intranet_ip.match(/10\.200\.26\./)) {
+                } else if (ipClip[0] === 10 && ipClip[1] === 200 && ipClip[2] === 32 && (ipClip[3] >= 1 && ipClip[3] <= 158)) {
+                    tmp.place = "润杰5层";
+                } else if (ipClip[0] === 10 && ipClip[1] === 200 && ipClip[2] === 33 && (ipClip[3] >= 1 && ipClip[3] <= 150)) {
+                    tmp.place = "润杰6层";
+                } else if (ipClip[0] === 10 && ipClip[1] === 200 && ipClip[2] === 32 && ipClip[3] === 75) {
+                    tmp.place = "润杰5层教师机";
+                } else if (ipClip[0] === 10 && ipClip[1] === 200 && ipClip[2] === 33 && ipClip[3] === 75) {
+                    tmp.place = "润杰6层教师机";
+                } else if (ipClip[0] === 10 && ipClip[1] === 200 && ipClip[2] === 25 && (ipClip[3] >= 1 && ipClip[3] <= 99)) {
+                    tmp.place = "402学生机";
+                } else if (ipClip[0] === 10 && ipClip[1] === 200 && ipClip[2] === 25 && ipClip[3] === 202) {
+                    tmp.place = "402教师机";
+                }
+                else if (tmp.intranet_ip.match(/10\.200\.26\./)) {
                     let ip = tmp.intranet_ip.substring(tmp.intranet_ip.lastIndexOf(".") + 1);
                     if (parseInt(ip) <= 100) {
                         tmp.place = "404机房";
@@ -232,6 +255,18 @@ class Util {
                     } else {
                         tmp.place = "机房";
                     }
+                } else if (ipClip[0] === 10 && ipClip[1] === 200 && ipClip[2] === 32 && (ipClip[3] >= 1 && ipClip[3] <= 158)) {
+                    tmp.place = "润杰5层";
+                } else if (ipClip[0] === 10 && ipClip[1] === 200 && ipClip[2] === 33 && (ipClip[3] >= 1 && ipClip[3] <= 150)) {
+                    tmp.place = "润杰6层";
+                } else if (ipClip[0] === 10 && ipClip[1] === 200 && ipClip[2] === 32 && ipClip[3] === 75) {
+                    tmp.place = "润杰5层教师机";
+                } else if (ipClip[0] === 10 && ipClip[1] === 200 && ipClip[2] === 33 && ipClip[3] === 75) {
+                    tmp.place = "润杰6层教师机";
+                } else if (ipClip[0] === 10 && ipClip[1] === 200 && ipClip[2] === 25 && (ipClip[3] >= 1 && ipClip[3] <= 99)) {
+                    tmp.place = "402学生机";
+                } else if (ipClip[0] === 10 && ipClip[1] === 200 && ipClip[2] === 25 && ipClip[3] === 202) {
+                    tmp.place = "402教师机";
                 } else if (tmp.intranet_ip.match(/10\.1[1-2]{1}0\.[0-9]{1,3}\.[0-9]{1,3}/)) {
                     tmp.place = "Wi-Fi";
                 } else if (tmp.intranet_ip.match(/10\.116\.[0-9]{1,3}\.[0-9]{1,3}/)) {

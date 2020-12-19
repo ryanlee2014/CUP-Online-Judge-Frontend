@@ -39,7 +39,9 @@ jobs:
           git clone https://github.com/ryanlee2014/CUP-Online-Judge-Frontend-Local.git local_build
 
       - name: Move file to repository
-        run: cp -r dist/* local_build/
+        run: |
+          rm -rf local_build/*
+          cp -r dist/* local_build/
 
       - name: Commit file and push
         run: |
