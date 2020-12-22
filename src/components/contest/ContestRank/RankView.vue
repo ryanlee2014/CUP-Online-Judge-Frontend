@@ -491,7 +491,6 @@ export default class RankView extends Mixins(mixins) {
             XLSContentHTML += "<tr><td colspan='8'>若硬件指纹唯一而环境指纹不唯一，代表同型号机器在不同IP地址提交</td></tr>";
             XLSContentHTML += "<tr><td colspan='8'>若硬件指纹不唯一，代表使用了多台设备进行提交</td></tr>";
             XLSContentHTML += "</table></html>";
-            const wopts = { bookType: "xlsx", bookSST: false, type: "binary" };// 这里的数据是用来定义导出的格式类型
 
             // downloadExl(doc);
             const blob = new Blob([XLSContentHTML], { type: "application/vnd.ms-excel;charset=UTF-8;" });

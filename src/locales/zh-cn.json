@@ -307,5 +307,10 @@
   "web application update": "页面程序升级",
   "penalty": "罚时",
   "penalty time": "P时间",
-  "expire": "过期"
+  "expire": "过期",
+  "contest account generate": "竞赛账号批量创建",
+  "account prefix": "账号前缀",
+  "count": "数量",
+  "contest account nick": "竞赛账号昵称",
+  "refresh page": "刷新页面"
 }

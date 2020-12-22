@@ -304,5 +304,10 @@
   "update": "アップデート",
   "web application update": "ページアップデート",
   "penalty": "ペナルティタイム",
-  "expire": "期限切れ"
+  "expire": "期限切れ",
+  "contest account generate": "アカウント作成",
+  "account prefix": "Account Prefix",
+  "count": "数",
+  "contest account nick": "コンテストアカウントニックネーム",
+  "refresh page": "リフレッシュ"
 }

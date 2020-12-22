@@ -478,6 +478,15 @@ const router = new Router({
             }
         },
         {
+            path: "/admin/contest/account_generate",
+            name: "Contest account generate",
+            component: () => import("./views/admin/contest/generate.vue"),
+            meta: {
+                auth: true,
+                admin: true
+            }
+        },
+        {
             path: "/admin/export/problem",
             name: "Admin export problem list",
             component: () => import("./views/admin/export/ProblemList.vue"),

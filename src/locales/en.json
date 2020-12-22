@@ -304,5 +304,10 @@
   "assistant": "Assistant",
   "web application update": "Web Application Update",
   "penalty": "Penalty",
-  "expire": "Expire"
+  "expire": "Expire",
+  "contest account generate": "Generate Contest Account",
+  "account prefix": "Account Prefix",
+  "count": "Count",
+  "contest account nick": "Contest Account Nick",
+  "refresh page": "Refresh Page"
 }
