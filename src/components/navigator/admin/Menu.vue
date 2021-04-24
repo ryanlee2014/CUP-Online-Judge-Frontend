@@ -78,6 +78,10 @@
                         <i class="user plus icon"></i>
                         {{$t("invite code manage")}}
                     </router-link>
+                    <router-link to="/admin/user/award" class="item" exact-active-class="active">
+                        <i class="user plus icon"></i>
+                        {{$t("award manage")}}
+                    </router-link>
                 </div>
             </div>
             <div class="ui dropdown item">

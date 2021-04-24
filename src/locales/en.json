@@ -309,5 +309,10 @@
   "account prefix": "Account Prefix",
   "count": "Count",
   "contest account nick": "Contest Account Nick",
-  "refresh page": "Refresh Page"
+  "refresh page": "Refresh Page",
+  "award manage": "Award Management",
+  "award_id": "Award ID",
+  "year": "Year",
+  "award": "Award",
+  "operate": "Operate"
 }

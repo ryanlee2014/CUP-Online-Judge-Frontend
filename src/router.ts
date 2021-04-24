@@ -546,6 +546,33 @@ const router = new Router({
             }
         },
         {
+            path: "/admin/user/award",
+            name: "Award management",
+            component: () => import("./views/admin/award/list.vue"),
+            meta: {
+                auth: true,
+                admin: true
+            }
+        },
+        {
+            path: "/admin/user/award/add",
+            name: "Award add management",
+            component: () => import("./views/admin/award/add.vue"),
+            meta: {
+                auth: true,
+                admin: true
+            }
+        },
+        {
+            path: "/admin/user/award/edit/:award_id",
+            name: "Award edit management",
+            component: () => import("./views/admin/award/edit.vue"),
+            meta: {
+                auth: true,
+                admin: true
+            }
+        },
+        {
             path: "/admin/user/password",
             name: "Modify User Password",
             component: () => import("./views/admin/account/password.vue"),

@@ -312,5 +312,10 @@
   "account prefix": "账号前缀",
   "count": "数量",
   "contest account nick": "竞赛账号昵称",
-  "refresh page": "刷新页面"
+  "refresh page": "刷新页面",
+  "award manage": "获奖管理",
+  "award_id": "奖项号",
+  "year": "年份",
+  "award": "获奖",
+  "operate": "操作"
 }
