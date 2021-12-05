@@ -24,7 +24,7 @@
     "animejs": "^3.2.1",
     "auto-textarea": "^1.4.0",
     "await-lock": "^2.1.0",
-    "axios": "^0.21.0",
+    "axios": "^0.21.2",
     "bluebird": "^3.7.2",
     "brace": "^0.11.1",
     "browser-update": "^3.3.25",
