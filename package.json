@@ -64,7 +64,7 @@
     "markdown-it-task-lists": "^2.1.1",
     "markdown-it-toc": "^1.1.0",
     "md5": "^2.3.0",
-    "mermaid": "^8.8.4",
+    "mermaid": "^8.13.8",
     "moment": "^2.29.1",
     "monaco-editor": "^0.20.0",
     "monaco-languageclient": "^0.13.0",
