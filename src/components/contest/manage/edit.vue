@@ -40,7 +40,9 @@
                     </div>
                 </div>
                 <div class="two fields">
-                    <div class="field"></div>
+                    <div class="field">
+                        <button v-if="contest_id" class="ui primary button" @click="exportSolution">{{$t("export solution")}}</button>
+                    </div>
                     <div class="field">
                         <div class="four fields">
                             <div class="field">
@@ -205,7 +207,7 @@
 
 <script lang="ts">
 import Type from "../../../type/index.json";
-import dayjs from "dayjs";
+import { saveAs } from "file-saver";
 import _ from "lodash";
 import jquery from "jquery";
 import { Prop, Component, Watch } from "vue-property-decorator";
@@ -288,6 +290,27 @@ export default class BaseManage extends Vue {
             ++cnt;
         }
         this.languageSelected = languageSet.join(",");
+    }
+
+    exportSolution () {
+        const contestId = this.contest_id;
+        this.axios({
+            url: `/api/admin/solution/download/contest/${contestId}`,
+            method: "GET",
+            responseType: "blob"
+        }).then((response) => {
+            const headerLine = response.headers["Content-Disposition"] || response.headers["content-disposition"];
+            let filename: string;
+            if (headerLine === null || headerLine === undefined) {
+                filename = `Contest ${contestId}.txt`;
+            }
+            else {
+                const startFileNameIndex = headerLine.indexOf("\"") + 1;
+                const endFileNameIndex = headerLine.lastIndexOf("\"");
+                filename = headerLine.substring(startFileNameIndex, endFileNameIndex);
+            }
+            saveAs(response.data, filename);
+        });
     }
 
     emitData () {

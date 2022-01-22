@@ -87,6 +87,19 @@
             <div class="ui dropdown item">
                 <div class="text">
                     <i class="laptop icon"></i>
+                    {{$t("export")}}
+                </div>
+                <i class="dropdown icon"></i>
+                <div class="menu">
+                    <router-link to="/admin/export/solution" class="item" exact-active-class="active">
+                        <i class="check double icon"></i>
+                        {{$t("export solution")}}
+                    </router-link>
+                </div>
+            </div>
+            <div class="ui dropdown item">
+                <div class="text">
+                    <i class="laptop icon"></i>
                     {{$t("global setting")}}
                 </div>
                 <i class="dropdown icon"></i>
