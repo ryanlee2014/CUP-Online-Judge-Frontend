@@ -317,5 +317,6 @@
   "award_id": "奖项号",
   "year": "年份",
   "award": "获奖",
-  "operate": "操作"
+  "operate": "操作",
+  "export solution": "导出代码"
 }

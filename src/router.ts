@@ -564,6 +564,15 @@ const router = new Router({
             }
         },
         {
+            path: "/admin/export/solution",
+            name: "Export solution management",
+            component: () => import("./views/admin/export/solution.vue"),
+            meta: {
+                auth: true,
+                admin: true
+            }
+        },
+        {
             path: "/admin/user/award/edit/:award_id",
             name: "Award edit management",
             component: () => import("./views/admin/award/edit.vue"),

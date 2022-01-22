@@ -15,7 +15,7 @@
                     <label>{{$t("value")}}</label>
                     <div class="one fields">
                         <div class="field">
-                            <input name="value" placeholder="value" type="text" v-model="value">
+                            <textarea v-model="value"></textarea>
                         </div>
                     </div>
                 </div>
