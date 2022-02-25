@@ -38,7 +38,8 @@
   "creative common": "知识共享许可协议",
   "creator": "作者",
   "current online": "当前在线",
-  "discuss": "讨论",
+  "download": "下载",
+  "discuss": "讨论版",
   "download browser": "下载最适合使用的浏览器",
   "download generator": "下载生成题目的工具",
   "download tool": "下载生成问题的工具",
@@ -200,7 +201,7 @@
   "edit contest": "编辑竞赛",
   "cupacm docs": "文档库",
   "export": "导出列表",
-  "export problem": "标签导出题目列表",
+  "tag export problem": "标签导出题目列表",
   "global setting": "全局设置",
   "version control": "系统版本信息",
   "login": "登录",
@@ -318,5 +319,6 @@
   "year": "年份",
   "award": "获奖",
   "operate": "操作",
-  "export solution": "导出代码"
+  "export solution": "导出代码",
+  "export problem": "导出问题"
 }

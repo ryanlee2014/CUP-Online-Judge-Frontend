@@ -20,9 +20,9 @@
                         <i class="add icon"></i>
                         {{$t("addproblem")}}
                     </router-link>
-                    <router-link class="item" exact-active-class="active" to="/admin/export/problem">
+                    <router-link class="item" exact-active-class="active" to="/admin/export/tag">
                         <i class="check double icon"></i>
-                        {{$t("export problem")}}
+                        {{$t("tag export problem")}}
                     </router-link>
                 </div>
             </div>
@@ -94,6 +94,10 @@
                     <router-link to="/admin/export/solution" class="item" exact-active-class="active">
                         <i class="check double icon"></i>
                         {{$t("export solution")}}
+                    </router-link>
+                    <router-link to="/admin/export/problem" class="item" exact-active-class="active">
+                        <i class="check double icon"></i>
+                        {{$t("export problem")}}
                     </router-link>
                 </div>
             </div>
