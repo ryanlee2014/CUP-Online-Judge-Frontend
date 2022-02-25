@@ -487,9 +487,18 @@ const router = new Router({
             }
         },
         {
-            path: "/admin/export/problem",
+            path: "/admin/export/tag",
             name: "Admin export problem list",
             component: () => import("./views/admin/export/ProblemList.vue"),
+            meta: {
+                auth: true,
+                admin: true
+            }
+        },
+        {
+            path: "/admin/export/problem",
+            name: "Admin export problem",
+            component: () => import("./views/admin/export/Problem.vue"),
             meta: {
                 auth: true,
                 admin: true
