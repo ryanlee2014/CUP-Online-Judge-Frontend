@@ -19,12 +19,10 @@
                                     <i class="newspaper outline icon"></i>
                                     {{$t("about icpc")}}
                                 </router-link>
-                                <!--
-                                <router-link class="ui inverted not theme large button download basic" to="/discuss/thread/20">
+                                <router-link class="ui inverted not theme large button download basic" to="/discuss/thread/23">
                                     <i class="briefcase icon"></i>
-                                    校招内推
+                                    {{$t("internship referral")}}
                                 </router-link>
-                                -->
                                 <router-link class="ui inverted not theme large button download basic" to="/about/fame">
                                     <i class="chess queen icon"></i>
                                     {{$t("hall of fame")}}

@@ -1,6 +1,6 @@
 {
   "name": "CUP-Online-Judge-NG-Frontend",
-  "version": "1.34.0",
+  "version": "1.34.1",
   "private": false,
   "scripts": {
     "serve": "npx --max_old_space_size=32000 vue-cli-service serve",
@@ -36,7 +36,7 @@
     "dragscroll": "0.0.8",
     "file-saver": "^2.0.5",
     "fingerprintjs2": "^2.1.2",
-    "fomantic-ui": "^2.8.7",
+    "fomantic-ui": "^2.8.8",
     "github-markdown-css": "^4.0.0",
     "highlight.js": "^10.4.1",
     "highlight.js-async-webpack": "^1.0.4",
