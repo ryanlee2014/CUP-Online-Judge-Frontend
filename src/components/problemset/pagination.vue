@@ -47,12 +47,14 @@ export default class Pagination extends Vue {
 
     get pageList () {
         const { current_page, page_cnt, total, total_menu } = this;
-        const list = Array.from(Array(Math.min(Math.ceil(total / page_cnt), total_menu)).keys()).map(function (n) {
+        const totalPage = Math.ceil(total / page_cnt);
+        const menuLength = Math.min(totalPage, total_menu);
+        const list = Array.from(Array(menuLength).keys()).map(function (n) {
             if (current_page < total_menu / 2) {
                 return Math.trunc(n + 1);
             }
-            else if (current_page + total_menu / 2 + 1 > Math.ceil(total / page_cnt)) {
-                return Math.trunc(Math.ceil(total / page_cnt) - total_menu + 1 + n);
+            else if (current_page + total_menu / 2 + 1 > totalPage) {
+                return Math.trunc(Math.max(totalPage - menuLength, 0) + 1 + n);
             }
             else {
                 return Math.trunc(current_page + n - total_menu / 2 + 1);
