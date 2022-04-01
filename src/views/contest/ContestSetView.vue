@@ -19,6 +19,10 @@
                     <p class="server_time"></p>
                 </div>
             </div>
+            <div class="ui action input" style="margin-bottom: 1em">
+                <input type="text" :placeholder="`${this.$t('search')} ${this.$t('title')}`" v-model="search">
+                <button class="ui button" @click="searchContest">{{$t("search")}}</button>
+            </div>
             <div class="ui grid">
                 <div class="row">
                     <div class="thirteen wide column">
@@ -130,6 +134,7 @@ export default class ContestSetView extends Mixins(mixins, TimerMixin) {
     page_cnt = 50;
     current_page = 0;
     total_number = 0;
+    search = "";
     prevGetPageCancelToken: any = null;
     created () {
         this.admin = this.$store.getters.admin;
@@ -164,6 +169,10 @@ export default class ContestSetView extends Mixins(mixins, TimerMixin) {
         this.setQuery({ page: newVal });
     }
 
+    searchContest () {
+        this.setQuery({ search: this.search });
+    }
+
     @Watch("$route.query")
     onRouteQueryChanged (newVal: any) {
         this.getPage(newVal);
@@ -191,7 +200,7 @@ export default class ContestSetView extends Mixins(mixins, TimerMixin) {
 
     getPage (mergeOptions?: any) {
         this.cancelPrevGetPage();
-        return this.axios.get("/api/contest/list", {
+        return this.axios.get("/api/contest/v2/list", {
             params: Object.assign(this.getParams(), mergeOptions),
             cancelToken: (this.prevGetPageCancelToken = this.axios.CancelToken.source()).token
         })
@@ -199,7 +208,8 @@ export default class ContestSetView extends Mixins(mixins, TimerMixin) {
                 if (response && response.data) {
                     const data = response.data;
                     this.prevGetPageCancelToken = null;
-                    this.contest_list = data.data;
+                    this.contest_list = data.data.contestInfoList.data;
+                    this.total_number = data.data.total;
                 }
             });
     }
