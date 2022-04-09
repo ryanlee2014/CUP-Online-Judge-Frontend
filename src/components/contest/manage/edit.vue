@@ -136,16 +136,28 @@
                 </div>
             </div>
             <div class="field">
-                <div class="field">
-                    <label>{{$t("select language")}}</label>
-                    <div class="ui fluid multiple search selection dropdown" id="selectedLanguage">
-                        <input @change="languageSelected = $event.target.value" name="country" type="hidden">
-                        <i class="dropdown icon"></i>
-                        <div class="default text">{{$t("select language")}}</div>
-                        <div class="menu">
-                            <div :data-value="key" :key="key" class="item" v-for="(row,key) in languageSet">
-                                {{row}}
+                <div class="two fields">
+                    <div class="field">
+                        <label>{{ $t("select language") }}</label>
+                        <div class="ui fluid multiple search selection dropdown" id="selectedLanguage">
+                            <input @change="languageSelected = $event.target.value" name="country" type="hidden">
+                            <i class="dropdown icon"></i>
+                            <div class="default text">{{ $t("select language") }}</div>
+                            <div class="menu">
+                                <div :data-value="key" :key="key" class="item" v-for="(row,key) in languageSet">
+                                    {{ row }}
+                                </div>
                             </div>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label>{{ $t("select language set") }}</label>
+                        <div class="ui buttons">
+                            <button class="ui button" @click="languageSetSelection('c')">C</button>
+                            <button class="ui button" @click="languageSetSelection('cpp')">C++</button>
+                            <button class="ui button" @click="languageSetSelection('c_with_cpp')">C/C++</button>
+                            <button class="ui button"  @click="languageSetSelection('all')">All</button>
+                            <button class="ui button"  @click="languageSetSelection('clear')">Clear</button>
                         </div>
                     </div>
                 </div>
@@ -258,6 +270,10 @@ export default class BaseManage extends Vue {
     hostname = "";
     userListText = "";
     userList: any[] = [];
+    CIndex = Type.language_name.c_lang.map(e => Type.language_name.local.indexOf(e));
+    CppIndex = Type.language_name.cpp_lang.map(e => Type.language_name.local.indexOf(e));
+    CCppIndex = [...this.CIndex, ...this.CppIndex];
+    AllIndex = Array.from(Type.language_name.local.keys());
 
     debug (name: string, value?: any) {
         console.log(name);
@@ -277,6 +293,34 @@ export default class BaseManage extends Vue {
             target ^= (2 ** el);
         });
         return target;
+    }
+
+    languageSetSelection (langSet: string) {
+        switch (langSet) {
+        case "c":
+            this.languageSelected = this.CIndex.join(",");
+            break;
+        case "cpp":
+            this.languageSelected = this.CppIndex.join(",");
+            break;
+        case "c_with_cpp":
+            this.languageSelected = this.CCppIndex.join(",");
+            break;
+        case "all":
+            this.languageSelected = this.AllIndex.join(",");
+            break;
+        case "clear":
+            this.languageSelected = "";
+            break;
+        default:
+            break;
+        }
+        if (this.languageSelected === "") {
+            $("#selectedLanguage").dropdown("clear");
+        }
+        else {
+            $("#selectedLanguage").dropdown("set selected", this.languageSelected.split(","));
+        }
     }
 
     LangmaskToLanguageSelected (langmask: number) {
