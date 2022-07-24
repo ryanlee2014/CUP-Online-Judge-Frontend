@@ -244,12 +244,12 @@
                     <monaco-editor v-model="append[appendSelected]" :selected_language="appendSelected"/>
                 </div>
             </div>
-            <div class="row" v-if="from === 'default'">
+            <div class="row" v-if="from === 'local'">
                 <h2 class="ui header">
                     {{$t("hint")}}
                 </h2>
             </div>
-            <div class="row" v-if="from === 'default'">
+            <div class="row" v-if="from === 'local'">
                 <mavon-editor ref="hint" :markInstance="hintInstance" :test="'1'" v-model="hint"></mavon-editor>
             </div>
             <a @click="submit" class="ui button">{{$t("submit")}}</a>
@@ -310,7 +310,7 @@ export default class ProblemEdit extends Mixins(mixins) implements IKeyValue {
         hintInstance = markdownIt.newInstance();
         hint: any = "";
         source = "";
-        from = "default";
+        from = "local";
         label = [];
         all_label = [];
         prepend: ICodeSet = {
@@ -350,7 +350,7 @@ export default class ProblemEdit extends Mixins(mixins) implements IKeyValue {
         }
 
         submit () {
-            const from = "default";
+            const from = "local";
             this.PrependAppendLanguage("prepend", 0, [21, 13, 28]);
             this.PrependAppendLanguage("prepend", 1, [19, 20, 14, 29]);
             this.PrependAppendLanguage("prepend", 3, [23, 24, 27]);
@@ -449,7 +449,7 @@ export default class ProblemEdit extends Mixins(mixins) implements IKeyValue {
                         sampleinput: d.sample_input,
                         sampleoutput: d.sample_output,
                         hint: d.hint,
-                        source: "default",
+                        source: "local",
                         label: d.label ? d.label.split(" ") : [],
                         all_label: [],
                         files: []
