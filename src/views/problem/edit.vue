@@ -425,7 +425,7 @@ export default class ProblemEdit extends Mixins(mixins) implements IKeyValue {
             let mx = -1;
             const that = this;
             _.forEach(data.data, (val, idx) => {
-                (this.$refs[map[key]] as any).markdownIt.image_add_with_check(val.name, val.data);
+                (this.$refs[map[key]] as any).markdownIt.image_add(val.name, val.data);
                 mx = Math.max(mx, parseInt(val.name));
             });
             (this.$refs[map[key]] as any).$children[0].num = mx + 1;
