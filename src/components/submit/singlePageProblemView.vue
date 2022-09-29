@@ -86,13 +86,13 @@
         <div class='ui hidden' v-html="input||''"></div>
         <h2 class='ui header hidden'>{{$t("output")}}</h2>
         <div class='ui hidden' v-html="output||''"></div>
-        <h2 class='ui header hidden'>{{$t("sampleinput")}}</h2>
+        <h2 class='ui header hidden'>{{$t("sampleinput")}} 1</h2>
         <div class="ui bottom attached segment hidden sample_input">
             <div class="ui top attached label"><a class="copy context" data-clipboard-target=".sample_input">Copy
                 Sample Input</a></div>
             <pre v-text='sampleinput'></pre>
         </div>
-        <h2 class='ui header'>{{$t("sampleoutput")}}</h2>
+        <h2 class='ui header'>{{$t("sampleoutput")}} 1</h2>
         <div class="ui bottom attached segment">
             <div class="ui top attached label"><a class="copy context" data-clipboard-target=".sample_output">Copy
                 Sample Output</a></div>

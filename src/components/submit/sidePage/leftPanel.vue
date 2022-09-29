@@ -38,7 +38,7 @@
             </div>
             <div class='title'>{{$t("output")}}<i class="dropdown icon"></i></div>
             <div class='content' id='problem_output' v-html="output||''"></div>
-            <div class='title'>{{$t("sampleinput")}}<i class="dropdown icon"></i>
+            <div class='title'>{{$t("sampleinput")}} 1<i class="dropdown icon"></i>
             </div>
             <div class='content'>
                 <div class="ui bottom attached segment">
@@ -49,7 +49,7 @@
                                v-text='sampleinput'></span></pre>
                 </div>
             </div>
-            <div class='title'>{{$t("sampleoutput")}}<i class="dropdown icon"></i></div>
+            <div class='title'>{{$t("sampleoutput")}} 1<i class="dropdown icon"></i></div>
             <div class='content'>
                 <div class="ui bottom attached segment">
                     <div class="ui top attached label"><a class="copy context"
