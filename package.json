@@ -136,7 +136,7 @@
     "html-webpack-plugin": "latest",
     "increase-memory-limit": "^1.0.7",
     "lint-staged": "^10.5.3",
-    "loader-utils": "^2.0.0",
+    "loader-utils": "^2.0.3",
     "monaco-editor-webpack-plugin": "^1.9.1",
     "nyc": "^15.1.0",
     "promise-worker": "^2.0.1",
