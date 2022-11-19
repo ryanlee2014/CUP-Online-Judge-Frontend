@@ -89,7 +89,7 @@
     "vue-socket.io": "3.0.10",
     "vuex": "^3.6.0",
     "wastyle": "^0.0.5",
-    "xlsx": "^0.16.9"
+    "xlsx": "^0.17.0"
   },
   "devDependencies": {
     "@cnamts/vue-cli-plugin-proxy": "^2.2.1",
