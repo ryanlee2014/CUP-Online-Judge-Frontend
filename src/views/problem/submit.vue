@@ -151,6 +151,7 @@ export default class Submit extends Mixins(mixins, ContestShowSimMixin) {
     finished= false;
     source_code_language: any = null;
     timeInterval: any = 0;
+    solutionId = 0;
     created () {
         this.normal_problem = !this.$route.params.contest_id && !this.$route.params.topic_id;
     }
@@ -209,6 +210,7 @@ export default class Submit extends Mixins(mixins, ContestShowSimMixin) {
         this.sockets.unsubscribe("result");
         this.sockets.unsubscribe("reject_submit");
         this.sockets.unsubscribe("remoteJudge");
+        this.sockets.unsubscribe("judge:solution_id");
     }
 
     convertHTML (html: string) {
@@ -676,7 +678,13 @@ export default class Submit extends Mixins(mixins, ContestShowSimMixin) {
     }
 
     registerSocketListener () {
+        this.sockets.subscribe("judge:solution_id", (data: any) => {
+            this.solutionId = data.solution_id;
+        });
         this.sockets.subscribe("result", (data: any) => {
+            if (`${data.solution_id}` !== `${this.solutionId}`) {
+                return;
+            }
             this.wsresult(data);
             this.wsfs_result(data);
         });

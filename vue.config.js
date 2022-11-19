@@ -6,8 +6,8 @@ const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPl
 const version = require("./package.json").version;
 const os = require("os");
 const webPath = `https://cdn.jsdelivr.net/gh/ryanlee2014/CUP-Online-Judge-CDN@v${version}/`;
-const remoteDev = false;
-const devURL = remoteDev ? "https://www.cupacm.com" : "https://hk.haoyuan.info";
+const remoteDev = true;
+const devURL = remoteDev ? "https://acm.cup.edu.cn" : "https://hk.haoyuan.info";
 module.exports = {
     chainWebpack: config => {
         config.module.rule("md")

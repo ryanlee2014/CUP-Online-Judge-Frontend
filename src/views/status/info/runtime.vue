@@ -115,7 +115,7 @@ export default class RuntimeInfo extends Mixins(mixins) {
                     break;
                 }
             }
-            const files: any = text.match(/[0-9A-Za-z]+\.out/g);
+            const files: any = text.match(/[0-9A-Za-z_]+\.out/g);
             const left_array = left;
             const right_array = right;
             left = "";
