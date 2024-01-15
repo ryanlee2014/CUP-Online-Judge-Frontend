@@ -42,6 +42,7 @@
                 <div class="two fields">
                     <div class="field">
                         <button v-if="contest_id" class="ui primary button" @click="exportSolution">{{$t("export solution")}}</button>
+                        <button v-if="contest_id" class="ui primary button" @click="exportLastAckSolution">{{$t("export last ack solution")}}</button>
                     </div>
                     <div class="field">
                         <div class="four fields">
@@ -347,6 +348,27 @@ export default class BaseManage extends Vue {
             let filename: string;
             if (headerLine === null || headerLine === undefined) {
                 filename = `Contest ${contestId}.txt`;
+            }
+            else {
+                const startFileNameIndex = headerLine.indexOf("\"") + 1;
+                const endFileNameIndex = headerLine.lastIndexOf("\"");
+                filename = headerLine.substring(startFileNameIndex, endFileNameIndex);
+            }
+            saveAs(response.data, filename);
+        });
+    }
+
+    exportLastAckSolution () {
+        const contestId = this.contest_id;
+        this.axios({
+            url: `/api/admin/solution/download/contest/${contestId}/lastAck`,
+            method: "GET",
+            responseType: "blob"
+        }).then((response) => {
+            const headerLine = response.headers["Content-Disposition"] || response.headers["content-disposition"];
+            let filename: string;
+            if (headerLine === null || headerLine === undefined) {
+                filename = `Contest ${contestId} LastAck.txt`;
             }
             else {
                 const startFileNameIndex = headerLine.indexOf("\"") + 1;
