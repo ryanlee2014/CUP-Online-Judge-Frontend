@@ -45,16 +45,19 @@ jobs:
           rm -rf local_build/*
           cp -r dist/* local_build/
 
-      - name: Commit file and push
+      - name: Commit files and push
         run: |
           cd local_build
           git config --local user.email "gxlhybh@gmail.com"
           git config --local user.name "Ryan Lee"
           git add --all
-          git commit -m "deploy `TZ=UTF-8 date +'%Y-%m-%d %H:%M:%S'`"
+          git commit -m "deploy `TZ=UTC-8 date +'%Y-%m-%d %H:%M:%S'`"
           git tag "v`cat VERSION`"
-          git push -f https://ryanlee2014:$GITHUB_TOKEN@github.com/ryanlee2014/CUP-Online-Judge-Frontend-Local.git master
-          git push --tags https://ryanlee2014:$GITHUB_TOKEN@github.com/ryanlee2014/CUP-Online-Judge-Frontend-Local.git
-
-        env:
-          GITHUB_TOKEN: ${{ secrets.ACTION_TOKEN }}
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.ACTION_TOKEN }}
+          repository: ryanlee2014/CUP-Online-Judge-Frontend-Local
+          force: true
+          directory: local_build
+          tags: true

@@ -67,7 +67,11 @@ jobs:
           git add --all
           git commit -m "deploy `TZ=UTC-8 date +'%Y-%m-%d %H:%M:%S'`"
           git tag "v`cat VERSION`"
-          git push -f https://ryanlee2014:$GITHUB_TOKEN@github.com/ryanlee2014/CUP-Online-Judge-CDN.git master
-          git push --tags https://ryanlee2014:$GITHUB_TOKEN@github.com/ryanlee2014/CUP-Online-Judge-CDN.git
-        env:
-          GITHUB_TOKEN: ${{ secrets.ACTION_TOKEN }}
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.ACTION_TOKEN }}
+          repository: ryanlee2014/CUP-Online-Judge-CDN
+          force: true
+          directory: cdn
+          tags: true
