@@ -11,7 +11,7 @@ const defaults = {
     containerFooterHtml: undefined,
 };
 
-export default (md, o) => {
+module.exports = (md, o) => {
     const options = Object.assign({}, defaults, o);
     const tocRegexp = options.markerPattern;
     let gstate;
@@ -162,3 +162,4 @@ export default (md, o) => {
     // Insert TOC
     md.inline.ruler.after('emphasis', 'toc', toc);
 };
+module.exports.default = module.exports;

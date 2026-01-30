@@ -22,7 +22,7 @@ interface IAwardDTO {
 })
 export default class AwardAdd extends Mixins(InitMixin, RouterBackMixin) {
     add (award: IAwardDTO) {
-        this.axios.post(`/api/admin/award/add`, award)
+        this.axios.post("/api/admin/award/add", award)
             .then(({ data }) => {
                 alert(this.$t("success"));
                 this.routerBack();

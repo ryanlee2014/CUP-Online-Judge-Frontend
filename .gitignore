@@ -1,6 +1,12 @@
 .DS_Store
 node_modules
-#/dist
+/dist
+/coverage
+/.nyc_output
+.eslintcache
+.cache
+.history
+/semantic/
 
 # local env files
 .env.local

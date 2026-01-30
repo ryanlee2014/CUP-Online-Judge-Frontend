@@ -6,7 +6,6 @@ import positiveFunc from "@/lib/markdownIt/container/positive";
 import messageFunc from "@/lib/markdownIt/container/message";
 const uslug = require("uslug");
 const uslugify = (s: any) => uslug(s);
-const emptyFunc = (src: string, env?: any) => "";
 
 interface MarkdownItExtend extends MarkdownIt {
     renderPlain(src: string, env?: any): string;
@@ -14,17 +13,16 @@ interface MarkdownItExtend extends MarkdownIt {
 }
 
 function Instance(key = "", problem_id = ""): any {
-    const md: MarkdownItExtend = Object.assign(MarkdownIt({
+    const md = MarkdownIt({
         html: true,
         breaks: true
-    }), {
-        renderPlain: emptyFunc,
-        renderRaw: emptyFunc
-    });
+    }) as MarkdownItExtend;
     const mh = require("markdown-it-highlightjs");
     const mk = require("@ryanlee2014/markdown-it-katex");
-    const mc = require("./markdown-it-table-contents").default;
-    const ma = require("markdown-it-anchor").default;
+    const mcModule = require("./markdown-it-table-contents");
+    const mc = mcModule.default || mcModule;
+    const maModule = require("markdown-it-anchor");
+    const ma = maModule.default || maModule;
     const mi = require("./markdown-it-images-preview");
     md.use(mk);
     md.use(mh);
