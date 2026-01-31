@@ -8,7 +8,9 @@ const os = require("os");
 const webPath = `https://cdn.jsdelivr.net/gh/ryanlee2014/CUP-Online-Judge-CDN@v${version}/`;
 const remoteDev = true;
 const devURL = remoteDev ? "https://acm.cup.edu.cn" : "https://hk.haoyuan.info";
+const shouldAnalyze = process.env.ANALYZE === "true";
 module.exports = {
+    lintOnSave: process.env.NODE_ENV !== "production",
     chainWebpack: config => {
         config.module.rule("md")
             .test(/\.md/)
@@ -134,9 +136,11 @@ module.exports = {
                 test: /\.(js|css|json|txt|html|ico|svg|png|jpg|eot|woff|woff2|ttf)(\?.*)?$/i,
                 minRatio: 0.99
             }));
-            config.plugins.push(new BundleAnalyzerPlugin({
-                analyzerMode: "static"
-            }));
+            if (shouldAnalyze) {
+                config.plugins.push(new BundleAnalyzerPlugin({
+                    analyzerMode: "static"
+                }));
+            }
         }
         return configs;
     },

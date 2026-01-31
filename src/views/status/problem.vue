@@ -394,7 +394,7 @@ export default class ProblemStatus extends Mixins(mixins) {
         _.forEach(ncolor, function (val) {
             colors.push(val);
         });
-        const config = {
+        const config: any = {
             type: "pie",
             data: {
                 datasets: [{
@@ -413,12 +413,13 @@ export default class ProblemStatus extends Mixins(mixins) {
             }
         };
         const lang: any = {};
-        let labels: any = {};
+        const labelMap: Record<string, boolean> = {};
+        let labels: string[] = [];
         _.forEach(this.submitStatus.time_range, function (val) {
-            labels[val.diff] = true;
+            labelMap[val.diff] = true;
             lang[val.language] = {};
         });
-        labels = _.map(labels, function (val, index) {
+        labels = _.map(labelMap, function (val, index: string) {
             const arr = index.split("-");
             let str = arr[0] + "ms";
             if (arr.length > 1) { str += " - " + arr[1] + "ms"; }
@@ -458,7 +459,7 @@ export default class ProblemStatus extends Mixins(mixins) {
         let _colors = _.map(colors, function (val) {
             return val;
         });
-        const config2 = {
+        const config2: any = {
             type: "bar",
             labels: labels,
             datasets: _.map(lang, (val, index) => {
@@ -469,16 +470,17 @@ export default class ProblemStatus extends Mixins(mixins) {
                 };
             })
         };
-        let mlabels: any = {};
+        const mlabelMap: Record<string, boolean> = {};
+        let mlabels: string[] = [];
         const mlang: any = {};
         _colors = _.map(colors, (val) => {
             return val;
         });
         _.forEach(this.submitStatus.memory_range, (val) => {
-            mlabels[val.diff] = true;
+            mlabelMap[val.diff] = true;
             mlang[val.language] = {};
         });
-        mlabels = _.map(mlabels, (val, index) => {
+        mlabels = _.map(mlabelMap, (val, index: string) => {
             if (index.indexOf("-") !== -1) {
                 const arr = index.split("-");
                 arr[0] = (parseFloat(arr[0]) / 1024).toFixed(2);
@@ -531,7 +533,7 @@ export default class ProblemStatus extends Mixins(mixins) {
                 mlang[val.language][">" + str + "MB"] = val.total;
             }
         });
-        const config3 = {
+        const config3: any = {
             type: "bar",
             labels: mlabels,
             datasets: _.map(mlang, (val: any, index: any) => {

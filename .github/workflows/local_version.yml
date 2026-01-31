@@ -22,25 +22,36 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [12.x]
+        node-version: [18.x]
     permissions:
       contents: write
 
     steps:
       - uses: actions/checkout@v4
         name: Checkout code
+        with:
+          fetch-depth: 1
 
       - name: Use Node.js environment
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
           cache: npm
           cache-dependency-path: package-lock.json
+      - name: Cache build tool data
+        uses: actions/cache@v4
+        with:
+          path: |
+            node_modules/.cache
+            ~/.cache
+          key: ${{ runner.os }}-buildcache-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-buildcache-
 
       - name: Build local distribution
         run: |
           BUILD_START=$(date +%s)
-          npm ci --no-audit --no-fund
+          npm ci --no-audit --no-fund --prefer-offline --no-progress
           npm run modern:local
           BUILD_END=$(date +%s)
           echo "Build duration: $((BUILD_END - BUILD_START))s"
@@ -62,8 +73,15 @@ jobs:
           ACTION_TOKEN: ${{ secrets.ACTION_TOKEN }}
 
       - name: Checkout repository to store local distribution
-        run: |
-          git clone https://x-access-token:${{ secrets.ACTION_TOKEN }}@github.com/ryanlee2014/CUP-Online-Judge-Frontend-Local.git local_build
+        uses: actions/checkout@v4
+        with:
+          repository: ryanlee2014/CUP-Online-Judge-Frontend-Local
+          path: local_build
+          ref: master
+          token: ${{ secrets.ACTION_TOKEN }}
+          persist-credentials: false
+          fetch-depth: 1
+          fetch-tags: false
 
       - name: Move file to repository
         run: |

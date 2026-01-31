@@ -22,7 +22,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [12.x]
+        node-version: [18.x]
     permissions:
       contents: write
 
@@ -31,7 +31,7 @@ jobs:
         name: Checkout code
         with:
           persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal token
-          fetch-depth: 0 # otherwise, you will failed to push refs to dest repo
+          fetch-depth: 1
 
       - name: Build env
         run: |
@@ -43,17 +43,27 @@ jobs:
 
       - name: Use Node.js environment
         if: env.NEED_BUILD == 'true'
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
           cache: npm
           cache-dependency-path: package-lock.json
+      - name: Cache build tool data
+        if: env.NEED_BUILD == 'true'
+        uses: actions/cache@v4
+        with:
+          path: |
+            node_modules/.cache
+            ~/.cache
+          key: ${{ runner.os }}-buildcache-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-buildcache-
 
       - name: Build distribution if needed
         if: env.NEED_BUILD == 'true'
         run: |
           BUILD_START=$(date +%s)
-          npm ci --no-audit --no-fund
+          npm ci --no-audit --no-fund --prefer-offline --no-progress
           npm run modern
           BUILD_END=$(date +%s)
           echo "Build duration: $((BUILD_END - BUILD_START))s"
@@ -85,7 +95,8 @@ jobs:
           ref: master
           token: ${{ secrets.ACTION_TOKEN }}
           persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal token
-          fetch-depth: 0 # otherwise, you will failed to push refs to dest repo
+          fetch-depth: 1
+          fetch-tags: false
 
       - name: Move file to another repository
         if: env.NEED_BUILD == 'true'

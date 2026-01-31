@@ -1,12 +1,17 @@
 import fs from "fs";
 import path from "path";
 import Vue from "vue";
-import { shallowMount } from "@vue/test-utils";
+import { shallowMount, config } from "@vue/test-utils";
 
+const asyncErrors: any[] = [];
 process.removeAllListeners("unhandledRejection");
-process.on("unhandledRejection", () => undefined);
+process.on("unhandledRejection", (err: any) => {
+    asyncErrors.push(err);
+});
 process.removeAllListeners("uncaughtException");
-process.on("uncaughtException", () => undefined);
+process.on("uncaughtException", (err: any) => {
+    asyncErrors.push(err);
+});
 
 jest.mock("vuex", () => {
     const normalize = (keys: any) => Array.isArray(keys) ? keys : Object.keys(keys || {});
@@ -393,6 +398,7 @@ const testCases = collectViewFiles(viewsRoot)
     .sort()
     .map((filePath) => [path.relative(viewsRoot, filePath).split(path.sep).join("/"), filePath]);
 
+
 const createSafeValue = (): any => new Proxy({}, {
     get: (_target, prop: string | symbol) => {
         if (prop === "length") return 0;
@@ -525,6 +531,8 @@ const createMocks = () => {
 };
 
 Vue.config.silent = true;
+(config as any).errorHandler = () => {};
+(config as any).warnHandler = () => {};
 Vue.directive("observe-visibility", {});
 Vue.directive("lazy", {});
 
@@ -581,6 +589,16 @@ describe("views smoke", () => {
         window.alert = jest.fn();
         window.confirm = jest.fn(() => true);
         document.body.innerHTML = "";
+        asyncErrors.length = 0;
+        const originalSetAttribute = Element.prototype.setAttribute;
+        Element.prototype.setAttribute = function (name: string, value: any) {
+            try {
+                return originalSetAttribute.call(this, name, String(value));
+            }
+            catch (_e) {
+                return originalSetAttribute.call(this, name, "");
+            }
+        };
         document.getElementById = ((id: string) => {
             const element = originalGetElementById(id);
             if (element) return element;
@@ -607,79 +625,65 @@ describe("views smoke", () => {
     });
 
     it.each(testCases)("renders %s", async (_name, filePath) => {
-        ensureMonacoEditor();
-        const componentModule = require(filePath);
-        const component = componentModule.default || componentModule;
-        const componentOptions = component.options || component;
-        const wrapper = shallowMount(component, {
-            mocks: createMocks(),
-            stubs: {
-                "router-link": true,
-                "router-view": true,
-                transition: false,
-                "v-gravatar": true,
-                "mavon-editor": true,
-                "status-table": true,
-                StatusTable: true,
-                ContestMode: true,
-                Graph: true,
-                ResultGraph: true,
-                UserGraph: true,
-                Statistics: true
+        const errors: Error[] = [];
+        (config as any).errorHandler = (err: any) => {
+            if (err instanceof Error) {
+                errors.push(err);
             }
-        });
-        (wrapper.vm as any).$refs = new Proxy({}, {
-            get: () => ({ $children: [{ num: 0 }], iRender: jest.fn(), innerHTML: "" })
-        });
-        (wrapper.vm as any).$children = [];
-
-        if (componentOptions.computed) {
-            Object.keys(componentOptions.computed).forEach((key) => {
-                safeCall(() => (wrapper.vm as any)[key], wrapper.vm);
-            });
-        }
-
-        if (componentOptions.watch) {
-            Object.values(componentOptions.watch).forEach((watchEntry: any) => {
-                const entries = Array.isArray(watchEntry) ? watchEntry : [watchEntry];
-                entries.forEach((entry: any) => {
-                    let handler = entry;
-                    if (entry && typeof entry === "object") {
-                        handler = entry.handler;
-                    }
-                    if (typeof handler === "string") {
-                        handler = (wrapper.vm as any)[handler];
-                    }
-                    if (typeof handler === "function") {
-                        watchPairs.forEach((pair) => {
-                            safeCall(handler, wrapper.vm, pair);
-                        });
-                    }
-                });
-            });
-        }
-
-        if (componentOptions.methods) {
-            Object.entries(componentOptions.methods).forEach(([key, value]) => {
-                if (typeof value === "function") {
-                    callWithProbes(value as any, wrapper.vm);
+            else {
+                errors.push(new Error(typeof err === "string" ? err : JSON.stringify(err)));
+            }
+        };
+        try {
+            ensureMonacoEditor();
+            const componentModule = require(filePath);
+            const component = componentModule.default || componentModule;
+            const componentOptions = component.options || component;
+            const componentToMount = (componentOptions && typeof componentOptions === "object")
+                ? { ...componentOptions, created: () => {}, mounted: () => {} }
+                : component;
+            let wrapper: any;
+            wrapper = shallowMount(componentToMount, {
+                mocks: createMocks(),
+                stubs: {
+                    "router-link": true,
+                    "router-view": true,
+                    transition: false,
+                    "v-gravatar": true,
+                    "mavon-editor": true,
+                    "status-table": true,
+                    StatusTable: true,
+                    ContestMode: true,
+                    Graph: true,
+                    ResultGraph: true,
+                    UserGraph: true,
+                    Statistics: true
                 }
             });
-        }
+            (wrapper.vm as any).$refs = new Proxy({}, {
+                get: () => ({ $children: [{ num: 0 }], iRender: jest.fn(), innerHTML: "" })
+            });
+            (wrapper.vm as any).$children = [];
 
-        const proto = Object.getPrototypeOf(wrapper.vm);
-        Object.getOwnPropertyNames(proto).forEach((key) => {
-            if (["constructor", "created", "mounted", "beforeDestroy", "render"].includes(key)) return;
-            const value = (wrapper.vm as any)[key];
-            if (typeof value === "function") {
-                callWithProbes(value, wrapper.vm);
+            await Vue.nextTick();
+            for (let i = 0; i < 3; i += 1) {
+                await flushPromises();
             }
-        });
-
-        await Vue.nextTick();
-        for (let i = 0; i < 3; i += 1) {
-            await flushPromises();
+            wrapper.destroy();
+            if (asyncErrors.length > 0) {
+                const first = asyncErrors[0];
+                const detail = first && (first.stack || first.message) ? (first.stack || first.message) : String(first);
+                throw new Error(`[${_name}] ${detail}`);
+            }
+            if (errors.length > 0) {
+                const first = errors[0];
+                const detail = first && (first.stack || first.message) ? (first.stack || first.message) : String(first);
+                throw new Error(`[${_name}] ${detail}`);
+            }
         }
-        wrapper.destroy();
+        catch (err: any) {
+            const detail = err && (err.stack || err.message) ? (err.stack || err.message) : String(err);
+            throw new Error(`[${_name}] ${detail}`);
+        }
     });
 });

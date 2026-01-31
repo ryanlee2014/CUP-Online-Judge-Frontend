@@ -96,7 +96,7 @@ export function ErrorAlert (target: any, propertyName: string, propertyDescripto
         try {
             return method.apply(this, args);
         }
-        catch (e) {
+        catch (e: any) {
             alert(e.message);
         }
     };
