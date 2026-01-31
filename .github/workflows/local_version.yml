@@ -11,6 +11,10 @@ on:
       - '.github/**'
       - 'vue.config.js'
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
     if: github.repository == 'ryanlee2014/CUP-Online-Judge-Frontend'
@@ -23,22 +27,43 @@ jobs:
       contents: write
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         name: Checkout code
 
       - name: Use Node.js environment
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
+          cache: npm
+          cache-dependency-path: package-lock.json
 
       - name: Build local distribution
         run: |
-          npm i
+          BUILD_START=$(date +%s)
+          npm ci --no-audit --no-fund
           npm run modern:local
+          BUILD_END=$(date +%s)
+          echo "Build duration: $((BUILD_END - BUILD_START))s"
+
+      - name: Check dist output
+        run: |
+          if [ ! -d dist ] || [ -z "$(ls -A dist)" ]; then
+            echo "dist directory is empty; exiting"
+            exit 1
+          fi
+
+      - name: Check push token
+        run: |
+          if [ -z "${ACTION_TOKEN}" ]; then
+            echo "ACTION_TOKEN is empty; exiting"
+            exit 1
+          fi
+        env:
+          ACTION_TOKEN: ${{ secrets.ACTION_TOKEN }}
 
       - name: Checkout repository to store local distribution
         run: |
-          git clone https://github.com/ryanlee2014/CUP-Online-Judge-Frontend-Local.git local_build
+          git clone https://x-access-token:${{ secrets.ACTION_TOKEN }}@github.com/ryanlee2014/CUP-Online-Judge-Frontend-Local.git local_build
 
       - name: Move file to repository
         run: |
@@ -53,8 +78,8 @@ jobs:
           git add --all
           git commit -m "deploy `TZ=UTF-8 date +'%Y-%m-%d %H:%M:%S'`"
           git tag "v`cat VERSION`"
-          git push -f https://ryanlee2014:$GITHUB_TOKEN@github.com/ryanlee2014/CUP-Online-Judge-Frontend-Local.git master
-          git push --tags https://ryanlee2014:$GITHUB_TOKEN@github.com/ryanlee2014/CUP-Online-Judge-Frontend-Local.git
+          git push -f https://x-access-token:${{ secrets.ACTION_TOKEN }}@github.com/ryanlee2014/CUP-Online-Judge-Frontend-Local.git master
+          git push --tags https://x-access-token:${{ secrets.ACTION_TOKEN }}@github.com/ryanlee2014/CUP-Online-Judge-Frontend-Local.git
 
         env:
           GITHUB_TOKEN: ${{ secrets.ACTION_TOKEN }}

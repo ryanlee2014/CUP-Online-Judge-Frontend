@@ -11,6 +11,10 @@ on:
       - 'public/**'
       - 'vue.config.js'
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   publish:
     if: github.repository == 'ryanlee2014/CUP-Online-Judge-Frontend'
@@ -23,7 +27,7 @@ jobs:
       contents: write
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         name: Checkout code
         with:
           persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal token
@@ -31,35 +35,66 @@ jobs:
 
       - name: Build env
         run: |
-          echo "NEED_BUILD=$(cat NEED_BUILD)" >> $GITHUB_ENV
+          if [ -f NEED_BUILD ]; then
+            echo "NEED_BUILD=$(cat NEED_BUILD)" >> $GITHUB_ENV
+          else
+            echo "NEED_BUILD=false" >> $GITHUB_ENV
+          fi
 
       - name: Use Node.js environment
         if: env.NEED_BUILD == 'true'
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
+          cache: npm
+          cache-dependency-path: package-lock.json
 
       - name: Build distribution if needed
         if: env.NEED_BUILD == 'true'
         run: |
-          npm i
+          BUILD_START=$(date +%s)
+          npm ci --no-audit --no-fund
           npm run modern
+          BUILD_END=$(date +%s)
+          echo "Build duration: $((BUILD_END - BUILD_START))s"
 
-      - uses: actions/checkout@v2
+      - name: Check dist output
+        if: env.NEED_BUILD == 'true'
+        run: |
+          if [ ! -d dist ] || [ -z "$(ls -A dist)" ]; then
+            echo "dist directory is empty; exiting"
+            exit 1
+          fi
+
+      - name: Check push token
+        if: env.NEED_BUILD == 'true'
+        run: |
+          if [ -z "${ACTION_TOKEN}" ]; then
+            echo "ACTION_TOKEN is empty; exiting"
+            exit 1
+          fi
+        env:
+          ACTION_TOKEN: ${{ secrets.ACTION_TOKEN }}
+
+      - uses: actions/checkout@v4
+        if: env.NEED_BUILD == 'true'
         name: Checkout CDN Repository
         with:
           repository: ryanlee2014/CUP-Online-Judge-CDN
           path: cdn
+          token: ${{ secrets.ACTION_TOKEN }}
           persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal token
           fetch-depth: 0 # otherwise, you will failed to push refs to dest repo
 
       - name: Move file to another repository
+        if: env.NEED_BUILD == 'true'
         run: |
           rm -rf cdn/*
           cp -r dist/* cdn/
 
 
       - name: Commit files and push
+        if: env.NEED_BUILD == 'true'
         run: |
           cd cdn
           git config --local user.email "gxlhybh@gmail.com"
@@ -67,7 +102,7 @@ jobs:
           git add --all
           git commit -m "deploy `TZ=UTC-8 date +'%Y-%m-%d %H:%M:%S'`"
           git tag "v`cat VERSION`"
-          git push -f https://ryanlee2014:$GITHUB_TOKEN@github.com/ryanlee2014/CUP-Online-Judge-CDN.git master
-          git push --tags https://ryanlee2014:$GITHUB_TOKEN@github.com/ryanlee2014/CUP-Online-Judge-CDN.git
+          git push -f https://x-access-token:${{ secrets.ACTION_TOKEN }}@github.com/ryanlee2014/CUP-Online-Judge-CDN.git master
+          git push --tags https://x-access-token:${{ secrets.ACTION_TOKEN }}@github.com/ryanlee2014/CUP-Online-Judge-CDN.git
         env:
           GITHUB_TOKEN: ${{ secrets.ACTION_TOKEN }}

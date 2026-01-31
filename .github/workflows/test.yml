@@ -2,6 +2,10 @@ name: Build distribution CI test
 
 on: [pull_request]
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -11,19 +15,22 @@ jobs:
         node-version: [12.x]
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         name: Checkout code
 
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
+          cache: npm
+          cache-dependency-path: package-lock.json
 
       - name: Prepare environment
         run: |
-          npm install
+          TEST_START=$(date +%s)
+          npm ci --no-audit --no-fund
           npm test
+          TEST_END=$(date +%s)
+          echo "Test duration: $((TEST_END - TEST_START))s"
         env:
           CI: true
-
-
