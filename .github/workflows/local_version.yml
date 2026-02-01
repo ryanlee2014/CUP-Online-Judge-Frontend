@@ -36,9 +36,12 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-          npm-version: 8
           cache: npm
           cache-dependency-path: package-lock.json
+      - name: Pin npm version
+        run: |
+          npm install -g npm@8.19.4
+          npm --version
       - name: Cache build tool data
         uses: actions/cache@v4
         with:
