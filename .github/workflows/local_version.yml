@@ -81,6 +81,7 @@ jobs:
         env:
           NODE_OPTIONS: --openssl-legacy-provider
           DISABLE_TYPECHECK: "true"
+          DISABLE_COMPRESS: "true"
 
       - name: Check dist output
         run: |

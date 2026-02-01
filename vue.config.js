@@ -9,6 +9,7 @@ const webPath = `https://cdn.jsdelivr.net/gh/ryanlee2014/CUP-Online-Judge-CDN@v$
 const remoteDev = true;
 const devURL = remoteDev ? "https://acm.cup.edu.cn" : "https://hk.haoyuan.info";
 const shouldAnalyze = process.env.ANALYZE === "true";
+const disableCompress = process.env.DISABLE_COMPRESS === "true";
 module.exports = {
     lintOnSave: process.env.NODE_ENV !== "production",
     chainWebpack: config => {
@@ -126,7 +127,7 @@ module.exports = {
                 ]
             }
         };
-        if (process.env.NODE_ENV === "production") {
+        if (process.env.NODE_ENV === "production" && !disableCompress) {
             configs.plugins.push(new CompressionPlugin({
                 algorithm (input, compressionOptions, callback) {
                     return zopfli.gzip(input, compressionOptions, callback);
@@ -141,11 +142,11 @@ module.exports = {
                 test: /\.(js|css|json|txt|html|ico|svg|png|jpg|eot|woff|woff2|ttf)(\?.*)?$/i,
                 minRatio: 0.99
             }));
-            if (shouldAnalyze) {
-                config.plugins.push(new BundleAnalyzerPlugin({
-                    analyzerMode: "static"
-                }));
-            }
+        if (shouldAnalyze) {
+            config.plugins.push(new BundleAnalyzerPlugin({
+                analyzerMode: "static"
+            }));
+        }
         }
         return configs;
     },
