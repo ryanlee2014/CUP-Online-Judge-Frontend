@@ -1,6 +1,6 @@
 {
   "name": "CUP-Online-Judge-NG-Frontend",
-  "version": "1.36.29",
+  "version": "1.36.30",
   "private": false,
   "scripts": {
     "serve": "npx --max_old_space_size=32000 vue-cli-service serve",
@@ -78,7 +78,7 @@
     "socket.io-client": "^2.3.1",
     "url-parse": "^1.5.10",
     "uslug": "^1.0.4",
-    "vscode-languageserver-protocol": "^3.17.5",
+    "vscode-languageserver-protocol": "^3.15.3",
     "vscode-ws-jsonrpc": "^0.2.0",
     "vue": "2.6.14",
     "vue-axios": "^3.2.5",
@@ -140,8 +140,8 @@
     "file-loader": "^6.2.0",
     "fork-ts-checker-webpack-plugin": "^5.2.1",
     "html-webpack-plugin": "latest",
-    "jest": "^27.5.1",
     "increase-memory-limit": "^1.0.7",
+    "jest": "^27.5.1",
     "lint-staged": "^10.5.4",
     "loader-utils": "^2.0.4",
     "monaco-editor-webpack-plugin": "^1.9.1",
