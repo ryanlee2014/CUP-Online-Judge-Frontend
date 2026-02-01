@@ -14,6 +14,13 @@ function stripGoogleFontsImport() {
     if (!fs.existsSync(cssPath)) {
         return;
     }
+    try {
+        fs.accessSync(cssPath, fs.constants.W_OK);
+    }
+    catch (err) {
+        console.warn("[preinstall] skip semantic.css update (no write access)");
+        return;
+    }
     const importLine = "@import url('https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic&subset=latin&display=swap')";
     let css = "";
     try {
