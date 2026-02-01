@@ -9,6 +9,29 @@ function removeDist() {
     }
 }
 
+function ensureSemanticAssets() {
+    const targetDir = path.resolve(__dirname, "..", "semantic", "semantic-ui");
+    const sourceDir = path.resolve(__dirname, "..", "node_modules", "fomantic-ui", "dist");
+    if (!fs.existsSync(sourceDir)) {
+        console.warn("[preinstall] missing fomantic-ui dist; skip semantic asset copy");
+        return;
+    }
+    fs.mkdirSync(targetDir, { recursive: true });
+    const files = ["semantic.css", "semantic.min.css", "semantic.min.js", "semantic.js"];
+    for (const file of files) {
+        const source = path.join(sourceDir, file);
+        const target = path.join(targetDir, file);
+        if (!fs.existsSync(target) && fs.existsSync(source)) {
+            try {
+                fs.copyFileSync(source, target);
+            }
+            catch (err) {
+                console.warn("[preinstall] failed to copy", file, ":", err && err.message ? err.message : err);
+            }
+        }
+    }
+}
+
 function stripGoogleFontsImport() {
     const cssPath = path.resolve(__dirname, "..", "semantic", "semantic-ui", "semantic.css");
     if (!fs.existsSync(cssPath)) {
@@ -62,5 +85,6 @@ function buildVersion() {
 }
 
 removeDist();
+ensureSemanticAssets();
 stripGoogleFontsImport();
 buildVersion();
