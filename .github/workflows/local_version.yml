@@ -66,6 +66,8 @@ jobs:
           sudo chmod -R u+rwX semantic/semantic-ui || true
           npm ci --no-audit --no-fund --prefer-offline --no-progress --legacy-peer-deps
           npm run modern:local
+        env:
+          NODE_OPTIONS: --openssl-legacy-provider
           BUILD_END=$(date +%s)
           echo "Build duration: $((BUILD_END - BUILD_START))s"
 
