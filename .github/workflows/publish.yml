@@ -78,7 +78,9 @@ jobs:
         run: |
           BUILD_START=$(date +%s)
           npm config set registry https://registry.npmjs.org/
-          sudo chmod -R u+rwX semantic/semantic-ui || true
+          if [ -d semantic/semantic-ui ]; then
+            sudo chmod -R u+rwX semantic/semantic-ui
+          fi
           npm ci --no-audit --no-fund --prefer-offline --no-progress --legacy-peer-deps
           npm run modern
           BUILD_END=$(date +%s)
