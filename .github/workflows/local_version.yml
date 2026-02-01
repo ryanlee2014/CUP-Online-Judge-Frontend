@@ -76,6 +76,10 @@ jobs:
           npm run modern:local
           BUILD_STEP_END=$(date +%s)
           echo "Build duration: $((BUILD_STEP_END - BUILD_STEP_START))s"
+          COMPRESS_START=$(date +%s)
+          node before_build/compress_dist.js
+          COMPRESS_END=$(date +%s)
+          echo "Compress duration: $((COMPRESS_END - COMPRESS_START))s"
           BUILD_END=$(date +%s)
           echo "Build duration: $((BUILD_END - BUILD_START))s"
         env:
