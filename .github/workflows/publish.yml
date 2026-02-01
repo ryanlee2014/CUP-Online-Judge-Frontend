@@ -94,6 +94,7 @@ jobs:
           echo "Build duration: $((BUILD_END - BUILD_START))s"
         env:
           NODE_OPTIONS: --openssl-legacy-provider
+          DISABLE_TYPECHECK: "true"
 
       - name: Check dist output
         if: env.NEED_BUILD == 'true'

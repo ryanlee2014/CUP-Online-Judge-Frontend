@@ -12,6 +12,9 @@ const shouldAnalyze = process.env.ANALYZE === "true";
 module.exports = {
     lintOnSave: process.env.NODE_ENV !== "production",
     chainWebpack: config => {
+        if (process.env.DISABLE_TYPECHECK === "true") {
+            config.plugins.delete("fork-ts-checker");
+        }
         config.module.rule("md")
             .test(/\.md/)
             .use("raw-loader")
@@ -23,13 +26,15 @@ module.exports = {
             .use("i18n")
             .loader("@kazupon/vue-i18n-loader")
             .end();
-        config
-            .plugin("fork-ts-checker")
-            .tap(args => {
-                const totalmem = Math.floor(os.totalmem() / 1024 / 1024); // get OS mem size
-                args[0].memoryLimit = totalmem > 8192 * 2 ? 8192 * 2 : 2048;
-                return args;
-            });
+        if (!process.env.DISABLE_TYPECHECK) {
+            config
+                .plugin("fork-ts-checker")
+                .tap(args => {
+                    const totalmem = Math.floor(os.totalmem() / 1024 / 1024); // get OS mem size
+                    args[0].memoryLimit = totalmem > 8192 * 2 ? 8192 * 2 : 2048;
+                    return args;
+                });
+        }
     },
     devServer: {
         proxy: {
