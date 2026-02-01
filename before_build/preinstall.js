@@ -23,7 +23,19 @@ function stripGoogleFontsImport() {
     }
     const updated = css.split(importLine).join("/* removed */\n");
     const fixed = fixBrokenContentStrings(updated);
-    fs.writeFileSync(cssPath, fixed, "utf8");
+    try {
+        fs.chmodSync(cssPath, 0o666);
+    }
+    catch (err) {
+        // ignore permission error and try write anyway
+    }
+    try {
+        fs.writeFileSync(cssPath, fixed, "utf8");
+    }
+    catch (err) {
+        // If file is read-only in CI, skip instead of failing the build.
+        console.warn("[preinstall] skip semantic.css update:", err && err.message ? err.message : err);
+    }
 }
 
 function fixBrokenContentStrings(css) {
