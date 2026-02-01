@@ -22,7 +22,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [16.x]
+        node-version: [18.x]
     permissions:
       contents: write
 
@@ -64,6 +64,7 @@ jobs:
         if: env.NEED_BUILD == 'true'
         run: |
           BUILD_START=$(date +%s)
+          npm config set registry https://registry.npmjs.org/
           npm ci --no-audit --no-fund --prefer-offline --no-progress --legacy-peer-deps
           npm run modern
           BUILD_END=$(date +%s)
