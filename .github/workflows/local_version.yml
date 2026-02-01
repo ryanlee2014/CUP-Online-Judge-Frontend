@@ -56,6 +56,7 @@ jobs:
           path: |
             node_modules/.cache
             ~/.cache
+            ~/.npm
           key: ${{ runner.os }}-buildcache-${{ hashFiles('package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-buildcache-
@@ -67,8 +68,14 @@ jobs:
           if [ -d semantic/semantic-ui ]; then
             sudo chmod -R u+rwX semantic/semantic-ui
           fi
+          INSTALL_START=$(date +%s)
           npm ci --no-audit --no-fund --prefer-offline --no-progress --legacy-peer-deps
+          INSTALL_END=$(date +%s)
+          echo "Install duration: $((INSTALL_END - INSTALL_START))s"
+          BUILD_STEP_START=$(date +%s)
           npm run modern:local
+          BUILD_STEP_END=$(date +%s)
+          echo "Build duration: $((BUILD_STEP_END - BUILD_STEP_START))s"
           BUILD_END=$(date +%s)
           echo "Build duration: $((BUILD_END - BUILD_START))s"
         env:
