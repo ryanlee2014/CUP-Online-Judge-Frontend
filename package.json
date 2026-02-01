@@ -1,6 +1,6 @@
 {
   "name": "CUP-Online-Judge-NG-Frontend",
-  "version": "1.36.10",
+  "version": "1.36.11",
   "private": false,
   "scripts": {
     "serve": "npx --max_old_space_size=32000 vue-cli-service serve",
@@ -231,6 +231,9 @@
       "vue-cli-service lint",
       "git add"
     ]
+  },
+  "overrides": {
+    "yargs-parser": "5.0.1"
   },
   "repository": {
     "type": "git",
