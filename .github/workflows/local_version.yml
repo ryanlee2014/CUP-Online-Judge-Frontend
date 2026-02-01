@@ -22,7 +22,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [18.x]
+        node-version: [16.x]
     permissions:
       contents: write
 
@@ -36,6 +36,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
+          npm-version: 8
           cache: npm
           cache-dependency-path: package-lock.json
       - name: Cache build tool data
@@ -51,7 +52,7 @@ jobs:
       - name: Build local distribution
         run: |
           BUILD_START=$(date +%s)
-          npm ci --no-audit --no-fund --prefer-offline --no-progress
+          npm ci --no-audit --no-fund --prefer-offline --no-progress --legacy-peer-deps
           npm run modern:local
           BUILD_END=$(date +%s)
           echo "Build duration: $((BUILD_END - BUILD_START))s"
