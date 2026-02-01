@@ -32,6 +32,14 @@ jobs:
         with:
           persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal token
           fetch-depth: 1
+      - name: Print build env
+        if: env.NEED_BUILD == 'true'
+        run: |
+          node -v
+          npm -v
+          head -n 20 package-lock.json
+          grep -n "lockfileVersion" package-lock.json || true
+          grep -n "yargs-parser-5.0.0-security.0" package-lock.json || true
 
       - name: Build env
         run: |

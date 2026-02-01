@@ -31,6 +31,13 @@ jobs:
         name: Checkout code
         with:
           fetch-depth: 1
+      - name: Print build env
+        run: |
+          node -v
+          npm -v
+          head -n 20 package-lock.json
+          grep -n "lockfileVersion" package-lock.json || true
+          grep -n "yargs-parser-5.0.0-security.0" package-lock.json || true
 
       - name: Use Node.js environment
         uses: actions/setup-node@v4
