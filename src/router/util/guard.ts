@@ -27,7 +27,7 @@ function errorHandler (next: NextFunction, to: Route) {
 }
 
 function checkAdmin (to: Route, admin: boolean, next: NextFunction) {
-    const meta = to.meta;
+    const meta = to.meta || {};
     if (meta.admin && admin) {
         return next();
     }
@@ -59,7 +59,7 @@ function checkAdmin (to: Route, admin: boolean, next: NextFunction) {
                 }
                 needPrivilege = (needPrivilege || key !== "auth");
 
-                if (meta[key] && store.getters[key]) {
+                if ((meta as any)[key] && (store.getters as any)[key]) {
                     needPrivilege = false;
                     return next();
                 }
@@ -112,7 +112,8 @@ const Guard = function (to: Route, from: Route, next: NextFunction) {
     middlewareAdapter.add(platform);
     middlewareAdapter.add(checkVersion);
     next = middlewareAdapter.getNextFn();
-    if (to.meta.auth) {
+    const meta = to.meta || {};
+    if (meta.auth) {
         if (store.getters.logined) {
             checkAdmin(to, store.getters.admin, next);
         }
@@ -124,11 +125,11 @@ const Guard = function (to: Route, from: Route, next: NextFunction) {
             getLoginInfo(to, next);
         }
     }
-    else if (to.meta.auth === false) {
-        if (to.meta.init === true && !store.getters.init) {
+    else if (meta.auth === false) {
+        if (meta.init === true && !store.getters.init) {
             return next();
         }
-        else if (to.meta.init === true) {
+        else if (meta.init === true) {
             return next({
                 path: "/"
             });
