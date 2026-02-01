@@ -10,6 +10,7 @@ on:
       - '.github/**'
       - 'public/**'
       - 'vue.config.js'
+      - 'before_build/**'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
