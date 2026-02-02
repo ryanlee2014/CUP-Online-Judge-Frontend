@@ -16,6 +16,11 @@ module.exports = {
         if (process.env.DISABLE_TYPECHECK === "true") {
             config.plugins.delete("fork-ts-checker");
         }
+        // Exclude web worker sources from the default TS rule to avoid thread-loader crashes.
+        if (config.module && config.module.rule("ts")) {
+            config.module.rule("ts").exclude.add(/\.web\.worker\.ts$/);
+            config.module.rule("ts").exclude.add(/\.worker\.ts$/);
+        }
         config.module.rule("md")
             .test(/\.md/)
             .use("raw-loader")
@@ -164,6 +169,6 @@ module.exports = {
             analyzerMode: "disabled"
         }
     },
-    parallel: false,
+    parallel: true,
     productionSourceMap: false
 };
