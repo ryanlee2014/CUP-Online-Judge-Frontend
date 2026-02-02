@@ -1,0 +1,69 @@
+name: Run unit tests
+
+on:
+  push:
+    branches:
+      - typescript
+    paths:
+      - 'package.json'
+      - 'src/**'
+      - 'tests/**'
+      - '.github/**'
+      - 'vue.config.js'
+      - 'before_build/**'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    if: github.repository == 'ryanlee2014/CUP-Online-Judge-Frontend'
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x]
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+        name: Checkout code
+        with:
+          fetch-depth: 1
+
+      - name: Use Node.js environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Pin npm version
+        run: |
+          npm install -g npm@8.19.4
+          npm --version
+
+      - name: Cache build tool data
+        uses: actions/cache@v4
+        with:
+          path: |
+            node_modules/.cache
+            ~/.cache
+            ~/.npm
+          key: ${{ runner.os }}-buildcache-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-buildcache-
+
+      - name: Install dependencies
+        run: |
+          npm config set registry https://registry.npmjs.org/
+          npm ci --no-audit --no-fund --prefer-offline --no-progress --legacy-peer-deps
+
+      - name: Run unit tests
+        run: |
+          TEST_START=$(date +%s)
+          npm test
+          TEST_END=$(date +%s)
+          echo "Test duration: $((TEST_END - TEST_START))s"
