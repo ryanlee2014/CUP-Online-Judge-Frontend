@@ -86,6 +86,10 @@ jobs:
           npm ci --no-audit --no-fund --prefer-offline --no-progress --legacy-peer-deps
           INSTALL_END=$(date +%s)
           echo "Install duration: $((INSTALL_END - INSTALL_START))s"
+          TEST_START=$(date +%s)
+          npm test
+          TEST_END=$(date +%s)
+          echo "Test duration: $((TEST_END - TEST_START))s"
           BUILD_STEP_START=$(date +%s)
           npm run modern
           BUILD_STEP_END=$(date +%s)
