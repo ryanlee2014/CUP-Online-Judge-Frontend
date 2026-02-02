@@ -1,16 +1,12 @@
 name: Run unit tests
 
 on:
-  push:
-    branches:
-      - typescript
-    paths:
-      - 'package.json'
-      - 'src/**'
-      - 'tests/**'
-      - '.github/**'
-      - 'vue.config.js'
-      - 'before_build/**'
+  workflow_run:
+    workflows:
+      - Build local version
+      - Publish releases to CDN repository
+    types:
+      - completed
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
