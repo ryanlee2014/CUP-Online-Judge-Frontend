@@ -100,6 +100,7 @@ jobs:
           NODE_OPTIONS: --openssl-legacy-provider
           DISABLE_TYPECHECK: "true"
           DISABLE_COMPRESS: "true"
+          COMPRESS_CONCURRENCY: "6"
 
       - name: Check dist output
         if: env.NEED_BUILD == 'true'
