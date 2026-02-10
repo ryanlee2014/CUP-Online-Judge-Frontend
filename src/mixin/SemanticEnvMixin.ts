@@ -1,5 +1,5 @@
 import jquery from "jquery";
-import "../../semantic/semantic-ui/semantic.min";
+import "fomantic-ui/dist/semantic.min";
 import { Component } from "vue-property-decorator";
 import Vue from "vue";
 // @ts-ignore

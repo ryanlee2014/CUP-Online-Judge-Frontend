@@ -23,7 +23,7 @@ export interface IIPPayload {
 const $: any = jquery;
 const jQuery = $;
 window.jQuery = window.$ = $;
-require("../../semantic/semantic-ui/semantic.min");
+require("fomantic-ui/dist/semantic.min");
 
 function generateAPIUrl(ip: string) {
     return `/geoip/json/${ip}?lang=zh-CN&fields=status,message,country,countryCode,region,regionName,city,district,zip,lat,lon,timezone,isp,org,as,asname,proxy,hosting,query`;
