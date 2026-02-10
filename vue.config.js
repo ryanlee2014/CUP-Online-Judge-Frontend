@@ -1,4 +1,5 @@
 const MonacoEditorPlugin = require("monaco-editor-webpack-plugin");
+const webpack = require("webpack");
 const CompressionPlugin = require("compression-webpack-plugin");
 const zopfli = require("@gfx/zopfli");
 const BrotliPlugin = require("brotli-webpack-plugin");
@@ -12,6 +13,24 @@ const shouldAnalyze = process.env.ANALYZE === "true";
 const disableCompress = process.env.DISABLE_COMPRESS === "true";
 module.exports = {
     lintOnSave: process.env.NODE_ENV !== "production",
+    css: {
+        loaderOptions: {
+            css: {
+                // webpack5 + css-loader may try to resolve malformed `data:` URIs from vendored CSS.
+                // Keep data URIs as-is instead of handing them to webpack resolver.
+                url: {
+                    filter: (url) => {
+                        // Don't let webpack try to resolve URLs that should remain runtime URLs.
+                        if (url.startsWith("data:")) return false;
+                        if (url.startsWith("/")) return false;
+                        if (url.startsWith("http://") || url.startsWith("https://")) return false;
+                        if (url.startsWith("//")) return false;
+                        return true;
+                    }
+                }
+            }
+        }
+    },
     chainWebpack: config => {
         if (process.env.DISABLE_TYPECHECK === "true") {
             config.plugins.delete("fork-ts-checker");
@@ -37,7 +56,9 @@ module.exports = {
                 .plugin("fork-ts-checker")
                 .tap(args => {
                     const totalmem = Math.floor(os.totalmem() / 1024 / 1024); // get OS mem size
-                    args[0].memoryLimit = totalmem > 8192 * 2 ? 8192 * 2 : 2048;
+                    // fork-ts-checker-webpack-plugin@6 expects memoryLimit under `typescript`
+                    args[0].typescript = args[0].typescript || {};
+                    args[0].typescript.memoryLimit = totalmem > 8192 * 2 ? 8192 * 2 : 2048;
                     return args;
                 });
         }
@@ -103,11 +124,30 @@ module.exports = {
     configureWebpack: config => {
         const configs = {
             plugins: [
-                new MonacoEditorPlugin()
+                new MonacoEditorPlugin(),
+                new webpack.ProvidePlugin({
+                    Buffer: ["buffer", "Buffer"],
+                    process: "process/browser"
+                })
             ],
             resolve: {
                 alias: {
                     vscode: require.resolve("monaco-languageclient/lib/vscode-compatibility")
+                },
+                // webpack5 no longer polyfills Node core modules.
+                // Some dependencies (e.g. html-to-docx, vscode-jsonrpc) still import them.
+                fallback: {
+                    crypto: require.resolve("crypto-browserify"),
+                    path: require.resolve("path-browserify"),
+                    stream: require.resolve("stream-browserify"),
+                    http: require.resolve("stream-http"),
+                    https: require.resolve("https-browserify"),
+                    zlib: require.resolve("browserify-zlib"),
+                    os: require.resolve("os-browserify/browser"),
+                    vm: require.resolve("vm-browserify"),
+                    // Not available in browsers; stub out.
+                    fs: false,
+                    net: false
                 }
             },
             module: {
