@@ -38,7 +38,7 @@ export default function () {
         }
     });
     const _get: any = axios.get;
-    const cache: {[x: string]: Promise<any>} = {};
+    const cache: Record<string, Promise<any> | undefined> = {};
     axios.cacheGet = function (url: string, config?: AxiosRequestConfig) {
         if (cache[url]) {
             return cache[url];

@@ -278,11 +278,11 @@ export default class RankView extends Mixins(mixins) {
                 // @ts-ignore
                 window.datas = this.submitter;
             }
-            catch (e) {
+            catch (e: any) {
                 that.state = false;
                 that.submitter = [];
                 console.log(e);
-                let str = e.stack;
+                let str = (e && e.stack) ? String(e.stack) : String(e);
                 str = str.replace(/\n/g, "<br>");
                 that.errormsg = str;
             }
@@ -659,22 +659,23 @@ export default class RankView extends Mixins(mixins) {
                     });
                     this.finished = true;
                 }
-                catch (e) {
+                catch (e: any) {
                     console.log("e", e);
-                    const data = e.data.data;
+                    const data = e?.data?.data ?? e?.response?.data?.data ?? e?.response?.data ?? e?.data;
                     that.state = false;
                     that.submitter = [];
                     let str;
-                    if (data.contest_mode === true) {
+                    if (data && data.contest_mode === true) {
                         str = "根据设置，内容非公开";
                     }
-                    else if (data.statement && data.statement.includes && data.statement.includes("denied")) {
+                    else if (data && data.statement && data.statement.includes && data.statement.includes("denied")) {
                         str = "根据设置，您无权访问";
                     }
                     else {
-                        str = "Contest " + cid + ":\n" + data.statement;
+                        const statement = data && data.statement ? data.statement : String(e);
+                        str = "Contest " + cid + ":\n" + statement;
                     }
-                    str = str.replace(/\n/g, "<br>");
+                    str = String(str).replace(/\n/g, "<br>");
                     that.errormsg = str;
                     that.initBar();
                 }
