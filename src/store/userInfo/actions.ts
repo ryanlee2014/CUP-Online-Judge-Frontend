@@ -1,13 +1,13 @@
-import axios from "axios";
 import { IUserInfoState } from "@/store/userInfo/userInfo";
 import { ActionTree, Commit } from "vuex";
 import { IRootState } from "@/store/root";
 import store from "@/store";
+import fetchUserSelf from "@/lib/userSelf";
 function getInfo (commit: Commit, tryTime: number) {
     if (tryTime <= 0 || !store.getters.init) {
         return;
     }
-    axios.get("/api/user/self")
+    fetchUserSelf()
         .then(response => {
             const data = response.data;
             if (data.status === "OK") {

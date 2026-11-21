@@ -8,9 +8,6 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 
-// import mavonEditor from "./lib/mavon-editor/mavon-editor";
-// @ts-ignore
-import mavonEditor from "@ryanlee2014/mavon-editor";
 import VueObserveVisibility from "vue-observe-visibility";
 import i18n from "./i18n";
 import VueSocketIo from "./lib/vue-socketio";
@@ -35,7 +32,11 @@ Vue.use(AsyncComputedPlugin);
 Vue.config.productionTip = false;
 Vue.config.performance = true;
 
-Vue.use(mavonEditor);
+// mavon-editor (~1.7MB) is only needed on editing pages: load it on first use instead of
+// shipping it in the entry bundle of every page.
+Vue.component("mavon-editor", () => import(/* webpackChunkName: "mavon-editor" */ "@ryanlee2014/mavon-editor")
+    // @ts-ignore
+    .then(m => m.mavonEditor || m.default.mavonEditor));
 Vue.use(VueObserveVisibility);
 new Vue({
     router,

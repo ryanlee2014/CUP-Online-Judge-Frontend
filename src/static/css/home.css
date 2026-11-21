@@ -592,6 +592,7 @@
 .gr5:after {
     background: white;
     background-image: url("~@/static/image/icpc_logo.png");
+    background-image: image-set(url("~@/static/image/icpc_logo.webp") type("image/webp"), url("~@/static/image/icpc_logo.png") type("image/png"));
     background-size:40%;
     background-repeat: no-repeat;
     background-position: center;

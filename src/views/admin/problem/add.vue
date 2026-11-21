@@ -222,6 +222,8 @@ import InitMixin from "../../../mixin/init";
 import { Component, Mixins } from "vue-property-decorator";
 import markdownIt from "@/lib/markdownIt/markdownIt";
 import monacoEditor from "@/components/submit/codeEditor/monacoEditor.vue";
+// @ts-ignore
+import { mavonEditor } from "@ryanlee2014/mavon-editor";
 import { unique } from "@/lib/ts-util";
 import _ from "lodash";
 import jquery from "jquery";
@@ -230,7 +232,8 @@ const $: any = jquery;
 
 @Component({
     components: {
-        monacoEditor
+        monacoEditor,
+        mavonEditor
     }
 })
 export default class AddProblem extends Mixins(InitMixin, RouterBackMixin) implements IKeyValue {

@@ -1,5 +1,4 @@
 import Vue from "vue";
-import mermaid from "mermaid";
 import $ from "jquery";
 import { Component } from "vue-property-decorator";
 @Component
@@ -11,17 +10,24 @@ export default class MermaidMixin extends Vue {
         });
     }
 
+    // mermaid is ~1MB: only fetch it when the page really has a diagram to render
+    loadMermaid (): Promise<any> {
+        return import(/* webpackChunkName: "mermaid" */ "mermaid").then(m => m.default || m);
+    }
+
     initVisibleMermaid () {
-        $(".mermaid").each(function (el: any, v: any) {
-            if ($(v).is(":visible")) {
-                mermaid.init(v);
-            }
-        });
+        const blocks = $(".mermaid").filter((i: number, v: any) => $(v).is(":visible") && !$(v).attr("data-processed"));
+        if (!blocks.length) {
+            return;
+        }
+        this.loadMermaid().then(mermaid => blocks.each((i: number, v: any) => mermaid.init(v)));
     }
 
     initMermaid () {
-        $(".mermaid").each(function (el: any, v: any) {
-            mermaid.init(v);
-        });
+        const blocks = $(".mermaid").filter((i: number, v: any) => !$(v).attr("data-processed"));
+        if (!blocks.length) {
+            return;
+        }
+        this.loadMermaid().then(mermaid => blocks.each((i: number, v: any) => mermaid.init(v)));
     }
 }

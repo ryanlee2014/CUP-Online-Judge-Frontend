@@ -1,5 +1,6 @@
 import markdownMermaid from "./markdown-it-mermaid";
 import MarkdownIt from "markdown-it";
+import hljs from "./hljs";
 import warning from "@/lib/markdownIt/container/warning";
 import errorFunc from "@/lib/markdownIt/container/error";
 import positiveFunc from "@/lib/markdownIt/container/positive";
@@ -17,7 +18,7 @@ function Instance(key = "", problem_id = ""): any {
         html: true,
         breaks: true
     }) as MarkdownItExtend;
-    const mh = require("markdown-it-highlightjs");
+    const mh = require("markdown-it-highlightjs/core");
     const mk = require("@ryanlee2014/markdown-it-katex");
     const mcModule = require("./markdown-it-table-contents");
     const mc = mcModule.default || mcModule;
@@ -25,7 +26,7 @@ function Instance(key = "", problem_id = ""): any {
     const ma = maModule.default || maModule;
     const mi = require("./markdown-it-images-preview");
     md.use(mk);
-    md.use(mh);
+    md.use(mh, { auto: true, code: true, inline: false, hljs });
     warning(md);
     errorFunc(md);
     positiveFunc(md);

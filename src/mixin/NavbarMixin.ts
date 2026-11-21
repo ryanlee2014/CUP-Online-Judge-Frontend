@@ -26,7 +26,7 @@ export default class NavbarMixin extends Vue {
             const Promise = require("bluebird");
             while (times-- > 0) {
                 if (this.$socket && this.$socket.connect && typeof this.$socket.connect === "function") {
-                    if (!this.$socket.connected) {
+                    if (!this.$socket.connected && !this.$socket.active) {
                         this.$socket.connect();
                         this.$socket.emit("getUser");
                     }
@@ -39,32 +39,7 @@ export default class NavbarMixin extends Vue {
         })();
     }
 
-    bindSocketObserver () {
-        const that = this;
-        Object.defineProperty(this.$socket, "connected", {
-            // @ts-ignore
-            _connected: this.$socket.connected,
-            get: function () {
-                return this._connected;
-            },
-            set: function (val) {
-                if (val === false) {
-                    that.intervalId = setInterval(() => {
-                        that._connectTry(1);
-                    }, 1000);
-                }
-                else {
-                    if (that.intervalId !== -1) {
-                        clearInterval(that.intervalId);
-                    }
-                }
-                that.socketConnected = this._connected = val;
-            }
-        });
-    }
-
     async mounted () {
-        this.bindSocketObserver();
         this.socketConnected = this.$socket.connected;
         const authMsg = {
             url: this.$route.fullPath,
@@ -101,8 +76,11 @@ export default class NavbarMixin extends Vue {
         this.sockets.subscribe("freeJudgerNumber", (data: any) => {
             this.judger = data.num;
         });
-        this.sockets.subscribe("disconnect", () => {
+        this.sockets.subscribe("disconnect", (reason: string) => {
             this.socketConnected = false;
+            if (reason === "io server disconnect") {
+                this.$socket.connect();
+            }
         });
         this.sockets.subscribe("msg", (data: any) => {
             setTimeout(() => {
@@ -117,12 +95,6 @@ export default class NavbarMixin extends Vue {
         });
         $("body").on("click", function () {
             $(".msg.header.item").popup("hide").removeAttr("data-html");
-        });
-        setTimeout(() => {
-            if (this.socketConnected === false && this.$socket.connected) {
-                this.$socket.disconnect();
-                this.$socket.connect();
-            }
         });
     }
 }

@@ -117,7 +117,7 @@ export default class App extends Vue {
             const Promise = require("bluebird");
             while (times-- > 0) {
                 if (this.$socket && this.$socket.connect && typeof this.$socket.connect === "function") {
-                    if (!this.$socket.connected) {
+                    if (!this.$socket.connected && !this.$socket.active) {
                         this.$socket.connect();
                         this.$socket.emit("getUser");
                     }

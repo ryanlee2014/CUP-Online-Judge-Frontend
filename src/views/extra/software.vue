@@ -55,7 +55,10 @@
             <div class="column">
                 <div class="ui card">
                     <a class="image chrome" href="software/ChromeStandaloneSetup.exe">
-                        <img src="@/static/image/Chrome.png">
+                        <picture>
+                            <source srcset="@/static/image/Chrome.webp" type="image/webp">
+                            <img src="@/static/image/Chrome.png">
+                        </picture>
                     </a>
                     <div class="content">
                         <a class="header chrome" href="software/ChromeStandaloneSetup.exe">Chrome 79</a>
@@ -68,7 +71,10 @@
             <div class="column">
                 <div class="ui card">
                     <a class="image" href="software/Firefox-ESR-full-latest.exe">
-                        <img src="@/static/image/firefox.jpg">
+                        <picture>
+                            <source srcset="@/static/image/firefox.webp" type="image/webp">
+                            <img src="@/static/image/firefox.jpg">
+                        </picture>
                     </a>
                     <div class="content">
                         <a class="header" href="software/Firefox-ESR-full-latest.exe">Firefox ESR (for Windows XP)</a>

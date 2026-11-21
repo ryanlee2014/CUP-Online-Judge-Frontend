@@ -370,6 +370,12 @@ export default class Submit extends Mixins(mixins, ContestShowSimMixin) {
 
     markdownInitHandler (thisObj: any, url: string, attribute: string) {
         const that: any = this;
+        // Problem images are referenced from the markdown as ![..](name); skip the request when
+        // this section has no image at all (the common case) instead of always firing 4 requests.
+        const content = (that.original_content && that.original_content[attribute]) || "";
+        if (!/!\[|<img/i.test(content)) {
+            return;
+        }
         this.axios.get(url).then(({ data }) => {
             if (data.status === "OK") {
                 thisObj.__image = {};

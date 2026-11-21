@@ -176,30 +176,25 @@
 </i18n>
 <script lang="ts">
 import statusTable from "../components/status/status-table.vue";
-import * as am4core from "@amcharts/amcharts4/core";
-import * as am4charts from "@amcharts/amcharts4/charts";
 import ContestMode from "../components/contestMode/block.vue";
 import mixins from "../mixin/init";
 import jquery from "jquery";
-import Chart from "chart.js";
 import _ from "lodash";
 import { Component, Mixins, Watch } from "vue-property-decorator";
 import StatusViewMixin from "@/mixin/StatusViewMixin";
 import AwaitLock from "await-lock";
 import { Lock, RunOnceEachKey } from "@/module/Decorator/method";
 import { mapGetters } from "vuex";
-import Graph from "@/components/status/graph.vue";
-import ResultGraph from "@/components/status/ResultGraph.vue";
-import UserGraph from "@/components/status/UserGraph.vue";
 
 const $: any = jquery;
 
 const hasRendered: any = {};
     @Component({
         components: {
-            UserGraph,
-            ResultGraph,
-            Graph,
+            // chart tabs pull in amcharts / chart.js: load them only when a chart tab is opened
+            UserGraph: () => import(/* webpackChunkName: "status-graph" */ "@/components/status/UserGraph.vue"),
+            ResultGraph: () => import(/* webpackChunkName: "status-graph" */ "@/components/status/ResultGraph.vue"),
+            Graph: () => import(/* webpackChunkName: "status-graph" */ "@/components/status/graph.vue"),
             statusTable,
             ContestMode
         },

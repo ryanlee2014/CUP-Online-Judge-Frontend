@@ -33,10 +33,10 @@
                             <div class="column">
                                 <!-- Place this tag where you want the button to render. -->
                                 <!-- Place this tag where you want the button to render. -->
-                                <github-button data-text="Star" style="vertical-align: middle;" class="github_button" data-size="large" href="https://github.com/ryanlee2014/CUP-Online-Judge" data-show-count="true" aria-label="Star ryanlee2014/CUP-Online-Judge on GitHub">Star</github-button>
+                                <github-button v-if="showGithubButtons" data-text="Star" style="vertical-align: middle;" class="github_button" data-size="large" href="https://github.com/ryanlee2014/CUP-Online-Judge" data-show-count="true" aria-label="Star ryanlee2014/CUP-Online-Judge on GitHub">Star</github-button>
                                 <!-- Place this tag where you want the button to render. -->
                                 &nbsp;
-                                <github-button data-text="Fork" style="vertical-align: middle;" class="github_button" data-size="large" href="https://github.com/ryanlee2014/CUP-Online-Judge/fork" data-show-count="true" aria-label="Fork ryanlee2014/CUP-Online-Judge on GitHub">Fork</github-button>
+                                <github-button v-if="showGithubButtons" data-text="Fork" style="vertical-align: middle;" class="github_button" data-size="large" href="https://github.com/ryanlee2014/CUP-Online-Judge/fork" data-show-count="true" aria-label="Fork ryanlee2014/CUP-Online-Judge on GitHub">Fork</github-button>
                             </div>
                             <br>
                             <a href="https://promotion.aliyun.com/ntms/act/ambassador/sharetouser.html?userCode=1ohno31e&utm_source=1ohno31e"
@@ -99,8 +99,11 @@
                         <p>一个优秀的浏览器可以更加完美高效的绘制页面，提升使用的舒适度。基于V8引擎的Chrome浏览器能够让每一个题目的启动和提交都能行云流水。</p>
                     </div>
                     <div class="six wide right floated column">
-                        <img class="ui large borderless rounded image"
-                             src="@/static/image/jetbrains.png">
+                        <picture>
+                            <source srcset="@/static/image/jetbrains.webp" type="image/webp">
+                            <img class="ui large borderless rounded image"
+                                 src="@/static/image/jetbrains.png">
+                        </picture>
                     </div>
                 </div>
             </div>
@@ -145,7 +148,13 @@ const $: any = jQuery;
     }
 })
 export default class Home extends Mixins(InitMixin) {
+    // GitHub star/fork counts call api.github.com from the visitor's browser (slow from
+    // campus networks, rate limited); render them only after the page has settled.
+    showGithubButtons = false;
     mounted () {
+        setTimeout(() => {
+            this.showGithubButtons = true;
+        }, 3000);
         document.title = `Home -- ${this.$t("oj-name")}`;
         $(function () {
             $(".image").visibility({

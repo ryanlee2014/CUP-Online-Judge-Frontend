@@ -131,8 +131,8 @@ import { Component, Mixins, Watch } from "vue-property-decorator";
 import mixins from "../mixin/init";
 import jquery from "jquery";
 import _ from "lodash";
-import G2 from "@antv/g2";
-import DataSet from "@antv/data-set";
+// @antv/g2 + data-set are only needed for the optional tag cloud: loaded on demand
+import type G2Type from "@antv/g2";
 const $: any = jquery;
 const HEIGHT = 320;
 const MAX_SIZE = 25;
@@ -203,7 +203,7 @@ export default class ProblemSet extends Mixins(mixins) {
         recent_one_month = -1;
         hide_currect = localStorage.getItem("hide_currect") === "true";
         show_label_cloud = localStorage.getItem("show_label_cloud") === "true";
-        chart: G2.Chart | undefined = undefined;
+        chart: G2Type.Chart | undefined = undefined;
         has_draw = false;
         contest_mode = false;
 
@@ -355,8 +355,14 @@ export default class ProblemSet extends Mixins(mixins) {
         drawLabelCloud () {
             this.has_draw = true;
             const that = this;
-            this.axios.get("/api/problem/local/?label=true")
-                .then(response => {
+            Promise.all([
+                this.axios.get("/api/problem/local/?label=true"),
+                import(/* webpackChunkName: "antv-g2" */ "@antv/g2"),
+                import(/* webpackChunkName: "antv-g2" */ "@antv/data-set")
+            ])
+                .then(([response, g2Module, dataSetModule]: any[]) => {
+                    const G2: any = g2Module.default || g2Module;
+                    const DataSet: any = dataSetModule.default || dataSetModule;
                     const d = response.data;
                     G2.Shape!.registerShape!("point", "cloud", {
                         drawShape (cfg: any, container: any) {

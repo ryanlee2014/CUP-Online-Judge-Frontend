@@ -4,8 +4,9 @@ import MiddlewareAdapter from "./middlewareAdapter";
 import platform from "../middleware/environmentCollector";
 import { NavigationGuard, Route } from "vue-router/types/router";
 import checkVersion from "@/router/middleware/checkVersion";
+import fetchUserSelf from "@/lib/userSelf";
 function getSelfInfo () {
-    return Vue.axios.get("/api/user/self");
+    return fetchUserSelf();
 }
 
 type NextFunction = (...arg: any[]) => any;
