@@ -1,14 +1,13 @@
 import store from "@/store";
-import SocketIo from "socket.io-client";
-// @ts-ignore
-import VueSocketIO from "vue-socket.io";
+import { io } from "socket.io-client";
+import VueSocketIO from "@/lib/socketio-plugin";
 import {VueConstructor} from "vue";
 import {Vue} from "vue/types/vue";
 
 export default function (vue: VueConstructor<Vue>) {
     vue.use(new VueSocketIO({
         debug: process.env.NODE_ENV === "development",
-        connection: SocketIo(location.origin, { autoConnect: false }),
+        connection: io(location.origin, { autoConnect: false }),
         vuex: {
             store
         }

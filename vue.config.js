@@ -1,7 +1,8 @@
 const MonacoEditorPlugin = require("monaco-editor-webpack-plugin");
 const CompressionPlugin = require("compression-webpack-plugin");
 const zopfli = require("@gfx/zopfli");
-const BrotliPlugin = require("brotli-webpack-plugin");
+const zlib = require("zlib");
+const webpack = require("webpack");
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 const version = require("./package.json").version;
 const os = require("os");
@@ -37,7 +38,9 @@ module.exports = {
                 .plugin("fork-ts-checker")
                 .tap(args => {
                     const totalmem = Math.floor(os.totalmem() / 1024 / 1024); // get OS mem size
-                    args[0].memoryLimit = totalmem > 8192 * 2 ? 8192 * 2 : 2048;
+                    args[0].typescript = Object.assign({}, args[0].typescript, {
+                        memoryLimit: totalmem > 8192 * 2 ? 8192 * 2 : 2048
+                    });
                     return args;
                 });
         }
@@ -95,29 +98,70 @@ module.exports = {
                 changeOrigin: true
             }
         },
-        overlay: {
-            warnings: false
+        client: {
+            overlay: {
+                warnings: false
+            }
         }
     },
     publicPath: process.env.NODE_ENV === "production" && !process.env.DISABLE_CDN ? webPath : "/",
     configureWebpack: config => {
         const configs = {
             plugins: [
-                new MonacoEditorPlugin()
+                new MonacoEditorPlugin(),
+                // webpack 5 no longer injects these Node globals (webpack 4 / Vue CLI 4 did).
+                new webpack.ProvidePlugin({
+                    process: "process/browser",
+                    Buffer: ["buffer", "Buffer"]
+                })
             ],
             resolve: {
                 alias: {
                     vscode: require.resolve("monaco-languageclient/lib/vscode-compatibility")
+                },
+                // webpack 5 dropped automatic Node core polyfills. Restore the ones webpack 4
+                // (node-libs-browser) provided for html-to-docx, xmlbuilder2 and vscode-jsonrpc,
+                // and stub the modules Vue CLI 4 configured as "empty".
+                fallback: {
+                    assert: require.resolve("assert/"),
+                    buffer: require.resolve("buffer/"),
+                    crypto: require.resolve("crypto-browserify"),
+                    http: require.resolve("stream-http"),
+                    https: require.resolve("https-browserify"),
+                    os: require.resolve("os-browserify/browser"),
+                    path: require.resolve("path-browserify"),
+                    stream: require.resolve("stream-browserify"),
+                    url: require.resolve("url/"),
+                    util: require.resolve("util/"),
+                    zlib: require.resolve("browserify-zlib"),
+                    child_process: false,
+                    dgram: false,
+                    fs: false,
+                    net: false,
+                    tls: false,
+                    // only used by asn1.js (via crypto-browserify) inside a try/catch
+                    vm: false
                 }
             },
             module: {
                 rules: [
                     {
                         test: /\.web\.worker\.ts$/,
-                        loader: "worker-loader",
-                        options: {
-                            publicPath: "/"
-                        }
+                        use: [
+                            {
+                                // keep loading the worker script from the site origin (see loader)
+                                loader: require.resolve("./build/worker-public-path-loader"),
+                                options: {
+                                    publicPath: "/"
+                                }
+                            },
+                            {
+                                loader: "worker-loader",
+                                options: {
+                                    publicPath: "/"
+                                }
+                            }
+                        ]
                     },
                     {
                         test: /\.web\.worker\.ts$/,
@@ -143,9 +187,16 @@ module.exports = {
                 minRatio: 0.99,
                 test: /\.(js|css|json|txt|html|ico|svg|png|jpg|eot|woff|woff2|ttf)(\?.*)?$/i
             }));
-            configs.plugins.push(new BrotliPlugin({
-                test: /\.(js|css|json|txt|html|ico|svg|png|jpg|eot|woff|woff2|ttf)(\?.*)?$/i,
-                minRatio: 0.99
+            configs.plugins.push(new CompressionPlugin({
+                filename: "[path][base].br",
+                algorithm: "brotliCompress",
+                compressionOptions: {
+                    params: {
+                        [zlib.constants.BROTLI_PARAM_QUALITY]: zlib.constants.BROTLI_MAX_QUALITY
+                    }
+                },
+                minRatio: 0.99,
+                test: /\.(js|css|json|txt|html|ico|svg|png|jpg|eot|woff|woff2|ttf)(\?.*)?$/i
             }));
         if (shouldAnalyze) {
             config.plugins.push(new BundleAnalyzerPlugin({
@@ -156,6 +207,19 @@ module.exports = {
         return configs;
     },
 
+    css: {
+        loaderOptions: {
+            css: {
+                // css-loader 6 (webpack 5) resolves data: URIs and root-relative URLs, which
+                // css-loader 3 (Vue CLI 4) left untouched. Keep the old behaviour: semantic-ui ships
+                // malformed data URIs (";;base64") and the app references server paths like
+                // /template/... that are not part of the bundle.
+                url: {
+                    filter: url => !/^\s*(data:|\/)/i.test(url)
+                }
+            }
+        }
+    },
     assetsDir: "./static",
     pluginOptions: {
         i18n: {
