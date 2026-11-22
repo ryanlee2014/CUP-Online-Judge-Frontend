@@ -93,94 +93,87 @@
 </template>
 <script lang="ts">
 import markdownIt from "../../../lib/markdownIt/markdownIt";
-import { Prop, Component, Watch } from "vue-property-decorator";
+import { defineComponent, PropType } from "vue";
 import { mapGetters } from "vuex";
 import _ from "lodash";
-import Vue from "vue";
-@Component({
+export default defineComponent({
+    name: "LeftPanel",
+    props: {
+        title: { type: String, default: "" },
+        time: { type: Number, default: 0 },
+        memory: { type: Number, default: 0 },
+        spj: { type: Boolean, default: false },
+        submit: { type: Number, default: 0 },
+        accepted: { type: Number, default: 0 },
+        original_id: { type: Number, default: 0 },
+        iseditor: { type: Boolean, default: false },
+        isadmin: { type: Boolean, default: false },
+        description: { type: String, default: "" },
+        input: { type: String, default: "" },
+        output: { type: String, default: "" },
+        sampleinput: { type: String, default: "" },
+        sampleoutput: { type: String, default: "" },
+        hint: { type: String, default: "" },
+        uploader: { type: String, default: "Administrator" },
+        switch_screen: { type: Function as PropType<(...arg: any[]) => any>, default: () => () => undefined },
+        normal_problem: { type: Boolean, default: true },
+        source: { type: String, default: "" },
+        problem_id: { type: Number, default: 0 }
+    },
+    data () {
+        return {
+            contestList: [] as any[]
+        };
+    },
     computed: {
-        ...mapGetters(["logined", "avatar", "admin", "user_id", "nick"])
-    }
-})
-export default class LeftPanel extends Vue {
-    admin!: boolean;
-    contestList = [];
-    @Watch("original_id")
-    onOriginalIdChanged (newVal: any) {
-        if (this.admin) {
-            this.initContestListForAdministrator(newVal);
+        ...mapGetters(["logined", "avatar", "user_id", "nick"]),
+        admin (): boolean {
+            return this.$store.getters.admin;
+        },
+        temp_title (): string {
+            return this.problem_id + ": " + markdownIt.renderRaw(this.title);
         }
-    }
-
-    initContestListForAdministrator (originalId = this.original_id) {
-        if (isNaN(originalId) || originalId < 1000) {
-            return;
+    },
+    watch: {
+        original_id (newVal: any) {
+            if (this.admin) {
+                this.initContestListForAdministrator(newVal);
+            }
         }
-        this.axios.get(`/api/problem/contest_list/${originalId}`)
-            .then(({ data }) => {
-                const contestList = data.data;
-                _.uniqWith(contestList, _.isEqual);
-                contestList.sort((a: any, b: any) => a.contestId - b.contestId);
-                this.contestList = contestList;
-            })
-            .catch(({ data }) => {
-                console.error(`/api/problem/contest_list/${originalId} caused error: `, data);
-            });
-    }
-
-    isPrivateContestLabel (state: any) {
-        if (this.isPrivate(state)) {
-            return "red";
-        }
-        else {
-            return "green";
-        }
-    }
-
-    isPrivate (state: any) {
-        return parseInt(state) === 1;
-    }
-
-    isPrivateContest (state: any) {
-        if (this.isPrivate(state)) {
-            return "Private";
-        }
-        else {
-            return "Public";
-        }
-    }
-
+    },
     mounted () {
         if (this.admin) {
             this.initContestListForAdministrator();
         }
+    },
+    methods: {
+        initContestListForAdministrator (id?: number): void {
+            const originalId = id === undefined ? this.original_id : id;
+            if (isNaN(originalId) || originalId < 1000) {
+                return;
+            }
+            this.axios.get(`/api/problem/contest_list/${originalId}`)
+                .then(({ data }) => {
+                    const contestList = data.data;
+                    _.uniqWith(contestList, _.isEqual);
+                    contestList.sort((a: any, b: any) => a.contestId - b.contestId);
+                    this.contestList = contestList;
+                })
+                .catch(({ data }) => {
+                    console.error(`/api/problem/contest_list/${originalId} caused error: `, data);
+                });
+        },
+        isPrivateContestLabel (state: any): string {
+            return this.isPrivate(state) ? "red" : "green";
+        },
+        isPrivate (state: any): boolean {
+            return parseInt(state) === 1;
+        },
+        isPrivateContest (state: any): string {
+            return this.isPrivate(state) ? "Private" : "Public";
+        }
     }
-
-    @Prop({ default: "" }) title!: string;
-    @Prop({ default: 0 }) time!: number;
-    @Prop({ default: 0 }) memory!: number;
-    @Prop({ default: false }) spj!: boolean;
-    @Prop({ default: 0 }) submit!: number;
-    @Prop({ default: 0 }) accepted!: number;
-    @Prop({ default: 0 }) original_id!: number;
-    @Prop({ default: false }) iseditor!: boolean;
-    @Prop({ default: false }) isadmin!: boolean;
-    @Prop({ default: "" }) description!: string;
-    @Prop({ default: "" }) input!: string;
-    @Prop({ default: "" }) output!: string;
-    @Prop({ default: "" }) sampleinput!: string;
-    @Prop({ default: "" }) sampleoutput!: string;
-    @Prop({ default: "" }) hint!: string;
-    @Prop({ default: "Administrator" }) uploader!: string;
-    @Prop({ default: () => () => undefined }) switch_screen!: (...arg: any[]) => any;
-    @Prop({ default: true }) normal_problem!: boolean;
-    @Prop({ default: "" }) source!: string;
-    @Prop({ default: 0 }) problem_id!: number;
-
-    get temp_title () {
-        return this.problem_id + ": " + markdownIt.renderRaw(this.title);
-    }
-}
+});
 </script>
 
 <style scoped>

@@ -245,19 +245,19 @@ jest.mock("dragscroll", () => ({ reset: jest.fn() }));
 const projectRoot = path.resolve(__dirname, "../../..");
 const originalGetElementById = document.getElementById.bind(document);
 
-const createDefaultMixinMock = (factory?: (VueBase: any) => any) => {
+const createDefaultMixinMock = (factory?: (VueBase: any) => any, named: Record<string, any> = {}) => {
     const VueBase = require("vue");
     const MockMixin = factory ? factory(VueBase) : class extends VueBase {};
-    return { __esModule: true, default: MockMixin };
+    return { __esModule: true, default: MockMixin, ...named };
 };
 
-const createNamedMixinMock = (name: string) => {
+const createNamedMixinMock = (name: string, named: Record<string, any> = {}) => {
     const VueBase = require("vue");
-    return { [name]: class MockMixin extends VueBase {} };
+    return { [name]: class MockMixin extends VueBase {}, ...named };
 };
 
 const mixinMocks: Record<string, () => any> = {
-    "src/mixin/init.ts": () => createDefaultMixinMock(),
+    "src/mixin/init.ts": () => createDefaultMixinMock(undefined, { initMixin: { methods: { renderDarkMode () {}, bindCopyTrigger () {} } } }),
     "src/mixin/StatusViewMixin.ts": () => createDefaultMixinMock((VueBase: any) => class extends VueBase {
         getUserId () { return null; }
         getResult () { return null; }
@@ -283,7 +283,7 @@ const mixinMocks: Record<string, () => any> = {
     }),
     "src/mixin/DarkModeMixin.ts": () => createDefaultMixinMock((VueBase: any) => class extends VueBase {
         renderDarkMode () {}
-    }),
+    }, { darkModeMixin: { methods: { renderDarkMode () {} } } }),
     "src/mixin/mermaidMixin.ts": () => createDefaultMixinMock((VueBase: any) => class extends VueBase {
         initMermaid () {}
         initVisibleMermaid () {}
@@ -339,7 +339,9 @@ beforeAll(() => {
 
     jest.doMock(
         path.resolve(projectRoot, "src/mixin/contest/ContestShowSimMixin.ts"),
-        () => createNamedMixinMock("ContestShowSimMixin")
+        () => createNamedMixinMock("ContestShowSimMixin", {
+            contestShowSimMixin: { data: () => ({ showSim: false }), methods: { initContestConfig () {} } }
+        })
     );
 
     jest.doMock(path.resolve(projectRoot, "src/lib/util.ts"), () => ({

@@ -7,213 +7,207 @@
 <script lang="ts">
 import * as monaco from "monaco-editor";
 import languageMap from "../../../lib/constants/monaco-editor/language-map";
-import Vue from "vue";
-import { Prop, Component, Watch } from "vue-property-decorator";
+import { defineComponent } from "vue";
 import { createLanguageServer } from "@/module/Editor/monaco-client";
 
-@Component
-export default class MonacoEditor extends Vue {
-    @Prop({ default: "18" }) fontSize!: string;
-    @Prop({ default: 0 }) selected_language!: number;
-    @Prop({ default: "vs-dark" }) theme!: string;
-    @Prop({ default: "" }) value!: string;
-    @Prop({ default: 460 }) height!: number;
-    @Prop({ default: false }) readOnly!: boolean;
-    @Prop({ default: true }) minimap!: boolean;
-    @Prop({ default: false }) enableLanguageServer!: boolean;
-    @Prop({ default: 0 }) prependLength!: number;
-
-    $refs: any;
-
-    editor: monaco.editor.IStandaloneCodeEditor | null = null;
-    source_code = "";
-    languageServer!: WebSocket;
-
-    @Watch("source_code")
-    onSourceCodeChanged (val: string) {
-        this.$emit("input", val);
-    }
-
-    @Watch("value")
-    onValueChanged (val: string) {
-        if (val !== this.source_code) {
-            this.source_code = val;
-            this.editor!.getModel()!.setValue(val);
-        }
-    }
-
-    getMonacoUri (languageSuffix: string) {
-        const uri = `file:///tmp/cupoj-language-server${this.readOnly ? "" : "/intellisense"}/${this.languageServerId()}/Main.${languageSuffix}`;
-        console.log(uri);
-        return monaco.Uri.parse(uri);
-    }
-
-    @Watch("selected_language")
-    onSelectedLanguageChanged (val: any, oldVal: any) {
-        if (this.editor && languageMap[val] !== languageMap[oldVal]) {
-            console.log("Changed");
-            this.closeLanguageServer();
-            const oldModel = this.editor.getModel()!;
-            const newModel = monaco.editor.createModel(oldModel.getValue(), languageMap[parseInt(val)], this.getMonacoUri(languageMap[val]));
-            this.editor.setModel(newModel);
-            if (oldModel) {
-                oldModel.dispose();
+export default defineComponent({
+    name: "MonacoEditor",
+    props: {
+        fontSize: { type: [String, Number], default: "18" },
+        selected_language: { type: [Number, String], default: 0 },
+        theme: { type: String, default: "vs-dark" },
+        value: { type: String, default: "" },
+        height: { type: [Number, String], default: 460 },
+        readOnly: { type: Boolean, default: false },
+        minimap: { type: Boolean, default: true },
+        enableLanguageServer: { type: Boolean, default: false },
+        prependLength: { type: Number, default: 0 }
+    },
+    data () {
+        return {
+            source_code: ""
+        };
+    },
+    watch: {
+        source_code (val: string) {
+            this.$emit("input", val);
+        },
+        value (val: string) {
+            if (val !== this.source_code) {
+                this.source_code = val;
+                this.getEditor()!.getModel()!.setValue(val);
             }
-            this.getNewLanguageServer(this.editor, this.value, languageMap[val]);
-            this.modelEventRegistry();
-        }
-    }
-
-    getNewLanguageServer (editor: monaco.editor.IStandaloneCodeEditor, value: string, language: string) {
-        if (this.enableLanguageServer) {
-            this.languageServer = createLanguageServer(editor, value, language);
-        }
-    }
-
-    closeLanguageServer (enableServer: boolean = false) {
-        if (this.enableLanguageServer || enableServer) {
-            if (this.languageServer && this.languageServer.close) {
-                this.languageServer.close();
+        },
+        selected_language (val: any, oldVal: any) {
+            const editor = this.getEditor();
+            if (editor && languageMap[val] !== languageMap[oldVal]) {
+                this.closeLanguageServer();
+                const oldModel = editor.getModel()!;
+                const newModel = monaco.editor.createModel(oldModel.getValue(), languageMap[parseInt(val)], this.getMonacoUri(languageMap[val]));
+                editor.setModel(newModel);
+                if (oldModel) {
+                    oldModel.dispose();
+                }
+                this.getNewLanguageServer(editor, this.value, languageMap[val]);
+                this.modelEventRegistry();
             }
-        }
-    }
-
-    @Watch("theme")
-    onThemeChanged (val: string) {
-        if (this.editor) {
-            if (val.includes("vs") || val.includes("hc-black")) {
-                monaco.editor.setTheme(val);
+        },
+        theme (val: string) {
+            if (this.getEditor()) {
+                if (val.includes("vs") || val.includes("hc-black")) {
+                    monaco.editor.setTheme(val);
+                }
+                else {
+                    monaco.editor.setTheme("vs-dark");
+                }
+            }
+        },
+        fontSize (val: string) {
+            const editor = this.getEditor();
+            if (editor && !isNaN(parseInt(val))) {
+                editor.updateOptions({
+                    fontSize: parseInt(val)
+                });
+            }
+        },
+        height () {
+            if (this.getEditor()) {
+                this.$nextTick(() => {
+                    this.getEditor()!.layout();
+                });
+            }
+        },
+        prependLength (val: number) {
+            if (this.getEditor()) {
+                this.$nextTick(() => {
+                    this.getEditor()!.updateOptions({
+                        lineNumbers: (line: number) => (val + line).toString()
+                    });
+                });
+            }
+        },
+        enableLanguageServer (val: boolean) {
+            if (!val) {
+                this.$nextTick(() => {
+                    this.getEditor()!.dispose();
+                    this.closeLanguageServer(true);
+                    this.buildEditor();
+                });
             }
             else {
-                monaco.editor.setTheme("vs-dark");
+                this.getNewLanguageServer(this.getEditor()!, this.value, languageMap[this.selected_language as number]);
             }
         }
-    }
-
-    @Watch("fontSize")
-    onFontSizeChanged (val: string) {
-        if (this.editor && !isNaN(parseInt(val))) {
-            this.editor.updateOptions({
-                fontSize: parseInt(val)
-            });
-        }
-    }
-
-    @Watch("height")
-    onHeightChanged (val: string) {
-        if (this.editor) {
-            this.$nextTick(() => {
-                this.editor!.layout();
-            });
-        }
-    }
-
-    @Watch("prependLength")
-    onPrependLengthChanged (val: number) {
-        if (this.editor) {
-            this.$nextTick(() => {
-                this.editor!.updateOptions({
-                    lineNumbers: (line: number) => (val + line).toString()
-                });
-            });
-        }
-    }
-
-    buildEditor () {
-        this.$nextTick(() => {
-            this.initEditor();
-        });
-    }
-
+    },
     mounted () {
         this.buildEditor();
-    }
-
-    @Watch("enableLanguageServer")
-    onEnableLanguageServerChanged (val: boolean) {
-        if (!val) {
-            console.log("val", val);
-            this.$nextTick(() => {
-                this.editor!.dispose();
-                this.closeLanguageServer(true);
-                this.buildEditor();
-            });
-        }
-        else {
-            this.getNewLanguageServer(this.editor!, this.value, languageMap[this.selected_language]);
-        }
-    }
-
+    },
     beforeDestroy () {
         this.closeLanguageServer();
-        this.editor!.dispose();
-    }
-
-    languageServerId () {
-        const id = `${(+(new Date())).toString()}${this.$store.getters.user_id}${Math.trunc(Math.random() * 1000).toString()}`;
-        console.log("langid:", id);
-        return id;
-    }
-
-    initEditor () {
-        this.editor = monaco.editor.create(this.$refs.source, {
-            model: monaco.editor.createModel(this.value, languageMap[this.selected_language], this.getMonacoUri(languageMap[this.selected_language])),
-            value: this.value,
-            lineNumbers: (line: number) => (this.prependLength + line).toString(),
-            language: languageMap[this.selected_language],
-            minimap: {
-                enabled: this.minimap
-            },
-            glyphMargin: true,
-            lightbulb: {
-                enabled: true
-            },
-            fontLigatures: true,
-            scrollBeyondLastLine: false,
-            readOnly: this.readOnly
-        });
-        this.getNewLanguageServer(this.editor, this.value, languageMap[this.selected_language]);
-        this.editor.updateOptions({
-            fontSize: this.getFontSizeFromStorage()
-        });
-        monaco.editor.setTheme(this.getThemeFromStorage());
-        this.modelEventRegistry();
-    }
-
-    modelEventRegistry () {
-        const currentModel = this.editor!.getModel();
-        currentModel!.onDidChangeContent(() => {
-            this.source_code = this.editor!.getModel()!.getValue();
-            this.$store.commit("setCodeInfo", {
-                code: this.source_code
+        const editor = this.getEditor();
+        if (editor) {
+            editor.dispose();
+        }
+    },
+    methods: {
+        // The editor and language server live off the reactive data on purpose.
+        getEditor (): monaco.editor.IStandaloneCodeEditor | null {
+            return (this as any).editor_ || null;
+        },
+        getMonacoUri (languageSuffix: string): monaco.Uri {
+            const uri = `file:///tmp/cupoj-language-server${this.readOnly ? "" : "/intellisense"}/${this.languageServerId()}/Main.${languageSuffix}`;
+            return monaco.Uri.parse(uri);
+        },
+        getNewLanguageServer (editor: monaco.editor.IStandaloneCodeEditor, value: string, language: string): void {
+            if (this.enableLanguageServer) {
+                try {
+                    (this as any).languageServer_ = createLanguageServer(editor, value, language);
+                }
+                catch (e) {
+                    // Language server is optional (completion only); keep the editor usable.
+                    console.warn("language server unavailable:", e);
+                }
+            }
+        },
+        closeLanguageServer (enableServer = false): void {
+            const languageServer = (this as any).languageServer_;
+            if (this.enableLanguageServer || enableServer) {
+                if (languageServer && languageServer.close) {
+                    languageServer.close();
+                }
+            }
+        },
+        buildEditor (): void {
+            this.$nextTick(() => {
+                this.initEditor();
             });
-            this.valueChanged(this.source_code);
-        });
-    }
-
-    valueChanged (newVal: string) {
-        this.$emit("input", newVal);
-    }
-
-    getDataFromStorage (defaultValue: any, key: string) {
-        let data;
-        try {
-            data = JSON.parse(localStorage.submitConfig)[key];
+        },
+        languageServerId (): string {
+            return `${(+(new Date())).toString()}${this.$store.getters.user_id}${Math.trunc(Math.random() * 1000).toString()}`;
+        },
+        initEditor (): void {
+            const language = languageMap[this.selected_language as number];
+            const editor = (this as any).editor_ = monaco.editor.create(this.$refs.source as HTMLElement, {
+                model: monaco.editor.createModel(this.value, language, this.getMonacoUri(language)),
+                value: this.value,
+                lineNumbers: (line: number) => (this.prependLength + line).toString(),
+                language,
+                minimap: {
+                    enabled: this.minimap
+                },
+                glyphMargin: true,
+                lightbulb: {
+                    enabled: true
+                },
+                fontLigatures: true,
+                scrollBeyondLastLine: false,
+                readOnly: this.readOnly
+            });
+            // Wire the content listener first: anything below failing must not leave the
+            // editor disconnected from v-model / the store (code would silently not be submitted).
+            this.modelEventRegistry();
+            editor.updateOptions({
+                fontSize: this.getFontSizeFromStorage()
+            });
+            monaco.editor.setTheme(this.getThemeFromStorage());
+            this.getNewLanguageServer(editor, this.value, language);
+        },
+        // Editor-level content event: keeps firing after setModel() (language switch / rebuild),
+        // unlike a listener bound to one model. Registered once per editor instance.
+        modelEventRegistry (): void {
+            const editor: any = this.getEditor();
+            if (!editor || editor.__kcContentListener) {
+                return;
+            }
+            editor.__kcContentListener = editor.onDidChangeModelContent(() => {
+                this.source_code = editor.getValue();
+                this.$store.commit("setCodeInfo", {
+                    code: this.source_code
+                });
+                this.valueChanged(this.source_code);
+            });
+        },
+        valueChanged (newVal: string): void {
+            this.$emit("input", newVal);
+        },
+        getDataFromStorage (defaultValue: any, key: string): any {
+            let data;
+            try {
+                data = JSON.parse(localStorage.submitConfig)[key];
+            }
+            catch (e) {
+                data = defaultValue;
+            }
+            return data;
+        },
+        getThemeFromStorage (): string {
+            return this.getDataFromStorage("vs-dark", "theme");
+        },
+        getFontSizeFromStorage (): number {
+            return this.getDataFromStorage(16, "fontSize");
         }
-        catch (e) {
-            data = defaultValue;
-        }
-        return data;
     }
-
-    getThemeFromStorage () {
-        return this.getDataFromStorage("vs-dark", "theme");
-    }
-
-    getFontSizeFromStorage () {
-        return this.getDataFromStorage(16, "fontSize");
-    }
-}
+});
 </script>
 
 <style scoped>

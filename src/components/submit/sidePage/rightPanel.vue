@@ -53,7 +53,7 @@
             <div class="item" style="text-align:center;">
                 {{$t("oj-name")}}
                 <div class="item">
-                    <div class="ui toggle checkbox" v-cloak v-if="!iscontest">
+                    <div class="ui toggle checkbox" v-cloak v-if="!isContestRoute">
                         <input name="share" type="checkbox" v-model="share">
                         <label>{{$t("public code")}}</label>
                     </div>
@@ -71,8 +71,10 @@
                 </div>
             </div>
             <div class="ui right menu">
+                <span class="item hotkey-hint" :title="$t('submit') + ': ' + submitHotkey">{{ submitHotkey }}</span>
                 <div class="ui buttons">
                     <input :disabled="submitDisabled" @click="do_submit" class="ui button green " id="Submit"
+                           :aria-keyshortcuts="submitHotkey === 'Ctrl + Enter' ? 'Control+Enter' : 'Meta+Enter'"
                            type=button
                            :value="$t('submit')">
                     <div class="or"></div>
@@ -112,88 +114,101 @@ import Clipboard from "clipboard";
 import jquery from "jquery";
 import "@/lib/brace/braceMode";
 import "@/lib/brace/braceTheme";
-import { Prop, Watch, Component } from "vue-property-decorator";
-import Vue from "vue";
-import { Debounce } from "@/module/Decorator/method";
+import { defineComponent, PropType } from "vue";
+import _ from "lodash";
 
 const astyle = require("wastyle/dist/astyle.wasm").default;
 const $: any = jquery;
 const detectLang = require("../../../lib/langDetector");
-    @Component({
-        components: {
-            aceEditor,
-            aceThemeSelector,
-            monacoEditor,
-            monacoThemeSelector,
-            aceStatic,
-            monacoStatic
+type Fn = (...arg: any[]) => any;
+
+// Shared by every instance, like the former @Debounce(100) decorator.
+const detectLanguageDebouncer = _.debounce(function (this: any) {
+    const detectedLang = detectLang(this.code, this.lang_list.map(function (e: any) {
+        return e.num;
+    }));
+    if (this.selected_language !== detectedLang) {
+        this.selected_language = detectedLang;
+    }
+}, 100);
+
+const isMac = typeof navigator !== "undefined" && /Mac|iPhone|iPad|iPod/i.test(navigator.platform || navigator.userAgent);
+
+export default defineComponent({
+    name: "RightPanel",
+    components: {
+        aceEditor,
+        aceThemeSelector,
+        monacoEditor,
+        monacoThemeSelector,
+        aceStatic,
+        monacoStatic
+    },
+    props: {
+        prepend: { default: () => ({}) as any },
+        append: { default: () => ({}) as any },
+        source_code_language: { type: Number as PropType<number | null>, default: null },
+        iscontest: { type: Boolean, default: false },
+        judgeInfoText: { type: String, default: "" },
+        lang_list: { type: Array as PropType<any[]>, default: () => [] },
+        language_template: { type: Array as PropType<any[]>, default: () => [] },
+        do_submit: { type: Function as PropType<Fn>, default: () => () => undefined },
+        pre_test_run: { type: Function as PropType<Fn>, default: () => () => undefined },
+        submitDisabled: { type: Boolean, default: false },
+        hide_warning: { type: Boolean, default: false },
+        source_code: { type: String, default: "" },
+        fill_in_blank_problem: { type: Number, default: 0 }
+    },
+    data () {
+        return {
+            selected_language: 0,
+            auto_detect: false,
+            share: false,
+            fontSize: "16",
+            theme: "ace/theme/monokai",
+            static_theme: "ace/theme/monokai",
+            prependView: null as any,
+            config: {} as any,
+            appendView: null as any,
+            editorPackage: false,
+            code: "",
+            codeLine: 0,
+            language: ["c_cpp", "c_cpp", "pascal", "java", "ruby", "sh", "python", "php", "perl", "csharp", "objectivec", "text", "scheme", "c_cpp", "c_cpp", "lua", "javascript", "go", "python", "c_cpp", "c_cpp", "c_cpp", "text", "java", "java", "python", "python", "java", "c_cpp", "c_cpp", "c_cpp"],
+            current_prepend: "" as any,
+            current_append: "" as any,
+            dirty: false,
+            // was assigned onto the iscontest prop before; kept as local state
+            isContestRoute: false,
+            submitHotkey: isMac ? "⌘ + Enter" : "Ctrl + Enter"
+        };
+    },
+    computed: {
+        appendLineStartsWith (): number {
+            if (typeof this.current_prepend === "string") {
+                return this.trimedCurrentPrepend.split("\n").length + this.codeLine;
+            }
+            return 0;
+        },
+        enableLanguageServerForEditor (): boolean {
+            return !(this.trimedCurrentPrepend || this.trimedCurrentAppend);
+        },
+        trimedCurrentPrepend (): any {
+            return typeof this.current_prepend === "string" ? this.current_prepend.trim() : this.current_prepend;
+        },
+        trimedCurrentAppend (): any {
+            return typeof this.current_append === "string" ? this.current_append.trim() : this.current_append;
+        },
+        codePrependLines (): number {
+            return typeof this.current_prepend === "string" ? this.trimedCurrentPrepend.split("\n").length : 0;
         }
-    })
-export default class RightPanel extends Vue {
-        selected_language = 0;
-        auto_detect = false;
-        share = false;
-        fontSize = "16";
-        theme = "ace/theme/monokai";
-        static_theme = "ace/theme/monokai";
-        prependView: any = null;
-        config: any = {};
-        appendView: any = null;
-        editorPackage = false;
-        code = "";
-        codeLine = 0;
-        language = ["c_cpp", "c_cpp", "pascal", "java", "ruby", "sh", "python", "php", "perl", "csharp", "objectivec", "text", "scheme", "c_cpp", "c_cpp", "lua", "javascript", "go", "python", "c_cpp", "c_cpp", "c_cpp", "text", "java", "java", "python", "python", "java", "c_cpp", "c_cpp", "c_cpp"];
-        current_prepend: any = "";
-        current_append: any = "";
-        dirty = false;
-
-        created () {
-            const config = this.initConfig();
-            Object.assign(this, config);
-            Object.assign(this.config, config);
-        }
-
-        @Prop({
-            default: () => {
-                return {};
-            }
-        }) prepend!: any;
-
-        @Prop({
-            default: () => {
-                return {};
-            }
-        }) append!: any;
-
-        @Prop({ default: null }) source_code_language!: number | null;
-        @Prop({ default: false }) iscontest!: boolean;
-        @Prop({ default: "" }) judgeInfoText!: string;
-        @Prop({ default: () => [] }) lang_list!: any[];
-        @Prop({ default: () => [] }) language_template!: any[];
-        @Prop({
-            default: () => {
-            }
-        }) do_submit!: (...arg: any[]) => any;
-
-        @Prop({
-            default: () => {
-            }
-        }) pre_test_run!: (...arg: any[]) => any;
-
-        @Prop({ default: false }) submitDisabled!: boolean;
-        @Prop({ default: false }) hide_warning!: boolean;
-        @Prop({ default: "" }) source_code!: string;
-        @Prop({ default: 0 }) fill_in_blank_problem!: number;
-
-        @Watch("source_code_language")
-        onSourceCodeLanguageChanged (val: any) {
+    },
+    watch: {
+        source_code_language (val: any) {
             if (!isNaN(val)) {
                 this.selected_language = val;
             }
-        }
-
-        @Watch("selected_language")
-        onSelectedLanguageChanged (val: any) {
+        },
+        selected_language (val: any) {
             if (val === undefined || val < 0) {
                 return;
             }
@@ -217,40 +232,27 @@ export default class RightPanel extends Vue {
                     this.appendView.getSession().setValue(this.current_append);
                 }
             }
-        }
-
-        @Watch("editorPackage")
-        onEditorPackageChanged (val: any) {
+        },
+        editorPackage (val: any) {
             this.config.editorPackage = val;
             localStorage.submitConfig = JSON.stringify(this.config);
-            if (val) {
-                this.theme = "vs-dark";
-            }
-            else {
-                this.theme = "ace/theme/monokai";
-            }
-        }
-
-        @Watch("static_theme")
-        onStaticThemeChanged (val: any) {
+            this.theme = val ? "vs-dark" : "ace/theme/monokai";
+        },
+        static_theme (val: any) {
             this.config.static_theme = val;
             localStorage.submitConfig = JSON.stringify(this.config);
-        }
-
-        @Watch("theme")
-        onThemeChanged (val: any) {
+        },
+        theme (val: any) {
             if (val === "") {
                 return;
             }
             this.config.theme = val;
             localStorage.submitConfig = JSON.stringify(this.config);
             this.static_theme = val;
-            const prependView = this.prependView;
-            if (prependView) {
+            if (this.prependView) {
                 this.prependView.setTheme(val);
             }
-            const appendView = this.appendView;
-            if (appendView) {
+            if (this.appendView) {
                 this.appendView.setTheme(val);
             }
             if (this.current_prepend || this.current_append) {
@@ -258,23 +260,19 @@ export default class RightPanel extends Vue {
                 this.$forceUpdate();
                 this.$nextTick(() => {
                     this.$nextTick(() => {
-                        this.current_prepend = this.prepend[this.selected_language] || "";
-                        this.current_append = this.append[this.selected_language] || "";
+                        this.current_prepend = (this.prepend as any)[this.selected_language] || "";
+                        this.current_append = (this.append as any)[this.selected_language] || "";
                         this.$forceUpdate();
                     });
                 });
             }
-        }
-
-        @Watch("auto_detect")
-        onAutoDetectChanged (val: any) {
+        },
+        auto_detect (val: any) {
             if (val) {
                 this.detectLanguageDebouncer();
             }
-        }
-
-        @Watch("prepend")
-        onPrependChanged (val: any) {
+        },
+        prepend (val: any) {
             if (!val) {
                 return;
             }
@@ -282,10 +280,8 @@ export default class RightPanel extends Vue {
                 this.selected_language = parseInt(Object.keys(val)[0]);
             }
             this.current_prepend = val[this.selected_language];
-        }
-
-        @Watch("append")
-        onAppendChanged (val: any) {
+        },
+        append (val: any) {
             if (!val) {
                 return;
             }
@@ -293,76 +289,41 @@ export default class RightPanel extends Vue {
                 this.selected_language = parseInt(Object.keys(val)[0]);
             }
             this.current_append = val[this.selected_language];
-        }
-
-        @Watch("share")
-        onShareChanged (val: any) {
+        },
+        share (val: any) {
             this.$store.commit("setCodeInfo", {
                 share: !!val
             });
-        }
-
-        @Watch("source_code")
-        onSourceCodeChanged (val: any) {
+        },
+        source_code (val: any) {
             this.code = val;
-        }
-
-        @Watch("code")
-        onCodeChanged (val: string) {
+        },
+        code (val: string) {
             if (val && this.auto_detect) {
                 this.detectLanguageDebouncer();
             }
             else if (val) {
                 this.codeLine = val.split("\n").length;
             }
-        }
-
-        get appendLineStartsWith () {
-            if (typeof this.current_prepend === "string") {
-                return this.trimedCurrentPrepend.split("\n").length + this.codeLine;
-            }
-            else {
-                return 0;
-            }
-        }
-
-        get enableLanguageServerForEditor () {
-            const resp = !(this.trimedCurrentPrepend || this.trimedCurrentAppend);
-            return resp;
-        }
-
-        get trimedCurrentPrepend () {
-            if (typeof this.current_prepend === "string") {
-                return this.current_prepend.trim();
-            }
-            else {
-                return this.current_prepend;
-            }
-        }
-
-        get trimedCurrentAppend () {
-            if (typeof this.current_append === "string") {
-                return this.current_append.trim();
-            }
-            else {
-                return this.current_append;
-            }
-        }
-
-        @Watch("fontSize")
-        onFontSizeChanged (val: any) {
+        },
+        fontSize (val: any) {
             this.config.fontSize = val;
             localStorage.submitConfig = JSON.stringify(this.config);
         }
-
-        mounted () {
-            this.initConfig();
-            this.initClipboard();
-            this.initSolutionCode();
-        }
-
-        initConfig () {
-            this.iscontest = this.$route.fullPath.includes("contest");
+    },
+    created () {
+        const config = this.initConfig();
+        Object.assign(this, config);
+        Object.assign(this.config, config);
+    },
+    mounted () {
+        this.initConfig();
+        this.initClipboard();
+        this.initSolutionCode();
+    },
+    methods: {
+        initConfig (): any {
+            this.isContestRoute = this.$route.fullPath.includes("contest");
             const defaultConfig = {
                 editorPackage: false,
                 theme: "ace/theme/monokai",
@@ -382,16 +343,10 @@ export default class RightPanel extends Vue {
                 }
             }
             return config;
-        }
-
-        get codePrependLines () {
-            const current_prepend = this.current_prepend;
-            return typeof current_prepend === "string" ? this.trimedCurrentPrepend.split("\n").length : 0;
-        }
-
-        initClipboard () {
+        },
+        initClipboard (): void {
             const obj = document.getElementById("clipbtn");
-            const that = this;
+            const that: any = this;
             if (obj) {
                 const clipboard = new Clipboard(obj, {
                     text: function () {
@@ -408,41 +363,32 @@ export default class RightPanel extends Vue {
                         return mergetext;
                     }
                 });
-                clipboard.on("success", (e) => {
+                clipboard.on("success", () => {
                     alert(that.$t("Context is in your clipboard") as string);
-                    console.log(e);
                 });
                 clipboard.on("error", function (e) {
                     console.error(e);
                     console.log("复制失败！请手动复制代码");
                 });
             }
-        }
-
-        initSolutionCode () {
+        },
+        initSolutionCode (): void {
             if (this.$route.params.solution_id) {
                 this.axios.get("/api/status/solution", { params: { sid: this.$route.params.solution_id } })
                     .then(({ data }) => {
                         this.selected_language = parseInt(data.data.language);
                     });
             }
-        }
-
-        @Debounce(100)
-        detectLanguageDebouncer () {
-            const detectedLang = detectLang(this.code, this.lang_list.map(function (e) {
-                return e.num;
-            }));
-            if (this.selected_language !== detectedLang) {
-                this.selected_language = detectedLang;
-            }
-        }
-
-        async formatCode () {
+        },
+        detectLanguageDebouncer (): void {
+            detectLanguageDebouncer.call(this);
+        },
+        async formatCode (): Promise<void> {
             await init(astyle);
             this.code = await format(this.code, "pad-oper style=google")[1];
         }
-}
+    }
+});
 </script>
 
 <style scoped>
@@ -495,6 +441,12 @@ export default class RightPanel extends Vue {
         display: block;
         margin-left: auto;
         margin-right: auto;
+    }
+
+    .hotkey-hint {
+        color: #999;
+        font-size: 12px;
+        white-space: nowrap;
     }
 
     .same_width {

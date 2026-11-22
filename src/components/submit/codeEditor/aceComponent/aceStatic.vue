@@ -11,66 +11,78 @@
 import * as ace from "brace";
 import "@/lib/brace/braceMode";
 import "@/lib/brace/braceTheme";
-import Vue from "vue";
-import { Prop, Component, Watch } from "vue-property-decorator";
-import { Lock } from "@/module/Decorator/method";
+import { defineComponent } from "vue";
 import AwaitLock from "await-lock";
 // @ts-ignore
 window.ace = ace;
 const language = ["c_cpp", "c_cpp", "pascal", "java", "ruby", "sh", "python", "php", "perl", "csharp", "objectivec", "text", "scheme", "c_cpp", "c_cpp", "lua", "javascript", "go", "python", "c_cpp", "c_cpp", "c_cpp", "text", "java", "java", "python", "python", "java", "c_cpp", "c_cpp"];
-@Component
-export default class AceStatic extends Vue {
-    @Prop({ default: "" }) content!: string;
-    @Prop({ default: 0 }) selected_language!: number;
-    @Prop({ default: "monokai" }) static_theme!: string;
-    @Prop({ default: 0 }) prependLength!: number;
-    @Prop({ default: 16 }) fontSize!: number;
-    highlight: any = null;
-    dirty = false;
-    language = language;
+// Shared by every instance, like the former @Lock(new AwaitLock()) decorator.
+const renderLock = new AwaitLock();
+export default defineComponent({
+    name: "AceStatic",
+    props: {
+        content: { type: String, default: "" },
+        selected_language: { type: Number, default: 0 },
+        static_theme: { type: String, default: "monokai" },
+        prependLength: { type: Number, default: 0 },
+        fontSize: { type: [Number, String], default: 16 }
+    },
+    data () {
+        return {
+            highlight: null as any,
+            dirty: false,
+            language
+        };
+    },
+    watch: {
+        content () {
+            this.renderHighlight();
+        },
+        static_theme () {
+            this.renderHighlight();
+        },
+        prependLength () {
+            this.renderHighlight();
+        }
+    },
     mounted () {
         this.initHighlight();
         window.render = this.renderHighlight;
+    },
+    methods: {
+        initHighlight (): void {
+            const that = this;
+            require("brace/ext/static_highlight");
+            // @ts-ignore
+            ace.acequire(["ace/ext/static_highlight"], function (fn) {
+                that.highlight = fn;
+                that.renderHighlight();
+            });
+        },
+        async renderHighlight (): Promise<unknown> {
+            await renderLock.acquireAsync();
+            const resp = new Promise((resolve) => {
+                const h = this.highlight;
+                if (typeof h === "function") {
+                    const highlight = h;
+                    const val: any = this.$refs.staticElement;
+                    $(val).text(this.content);
+                    this.$nextTick(() => {
+                        highlight(val, {
+                            mode: val.getAttribute("ace-mode"),
+                            theme: val.getAttribute("ace-theme"),
+                            firstLineNumber: Math.max(this.prependLength, 0) + 1,
+                            showGutter: val.getAttribute("ace-gutter"),
+                            trim: true
+                        }, function () { resolve(null); });
+                    });
+                }
+            });
+            renderLock.release();
+            return resp;
+        }
     }
-
-    initHighlight () {
-        const that = this;
-        require("brace/ext/static_highlight");
-        // @ts-ignore
-        ace.acequire(["ace/ext/static_highlight"], function (fn) {
-            that.highlight = fn;
-            that.renderHighlight();
-        });
-    }
-
-    @Lock(new AwaitLock())
-    async renderHighlight () {
-        return new Promise((resolve) => {
-            const h = this.highlight;
-            if (typeof h === "function") {
-                const highlight = h;
-                const val: any = this.$refs.staticElement;
-                $(val).text(this.content);
-                this.$nextTick(() => {
-                    highlight(val, {
-                        mode: val.getAttribute("ace-mode"),
-                        theme: val.getAttribute("ace-theme"),
-                        firstLineNumber: Math.max(this.prependLength, 0) + 1,
-                        showGutter: val.getAttribute("ace-gutter"),
-                        trim: true
-                    }, function () { resolve(null); });
-                });
-            }
-        });
-    }
-
-    @Watch("content")
-    @Watch("static_theme")
-    @Watch("prependLength")
-    onWatchChanged () {
-        this.renderHighlight();
-    }
-}
+});
 </script>
 
 <style scoped>
