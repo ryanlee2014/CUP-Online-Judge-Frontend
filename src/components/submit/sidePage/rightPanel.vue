@@ -116,6 +116,7 @@ import "@/lib/brace/braceMode";
 import "@/lib/brace/braceTheme";
 import { defineComponent, PropType } from "vue";
 import _ from "lodash";
+import { toast } from "@/util/toast";
 
 const astyle = require("wastyle/dist/astyle.wasm").default;
 const $: any = jquery;
@@ -364,7 +365,7 @@ export default defineComponent({
                     }
                 });
                 clipboard.on("success", () => {
-                    alert(that.$t("Context is in your clipboard") as string);
+                    toast(that.$t("Context is in your clipboard") as string, { type: "success" });
                 });
                 clipboard.on("error", function (e) {
                     console.error(e);

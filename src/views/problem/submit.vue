@@ -96,7 +96,7 @@ const debouncedSubmit = _.debounce(function (this: any) {
 
 const debouncedPreTestRun = _.debounce(function (this: any) {
     if (!this.$socket || (this.$socket && !this.$socket.connected)) {
-        alert(WEBSOCKET_NOT_READY);
+        toast(WEBSOCKET_NOT_READY, { type: "error" });
         return;
     }
     const now = parseInt(dayjs() + "");
@@ -441,7 +441,7 @@ export default defineComponent({
                 })
                 .catch(({ data }) => {
                     if (data.statement) {
-                        alert(data.statement);
+                        toast(data.statement, { type: "error" });
                     }
                     this.contest_mode = data.contest_mode;
                     this.limit = false;
@@ -646,7 +646,7 @@ export default defineComponent({
 
         do_submit (): void {
             if (!(this as any).$socket.connected) {
-                alert(WEBSOCKET_NOT_READY);
+                toast(WEBSOCKET_NOT_READY, { type: "error" });
                 return;
             }
             debouncedSubmit.call(this);
@@ -696,7 +696,7 @@ export default defineComponent({
         },
 
         error_callback (data: any): void {
-            alert(data.statement);
+            toast(data.statement, { type: "error" });
             this.resume();
             $(".ui.teal.progress").hide();
         },
@@ -720,7 +720,7 @@ export default defineComponent({
             case 27:
                 code = this.$store.getters.code;
                 if (code.indexOf("Main") === -1 || code.indexOf("main") === -1 || code.indexOf("package") !== -1) {
-                    alert("Java语言提交时必须使用Main作为主类\n使用static main作为入口函数\n并且不能存在包名(如package helloworld)");
+                    toast("Java语言提交时必须使用Main作为主类\n使用static main作为入口函数\n并且不能存在包名(如package helloworld)", { type: "warning" });
                     return false;
                 }
                 return true;
@@ -738,11 +738,14 @@ export default defineComponent({
             const params: any = this.$route.params;
             $("#out").html("样例输出为:\n" + this.sampleoutput);
             if (that.test_run_sampleinput && that.test_run_sampleinput.length > 1000) {
-                alert("测试运行输入用例长度不能超过1000字!");
+                toast("测试运行输入用例长度不能超过1000字!", { type: "warning" });
                 return;
             }
             if (handlerInterval) window.clearInterval(handlerInterval);
-            if (this.$store.getters.code.length < 10) return alert("too short!");
+            if (this.$store.getters.code.length < 10) {
+                toast("too short!", { type: "warning" });
+                return;
+            }
             let type = "problem";
             if (!isNaN(params.contest_id)) {
                 type = "contest";

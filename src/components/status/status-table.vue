@@ -88,14 +88,13 @@
 </template>
 
 <script lang="ts">
-import avatarMixin from "../../mixin/avatarMixin";
-import { Mixins, Component } from "vue-property-decorator";
-import { StatusTableMixin } from "@/mixin/status-table-mixin.component";
+import { defineComponent } from "vue";
+import { avatarMixin } from "../../mixin/avatarMixin";
+import { statusTableMixin } from "@/mixin/status-table-mixin.component";
 
-@Component
-export default class StatusTable extends Mixins(avatarMixin, StatusTableMixin) {
-
-}
+export default defineComponent({
+    mixins: [avatarMixin, statusTableMixin]
+});
 </script>
 
 <style scoped>

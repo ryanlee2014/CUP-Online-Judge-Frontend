@@ -8,6 +8,7 @@
                     {{$tc("totalProblem", (total || 0), {n: total || 0})}}
                     {{recent_one_month !== -1 && (!label) && (!search_tag) ? $tc("addProblem", recent_one_month, {n:
                     recent_one_month}) : "" }}
+                    <div class="ui active mini inline loader list-state-reloading" v-if="listReloading"></div>
                 </div>
             </h2>
             <div class="ui grid">
@@ -78,7 +79,11 @@
                 <div :class="(show_label_cloud?'twelve':'sixteen')+' wide column'">
                     <div class="row">
 
+                        <list-state :empty-text="$t('noMatchingProblem')" :state="listState"
+                                    @retry="retryList"></list-state>
                         <main-content
+                            :class="{'list-reloading': listReloading}"
+                            v-show="hasRows"
                             :data="table"
                             :dim="dim"
                             :hide_currect="hide_currect"
@@ -121,18 +126,17 @@
 </template>
 
 <script lang="ts">
-// eslint-disable-next-line no-unused-vars
 import Pagination from "../components/problemset/pagination.vue";
 import selectedTag from "../components/problemset/selected-tag.vue";
 import mainContent from "../components/problemset/MainContent.vue";
 import ContestMode from "../components/contestMode/block.vue";
+import ListState, { ListStateType } from "../components/common/ListState.vue";
 import { mapGetters } from "vuex";
-import { Component, Mixins, Watch } from "vue-property-decorator";
-import mixins from "../mixin/init";
+import { defineComponent } from "vue";
+import { initMixin } from "../mixin/init";
 import jquery from "jquery";
 import _ from "lodash";
 // @antv/g2 + data-set are only needed for the optional tag cloud: loaded on demand
-import type G2Type from "@antv/g2";
 const $: any = jquery;
 const HEIGHT = 320;
 const MAX_SIZE = 25;
@@ -180,52 +184,154 @@ function parseQueryString (query: any) {
 
 const queryString = parseQueryString(window.location.hash.substring(1));
 
-@Component({
+export default defineComponent({
     components: {
         mainContent,
         Pagination,
         selectedTag,
-        ContestMode
+        ContestMode,
+        ListState
     },
-    computed: mapGetters(["contestMode"])
-})
-export default class ProblemSet extends Mixins(mixins) {
-        table = {};
-        dim = false;
-        current_page = queryString.page || 1;
-        search_tag = queryString.search || getParameterByName("tag") || "";
-        label = queryString.label || getParameterByName("label") || "";
-        order = queryString.order || 0;
-        order_target = queryString.target || "problem_id";
-        show_tag = localStorage.getItem("show_tag") === "true";
-        page_cnt = queryString.page_cnt || 50;
-        total = 0;
-        recent_one_month = -1;
-        hide_currect = localStorage.getItem("hide_currect") === "true";
-        show_label_cloud = localStorage.getItem("show_label_cloud") === "true";
-        chart: G2Type.Chart | undefined = undefined;
-        has_draw = false;
-        contest_mode = false;
-
-        get tables () {
-            return {
-                page_cnt: this.page_cnt,
-                total: this.total,
-                table: undefined,
-                recent_one_month: this.recent_one_month
-            };
-        }
-
-        set tables (_t: any) {
-            this.page_cnt = _t.step;
-            this.total = _t.total;
-            this.table = _t;
-            if (_t.recent_one_month) {
-                this.recent_one_month = _t.recent_one_month;
+    mixins: [initMixin],
+    data () {
+        return {
+            table: {} as any,
+            dim: false,
+            current_page: (queryString.page || 1) as any,
+            search_tag: (queryString.search || getParameterByName("tag") || "") as any,
+            label: (queryString.label || getParameterByName("label") || "") as any,
+            order: (queryString.order || 0) as any,
+            order_target: (queryString.target || "problem_id") as any,
+            show_tag: localStorage.getItem("show_tag") === "true",
+            page_cnt: (queryString.page_cnt || 50) as any,
+            total: 0 as any,
+            recent_one_month: -1 as any,
+            hide_currect: localStorage.getItem("hide_currect") === "true",
+            show_label_cloud: localStorage.getItem("show_label_cloud") === "true",
+            has_draw: false,
+            contest_mode: false as any,
+            // list request state (loading skeleton / empty / error + retry)
+            listLoading: false,
+            listLoaded: false,
+            listError: false
+        };
+    },
+    computed: {
+        ...mapGetters(["contestMode"]),
+        tables: {
+            get (): any {
+                return {
+                    page_cnt: this.page_cnt,
+                    total: this.total,
+                    table: undefined,
+                    recent_one_month: this.recent_one_month
+                };
+            },
+            set (_t: any): void {
+                this.page_cnt = _t.step;
+                this.total = _t.total;
+                this.table = _t;
+                if (_t.recent_one_month) {
+                    this.recent_one_month = _t.recent_one_month;
+                }
             }
+        },
+        hasRows (): boolean {
+            const problem = this.table && this.table.problem;
+            return !!problem && problem.length > 0;
+        },
+        listReloading (): boolean {
+            return this.listLoading && this.listLoaded;
+        },
+        listState (): ListStateType {
+            if (this.listError) {
+                return "error";
+            }
+            if (this.hasRows) {
+                return null;
+            }
+            return this.listLoaded ? "empty" : "loading";
         }
+    },
+    watch: {
+        show_tag: "check",
+        // NOTE: watches a non-existent key (typo of hide_currect) exactly like the former @Watch("hide_current")
+        hide_current: "hide",
+        show_label_cloud: "cloud"
+    },
+    updated () {
+        this.initjQueryMethods();
+    },
+    mounted () {
+        document.title = `Problem Set -- ${document.title}`;
+        const that = this;
+        const page = parseInt(getParameterByName("page") || queryString.page || "1") - 1;
+        this.current_page = page;
+        this.requestProblemSet("/api/problemset/" + page + "/" + (this.search_tag || "none") + "/" + this.order_target + "/" + this.order + "/?label=" + this.label,
+            (data: any) => {
+                if (data.total) {
+                    if (this.show_label_cloud) {
+                        setTimeout(this.drawLabelCloud, 300);
+                    }
+                    that.tables = data;
+                }
+                else {
+                    that.contest_mode = data.contest_mode;
+                }
+            });
+        /*
+         $(".ui.search")
+            .search({
+                apiSettings: {
+                    url: "/api/problem/module/search/{query}"
+                },
+                fields: {
+                    results: "items",
+                    title: "title",
+                    url: "url",
+                    description: "source"
+                },
+                searchFields: [
+                    "title", "description", "source", "problem_id", "label"
+                ],
+                minCharacters: 2
+            });
+            */
+    },
+    methods: {
+        /**
+         * Runs a problem list request and tracks loading / error state.
+         * Only failures of the request itself are turned into the error state; the retry re-runs the same request.
+         */
+        requestProblemSet (url: string, onData: (data: any) => void): void {
+            const self = this as any;
+            const seq = self.listRequestSeq_ = (self.listRequestSeq_ || 0) + 1;
+            self.retry_ = () => this.requestProblemSet(url, onData);
+            this.listLoading = true;
+            this.listError = false;
+            this.axios.get(url)
+                .then(({ data }) => {
+                    if (seq === self.listRequestSeq_) {
+                        this.listLoading = false;
+                        this.listLoaded = true;
+                    }
+                    onData(data);
+                }, () => {
+                    if (seq === self.listRequestSeq_) {
+                        this.listLoading = false;
+                        this.listError = true;
+                    }
+                });
+        },
 
-        setQuery () {
+        retryList (): void {
+            const retry = (this as any).retry_;
+            if (typeof retry === "function") {
+                retry();
+            }
+        },
+
+        setQuery (): void {
             const queryObject: any = {};
             if (this.current_page !== 0) {
                 queryObject.page = this.current_page + 1;
@@ -237,9 +343,9 @@ export default class ProblemSet extends Mixins(mixins) {
                 queryObject.label = this.label;
             }
             this.$router.push({ path: this.$route.path, query: queryObject });
-        }
+        },
 
-        page (num: any, arrow: any) {
+        page (num: any, arrow: any): void {
             // this.dim = true;
             const page = this.current_page = arrow ? this.current_page + arrow : num;
             const searchTag = this.search_tag || "none";
@@ -247,13 +353,13 @@ export default class ProblemSet extends Mixins(mixins) {
             const orderTarget = this.order_target;
             const that = this;
             this.setQuery();
-            this.axios.get("/api/problemset/" + page + "/" + searchTag + "/" + orderTarget + "/" + order + "/?label=" + this.label)
-                .then(({ data }) => {
+            this.requestProblemSet("/api/problemset/" + page + "/" + searchTag + "/" + orderTarget + "/" + order + "/?label=" + this.label,
+                (data: any) => {
                     that.tables = data;
                 });
-        }
+        },
 
-        sort (target: any, event: any, defaultOrder = 0) {
+        sort (target: any, event: any, defaultOrder = 0): void {
             // this.dim = true;
             const prevTargetEquivToCurrent = this.order_target === target;
             this.order_target = target;
@@ -261,14 +367,14 @@ export default class ProblemSet extends Mixins(mixins) {
             const searchTag = this.search_tag || "none";
             const order = this.order = prevTargetEquivToCurrent ? (-this.order + 1) : defaultOrder;
             const that = this;
-            this.axios.get("/api/problemset/" + page + "/" + searchTag + "/" + target + "/" + order + "/?label=" + this.label)
-                .then(({ data }) => {
+            this.requestProblemSet("/api/problemset/" + page + "/" + searchTag + "/" + target + "/" + order + "/?label=" + this.label,
+                (data: any) => {
                     that.dim = false;
                     that.tables = data;
                 });
-        }
+        },
 
-        tag (label: any) {
+        tag (label: any): void {
             if (label === "标签待整理") {
                 return;
             }
@@ -280,14 +386,14 @@ export default class ProblemSet extends Mixins(mixins) {
             const order = this.order;
             const that = this;
             this.setQuery();
-            this.axios.get("/api/problemset/" + page + "/" + searchTag + "/" + orderTarget + "/" + order + "/?label=" + this.label)
-                .then(({ data }) => {
+            this.requestProblemSet("/api/problemset/" + page + "/" + searchTag + "/" + orderTarget + "/" + order + "/?label=" + this.label,
+                (data: any) => {
                     that.dim = false;
                     that.tables = data;
                 });
-        }
+        },
 
-        searching (label: any) {
+        searching (label: any): void {
             if (label === "标签待整理") {
                 return;
             }
@@ -299,17 +405,17 @@ export default class ProblemSet extends Mixins(mixins) {
             const that = this;
             this.setQuery();
             const problemId = parseInt(label);
-            this.axios.get("/api/problemset/" + page + "/" + label + "/" + orderTarget + "/" + order + "/?label=" + this.label)
-                .then(({ data }) => {
+            this.requestProblemSet("/api/problemset/" + page + "/" + label + "/" + orderTarget + "/" + order + "/?label=" + this.label,
+                (data: any) => {
                     that.dim = false;
                     if (!isNaN(problemId)) {
                         (data.problem || []).sort((a: any, b: any) => a.problem_id === problemId ? -1 : b.problem_id === problemId ? 1 : 0);
                     }
                     that.tables = data;
                 });
-        }
+        },
 
-        remove (type: any) {
+        remove (type: any): void {
             if (type === "search") {
                 this.search_tag = "";
             }
@@ -322,37 +428,34 @@ export default class ProblemSet extends Mixins(mixins) {
             const order = this.order;
             const that = this;
             this.setQuery();
-            this.axios.get("/api/problemset/" + page + "/" + (this.search_tag || "none") + "/" + orderTarget + "/" + order + "/?label=" + this.label)
-                .then(({ data }) => {
+            this.requestProblemSet("/api/problemset/" + page + "/" + (this.search_tag || "none") + "/" + orderTarget + "/" + order + "/?label=" + this.label,
+                (data: any) => {
                     that.dim = false;
                     that.tables = data;
                 });
-        }
+        },
 
-        @Watch("show_tag")
-        check (val: boolean) {
+        check (val: boolean): void {
             localStorage.setItem("show_tag", "" + val);
-        }
+        },
 
-        @Watch("hide_current")
-        hide (val: boolean) {
+        hide (val: boolean): void {
             localStorage.setItem("hide_currect", "" + val);
-        }
+        },
 
-        @Watch("show_label_cloud")
-        cloud (val: boolean) {
+        cloud (val: boolean): void {
             if (!this.has_draw) {
                 this.drawLabelCloud();
             }
             localStorage.setItem("show_label_cloud", "" + val);
-        }
+        },
 
-        enter (obj: any) {
+        enter (obj: any): void {
             const val = obj.target.value || "none";
             this.searching(val);
-        }
+        },
 
-        drawLabelCloud () {
+        drawLabelCloud (): void {
             this.has_draw = true;
             const that = this;
             Promise.all([
@@ -384,7 +487,9 @@ export default class ProblemSet extends Mixins(mixins) {
                     }
                     const dv = new DataSet.View().source(data);
                     const range = dv.range("count");
+                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
                     const min = range[0];
+                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
                     const max = range[1];
                     dv.transform({
                         type: "tag-cloud",
@@ -396,7 +501,8 @@ export default class ProblemSet extends Mixins(mixins) {
                         rotate: 0,
                         fontSize: 14
                     });
-                    const chart = that.chart = new G2.Chart({
+                    // chart instance is kept off reactive data
+                    const chart = (that as any).chart_ = new G2.Chart({
                         container: "word-cloud",
                         forceFit: true,
                         height: HEIGHT,
@@ -424,61 +530,21 @@ export default class ProblemSet extends Mixins(mixins) {
                         // location.href = "?tag=" + encodeURI();
                     });
                 });
-        }
+        },
 
-        initjQueryMethods () {
+        initjQueryMethods (): void {
             $(".ui.search")
                 .popup({
                     on: "click",
                     content: this.$t("press enter to search")
                 });
-        }
+        },
 
-        updated () {
-            this.initjQueryMethods();
-        }
-
-        preloadContent () {
+        preloadContent (): void {
 
         }
-
-        mounted () {
-            document.title = `Problem Set -- ${document.title}`;
-            const that = this;
-            const page = parseInt(getParameterByName("page") || queryString.page || "1") - 1;
-            this.current_page = page;
-            this.axios.get("/api/problemset/" + page + "/" + (this.search_tag || "none") + "/" + this.order_target + "/" + this.order + "/?label=" + this.label)
-                .then(({ data }) => {
-                    if (data.total) {
-                        if (this.show_label_cloud) {
-                            setTimeout(this.drawLabelCloud, 300);
-                        }
-                        that.tables = data;
-                    }
-                    else {
-                        that.contest_mode = data.contest_mode;
-                    }
-                });
-            /*
-             $(".ui.search")
-                .search({
-                    apiSettings: {
-                        url: "/api/problem/module/search/{query}"
-                    },
-                    fields: {
-                        results: "items",
-                        title: "title",
-                        url: "url",
-                        description: "source"
-                    },
-                    searchFields: [
-                        "title", "description", "source", "problem_id", "label"
-                    ],
-                    minCharacters: 2
-                });
-                */
-        }
-}
+    }
+});
 
 </script>
 
@@ -486,20 +552,32 @@ export default class ProblemSet extends Mixins(mixins) {
     #problemsetContainer {
         min-height: 80%;
     }
+
+    .list-reloading {
+        opacity: .55;
+        transition: opacity .2s;
+    }
+
+    .list-state-reloading {
+        margin-left: .5em;
+    }
 </style>
 <i18n>
     {
     "zh-cn": {
     "totalProblem": "共开放{n}题",
-    "addProblem": "最近一个月新增{n}题"
+    "addProblem": "最近一个月新增{n}题",
+    "noMatchingProblem": "没有符合条件的题目"
     },
     "en": {
     "totalProblem": "Total {n} problem | Total {n} problems",
-    "addProblem": "{n} new problem in this month | {n} new problems in this month"
+    "addProblem": "{n} new problem in this month | {n} new problems in this month",
+    "noMatchingProblem": "No problems match the current filter"
     },
     "ja": {
     "totalProblem": "{n}の質問があります",
-    "addProblem": "{n}つの新しい質問を追加"
+    "addProblem": "{n}つの新しい質問を追加",
+    "noMatchingProblem": "条件に一致する問題はありません"
     }
     }
 </i18n>

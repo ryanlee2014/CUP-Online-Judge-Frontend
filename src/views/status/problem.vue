@@ -83,8 +83,12 @@
             </div>
         </div>
 
-        <h1 class="ui dividing header">Submissions</h1>
-        <table class="ui table" id=problemstatus>
+        <h1 class="ui dividing header">Submissions
+            <div class="ui active mini inline loader list-state-reloading" v-if="listReloading"></div>
+        </h1>
+        <list-state :empty-text="$t('noMatchingSubmission')" :rows="4" :state="listState"
+                    @retry="retryList"></list-state>
+        <table :class="{'list-reloading': listReloading}" class="ui table" id=problemstatus v-show="hasRows">
             <thead>
             <tr class=toprow>
                 <th style="cursor:hand">名次
@@ -146,8 +150,9 @@
 <script lang="ts">
 import * as am4core from "@amcharts/amcharts4/core";
 import * as am4charts from "@amcharts/amcharts4/charts";
-import mixins from "../../mixin/init";
-import { Mixins, Component } from "vue-property-decorator";
+import { initMixin } from "../../mixin/init";
+import { defineComponent } from "vue";
+import ListState, { ListStateType } from "../../components/common/ListState.vue";
 import _ from "lodash";
 import jquery from "jquery";
 import Chart from "chart.js";
@@ -284,90 +289,83 @@ function drawChordGraph (data: any, pid: any, prefix = "chord_graph") {
     }
 }
 
-@Component
-export default class ProblemStatus extends Mixins(mixins) {
-    pid!: any;
-    problem_stat= [];
-    submit_stat= [];
-    problem_submit_stat= {};
-    stat_name= [];
-    current_page: any = 0;
-    language_name= [];
-    isadmin= false;
-    self= "";
-    time_range= {};
-    owner: any = "";
-    memory_range= {};
-    initedSolveMap= false;
-    $route: any;
-
+export default defineComponent({
+    components: {
+        ListState
+    },
+    mixins: [initMixin],
+    data () {
+        return {
+            pid: null as any,
+            problem_stat: [] as any[],
+            submit_stat: [] as any[],
+            problem_submit_stat: {} as any,
+            stat_name: [] as any[],
+            current_page: 0 as any,
+            language_name: [] as any[],
+            isadmin: false as any,
+            self: "",
+            time_range: {} as any,
+            owner: "" as any,
+            memory_range: {} as any,
+            initedSolveMap: false,
+            // list request state (loading skeleton / empty / error + retry)
+            listLoading: false,
+            listLoaded: false,
+            listError: false
+        };
+    },
+    computed: {
+        submitStatus: {
+            get (): any {
+                const prob_stat: any = {};
+                _.forEach(this.problem_stat, function (val: any) {
+                    prob_stat[val.result] = val.total;
+                });
+                return {
+                    problem_status: prob_stat,
+                    solution_status: this.submit_stat,
+                    total_status: this.problem_submit_stat,
+                    color: ["black", "black", "black", "green", "red", "red", "yellow", "yellow", "yellow", "yellow", "yellow", "yellow", "yellow", "", "", ""],
+                    statistic_name: this.stat_name,
+                    language_name: this.language_name,
+                    time_range: this.time_range,
+                    memory_range: this.memory_range
+                };
+            },
+            set (val: any): void {
+                const stat = val.data.problem_status;
+                this.problem_stat = stat;
+                this.submit_stat = val.data.solution_status;
+                this.problem_submit_stat = val.data.submit_status;
+                this.stat_name = val.data.statistic_name;
+                this.language_name = val.data.language_name;
+                this.isadmin = val.data.isadmin;
+                this.owner = val.data.self;
+                this.time_range = val.data.time_range;
+                this.memory_range = val.data.memory_range;
+            }
+        },
+        hasRows (): boolean {
+            return !!this.submit_stat && this.submit_stat.length > 0;
+        },
+        listReloading (): boolean {
+            return this.listLoading && this.listLoaded;
+        },
+        listState (): ListStateType {
+            if (this.listError) {
+                return "error";
+            }
+            if (this.hasRows) {
+                return null;
+            }
+            return this.listLoaded ? "empty" : "loading";
+        }
+    },
     created () {
         this.pid = this.$route.params.id;
-        this.current_page = parseInt(this.$route.query.page || 0);
-    }
-
-    get submitStatus () {
-        const prob_stat: any = {};
-        _.forEach(this.problem_stat, function (val: any) {
-            prob_stat[val.result] = val.total;
-        });
-        return {
-            problem_status: prob_stat,
-            solution_status: this.submit_stat,
-            total_status: this.problem_submit_stat,
-            color: ["black", "black", "black", "green", "red", "red", "yellow", "yellow", "yellow", "yellow", "yellow", "yellow", "yellow", "", "", ""],
-            statistic_name: this.stat_name,
-            language_name: this.language_name,
-            time_range: this.time_range,
-            memory_range: this.memory_range
-        };
-    }
-
-    set submitStatus (val: any) {
-        const stat = val.data.problem_status;
-        this.problem_stat = stat;
-        this.submit_stat = val.data.solution_status;
-        this.problem_submit_stat = val.data.submit_status;
-        this.stat_name = val.data.statistic_name;
-        this.language_name = val.data.language_name;
-        this.isadmin = val.data.isadmin;
-        this.owner = val.data.self;
-        this.time_range = val.data.time_range;
-        this.memory_range = val.data.memory_range;
-    }
-
-    initSolveMap () {
-        if (this.initedSolveMap) {
-            return;
-        }
-        this.initedSolveMap = true;
-        this.axios.get(`/api/status/problem/solve_map/${this.pid}`)
-            .then(({ data }) => {
-                if (data.status === "OK") {
-                    _.delay(drawChordGraph, 0, data.data, this.pid);
-                }
-            });
-    }
-
-    page (num: any) {
-        this.current_page += num;
-        const that = this;
-        this.axios.get(`/api/problemstatus/${this.pid}?page=${this.current_page}`)
-            .then(({ data }) => {
-                this.submitStatus = data;
-                this.setQuery();
-            });
-    }
-
-    setQuery () {
-        const queryObject: any = {};
-        if (this.current_page !== 0) { queryObject.page = this.current_page + 1; }
-        else {
-            delete queryObject.page;
-        }
-        this.$router.push({ path: this.$route.path, query: queryObject });
-    }
-
+        this.current_page = parseInt((this.$route.query.page as any) || 0);
+    },
     mounted () {
         document.title = `Problem ${this.pid} Statistics -- ${document.title}`;
         const current_title = $("title").text();
@@ -377,227 +375,309 @@ export default class ProblemStatus extends Mixins(mixins) {
             .then(({ data }) => {
                 drawLineChart(data.data);
             });
-        this.axios.get(`/api/problemstatus/${this.pid}?page=${this.current_page}`)
-            .then(({ data }) => {
+        this.requestSubmissions(`/api/problemstatus/${this.pid}?page=${this.current_page}`, (data: any) => {
+            this.submitStatus = data;
+            this.initGraph();
+        });
+    },
+    methods: {
+        /**
+         * Runs the submission list request and tracks loading / error state.
+         * The retry re-runs exactly the same request (and the same follow-up).
+         */
+        requestSubmissions (url: string, onData: (data: any) => void): void {
+            const self = this as any;
+            const seq = self.listRequestSeq_ = (self.listRequestSeq_ || 0) + 1;
+            self.retry_ = () => this.requestSubmissions(url, onData);
+            this.listLoading = true;
+            this.listError = false;
+            this.axios.get(url)
+                .then(({ data }) => {
+                    if (seq === self.listRequestSeq_) {
+                        this.listLoading = false;
+                        this.listLoaded = true;
+                    }
+                    onData(data);
+                }, () => {
+                    if (seq === self.listRequestSeq_) {
+                        this.listLoading = false;
+                        this.listError = true;
+                    }
+                });
+        },
+
+        retryList (): void {
+            const retry = (this as any).retry_;
+            if (typeof retry === "function") {
+                retry();
+            }
+        },
+
+        initSolveMap (): void {
+            if (this.initedSolveMap) {
+                return;
+            }
+            this.initedSolveMap = true;
+            this.axios.get(`/api/status/problem/solve_map/${this.pid}`)
+                .then(({ data }) => {
+                    if (data.status === "OK") {
+                        _.delay(drawChordGraph, 0, data.data, this.pid);
+                    }
+                });
+        },
+
+        page (num: any): void {
+            this.current_page += num;
+            this.requestSubmissions(`/api/problemstatus/${this.pid}?page=${this.current_page}`, (data: any) => {
                 this.submitStatus = data;
-                this.initGraph();
+                this.setQuery();
             });
-    }
+        },
 
-    initGraph () {
-        const colors: any = _.values(window.chartColors);
-        colors.push("#af63f4");
-        colors.push("#00b5ad");
-        colors.push("#350ae8");
-        colors.push("#E2EAE9");
-        const ncolor = ["#3366CC", "#DC3912", "#FF9900", "#109618", "#990099", "#3B3EAC", "#0099C6", "#DD4477", "#66AA00", "#B82E2E", "#316395", "#994499", "#22AA99", "#AAAA11", "#6633CC", "#E67300", "#8B0707", "#329262", "#5574A6", "#3B3EAC"];
-        _.forEach(ncolor, function (val) {
-            colors.push(val);
-        });
-        const config: any = {
-            type: "pie",
-            data: {
-                datasets: [{
-                    data: _.map(this.submitStatus.problem_status, (val) => {
-                        return val;
-                    }),
-                    backgroundColor: colors,
-                    label: "Status"
-                }],
-                labels: _.map(this.submitStatus.problem_status, (val, index) => {
-                    return this.submitStatus.statistic_name[index];
-                })
-            },
-            options: {
-                responsive: true
-            }
-        };
-        const lang: any = {};
-        const labelMap: Record<string, boolean> = {};
-        let labels: string[] = [];
-        _.forEach(this.submitStatus.time_range, function (val) {
-            labelMap[val.diff] = true;
-            lang[val.language] = {};
-        });
-        labels = _.map(labelMap, function (val, index: string) {
-            const arr = index.split("-");
-            let str = arr[0] + "ms";
-            if (arr.length > 1) { str += " - " + arr[1] + "ms"; }
-            return str;
-        });
-        labels.sort(function (a: any, b: any) {
-            if (a.indexOf(">") !== -1) {
-                const s = parseFloat(a.substring(1, a.length));
-                const t = parseFloat(b.split("-")[0]);
-                return s - t;
-            }
-            else if (b.indexOf(">") !== -1) {
-                const s = parseFloat(a.split("-")[0]);
-                const t = parseFloat(b.substring(1, b.length));
-                return s - t;
-            }
+        setQuery (): void {
+            const queryObject: any = {};
+            if (this.current_page !== 0) { queryObject.page = this.current_page + 1; }
             else {
-                const s = parseFloat(a.split("-")[0]);
-                const t = parseFloat(b.split("-")[0]);
-                return s - t;
+                delete queryObject.page;
             }
-        });
-        _.forEach(lang, function (val, index) {
-            _.forEach(labels, function (v) {
-                lang[index][v] = 0;
-            });
-        });
+            this.$router.push({ path: this.$route.path, query: queryObject });
+        },
 
-        _.forEach(this.submitStatus.time_range, (val) => {
-            const arr = val.diff.split("-");
-            let diffstr = arr[0] + "ms";
-            if (arr.length > 1) {
-                diffstr += " - " + arr[1] + "ms";
-            }
-            lang[val.language][diffstr] = val.total;
-        });
-        let _colors = _.map(colors, function (val) {
-            return val;
-        });
-        const config2: any = {
-            type: "bar",
-            labels: labels,
-            datasets: _.map(lang, (val, index) => {
-                return {
-                    label: this.submitStatus.language_name[index],
-                    backgroundColor: _colors.shift(),
-                    data: _.values(val)
-                };
-            })
-        };
-        const mlabelMap: Record<string, boolean> = {};
-        let mlabels: string[] = [];
-        const mlang: any = {};
-        _colors = _.map(colors, (val) => {
-            return val;
-        });
-        _.forEach(this.submitStatus.memory_range, (val) => {
-            mlabelMap[val.diff] = true;
-            mlang[val.language] = {};
-        });
-        mlabels = _.map(mlabelMap, (val, index: string) => {
-            if (index.indexOf("-") !== -1) {
+        initGraph (): void {
+            const colors: any = _.values(window.chartColors);
+            colors.push("#af63f4");
+            colors.push("#00b5ad");
+            colors.push("#350ae8");
+            colors.push("#E2EAE9");
+            const ncolor = ["#3366CC", "#DC3912", "#FF9900", "#109618", "#990099", "#3B3EAC", "#0099C6", "#DD4477", "#66AA00", "#B82E2E", "#316395", "#994499", "#22AA99", "#AAAA11", "#6633CC", "#E67300", "#8B0707", "#329262", "#5574A6", "#3B3EAC"];
+            _.forEach(ncolor, function (val) {
+                colors.push(val);
+            });
+            const config: any = {
+                type: "pie",
+                data: {
+                    datasets: [{
+                        data: _.map(this.submitStatus.problem_status, (val) => {
+                            return val;
+                        }),
+                        backgroundColor: colors,
+                        label: "Status"
+                    }],
+                    labels: _.map(this.submitStatus.problem_status, (val, index) => {
+                        return this.submitStatus.statistic_name[index];
+                    })
+                },
+                options: {
+                    responsive: true
+                }
+            };
+            const lang: any = {};
+            const labelMap: Record<string, boolean> = {};
+            let labels: string[] = [];
+            _.forEach(this.submitStatus.time_range, function (val) {
+                labelMap[val.diff] = true;
+                lang[val.language] = {};
+            });
+            labels = _.map(labelMap, function (val, index: string) {
                 const arr = index.split("-");
-                arr[0] = (parseFloat(arr[0]) / 1024).toFixed(2);
-                if (arr.length > 1) { arr[1] = (parseFloat(arr[1]) / 1024).toFixed(2); }
-                let str = arr[0] + "MB";
-                if (arr.length > 1) { str += " - " + arr[1] + "MB"; }
+                let str = arr[0] + "ms";
+                if (arr.length > 1) { str += " - " + arr[1] + "ms"; }
                 return str;
-            }
-            else {
-                let str = index.substring(1, index.length);
-                str = (parseFloat(str) / 1024).toFixed(2);
-                return ">" + str + "MB";
-            }
-        });
-        mlabels.sort((a: any, b: any) => {
-            if (a.charAt(0) === ">") {
-                const s = parseFloat(a.substring(1, a.length));
-                const t = parseFloat(b.split("-")[0]);
-                return s - t;
-            }
-            else if (b.charAt(0) === ">") {
-                const s = parseFloat(a.split("-")[0]);
-                const t = parseFloat(b.substring(1, b.length));
-                return s - t;
-            }
-            else {
-                const s = parseFloat(a.split("-")[0]);
-                const t = parseFloat(b.split("-")[0]);
-                return s - t;
-            }
-        });
-        _.forEach(mlang, (val: any, index: any) => {
-            _.forEach(mlabels, (v: any) => {
-                mlang[index][v] = 0;
             });
-        });
+            labels.sort(function (a: any, b: any) {
+                if (a.indexOf(">") !== -1) {
+                    const s = parseFloat(a.substring(1, a.length));
+                    const t = parseFloat(b.split("-")[0]);
+                    return s - t;
+                }
+                else if (b.indexOf(">") !== -1) {
+                    const s = parseFloat(a.split("-")[0]);
+                    const t = parseFloat(b.substring(1, b.length));
+                    return s - t;
+                }
+                else {
+                    const s = parseFloat(a.split("-")[0]);
+                    const t = parseFloat(b.split("-")[0]);
+                    return s - t;
+                }
+            });
+            _.forEach(lang, function (val, index) {
+                _.forEach(labels, function (v) {
+                    lang[index][v] = 0;
+                });
+            });
 
-        _.forEach(this.submitStatus.memory_range, (val: any) => {
-            if (val.diff.indexOf("-") !== -1) {
+            _.forEach(this.submitStatus.time_range, (val) => {
                 const arr = val.diff.split("-");
-                arr[0] = (parseFloat(arr[0]) / 1024).toFixed(2);
-                if (arr.length > 1) { arr[1] = (parseFloat(arr[1]) / 1024).toFixed(2); }
-                let diffstr = arr[0] + "MB";
-                if (arr.length > 1) { diffstr += " - " + arr[1] + "MB"; }
-                mlang[val.language][diffstr] = val.total;
-            }
-            else {
-                let str = val.diff.substring(1, val.diff.length);
-                str = (parseFloat(str) / 1024).toFixed(2);
-                mlang[val.language][">" + str + "MB"] = val.total;
-            }
-        });
-        const config3: any = {
-            type: "bar",
-            labels: mlabels,
-            datasets: _.map(mlang, (val: any, index: any) => {
-                return {
-                    label: this.submitStatus.language_name[index],
-                    backgroundColor: _colors.shift(),
-                    data: _.values(val)
-                };
-            })
-        };
-        const ctx = (document.getElementById!("chart-area")! as any).getContext("2d");
-        window.myPie = new Chart(ctx, config);
-        const btx = (document.getElementById!("bar-area")! as any).getContext("2d");
-        const mtx = (document.getElementById!("memory_bar_area")! as any).getContext("2d");
-        window.myBar = new Chart(btx, {
-            type: "bar",
-            data: config2,
-            options: {
-                title: {
-                    display: true,
-                    text: "AC代码运行用时"
-                },
-                tooltips: {
-                    mode: "index",
-                    intersect: true
-                },
-                responsive: true,
-                scales: {
-                    xAxes: [{
-                        stacked: true
-                    }],
-                    yAxes: [{
-                        stacked: true
-                    }]
+                let diffstr = arr[0] + "ms";
+                if (arr.length > 1) {
+                    diffstr += " - " + arr[1] + "ms";
                 }
-            }
-        });
-        window.myMemory = new Chart(mtx, {
-            type: "bar",
-            data: config3,
-            options: {
-                title: {
-                    display: true,
-                    text: "AC代码内存使用"
-                },
-                tooltips: {
-                    mode: "index",
-                    intersect: false
-                },
-                responsive: true,
-                scales: {
-                    xAxes: [{
-                        stacked: true
-                    }],
-                    yAxes: [{
-                        stacked: true
-                    }]
+                lang[val.language][diffstr] = val.total;
+            });
+            let _colors = _.map(colors, function (val) {
+                return val;
+            });
+            const config2: any = {
+                type: "bar",
+                labels: labels,
+                datasets: _.map(lang, (val, index) => {
+                    return {
+                        label: this.submitStatus.language_name[index],
+                        backgroundColor: _colors.shift(),
+                        data: _.values(val)
+                    };
+                })
+            };
+            const mlabelMap: Record<string, boolean> = {};
+            let mlabels: string[] = [];
+            const mlang: any = {};
+            _colors = _.map(colors, (val) => {
+                return val;
+            });
+            _.forEach(this.submitStatus.memory_range, (val) => {
+                mlabelMap[val.diff] = true;
+                mlang[val.language] = {};
+            });
+            mlabels = _.map(mlabelMap, (val, index: string) => {
+                if (index.indexOf("-") !== -1) {
+                    const arr = index.split("-");
+                    arr[0] = (parseFloat(arr[0]) / 1024).toFixed(2);
+                    if (arr.length > 1) { arr[1] = (parseFloat(arr[1]) / 1024).toFixed(2); }
+                    let str = arr[0] + "MB";
+                    if (arr.length > 1) { str += " - " + arr[1] + "MB"; }
+                    return str;
                 }
-            }
-        });
+                else {
+                    let str = index.substring(1, index.length);
+                    str = (parseFloat(str) / 1024).toFixed(2);
+                    return ">" + str + "MB";
+                }
+            });
+            mlabels.sort((a: any, b: any) => {
+                if (a.charAt(0) === ">") {
+                    const s = parseFloat(a.substring(1, a.length));
+                    const t = parseFloat(b.split("-")[0]);
+                    return s - t;
+                }
+                else if (b.charAt(0) === ">") {
+                    const s = parseFloat(a.split("-")[0]);
+                    const t = parseFloat(b.substring(1, b.length));
+                    return s - t;
+                }
+                else {
+                    const s = parseFloat(a.split("-")[0]);
+                    const t = parseFloat(b.split("-")[0]);
+                    return s - t;
+                }
+            });
+            _.forEach(mlang, (val: any, index: any) => {
+                _.forEach(mlabels, (v: any) => {
+                    mlang[index][v] = 0;
+                });
+            });
+
+            _.forEach(this.submitStatus.memory_range, (val: any) => {
+                if (val.diff.indexOf("-") !== -1) {
+                    const arr = val.diff.split("-");
+                    arr[0] = (parseFloat(arr[0]) / 1024).toFixed(2);
+                    if (arr.length > 1) { arr[1] = (parseFloat(arr[1]) / 1024).toFixed(2); }
+                    let diffstr = arr[0] + "MB";
+                    if (arr.length > 1) { diffstr += " - " + arr[1] + "MB"; }
+                    mlang[val.language][diffstr] = val.total;
+                }
+                else {
+                    let str = val.diff.substring(1, val.diff.length);
+                    str = (parseFloat(str) / 1024).toFixed(2);
+                    mlang[val.language][">" + str + "MB"] = val.total;
+                }
+            });
+            const config3: any = {
+                type: "bar",
+                labels: mlabels,
+                datasets: _.map(mlang, (val: any, index: any) => {
+                    return {
+                        label: this.submitStatus.language_name[index],
+                        backgroundColor: _colors.shift(),
+                        data: _.values(val)
+                    };
+                })
+            };
+            const ctx = (document.getElementById!("chart-area")! as any).getContext("2d");
+            window.myPie = new Chart(ctx, config);
+            const btx = (document.getElementById!("bar-area")! as any).getContext("2d");
+            const mtx = (document.getElementById!("memory_bar_area")! as any).getContext("2d");
+            window.myBar = new Chart(btx, {
+                type: "bar",
+                data: config2,
+                options: {
+                    title: {
+                        display: true,
+                        text: "AC代码运行用时"
+                    },
+                    tooltips: {
+                        mode: "index",
+                        intersect: true
+                    },
+                    responsive: true,
+                    scales: {
+                        xAxes: [{
+                            stacked: true
+                        }],
+                        yAxes: [{
+                            stacked: true
+                        }]
+                    }
+                }
+            });
+            window.myMemory = new Chart(mtx, {
+                type: "bar",
+                data: config3,
+                options: {
+                    title: {
+                        display: true,
+                        text: "AC代码内存使用"
+                    },
+                    tooltips: {
+                        mode: "index",
+                        intersect: false
+                    },
+                    responsive: true,
+                    scales: {
+                        xAxes: [{
+                            stacked: true
+                        }],
+                        yAxes: [{
+                            stacked: true
+                        }]
+                    }
+                }
+            });
+        }
     }
-}
+});
 </script>
 
 <style scoped>
+    .list-reloading {
+        opacity: .55;
+        transition: opacity .2s;
+    }
 
+    .list-state-reloading {
+        margin-left: .5em;
+    }
 </style>
+<i18n>
+    {
+    "zh-cn": {
+    "noMatchingSubmission": "没有符合条件的提交"
+    },
+    "en": {
+    "noMatchingSubmission": "No submissions found"
+    },
+    "ja": {
+    "noMatchingSubmission": "条件に一致する提出はありません"
+    }
+    }
+</i18n>

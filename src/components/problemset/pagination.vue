@@ -23,19 +23,41 @@
 </template>
 
 <script lang="ts">
-import jquery from "jquery";
-import { Component, Prop } from "vue-property-decorator";
-import Vue from "vue";
-const $: any = jquery;
+import { defineComponent } from "vue";
 
-@Component
-export default class Pagination extends Vue {
-    @Prop() total!: number;
-    @Prop() page_cnt!: number;
-    @Prop() current_page!: number;
-    @Prop() onPageChanged!: (event: any, arrow?: any) => any;
-    $parent: any;
-    total_menu = 0;
+export default defineComponent({
+    // props intentionally untyped (same as the former class @Prop()): callers pass numbers or numeric strings
+    props: {
+        total: { default: undefined as any },
+        page_cnt: { default: undefined as any },
+        current_page: { default: undefined as any },
+        onPageChanged: { default: undefined as any as (event: any, arrow?: any) => any }
+    },
+    data () {
+        return {
+            total_menu: 0
+        };
+    },
+    computed: {
+        pageList (): number[] {
+            const { current_page, page_cnt, total, total_menu } = this as any;
+            const totalPage = Math.ceil(total / page_cnt);
+            const menuLength = Math.min(totalPage, total_menu);
+            const list = Array.from(Array(menuLength).keys()).map(function (n) {
+                if (current_page < total_menu / 2) {
+                    return Math.trunc(n + 1);
+                }
+                else if (current_page + total_menu / 2 + 1 > totalPage) {
+                    return Math.trunc(Math.max(totalPage - menuLength, 0) + 1 + n);
+                }
+                else {
+                    return Math.trunc(current_page + n - total_menu / 2 + 1);
+                }
+            });
+            this.$emit("pageUpdated", list);
+            return list;
+        }
+    },
     created () {
         let width = document.body.clientWidth;
         const container = 1100;
@@ -43,36 +65,18 @@ export default class Pagination extends Vue {
             width = container;
         }
         this.total_menu = Math.max(0, Math.trunc(width * 0.7 / 42) - 4);
-    }
-
-    get pageList () {
-        const { current_page, page_cnt, total, total_menu } = this;
-        const totalPage = Math.ceil(total / page_cnt);
-        const menuLength = Math.min(totalPage, total_menu);
-        const list = Array.from(Array(menuLength).keys()).map(function (n) {
-            if (current_page < total_menu / 2) {
-                return Math.trunc(n + 1);
-            }
-            else if (current_page + total_menu / 2 + 1 > totalPage) {
-                return Math.trunc(Math.max(totalPage - menuLength, 0) + 1 + n);
+    },
+    methods: {
+        page (event: any, arrow?: any): void {
+            if (arrow) {
+                this.onPageChanged(null, arrow);
             }
             else {
-                return Math.trunc(current_page + n - total_menu / 2 + 1);
+                this.onPageChanged(parseInt(event.target.innerText) - 1);
             }
-        });
-        this.$emit("pageUpdated", list);
-        return list;
-    }
-
-    page (event: any, arrow: any) {
-        if (arrow) {
-            this.onPageChanged(null, arrow);
-        }
-        else {
-            this.onPageChanged(parseInt(event.target.innerText) - 1);
         }
     }
-}
+});
 </script>
 
 <style scoped>

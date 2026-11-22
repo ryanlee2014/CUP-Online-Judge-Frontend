@@ -10,7 +10,7 @@ export interface ToastAction {
 
 export interface ToastOptions {
     type?: ToastType;
-    /** milliseconds; 0 keeps the toast until closed */
+    /** milliseconds; 0 keeps the toast until closed. Default 4s, 6s for warning / error */
     duration?: number;
     action?: ToastAction;
 }
@@ -50,7 +50,8 @@ function ensureContainer (): HTMLElement {
 
 /** Show a toast; returns a function that closes it. */
 export function toast (message: string, options: ToastOptions = {}): () => void {
-    const { type = "info", duration = 4000, action } = options;
+    const { type = "info", action } = options;
+    const duration = options.duration !== undefined ? options.duration : (type === "warning" || type === "error" ? 6000 : 4000);
     const container = ensureContainer();
     const el = document.createElement("div");
     el.className = `cupoj-toast ${type}`;

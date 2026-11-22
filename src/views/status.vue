@@ -105,12 +105,15 @@
             </div>
             <br>
             <div class="row">
+                <list-state :empty-text="$t('noMatchingSubmission')" :state="listState"
+                            @retry="retryList"></list-state>
                 <status-table :answer_class="judge_color" :answer_icon="icon_list"
                               :isadmin="isadmin" :language_name="language_name" :problem_list="problem_list"
                               :result="result"
                               :self="self"
-                              :target="target"></status-table>
-                <div class="ui active inverted dimmer" v-if="dim">
+                              :target="target"
+                              v-show="listLoaded && hasRows"></status-table>
+                <div class="ui active inverted dimmer" v-if="dim && listLoaded">
                     <div class="ui large text loader">Loading</div>
                 </div>
             </div>
@@ -150,7 +153,8 @@
     "submit status": "提交状态",
     "submit graph": "提交图表",
     "result statistic": "结果统计",
-    "user statistic": "用户统计"
+    "user statistic": "用户统计",
+    "noMatchingSubmission": "没有符合条件的提交"
     },
     "en": {
     "auto refresh": "Auto Refresh",
@@ -160,7 +164,8 @@
     "show user only": "Show Yourself Only",
     "submit graph": "Submission Graph",
     "result statistic": "Result Statistics",
-    "user statistic": "User statistics"
+    "user statistic": "User statistics",
+    "noMatchingSubmission": "No submissions match the current filter"
     },
     "ja": {
     "auto refresh": "自動リフレッシュ",
@@ -170,55 +175,108 @@
     "show user only": "自分だけを表示",
     "submit graph": "提出グラフ",
     "result statistics": "結果統計",
-    "user statistic": "ユーザー統計"
+    "user statistic": "ユーザー統計",
+    "noMatchingSubmission": "条件に一致する提出はありません"
     }
     }
 </i18n>
 <script lang="ts">
 import statusTable from "../components/status/status-table.vue";
 import ContestMode from "../components/contestMode/block.vue";
-import mixins from "../mixin/init";
-import jquery from "jquery";
+import ListState, { ListStateType } from "../components/common/ListState.vue";
+import { initMixin } from "../mixin/init";
 import _ from "lodash";
-import { Component, Mixins, Watch } from "vue-property-decorator";
-import StatusViewMixin from "@/mixin/StatusViewMixin";
+import md5 from "md5";
+import { defineComponent } from "vue";
+import { statusViewMixin } from "@/mixin/StatusViewMixin";
 import AwaitLock from "await-lock";
-import { Lock, RunOnceEachKey } from "@/module/Decorator/method";
+import { parameterHash } from "@/util/util";
 import { mapGetters } from "vuex";
 
-const $: any = jquery;
+// Shared by every instance, like the former @Lock(new AwaitLock()) / @RunOnceEachKey decorators on Submit.
+const submitLock = new AwaitLock();
+const submitRunOnceCache: Record<string, boolean> = {};
 
-const hasRendered: any = {};
-    @Component({
-        components: {
-            // chart tabs pull in amcharts / chart.js: load them only when a chart tab is opened
-            UserGraph: () => import(/* webpackChunkName: "status-graph" */ "@/components/status/UserGraph.vue"),
-            ResultGraph: () => import(/* webpackChunkName: "status-graph" */ "@/components/status/ResultGraph.vue"),
-            Graph: () => import(/* webpackChunkName: "status-graph" */ "@/components/status/graph.vue"),
-            statusTable,
-            ContestMode
+function runOnceEachKey (this: any, args: any[]): any {
+    const keyHash = md5(parameterHash(args));
+    if (!submitRunOnceCache[keyHash]) {
+        submitRunOnceCache[keyHash] = true;
+        return this.submitHandler(...args);
+    }
+}
+
+// Same as the former @Lock: acquires, calls without awaiting, releases.
+async function lockedSubmit (this: any, args: any[]): Promise<any> {
+    await submitLock.acquireAsync();
+    const resp = runOnceEachKey.call(this, args);
+    submitLock.release();
+    return resp;
+}
+
+export default defineComponent({
+    components: {
+        // chart tabs pull in amcharts / chart.js: load them only when a chart tab is opened
+        UserGraph: () => import(/* webpackChunkName: "status-graph" */ "@/components/status/UserGraph.vue"),
+        ResultGraph: () => import(/* webpackChunkName: "status-graph" */ "@/components/status/ResultGraph.vue"),
+        Graph: () => import(/* webpackChunkName: "status-graph" */ "@/components/status/graph.vue"),
+        statusTable,
+        ContestMode,
+        ListState
+    },
+    mixins: [initMixin, statusViewMixin],
+    data () {
+        return {
+            problem_list: [] as any[],
+            icon_list: [] as any[],
+            judge_color: [] as any[],
+            judge_icon: [] as any[],
+            target: {} as any,
+            hasDrawedGraph: false,
+            language_name: [] as any[],
+            result: [] as any[],
+            language_icon: [] as any[],
+            self: "" as any,
+            isadmin: false as any,
+            page_cnt: 0,
+            dim: false,
+            prevSolutionId: 0,
+            labelName: [] as any[],
+            // list request state (loading skeleton / empty / error + retry)
+            listLoaded: false,
+            listError: false
+        };
+    },
+    computed: {
+        ...mapGetters(["contestMode"]),
+        hasRows (): boolean {
+            return !!this.problem_list && this.problem_list.length > 0;
         },
-        computed: mapGetters(["contestMode"])
-    })
-export default class GeneralStatus extends Mixins(mixins, StatusViewMixin) {
-        problem_list: any[] = [];
-        icon_list = [];
-        judge_color = [];
-        judge_icon = [];
-        target = {};
-        hasDrawedGraph = false;
-        language_name = [];
-        result = [];
-        language_icon = [];
-        self = "";
-        isadmin = false;
-        page_cnt = 0;
-        dim = false;
-        sockets: any;
-        prevSolutionId = 0;
-        labelName = [];
-
-        search_func (data: any) {
+        listState (): ListStateType {
+            if (this.listError) {
+                return "error";
+            }
+            if (!this.listLoaded) {
+                return "loading";
+            }
+            return this.hasRows ? null : "empty";
+        }
+    },
+    beforeDestroy () {
+        (this as any).sockets.unsubscribe("submit");
+        (this as any).sockets.unsubscribe("result");
+    },
+    mounted () {
+        document.title = `Status -- ${document.title}`;
+        this.initData();
+        (this as any).sockets.subscribe("submit", (data: any) => {
+            this.Submit(data);
+        });
+        (this as any).sockets.subscribe("result", (data: any) => {
+            this.Update(data);
+        });
+    },
+    methods: {
+        search_func (data: any): void {
             const that = this;
             this.setQuery();
             that.problem_list = data.result;
@@ -231,9 +289,47 @@ export default class GeneralStatus extends Mixins(mixins, StatusViewMixin) {
             that.result = data.const_list.result.cn;
             that.self = data.self;
             that.isadmin = data.isadmin || data.browse_code;
-        }
+        },
 
-        search () {
+        /**
+         * Runs a status list request (same URL as before) and tracks loaded / error state.
+         * Resolves with the response data, or undefined when the request failed (the error state then offers a retry
+         * that re-runs exactly the same request).
+         */
+        requestStatus (url: string, after?: (data: any) => void): Promise<any> {
+            const self = this as any;
+            const seq = self.listRequestSeq_ = (self.listRequestSeq_ || 0) + 1;
+            self.retry_ = () => {
+                this.dim = true;
+                this.requestStatus(url, after);
+            };
+            this.listError = false;
+            return this.axios.get(url)
+                .then(({ data }) => {
+                    this.dim = false;
+                    this.listLoaded = true;
+                    this.search_func(data);
+                    if (after) {
+                        after(data);
+                    }
+                    return data;
+                }, () => {
+                    if (seq === self.listRequestSeq_) {
+                        this.dim = false;
+                        this.listError = true;
+                    }
+                    return undefined;
+                });
+        },
+
+        retryList (): void {
+            const retry = (this as any).retry_;
+            if (typeof retry === "function") {
+                retry();
+            }
+        },
+
+        search (): Promise<any> {
             this.dim = true;
             this.page_cnt = 0;
             const problemId = this.problem_id || "null";
@@ -243,14 +339,10 @@ export default class GeneralStatus extends Mixins(mixins, StatusViewMixin) {
             const pageCount = this.page_cnt * 20;
             const sim = Number(this.sim_checkbox);
             const pri = Number(this.privilege);
-            return this.axios.get(`/api/status/${problemId}/${userId}/${language}/${result}/${pageCount}/${sim}/${pri}`)
-                .then(({ data }) => {
-                    this.dim = false;
-                    this.search_func(data);
-                });
-        }
+            return this.requestStatus(`/api/status/${problemId}/${userId}/${language}/${result}/${pageCount}/${sim}/${pri}`);
+        },
 
-        page (num: number) {
+        page (num: number): void {
             this.dim = true;
             this.page_cnt += num;
             const problemId = this.problem_id || "null";
@@ -260,16 +352,15 @@ export default class GeneralStatus extends Mixins(mixins, StatusViewMixin) {
             const pageCount = this.page_cnt * 20;
             const simCheckbox = Number(this.sim_checkbox);
             const pri = Number(this.privilege);
-            this.axios.get(`/api/status/${problemId}/${userId}/${language}/${result}/${pageCount}/${simCheckbox}/${pri}`)
-                .then(({ data }) => {
-                    this.dim = false;
-                    this.search_func(data);
-                });
-        }
+            this.requestStatus(`/api/status/${problemId}/${userId}/${language}/${result}/${pageCount}/${simCheckbox}/${pri}`);
+        },
 
-        @Lock(new AwaitLock())
-        @RunOnceEachKey
-        async Submit (data: any) {
+        Submit (data: any): Promise<any> {
+            return lockedSubmit.call(this, [data]);
+        },
+
+        // body of the former @Lock @RunOnceEachKey Submit
+        async submitHandler (data: any): Promise<void> {
             if (!this.auto_refresh) {
                 return;
             }
@@ -306,9 +397,9 @@ export default class GeneralStatus extends Mixins(mixins, StatusViewMixin) {
                 this.problem_list.pop();
                 this.problem_list.unshift(obj);
             }
-        }
+        },
 
-        Update (data: any) {
+        Update (data: any): void {
             if (!this.auto_refresh) {
                 return;
             }
@@ -341,44 +432,23 @@ export default class GeneralStatus extends Mixins(mixins, StatusViewMixin) {
                     i.fingerprintRaw = fingerprintRaw;
                 }
             });
-        }
+        },
 
-        initData () {
-            this.fetchData()
-                .then((data) => {
-                    this.labelName = data.const_list.result.cn;
-                });
-        }
+        initData (): void {
+            this.fetchData((data: any) => {
+                this.labelName = data.const_list.result.cn;
+            });
+        },
 
-        fetchData () {
+        fetchData (after?: (data: any) => void): Promise<any> {
             const problem_id = (this.problem_id = this.getProblemID() || null) || "null";
             const user_id = (this.user_id = this.getUserId() || null) || "null";
             const language = (this.language = this.getLanguage() || -1) == -1 ? "null" : this.getLanguage();
             const result = (this.problem_result = this.getResult() || -1) == -1 ? "null" : this.problem_result;
-            return this.axios.get(`/api/status/${problem_id}/${user_id}/${language}/${result}/0/`)
-                .then(({ data }) => {
-                    this.dim = false;
-                    this.search_func(data);
-                    return data;
-                });
+            return this.requestStatus(`/api/status/${problem_id}/${user_id}/${language}/${result}/0/`, after);
         }
-
-        beforeDestroy () {
-            this.sockets.unsubscribe("submit");
-            this.sockets.unsubscribe("result");
-        }
-
-        mounted () {
-            document.title = `Status -- ${document.title}`;
-            this.initData();
-            this.sockets.subscribe("submit", (data: any) => {
-                this.Submit(data);
-            });
-            this.sockets.subscribe("result", (data: any) => {
-                this.Update(data);
-            });
-        }
-}
+    }
+});
 </script>
 
 <style scoped>

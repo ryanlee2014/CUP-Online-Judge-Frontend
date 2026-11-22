@@ -268,6 +268,30 @@ const mixinMocks: Record<string, () => any> = {
         setQuery () {}
         tag () {}
         list_self_only () {}
+    }, {
+        statusViewMixin: {
+            data: () => ({
+                current_tag: "status",
+                user_id: null,
+                problem_result: -1,
+                problem_id: null,
+                language: -1,
+                sim_checkbox: false,
+                privilege: 0,
+                auto_refresh: true
+            }),
+            methods: {
+                getUserId () { return null; },
+                getResult () { return null; },
+                getProblemID () { return null; },
+                getLanguage () { return null; },
+                fetchData () { return Promise.resolve(); },
+                search () { return Promise.resolve(); },
+                setQuery () {},
+                tag () {},
+                list_self_only () {}
+            }
+        }
     }),
     "src/mixin/ContestSetEditMixin.ts": () => createDefaultMixinMock(),
     "src/mixin/TimerMixin.ts": () => createDefaultMixinMock((VueBase: any) => class extends VueBase {
@@ -291,11 +315,19 @@ const mixinMocks: Record<string, () => any> = {
     "src/mixin/avatarMixin.ts": () => createDefaultMixinMock((VueBase: any) => class extends VueBase {
         getAvatarURL () { return ""; }
         hasAvatarURL () { return false; }
-    }),
+    }, { avatarMixin: { methods: { getAvatarURL () { return ""; }, hasAvatarURL () { return false; } } } }),
     "src/mixin/MarkdownWorkerMixin.ts": () => createDefaultMixinMock((VueBase: any) => class extends VueBase {
         async renderAsync (content: string) { return content; }
         async renderPlainAsync (content: string) { return content; }
         async renderRawAsync (content: string) { return content; }
+    }, {
+        markdownWorkerMixin: {
+            methods: {
+                async renderAsync (content: string) { return content; },
+                async renderPlainAsync (content: string) { return content; },
+                async renderRawAsync (content: string) { return content; }
+            }
+        }
     })
 };
 

@@ -80,91 +80,97 @@
 <script lang="ts">
 import jquery from "jquery";
 import lodash from "lodash";
-import { Component, Prop, Watch, Mixins } from "vue-property-decorator";
-import MarkdownWorkerMixin from "@/mixin/MarkdownWorkerMixin";
+import { defineComponent } from "vue";
+import { markdownWorkerMixin } from "@/mixin/MarkdownWorkerMixin";
 const $: any = jquery;
-@Component
-export default class ProblemSetMainContent extends Mixins(MarkdownWorkerMixin) {
-    @Prop({ default: () => { return {}; } }) data!: any;
-    @Prop({ default: false }) dim!: boolean;
-    @Prop({ default: false }) show_tag!: boolean;
-    @Prop({ default: 0 }) order!: number;
-    @Prop({ default: "" }) order_target!: string;
-    @Prop({ default: false }) hide_currect!: boolean;
-    $parent: any;
-    lodash = lodash;
-    payload: any = {};
 
-    @Watch("data")
-    onDataChanged (val: any) {
-        if (val) {
-            this.payload = val;
-            const problem = typeof val.problem === "undefined" ? [] : val.problem;
-            problem.forEach(async (e: any) => {
-                if (typeof e.title === "string") {
-                    e.title = await this.renderRawAsync(e.title);
+export default defineComponent({
+    mixins: [markdownWorkerMixin],
+    // props intentionally untyped (same as the former class @Prop definitions)
+    props: {
+        data: { default: () => ({}) as any },
+        dim: { default: false as boolean },
+        show_tag: { default: false as boolean },
+        order: { default: 0 as any },
+        order_target: { default: "" as string },
+        hide_currect: { default: false as boolean }
+    },
+    data () {
+        return {
+            lodash,
+            payload: {} as any
+        };
+    },
+    computed: {
+        result (): { color: any, problem: any[] } {
+            const data = this.payload;
+            const color = Object.assign({}, data.color);
+            color["标签待整理"] = "black";
+            for (const i in data.problem) {
+                if (Object.prototype.hasOwnProperty.call(data.problem, i)) {
+                    const label = data.problem[i].label;
+                    data.problem[i].label = (label ? label.split(" ") : ["标签待整理"]).sort(function (a: any, b: any) {
+                        if (a === "简单" || a === "普通" || a === "中等" || a === "困难") {
+                            return 1;
+                        }
+                        else if (b === "简单" || b === "普通" || b === "中等" || b === "困难") {
+                            return -1;
+                        }
+                        else {
+                            if (a < b) return -1;
+                            else if (a === b) return 0;
+                            else return 1;
+                        }
+                    });
                 }
-                else {
-                    e.title = "";
-                }
-            });
+            }
+            const problemArray = typeof data.problem === "undefined" ? [] : data.problem;
+            return {
+                color: color,
+                problem: problemArray
+            };
+        },
+        filterTableRow (): any[] {
+            const dim = this.dim;
+            const hideCurrent = this.hide_currect;
+            return this.result.problem.filter((row: any) => !dim && (row.ac === false || row.ac === -1 || (row.ac === true && !hideCurrent)));
         }
-    }
-
-    get result () {
-        const data = this.payload;
-        const color = Object.assign({}, data.color);
-        color["标签待整理"] = "black";
-        for (const i in data.problem) {
-            if (Object.prototype.hasOwnProperty.call(data.problem, i)) {
-                const label = data.problem[i].label;
-                data.problem[i].label = (label ? label.split(" ") : ["标签待整理"]).sort(function (a: any, b: any) {
-                    if (a === "简单" || a === "普通" || a === "中等" || a === "困难") {
-                        return 1;
-                    }
-                    else if (b === "简单" || b === "普通" || b === "中等" || b === "困难") {
-                        return -1;
+    },
+    watch: {
+        data (val: any): void {
+            if (val) {
+                this.payload = val;
+                const problem = typeof val.problem === "undefined" ? [] : val.problem;
+                problem.forEach(async (e: any) => {
+                    if (typeof e.title === "string") {
+                        e.title = await this.renderRawAsync(e.title);
                     }
                     else {
-                        if (a < b) return -1;
-                        else if (a === b) return 0;
-                        else return 1;
+                        e.title = "";
                     }
                 });
             }
         }
-        const problemArray = typeof data.problem === "undefined" ? [] : data.problem;
-        return {
-            color: color,
-            problem: problemArray
-        };
+    },
+    methods: {
+        sort (target: any, event: any, default_order = 0): void {
+            (this.$parent as any).sort(target, event, default_order);
+        },
+        tag (label: any, event: any): void {
+            (this.$parent as any).tag(label, event);
+        },
+        bindSticky (): void {
+            $(".ui.sticky.element")
+                .sticky({
+                    context: "#problemset",
+                    offset: 40,
+                    observeChanges: false,
+                    refreshOnLoad: true,
+                    refreshOnResize: true
+                });
+        }
     }
-
-    get filterTableRow () {
-        const dim = this.dim;
-        const hideCurrent = this.hide_currect;
-        return this.result.problem.filter((row: any) => !dim && (row.ac === false || row.ac === -1 || (row.ac === true && !hideCurrent)));
-    }
-
-    sort (target: any, event: any, default_order = 0) {
-        this.$parent.sort(target, event, default_order);
-    }
-
-    tag (label: any, event: any) {
-        this.$parent.tag(label, event);
-    }
-
-    bindSticky () {
-        $(".ui.sticky.element")
-            .sticky({
-                context: "#problemset",
-                offset: 40,
-                observeChanges: false,
-                refreshOnLoad: true,
-                refreshOnResize: true
-            });
-    }
-}
+});
 </script>
 
 <style scoped>
