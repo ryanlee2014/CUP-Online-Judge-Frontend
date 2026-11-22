@@ -39,17 +39,17 @@ describe("markdown-it-mermaid", () => {
         expect(html).toContain("language-js");
     });
 
-    it("handles mermaid parse errors", () => {
-        mockedMermaid.parse.mockImplementation(() => {
-            throw { str: "bad", hash: {} };
-        });
+    it("leaves invalid diagrams to mermaid itself (no eager parse)", () => {
+        // mermaid is loaded lazily when a diagram is rendered, so the markdown renderer no
+        // longer parses eagerly; mermaid reports syntax errors when it renders the block.
         const md = new MarkdownIt();
         MermaidPlugin(md);
         const html = md.render("```mermaid\nbad\n```");
-        expect(html).toContain("<pre>bad</pre>");
+        expect(html).toContain("<div class=\"mermaid\">bad</div>");
+        expect(mockedMermaid.parse).not.toHaveBeenCalled();
     });
 
-    it("loads preferences with defaults", () => {
+    it("loads preferences with defaults", async () => {
         const md = new MarkdownIt();
         MermaidPlugin(md);
         const preferenceStore = { get: jest.fn().mockReturnValue(undefined) };
@@ -58,6 +58,7 @@ describe("markdown-it-mermaid", () => {
             "mermaid-theme": "default",
             "gantt-axis-format": "%Y-%m-%d"
         });
+        await (md as any).mermaid.ready;
         expect(mockedMermaid.initialize).toHaveBeenCalled();
         const initArgs = mockedMermaid.initialize.mock.calls[0][0];
         const axisFormatter = initArgs.gantt.axisFormatter[0][1];
