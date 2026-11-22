@@ -87,7 +87,7 @@
 import { Component, Prop } from "vue-property-decorator";
 import Vue from "vue";
 import Chart from "chart.js";
-import _ from "lodash";
+import * as _ from "lodash-es";
 let defaultSpan = 0;
 const spans = [];
 const statusCodesColors = ["#75D701", "#47b8e0", "#ffc952", "#E53A40"];

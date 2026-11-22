@@ -315,7 +315,7 @@
 import mixins from "../../mixin/init";
 import { Component, Mixins } from "vue-property-decorator";
 import jquery from "jquery";
-import _ from "lodash";
+import * as _ from "lodash-es";
 const $: any = jquery;
 @Component
 export default class Fame extends Mixins(mixins) {

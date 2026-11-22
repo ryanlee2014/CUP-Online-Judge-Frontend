@@ -52,7 +52,7 @@
 import mixins from "../../../mixin/init";
 import { Component, Mixins } from "vue-property-decorator";
 import * as monaco from "monaco-editor";
-import * as _ from "lodash";
+import * as _ from "lodash-es";
 import editor = monaco.editor;
 import IDiffEditor = editor.IDiffEditor;
 

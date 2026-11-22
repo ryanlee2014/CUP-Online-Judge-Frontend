@@ -135,7 +135,7 @@ import { mapGetters } from "vuex";
 import { defineComponent } from "vue";
 import { initMixin } from "../mixin/init";
 import jquery from "jquery";
-import _ from "lodash";
+import * as _ from "lodash-es";
 // @antv/g2 + data-set are only needed for the optional tag cloud: loaded on demand
 const $: any = jquery;
 const HEIGHT = 320;

@@ -266,7 +266,7 @@ import { mavonEditor } from "@ryanlee2014/mavon-editor";
 import { Component, Mixins } from "vue-property-decorator";
 import { unique } from "@/lib/ts-util";
 import jquery from "jquery";
-import * as _ from "lodash";
+import * as _ from "lodash-es";
 
 const $: any = jquery;
 

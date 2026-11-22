@@ -153,7 +153,7 @@ import * as am4charts from "@amcharts/amcharts4/charts";
 import { initMixin } from "../../mixin/init";
 import { defineComponent } from "vue";
 import ListState, { ListStateType } from "../../components/common/ListState.vue";
-import _ from "lodash";
+import * as _ from "lodash-es";
 import jquery from "jquery";
 import Chart from "chart.js";
 const am4themes_animated = require("@amcharts/amcharts4/themes/animated").default;

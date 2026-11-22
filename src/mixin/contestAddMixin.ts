@@ -1,4 +1,4 @@
-import _ from "lodash";
+import * as _ from "lodash-es";
 import { Component, Mixins } from "vue-property-decorator";
 import RouterBackMixin from "@/mixin/router/RouterBackMixin";
 @Component

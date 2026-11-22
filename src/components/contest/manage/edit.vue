@@ -221,7 +221,7 @@
 <script lang="ts">
 import Type from "../../../type/index.json";
 import { saveAs } from "file-saver";
-import _ from "lodash";
+import * as _ from "lodash-es";
 import jquery from "jquery";
 import { Prop, Component, Watch } from "vue-property-decorator";
 import Vue from "vue";

@@ -225,7 +225,7 @@ import monacoEditor from "@/components/submit/codeEditor/monacoEditor.vue";
 // @ts-ignore
 import { mavonEditor } from "@ryanlee2014/mavon-editor";
 import { unique } from "@/lib/ts-util";
-import _ from "lodash";
+import * as _ from "lodash-es";
 import jquery from "jquery";
 import RouterBackMixin from "@/mixin/router/RouterBackMixin";
 const $: any = jquery;

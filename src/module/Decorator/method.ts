@@ -1,4 +1,4 @@
-import _ from "lodash";
+import * as _ from "lodash-es";
 import md5 from "md5";
 
 import { log, logFactory } from "@/util/logger";

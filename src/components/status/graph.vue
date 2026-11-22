@@ -26,7 +26,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import _ from "lodash";
+import * as _ from "lodash-es";
 import Chart from "chart.js";
 import * as am4core from "@amcharts/amcharts4/core";
 import * as am4charts from "@amcharts/amcharts4/charts";

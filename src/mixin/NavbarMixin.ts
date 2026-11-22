@@ -23,7 +23,6 @@ export default class NavbarMixin extends Vue {
     intervalId: any = -1;
     _connectTry (times: number) {
         (async () => {
-            const Promise = require("bluebird");
             while (times-- > 0) {
                 if (this.$socket && this.$socket.connect && typeof this.$socket.connect === "function") {
                     if (!this.$socket.connected && !this.$socket.active) {
@@ -34,7 +33,7 @@ export default class NavbarMixin extends Vue {
                         break;
                     }
                 }
-                await Promise.delay(500);
+                await new Promise(resolve => setTimeout(resolve, 500));
             }
         })();
     }

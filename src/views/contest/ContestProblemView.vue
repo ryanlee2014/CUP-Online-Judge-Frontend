@@ -103,7 +103,7 @@ import ContestMode from "../../components/contestMode/block.vue";
 import LimitHostname from "../../components/contest/ContestProblemView/LimitHostname.vue";
 import mixins from "../../mixin/init";
 import { mapGetters } from "vuex";
-import _ from "lodash";
+import * as _ from "lodash-es";
 import jquery from "jquery";
 import dayjs from "dayjs";
 import { Component, Mixins } from "vue-property-decorator";

@@ -1,6 +1,6 @@
 import Axios from "axios";
 import store from "@/store";
-import _ from "lodash";
+import * as _ from "lodash-es";
 const platform = require("platform");
 
 function trimMinorVersion (version: string) {

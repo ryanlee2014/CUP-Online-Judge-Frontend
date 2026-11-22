@@ -506,7 +506,7 @@ import ContestMode from "../../components/contestMode/block.vue";
 import avatarMixin from "../../mixin/avatarMixin";
 import { Component, Mixins, Prop, Watch } from "vue-property-decorator";
 import jquery from "jquery";
-import _ from "lodash";
+import * as _ from "lodash-es";
 import Chart from "chart.js";
 import dayjs from "dayjs";
 import { mapGetters } from "vuex";

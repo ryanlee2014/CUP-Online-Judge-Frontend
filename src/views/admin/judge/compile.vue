@@ -28,7 +28,7 @@
 <script lang="ts">
 import { Component, Mixins } from "vue-property-decorator";
 import InitMixin from "../../../mixin/init";
-import _ from "lodash";
+import * as _ from "lodash-es";
 import languageNameConfig from "@/type/index.json";
 import { ICompileArguments } from "@/types/judge/compile";
 

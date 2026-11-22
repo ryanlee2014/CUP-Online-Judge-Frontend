@@ -4,6 +4,7 @@ module.exports = {
     testMatch: ["<rootDir>/tests/**/*.spec.ts"],
     moduleNameMapper: {
         "^@/(.*)$": "<rootDir>/src/$1",
+        "^lodash-es$": "lodash",
         "^monaco-editor$": "<rootDir>/tests/__mocks__/empty.js",
         "^mermaid$": "<rootDir>/tests/__mocks__/empty.js",
         "^mermaid/dist/mermaid.core(?:\\.js)?$": "<rootDir>/tests/__mocks__/empty.js",

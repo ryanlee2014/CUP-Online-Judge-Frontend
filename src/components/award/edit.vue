@@ -37,7 +37,7 @@
 <script lang="ts">
 import { Component, Prop, Watch } from "vue-property-decorator";
 import Vue from "vue";
-import _ from "lodash";
+import * as _ from "lodash-es";
 import dayjs from "dayjs";
 
 interface IAward {

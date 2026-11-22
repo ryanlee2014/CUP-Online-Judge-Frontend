@@ -185,7 +185,7 @@ import statusTable from "../components/status/status-table.vue";
 import ContestMode from "../components/contestMode/block.vue";
 import ListState, { ListStateType } from "../components/common/ListState.vue";
 import { initMixin } from "../mixin/init";
-import _ from "lodash";
+import * as _ from "lodash-es";
 import md5 from "md5";
 import { defineComponent } from "vue";
 import { statusViewMixin } from "@/mixin/StatusViewMixin";

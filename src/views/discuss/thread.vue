@@ -61,7 +61,7 @@ import MainContent from "../../components/discuss/MainContent.vue";
 import mixins from "../../mixin/init";
 import avatarMixin from "../../mixin/avatarMixin";
 import jquery from "jquery";
-import _ from "lodash";
+import * as _ from "lodash-es";
 import Clipboard from "clipboard";
 import { Component, Mixins } from "vue-property-decorator";
 import MarkdownWorkerMixin from "@/mixin/MarkdownWorkerMixin";

@@ -69,7 +69,7 @@ import dayjs from "dayjs";
 import Clipboard from "clipboard";
 import { defineComponent } from "vue";
 import jquery from "jquery";
-import _ from "lodash";
+import * as _ from "lodash-es";
 import { mapGetters } from "vuex";
 import { CancelTokenSource } from "axios";
 import { contestShowSimMixin } from "@/mixin/contest/ContestShowSimMixin";

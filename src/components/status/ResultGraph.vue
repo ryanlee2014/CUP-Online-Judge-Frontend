@@ -8,7 +8,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import _ from "lodash";
+import * as _ from "lodash-es";
 import Chart from "chart.js";
 
 export default defineComponent({

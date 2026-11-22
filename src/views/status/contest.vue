@@ -198,7 +198,7 @@
 import mixins from "../../mixin/init";
 import * as am4core from "@amcharts/amcharts4/core";
 import * as am4charts from "@amcharts/amcharts4/charts";
-import _ from "lodash";
+import * as _ from "lodash-es";
 import { Component, Mixins, Watch } from "vue-property-decorator";
 import Statistics from "../../components/status/contest/Statistics.vue";
 import StatusTable from "../../components/status/contest/StatusTable.vue";

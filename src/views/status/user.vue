@@ -99,7 +99,7 @@ import { initMixin } from "../../mixin/init";
 import ListState, { ListStateType } from "../../components/common/ListState.vue";
 import * as am4core from "@amcharts/amcharts4/core";
 import * as am4charts from "@amcharts/amcharts4/charts";
-import _ from "lodash";
+import * as _ from "lodash-es";
 import jquery from "jquery";
 import { defineComponent } from "vue";
 

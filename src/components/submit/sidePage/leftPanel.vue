@@ -95,7 +95,7 @@
 import markdownIt from "../../../lib/markdownIt/markdownIt";
 import { defineComponent, PropType } from "vue";
 import { mapGetters } from "vuex";
-import _ from "lodash";
+import * as _ from "lodash-es";
 export default defineComponent({
     name: "LeftPanel",
     props: {

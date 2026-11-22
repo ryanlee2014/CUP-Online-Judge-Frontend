@@ -114,7 +114,6 @@ export default class App extends Vue {
             return;
         }
         (async () => {
-            const Promise = require("bluebird");
             while (times-- > 0) {
                 if (this.$socket && this.$socket.connect && typeof this.$socket.connect === "function") {
                     if (!this.$socket.connected && !this.$socket.active) {
@@ -125,7 +124,7 @@ export default class App extends Vue {
                         break;
                     }
                 }
-                await Promise.delay(500);
+                await new Promise(resolve => setTimeout(resolve, 500));
             }
         })();
     }

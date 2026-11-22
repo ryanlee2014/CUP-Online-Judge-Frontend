@@ -43,7 +43,10 @@
  *  and one has a higher precedence over the other one.
  */
 const $ = require("jquery");
-const _ = require("lodash");
+const map = require("lodash/map");
+const reduce = require("lodash/reduce");
+const reject = require("lodash/reject");
+const _ = { map, reduce, reject };
 var language_flag = {
     "c11": 0,
     "cpp17": 1,

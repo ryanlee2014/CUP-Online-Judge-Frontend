@@ -79,7 +79,7 @@
 
 <script lang="ts">
 import jquery from "jquery";
-import lodash from "lodash";
+import { values } from "lodash-es";
 import { defineComponent } from "vue";
 import { markdownWorkerMixin } from "@/mixin/MarkdownWorkerMixin";
 const $: any = jquery;
@@ -97,7 +97,8 @@ export default defineComponent({
     },
     data () {
         return {
-            lodash,
+            // only what the template uses, so lodash-es stays tree-shakeable
+            lodash: { values },
             payload: {} as any
         };
     },

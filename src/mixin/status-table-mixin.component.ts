@@ -3,7 +3,7 @@ import { Component } from "vue-property-decorator";
 import dayjs from "dayjs";
 import utils, { IIPPayload } from "@/lib/util";
 import jquery from "jquery";
-import _ from "lodash";
+import * as _ from "lodash-es";
 const $: any = jquery;
 
 /**

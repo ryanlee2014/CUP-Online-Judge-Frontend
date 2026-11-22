@@ -144,7 +144,7 @@ import TimeView from "@/components/contest/ContestRank/timeView.vue";
 import ErrorView from "@/components/contest/ContestRank/errorView.vue";
 import ResultGrid from "@/components/contest/ContestRank/ResultGrid.vue";
 import AwaitLock from "await-lock";
-import _ from "lodash";
+import * as _ from "lodash-es";
 import dayjs from "dayjs";
 import { Component, Mixins, Prop, Watch } from "vue-property-decorator";
 import {

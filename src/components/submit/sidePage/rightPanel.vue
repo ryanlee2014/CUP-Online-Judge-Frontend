@@ -115,7 +115,7 @@ import jquery from "jquery";
 import "@/lib/brace/braceMode";
 import "@/lib/brace/braceTheme";
 import { defineComponent, PropType } from "vue";
-import _ from "lodash";
+import * as _ from "lodash-es";
 import { toast } from "@/util/toast";
 
 const astyle = require("wastyle/dist/astyle.wasm").default;
