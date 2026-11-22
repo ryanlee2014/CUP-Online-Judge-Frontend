@@ -34,7 +34,7 @@
         <ace-static :content="trimedCurrentPrepend" :fontSize="fontSize + ''" :selected_language="selected_language"
                     :static_theme="static_theme" v-if="!editorPackage && trimedCurrentPrepend"></ace-static>
         <monaco-static :content="trimedCurrentPrepend" :fontSize="fontSize + ''" :selected_language="selected_language"
-                       :static_theme="static_theme" v-show="editorPackage && !!trimedCurrentPrepend"></monaco-static>
+                       :static_theme="static_theme" v-if="editorPackage && !!trimedCurrentPrepend"></monaco-static>
         <ace-editor :fontSize="fontSize + ''" :selected_language="selected_language" :theme="theme"
                     v-if="!editorPackage" v-model="code" :prepend-length="codePrependLines"></ace-editor>
         <monaco-editor :fontSize="fontSize + ''" :selected_language="selected_language" :theme="theme"
@@ -44,7 +44,7 @@
         <ace-static :content="trimedCurrentAppend" :fontSize="fontSize + ''" :selected_language="selected_language"
                     :static_theme="static_theme" v-if="!editorPackage && trimedCurrentAppend" :prepend-length="appendLineStartsWith"></ace-static>
         <monaco-static :content="trimedCurrentAppend" :fontSize="fontSize + ''" :selected_language="selected_language"
-                       :static_theme="static_theme" v-show="editorPackage && !!trimedCurrentAppend" :prepend-length="appendLineStartsWith"></monaco-static>
+                       :static_theme="static_theme" v-if="editorPackage && !!trimedCurrentAppend" :prepend-length="appendLineStartsWith"></monaco-static>
         <div class="ui menu borderless" id="statusBar" style="margin: 0;
         padding: 0;
         position: relative;
@@ -106,9 +106,7 @@
 import aceEditor from "@/components/submit/codeEditor/aceEditor.vue";
 import aceThemeSelector from "@/components/submit/codeEditor/aceComponent/aceThemeSelector.vue";
 import aceStatic from "@/components/submit/codeEditor/aceComponent/aceStatic.vue";
-import monacoEditor from "@/components/submit/codeEditor/monacoEditor.vue";
 import monacoThemeSelector from "@/components/submit/codeEditor/monacoComponent/monacoThemeSelector.vue";
-import monacoStatic from "@/components/submit/codeEditor/monacoComponent/monacoStatic.vue";
 import { init, format } from "wastyle";
 import Clipboard from "clipboard";
 import jquery from "jquery";
@@ -140,10 +138,11 @@ export default defineComponent({
     components: {
         aceEditor,
         aceThemeSelector,
-        monacoEditor,
+        // Monaco (~900KB gzip) only loads when the user switches to it
+        monacoEditor: () => import(/* webpackChunkName: "monaco-editor" */ "@/components/submit/codeEditor/monacoEditor.vue"),
         monacoThemeSelector,
         aceStatic,
-        monacoStatic
+        monacoStatic: () => import(/* webpackChunkName: "monaco-editor" */ "@/components/submit/codeEditor/monacoComponent/monacoStatic.vue")
     },
     props: {
         prepend: { default: () => ({}) as any },
@@ -174,7 +173,7 @@ export default defineComponent({
             editorPackage: false,
             code: "",
             codeLine: 0,
-            language: ["c_cpp", "c_cpp", "pascal", "java", "ruby", "sh", "python", "php", "perl", "csharp", "objectivec", "text", "scheme", "c_cpp", "c_cpp", "lua", "javascript", "go", "python", "c_cpp", "c_cpp", "c_cpp", "text", "java", "java", "python", "python", "java", "c_cpp", "c_cpp", "c_cpp"],
+            language: ["c_cpp", "c_cpp", "pascal", "java", "ruby", "sh", "python", "php", "perl", "csharp", "objectivec", "text", "scheme", "c_cpp", "c_cpp", "lua", "javascript", "golang", "python", "c_cpp", "c_cpp", "c_cpp", "text", "java", "java", "python", "python", "java", "c_cpp", "c_cpp", "c_cpp"],
             current_prepend: "" as any,
             current_append: "" as any,
             dirty: false,
@@ -217,7 +216,6 @@ export default defineComponent({
             this.$store.commit("setCodeInfo", {
                 language: val
             });
-            require(`brace/mode/${this.language[val]}`);
             $("#language").dropdown("set selected", val.toString());
             const prepend: any = this.prepend;
             const append: any = this.append;
