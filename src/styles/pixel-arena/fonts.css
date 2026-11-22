@@ -1,0 +1,3 @@
+@font-face{font-family:"PixelArena";src:url("./fonts/px-latin.woff2") format("woff2");font-display:swap;unicode-range:U+20-7E,U+A0,U+B7,U+D7,U+2014,U+2018-2019,U+201C-201D,U+2026,U+2190-2193,U+25A0,U+25B6,U+25C0,U+2605-2606,U+2713,U+2744}
+@font-face{font-family:"PixelArena";src:url("./fonts/px-punct.woff2") format("woff2");font-display:swap;unicode-range:U+3000-303F,U+FF00-FF6F}
+@font-face{font-family:"PixelArena";src:url("./fonts/px-cjk.woff2") format("woff2");font-display:swap;unicode-range:U+4E00-9FFF}

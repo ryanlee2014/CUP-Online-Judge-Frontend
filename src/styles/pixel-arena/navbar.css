@@ -1,0 +1,75 @@
+/*
+ * Pixel Arena skin for the existing Semantic UI top bar (all sizes: large / small / nano / contest / topic).
+ * Only colours, fonts and the active marker change; markup, dropdown menus and behaviour stay as they are,
+ * until the remaining pages drop Semantic UI.
+ */
+.following.bar.topmenu,
+.following.bar.topmenu.light,
+.following.bar.topmenu.inverted {
+    background: var(--pa-bg2) !important;
+    border-bottom: 4px solid var(--pa-shadow) !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+}
+
+.following.bar.topmenu .ui.secondary.menu {
+    background: transparent !important;
+    min-height: 58px;
+}
+
+.following.bar.topmenu .ui.secondary.menu > .container > .item,
+.following.bar.topmenu .ui.secondary.menu > .container > .msg.header.item > .item,
+.following.bar.topmenu .ui.secondary.menu .right.menu > .item,
+.following.bar.topmenu .ui.secondary.menu .ui.dropdown.item > .text {
+    font-family: var(--pa-font-px);
+    font-weight: normal !important;
+    font-size: 15px;
+    letter-spacing: .5px;
+    color: var(--pa-mute) !important;
+    background: transparent !important;
+}
+
+.following.bar.topmenu .ui.secondary.menu > .container > .item:hover,
+.following.bar.topmenu .ui.secondary.menu .right.menu > .item:hover {
+    color: var(--pa-ink) !important;
+}
+
+.following.bar.topmenu .ui.secondary.menu > .container > a.item.active {
+    color: var(--pa-ink) !important;
+    background: transparent !important;
+}
+
+.following.bar.topmenu .ui.secondary.menu > .container > a.item.active::before {
+    content: "▶" !important;
+    display: inline-block !important;
+    position: static !important;
+    width: auto !important;
+    height: auto !important;
+    background: none !important;
+    color: var(--pa-y);
+    margin-right: 6px;
+    font-size: 12px;
+}
+
+.following.bar.topmenu .ui.secondary.menu > .container > a.item.active > i.icon {
+    display: none;
+}
+
+.following.bar.topmenu .ui.secondary.menu i.icon,
+.following.bar.topmenu .ui.secondary.menu .dropdown.icon {
+    color: var(--pa-dim);
+}
+
+.following.bar.topmenu .ui.secondary.menu .right.menu .ui.button {
+    font-family: var(--pa-font-px);
+    font-weight: normal;
+    border-radius: 0;
+    background: #2e2e5e;
+    color: var(--pa-ink);
+    box-shadow: 0 0 0 3px var(--pa-shadow);
+}
+
+.following.bar.topmenu .ui.secondary.menu .right.menu .ui.primary.button {
+    background: var(--pa-y);
+    color: #1a1a10;
+}
