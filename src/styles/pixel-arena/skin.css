@@ -140,6 +140,21 @@ body.pa-mode .router .ui.menu a.item:hover {
     color: var(--pa-ink) !important;
 }
 
+/* stacked menus (e.g. the language list next to the prepend/append code editors) */
+body.pa-mode .router .ui.vertical.menu:not(.secondary):not(.text) {
+    background: var(--pa-card2) !important;
+    border: 2px solid var(--pa-line2) !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+}
+body.pa-mode .router .ui.vertical.menu:not(.secondary):not(.text) > .item {
+    border-bottom: 1px solid var(--pa-line2);
+}
+body.pa-mode .router .ui.vertical.pointing.menu .active.item::after {
+    background: #33336a !important;
+    border-color: var(--pa-line2) !important;
+}
+
 body.pa-mode .router .ui.tabular.menu {
     background: transparent !important;
     box-shadow: none !important;
@@ -670,4 +685,19 @@ body.pa-mode img[src*="/api/captcha"] {
     outline-offset: -2px;
     cursor: pointer;
     vertical-align: middle;
+}
+
+/* ---------- plain (markdown) tables: FAQ, problem statements, discussions ---------- */
+/* the GitHub markdown styles paint every row white */
+body.pa-mode .router table:not(.ui) tr {
+    background-color: transparent !important;
+    border-top-color: var(--pa-line2) !important;
+}
+body.pa-mode .router table:not(.ui) tr:nth-child(2n) {
+    background-color: rgba(255, 255, 255, .04) !important;
+}
+body.pa-mode .router table:not(.ui) th,
+body.pa-mode .router table:not(.ui) td {
+    border-color: var(--pa-line2) !important;
+    color: var(--pa-ink);
 }
