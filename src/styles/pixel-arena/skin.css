@@ -659,3 +659,15 @@ body.pa-mode .router .markdown-body code {
     background: #2c2c58 !important;
     color: #e9e8ff !important;
 }
+
+/* ---------- captcha ---------- */
+/* The captcha image is dark strokes on a transparent background (made for the old white pages);
+   on the dark skin it all but disappears, so give it a light card of its own. */
+body.pa-mode img[src*="/api/captcha"] {
+    background: #eef1ff !important;
+    border: 2px solid var(--pa-line, #3a3a6a);
+    padding: 2px 6px;
+    box-sizing: content-box;
+    cursor: pointer;
+    vertical-align: middle;
+}
