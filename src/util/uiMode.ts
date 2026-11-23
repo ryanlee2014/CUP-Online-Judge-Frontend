@@ -8,7 +8,7 @@ import Vue from "vue";
 export type UiMode = "arena" | "classic";
 
 export const UI_MODE_KEY = "cupoj:ui-mode";
-export const DEFAULT_UI_MODE: UiMode = "arena";
+export const DEFAULT_UI_MODE: UiMode = "classic";
 export const BODY_CLASS = "pa-mode";
 
 function read (): UiMode {

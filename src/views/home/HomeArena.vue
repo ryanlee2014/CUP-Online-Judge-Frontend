@@ -319,7 +319,9 @@ export default defineComponent({
             this.statusError = false;
             this.axios.get(`/api/status/null/${encodeURIComponent(this.userId)}/null/null/0/0/0`)
                 .then(({ data }: any) => {
-                    this.submissions = Array.isArray(data && data.result) ? data.result : [];
+                    // test runs are stored with a negative problem id (-1000 = test run of P1000); they aren't attempts
+                    this.submissions = (Array.isArray(data && data.result) ? data.result : [])
+                        .filter((s: Submission) => Number(s.problem_id) > 0);
                     this.loadTitles();
                 })
                 .catch(() => {

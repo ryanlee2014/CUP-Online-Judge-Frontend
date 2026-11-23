@@ -6,10 +6,11 @@ describe("uiMode", () => {
         setUiMode(DEFAULT_UI_MODE);
     });
 
-    it("defaults to the new interface and marks <body>", () => {
-        expect(uiModeState.mode).toBe("arena");
+    it("defaults to the classic interface and leaves <body> unmarked", () => {
+        expect(DEFAULT_UI_MODE).toBe("classic");
+        expect(uiModeState.mode).toBe("classic");
         applyBodyClass();
-        expect(document.body.classList.contains(BODY_CLASS)).toBe(true);
+        expect(document.body.classList.contains(BODY_CLASS)).toBe(false);
     });
 
     it("switches, persists and unmarks <body> for the classic interface", () => {

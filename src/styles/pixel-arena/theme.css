@@ -87,6 +87,13 @@ a.pa-btn {
 
 .pa-btn .pa-key { opacity: .55; font-size: 13px; }
 
+/* page links inside .router are recoloured by the skin (blue, yellow on hover); buttons keep their own colours,
+   otherwise the yellow primary button turns yellow-on-yellow when hovered */
+body.pa-mode .router a.pa-btn { color: var(--pa-ink); }
+body.pa-mode .router a.pa-btn:hover { color: #fff; }
+body.pa-mode .router a.pa-btn.pa-primary,
+body.pa-mode .router a.pa-btn.pa-primary:hover { color: #1a1a10; }
+
 .pa-result {
     font-family: var(--pa-font-px);
     font-size: 13px;

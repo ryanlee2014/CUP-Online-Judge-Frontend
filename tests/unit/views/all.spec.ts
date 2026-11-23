@@ -691,7 +691,10 @@ describe("views smoke", () => {
                     Graph: true,
                     ResultGraph: true,
                     UserGraph: true,
-                    Statistics: true
+                    Statistics: true,
+                    // Home.vue only picks one of these (async components, mounted for real otherwise)
+                    HomeArena: true,
+                    HomeClassic: true
                 }
             });
             (wrapper.vm as any).$refs = new Proxy({}, {
