@@ -1,0 +1,375 @@
+/*
+ * 像素赛场 skin for the pages that still use Semantic UI markup.
+ * Only active in the new interface (body.pa-mode). Recolours and re-fonts the common
+ * Semantic components so every page reads as the same design; layout and behaviour are untouched.
+ * Problem statements keep a light "paper" background for long reading.
+ */
+
+body.pa-mode,
+body.pa-mode #app {
+    background-color: var(--pa-bg) !important;
+    color: var(--pa-ink);
+}
+
+body.pa-mode {
+    background-image: radial-gradient(#2a2a50 1px, transparent 1px) !important;
+    background-size: 56px 56px !important;
+}
+
+body.pa-mode .router {
+    color: var(--pa-ink);
+}
+
+/* ---------- text ---------- */
+body.pa-mode .router a { color: #8fb2ff; }
+body.pa-mode .router a:hover { color: var(--pa-y); }
+
+body.pa-mode .router .ui.header,
+body.pa-mode .router h1, body.pa-mode .router h2, body.pa-mode .router h3,
+body.pa-mode .router h4, body.pa-mode .router h5 {
+    color: var(--pa-ink) !important;
+    font-family: var(--pa-font-px) !important;
+    font-weight: normal !important;
+    letter-spacing: .5px;
+}
+
+body.pa-mode .router .ui.header .sub.header,
+body.pa-mode .router .ui.dividing.header + *,
+body.pa-mode .router .meta {
+    color: var(--pa-mute) !important;
+}
+
+body.pa-mode .router .description,
+body.pa-mode .router .ui.list .item .description {
+    color: #c9c8ee !important;
+}
+
+body.pa-mode .router .ui.dividing.header {
+    border-bottom: 2px dashed var(--pa-line2) !important;
+}
+
+body.pa-mode .router .ui.divider { border-color: var(--pa-line2) !important; }
+
+/* ---------- containers ---------- */
+body.pa-mode .router .ui.segment,
+body.pa-mode .router .ui.segments,
+body.pa-mode .router .ui.card,
+body.pa-mode .router .ui.cards > .card,
+body.pa-mode .router .ui.attached.segment,
+body.pa-mode .router .ui.tab.segment {
+    background: var(--pa-card) !important;
+    color: var(--pa-ink) !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: 0 -3px 0 0 var(--pa-line), 0 3px 0 0 var(--pa-line), -3px 0 0 0 var(--pa-line), 3px 0 0 0 var(--pa-line), 6px 6px 0 0 var(--pa-shadow) !important;
+}
+
+body.pa-mode .router .ui.basic.segment,
+body.pa-mode .router .ui.vertical.segment {
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+body.pa-mode .router .ui.card > .content,
+body.pa-mode .router .ui.cards > .card > .content {
+    border-top-color: var(--pa-line2) !important;
+}
+
+/* ---------- tables ---------- */
+body.pa-mode .router .ui.table {
+    background: var(--pa-card) !important;
+    color: var(--pa-ink) !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: 0 -3px 0 0 var(--pa-line), 0 3px 0 0 var(--pa-line), -3px 0 0 0 var(--pa-line), 3px 0 0 0 var(--pa-line), 6px 6px 0 0 var(--pa-shadow) !important;
+}
+
+body.pa-mode .router .ui.table thead th {
+    background: var(--pa-card2) !important;
+    color: var(--pa-mute) !important;
+    font-family: var(--pa-font-px);
+    font-weight: normal !important;
+    border-bottom: 3px solid var(--pa-line2) !important;
+}
+
+body.pa-mode .router .ui.table td {
+    border-top: 2px dashed var(--pa-line2) !important;
+    color: var(--pa-ink);
+}
+
+body.pa-mode .router .ui.table tbody tr:hover,
+body.pa-mode .router .ui.selectable.table tbody tr:hover {
+    background: #2a2a58 !important;
+}
+
+body.pa-mode .router .ui.table tr.warning,
+body.pa-mode .router .ui.table td.warning,
+body.pa-mode .router .ui.table tr.positive,
+body.pa-mode .router .ui.table tr.negative,
+body.pa-mode .router .ui.table tr.active {
+    background: #2a2a58 !important;
+    color: var(--pa-ink) !important;
+    box-shadow: inset 4px 0 0 var(--pa-y) !important;
+}
+
+body.pa-mode .router .ui.table tfoot th {
+    background: var(--pa-card2) !important;
+    color: var(--pa-mute) !important;
+}
+
+/* ---------- menus / tabs / pagination ---------- */
+body.pa-mode .router .ui.menu:not(.vertical):not(.secondary),
+body.pa-mode .router .ui.pagination.menu {
+    background: var(--pa-card2) !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: 0 -3px 0 0 var(--pa-line2), 0 3px 0 0 var(--pa-line2), -3px 0 0 0 var(--pa-line2), 3px 0 0 0 var(--pa-line2) !important;
+}
+
+body.pa-mode .router .ui.menu .item {
+    color: var(--pa-mute) !important;
+    font-family: var(--pa-font-px);
+}
+
+body.pa-mode .router .ui.menu .item::before { background: var(--pa-line2) !important; }
+
+body.pa-mode .router .ui.menu .active.item,
+body.pa-mode .router .ui.menu a.item:hover {
+    background: #33336a !important;
+    color: var(--pa-ink) !important;
+}
+
+body.pa-mode .router .ui.tabular.menu {
+    background: transparent !important;
+    box-shadow: none !important;
+    border-bottom: 3px solid var(--pa-line2) !important;
+}
+
+body.pa-mode .router .ui.tabular.menu .item {
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+}
+
+body.pa-mode .router .ui.tabular.menu .active.item {
+    background: var(--pa-card) !important;
+    color: var(--pa-ink) !important;
+    box-shadow: inset 0 3px 0 var(--pa-y) !important;
+}
+
+body.pa-mode .router .ui.secondary.pointing.menu {
+    border-bottom: 3px solid var(--pa-line2) !important;
+}
+
+body.pa-mode .router .ui.secondary.pointing.menu .active.item {
+    border-color: var(--pa-y) !important;
+    background: transparent !important;
+}
+
+/* ---------- forms ---------- */
+body.pa-mode .router .ui.input > input,
+body.pa-mode .router .ui.form input:not([type]),
+body.pa-mode .router .ui.form input[type="text"],
+body.pa-mode .router .ui.form input[type="number"],
+body.pa-mode .router .ui.form input[type="password"],
+body.pa-mode .router .ui.form input[type="email"],
+body.pa-mode .router .ui.form textarea,
+body.pa-mode .router .ui.selection.dropdown,
+body.pa-mode .router input.prompt {
+    background: var(--pa-card2) !important;
+    color: var(--pa-ink) !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: 0 -2px 0 0 var(--pa-line), 0 2px 0 0 var(--pa-line), -2px 0 0 0 var(--pa-line), 2px 0 0 0 var(--pa-line) !important;
+}
+
+body.pa-mode .router .ui.input > input:focus,
+body.pa-mode .router .ui.form input:focus,
+body.pa-mode .router .ui.form textarea:focus,
+body.pa-mode .router .ui.selection.dropdown.active {
+    box-shadow: 0 -2px 0 0 var(--pa-y), 0 2px 0 0 var(--pa-y), -2px 0 0 0 var(--pa-y), 2px 0 0 0 var(--pa-y) !important;
+}
+
+body.pa-mode .router .ui.input > input::placeholder,
+body.pa-mode .router .ui.dropdown .default.text { color: var(--pa-dim) !important; }
+
+body.pa-mode .router .ui.selection.dropdown .menu,
+body.pa-mode .router .ui.dropdown .menu {
+    background: var(--pa-card2) !important;
+    border-color: var(--pa-line) !important;
+    border-radius: 0 !important;
+}
+
+body.pa-mode .router .ui.dropdown .menu > .item {
+    color: var(--pa-ink) !important;
+    border-top-color: var(--pa-line2) !important;
+}
+
+body.pa-mode .router .ui.dropdown .menu > .item:hover,
+body.pa-mode .router .ui.dropdown .menu .selected.item {
+    background: #33336a !important;
+}
+
+body.pa-mode .router .ui.form .field > label,
+body.pa-mode .router .ui.checkbox label,
+body.pa-mode .router .ui.toggle.checkbox label,
+body.pa-mode .router .ui.toggle.checkbox input:checked ~ label {
+    color: var(--pa-mute) !important;
+    font-family: var(--pa-font-px);
+    font-weight: normal !important;
+}
+
+body.pa-mode .router .ui.toggle.checkbox label::before { background: #34346a !important; border-radius: 0 !important; }
+body.pa-mode .router .ui.toggle.checkbox input:checked ~ label::before { background: var(--pa-ac) !important; }
+body.pa-mode .router .ui.toggle.checkbox label::after { border-radius: 0 !important; }
+
+/* ---------- buttons / labels ---------- */
+body.pa-mode .router .ui.button {
+    font-family: var(--pa-font-px);
+    font-weight: normal;
+    border-radius: 0 !important;
+    background: #2e2e5e;
+    color: var(--pa-ink);
+    box-shadow: 0 -2px 0 0 var(--pa-shadow), 0 2px 0 0 var(--pa-shadow), -2px 0 0 0 var(--pa-shadow), 2px 0 0 0 var(--pa-shadow), inset 0 -3px 0 0 #1c1c40 !important;
+}
+
+body.pa-mode .router .ui.button:hover { background: #383870; color: #fff; }
+
+body.pa-mode .router .ui.primary.button,
+body.pa-mode .router .ui.green.button:not(.basic),
+body.pa-mode .router .ui.positive.button:not(.basic) {
+    background: var(--pa-y) !important;
+    color: #1a1a10 !important;
+    box-shadow: 0 -2px 0 0 var(--pa-shadow), 0 2px 0 0 var(--pa-shadow), -2px 0 0 0 var(--pa-shadow), 2px 0 0 0 var(--pa-shadow), inset 0 -3px 0 0 var(--pa-y2) !important;
+}
+
+body.pa-mode .router .ui.basic.button,
+body.pa-mode .router .ui.basic.buttons .button {
+    background: transparent !important;
+    color: var(--pa-ink) !important;
+}
+
+body.pa-mode .router .ui.labeled.icon.button > .icon,
+body.pa-mode .router .ui.labeled.button > .label {
+    background: rgba(0, 0, 0, .25) !important;
+    border-radius: 0 !important;
+}
+
+body.pa-mode .router .ui.label:not(.ribbon) {
+    border-radius: 0 !important;
+    font-weight: normal;
+}
+
+body.pa-mode .router .ui.message {
+    background: var(--pa-card2) !important;
+    color: var(--pa-ink) !important;
+    border-radius: 0 !important;
+    box-shadow: inset 4px 0 0 var(--pa-pend) !important;
+}
+
+body.pa-mode .router .ui.message .header { color: var(--pa-ink) !important; }
+
+body.pa-mode .router .ui.statistic > .value,
+body.pa-mode .router .ui.statistics .statistic > .value {
+    font-family: var(--pa-font-px) !important;
+    color: var(--pa-ink) !important;
+}
+
+body.pa-mode .router .ui.statistic > .label { color: var(--pa-mute) !important; }
+
+body.pa-mode .router .ui.accordion .title,
+body.pa-mode .router .ui.list .item,
+body.pa-mode .router .ui.list .item .header,
+body.pa-mode .router .ui.comments .comment .text,
+body.pa-mode .router .ui.comments .comment .author,
+body.pa-mode .router .ui.feed .event .summary {
+    color: var(--pa-ink) !important;
+}
+
+body.pa-mode .router .ui.progress { background: #30305e !important; border-radius: 0 !important; }
+body.pa-mode .router .ui.progress .bar { border-radius: 0 !important; }
+
+/* ---------- long reading: problem statement & markdown stay on "paper" ---------- */
+body.pa-mode .router .markdown-body,
+body.pa-mode .router .ui.segment .markdown-body {
+    color: var(--pa-paper-ink) !important;
+}
+
+body.pa-mode .router #left-side .ui.segment,
+body.pa-mode .router .problem-paper {
+    background: var(--pa-paper) !important;
+    color: var(--pa-paper-ink) !important;
+}
+
+body.pa-mode .router #left-side .ui.header,
+body.pa-mode .router #left-side h1, body.pa-mode .router #left-side h2,
+body.pa-mode .router #left-side h3, body.pa-mode .router #left-side h4 {
+    color: var(--pa-paper-ink) !important;
+}
+
+body.pa-mode .router #left-side .ui.table,
+body.pa-mode .router #left-side .ui.table td,
+body.pa-mode .router #left-side .ui.table th {
+    background: transparent !important;
+    color: var(--pa-paper-ink) !important;
+    box-shadow: none !important;
+}
+
+body.pa-mode .router #left-side a { color: #3156c8; }
+
+/* footer */
+body.pa-mode .ui.inverted.vertical.footer.segment,
+body.pa-mode .footer.segment {
+    background: var(--pa-bg2) !important;
+    color: var(--pa-mute) !important;
+}
+
+body.pa-mode .router #left-side {
+    background: var(--pa-paper) !important;
+    color: var(--pa-paper-ink) !important;
+    border-radius: 0 !important;
+}
+
+/* attached headers (user page, panels) */
+body.pa-mode .router .ui.attached.header,
+body.pa-mode .router .ui.top.attached.header,
+body.pa-mode .router .ui.block.header {
+    background: var(--pa-card2) !important;
+    color: var(--pa-ink) !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: inset 0 -2px 0 var(--pa-line2) !important;
+}
+
+body.pa-mode .router .ui.attached.header .icon,
+body.pa-mode .router .ui.attached.header .content { color: var(--pa-ink) !important; }
+
+/* accordions: problem statement sections on paper, elsewhere on cards */
+body.pa-mode .router .ui.styled.accordion,
+body.pa-mode .router .ui.styled.accordion .accordion {
+    background: transparent !important;
+    border-radius: 0 !important;
+    box-shadow: 0 0 0 2px var(--pa-line2) !important;
+}
+
+body.pa-mode .router .ui.styled.accordion .title,
+body.pa-mode .router .ui.styled.accordion .accordion .title {
+    color: var(--pa-ink) !important;
+    font-family: var(--pa-font-px);
+    border-top-color: var(--pa-line2) !important;
+}
+
+body.pa-mode .router .ui.styled.accordion .content { color: inherit !important; }
+
+body.pa-mode .router #left-side .ui.styled.accordion {
+    box-shadow: 0 0 0 2px #d9d4c0 !important;
+}
+
+body.pa-mode .router #left-side .ui.styled.accordion .title {
+    color: var(--pa-paper-ink) !important;
+    border-top-color: #d9d4c0 !important;
+}
+
+body.pa-mode .router #left-side .ui.styled.accordion .active.title {
+    box-shadow: inset 4px 0 0 #5b8cff;
+}

@@ -143,6 +143,7 @@ export default class App extends Vue {
     @import "../node_modules/@ryanlee2014/mavon-editor/dist/css/index.css";
     @import "./styles/pixel-arena/theme.css";
     @import "./styles/pixel-arena/navbar.css";
+    @import "./styles/pixel-arena/skin.css";
 
     @media only screen and (min-width: 1200px) {
         .ui.container {
