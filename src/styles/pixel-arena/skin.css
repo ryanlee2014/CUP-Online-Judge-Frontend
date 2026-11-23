@@ -665,9 +665,9 @@ body.pa-mode .router .markdown-body code {
    on the dark skin it all but disappears, so give it a light card of its own. */
 body.pa-mode img[src*="/api/captcha"] {
     background: #eef1ff !important;
-    border: 2px solid var(--pa-line, #3a3a6a);
-    padding: 2px 6px;
-    box-sizing: content-box;
+    /* outline instead of border/padding so the image keeps the size each page lays it out at */
+    outline: 2px solid var(--pa-line, #3a3a6a);
+    outline-offset: -2px;
     cursor: pointer;
     vertical-align: middle;
 }
