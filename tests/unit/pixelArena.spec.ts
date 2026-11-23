@@ -21,6 +21,9 @@ describe("pixelArena", () => {
         expect(resultClass(11)).toBe("ce");
         expect(resultClass(0)).toBe("pd");
         expect(resultClass(14)).toBe("pd");
+        // 13 = 运行完成: the final result of a test run, must not keep spinning
+        expect(resultClass(13)).toBe("run");
+        expect(resultClass(12)).toBe("pd");
         expect(resultClass(10)).toBe("wa");
     });
 
@@ -62,5 +65,43 @@ describe("pixelArena", () => {
         expect(shortTitle("A + B Problem III【★】单循环多组 Single round-robin")).toBe("A + B Problem III");
         expect(shortTitle("增税")).toBe("增税");
         expect(shortTitle(null)).toBe("");
+    });
+});
+
+import { DIFFICULTY_STARS, passCells, passPercent, recentBalloons, testCells } from "@/util/problemsetArena";
+
+describe("problem list / status helpers", () => {
+    it("pass rate bar and percentage", () => {
+        expect(passPercent(47, 100)).toBe(47);
+        expect(passPercent("3", "0")).toBe(0);
+        expect(passCells(1, 1000)).toBe(1);
+        expect(passCells(0, 10)).toBe(0);
+        expect(passCells(10, 10)).toBe(10);
+        expect(passCells(63, 100)).toBe(6);
+    });
+
+    it("difficulty labels", () => {
+        expect(DIFFICULTY_STARS["困难"]).toBe(4);
+        expect(DIFFICULTY_STARS["动态规划"]).toBeUndefined();
+    });
+
+    it("test case cells", () => {
+        expect(testCells(3, 7, 12)).toEqual([...Array(7).fill("ac"), "run", ...Array(4).fill("todo")]);
+        expect(testCells(6, 2, 4)).toEqual(["ac", "ac", "bad", "todo"]);
+        expect(testCells(4, 0, 3)).toEqual(["ac", "ac", "ac"]);
+        // run finished (test run) and compile error: nothing blinking
+        expect(testCells(13, 0, 2)).toEqual(["todo", "todo"]);
+        expect(testCells(11, 0, 2)).toEqual(["todo", "todo"]);
+        expect(testCells(3, 0, 0)).toEqual([]);
+        expect(testCells(3, 0, 100).length).toBe(40);
+    });
+
+    it("recent balloons: AC only, deduplicated, newest first", () => {
+        const list = [
+            { problem_id: 1003, result: 4 }, { problem_id: 1002, result: 6 },
+            { problem_id: -1003, result: 4 }, { problem_id: 1001, result: 4 }
+        ];
+        expect(recentBalloons(list)).toEqual([1003, 1001]);
+        expect(recentBalloons(list, 1)).toEqual([1003]);
     });
 });

@@ -2,6 +2,58 @@
     <div class="ui container padding" v-if="contestMode">
         <ContestMode/>
     </div>
+    <div class="pa-st-wrap" v-else-if="arena">
+        <st-arena-hero :language-name="mine ? (language_name[mine.language] || '') : ''"
+                       :memory="mine ? memoryText(mine.memory) : ''" :sub="mine" :time="mine ? timeText(mine.time) : ''"
+                       :title="mineTitle" class="pa-st-herobox" v-if="myId"></st-arena-hero>
+        <div class="pa-st-tabs">
+            <button :class="{ on: current_tag === t.k }" :key="t.k" @click="tag(t.k, $event)" class="pa-btn pa-tab"
+                    v-for="t in arenaTabs">{{ $t(t.l) }}</button>
+        </div>
+        <template v-if="current_tag === 'status'">
+            <div class="pa-st-bar">
+                <button :class="{ on: user_id !== myId || !myId }" @click="onlyMe(false)" class="pa-btn pa-tab">{{ $t("pa.st.all") }}</button>
+                <button :class="{ on: !!myId && user_id === myId }" @click="onlyMe(true)" class="pa-btn pa-tab" v-if="myId">{{ $t("pa.st.onlyMe") }}</button>
+                <label class="pa-st-field"><span class="pa-mute">{{ $t("pa.st.problem") }}</span>
+                    <input @keypress.enter="search" size="6" type="text" v-model="problem_id"></label>
+                <label class="pa-st-field"><span class="pa-mute">{{ $t("pa.st.user") }}</span>
+                    <input @keypress.enter="search" size="10" type="text" v-model="user_id"></label>
+                <label class="pa-st-field"><span class="pa-mute">{{ $t("pa.st.language") }}</span>
+                    <select @change="search" v-model="language">
+                        <option :value="-1">{{ $t("pa.st.any") }}</option>
+                        <option :key="i" :value="i" v-for="(n, i) in language_name">{{ n }}</option>
+                    </select></label>
+                <label class="pa-st-field"><span class="pa-mute">{{ $t("pa.st.result") }}</span>
+                    <select @change="search" v-model="problem_result">
+                        <option :value="-1">{{ $t("pa.st.any") }}</option>
+                        <option :key="i" :value="i" v-for="(n, i) in result">{{ $t(n) }}</option>
+                    </select></label>
+                <button @click="search" class="pa-btn pa-primary">{{ $t("pa.st.search") }}</button>
+                <span class="pa-st-gap"></span>
+                <label class="pa-st-check"><input type="checkbox" v-model="auto_refresh"> {{ $t("pa.st.autoRefresh") }}</label>
+                <label class="pa-st-check"><input type="checkbox" v-model="sim_checkbox"> {{ $t("pa.st.simOnly") }}</label>
+                <label class="pa-st-check" v-if="isadmin"><input :checked="!!privilege" @change="privilege = !privilege" type="checkbox"> {{ $t("pa.st.hideTestRun") }}</label>
+            </div>
+            <list-state :empty-text="$t('noMatchingSubmission')" :state="listState" @retry="retryList"></list-state>
+            <st-arena-table :answer_class="judge_color" :answer_icon="icon_list" :dim="dim && listLoaded"
+                            :isadmin="isadmin" :language_name="language_name" :now="now" :problem_list="problem_list"
+                            :result="result" :self="self" :target="target"
+                            v-show="listLoaded && hasRows"></st-arena-table>
+            <div class="pa-st-pages">
+                <button :disabled="page_cnt == 0" @click="page(-page_cnt)" class="pa-btn pa-tab">{{ $t("pa.st.top") }}</button>
+                <button :disabled="page_cnt == 0" @click="page(-1)" class="pa-btn pa-tab">◀ {{ $t("pa.st.prev") }}</button>
+                <span class="pa-px pa-mute">{{ page_cnt + 1 }}</span>
+                <button :disabled="problem_list.length == 0" @click="page(1)" class="pa-btn pa-tab">{{ $t("pa.st.next") }} ▶</button>
+            </div>
+        </template>
+        <div class="pa-st-graph" v-else>
+            <keep-alive>
+                <Graph ref="graph" v-if="current_tag === 'graph'"></Graph>
+                <ResultGraph :label-name="labelName" v-if="current_tag === 'result'"></ResultGraph>
+                <UserGraph v-if="current_tag === 'user'"></UserGraph>
+            </keep-alive>
+        </div>
+    </div>
     <div class="padding ui container" v-else>
         <h2 class="ui dividing header">
             {{$t("status")}}
@@ -192,6 +244,10 @@ import { statusViewMixin } from "@/mixin/StatusViewMixin";
 import AwaitLock from "await-lock";
 import { parameterHash } from "@/util/util";
 import { mapGetters } from "vuex";
+import StArenaTable from "@/components/status/arena/StArenaTable.vue";
+import StArenaHero from "@/components/status/arena/StArenaHero.vue";
+import { uiModeState } from "@/util/uiMode";
+import { shortTitle } from "@/util/pixelArena";
 
 // Shared by every instance, like the former @Lock(new AwaitLock()) / @RunOnceEachKey decorators on Submit.
 const submitLock = new AwaitLock();
@@ -221,7 +277,9 @@ export default defineComponent({
         Graph: () => import(/* webpackChunkName: "status-graph" */ "@/components/status/graph.vue"),
         statusTable,
         ContestMode,
-        ListState
+        ListState,
+        StArenaTable,
+        StArenaHero
     },
     mixins: [initMixin, statusViewMixin],
     data () {
@@ -243,11 +301,27 @@ export default defineComponent({
             labelName: [] as any[],
             // list request state (loading skeleton / empty / error + retry)
             listLoaded: false,
-            listError: false
+            listError: false,
+            // 像素赛场: my latest submission pinned on top, live through the socket
+            mine: null as any,
+            mineTitle: "",
+            now: Date.now(),
+            arenaTabs: [
+                { k: "status", l: "pa.st.tabStatus" },
+                { k: "graph", l: "pa.st.tabGraph" },
+                { k: "result", l: "pa.st.tabResult" },
+                { k: "user", l: "pa.st.tabUser" }
+            ]
         };
     },
     computed: {
         ...mapGetters(["contestMode"]),
+        arena (): boolean {
+            return uiModeState.mode === "arena";
+        },
+        myId (): string {
+            return this.$store.getters.user_id || "";
+        },
         hasRows (): boolean {
             return !!this.problem_list && this.problem_list.length > 0;
         },
@@ -261,17 +335,29 @@ export default defineComponent({
             return this.hasRows ? null : "empty";
         }
     },
+    watch: {
+        myId (): void {
+            this.loadMine();
+        }
+    },
     beforeDestroy () {
+        clearInterval((this as any).clock_);
         (this as any).sockets.unsubscribe("submit");
         (this as any).sockets.unsubscribe("result");
     },
     mounted () {
         document.title = `Status -- ${document.title}`;
         this.initData();
+        this.loadMine();
+        (this as any).clock_ = setInterval(() => {
+            this.now = Date.now();
+        }, 5000);
         (this as any).sockets.subscribe("submit", (data: any) => {
+            this.onMineSubmit(data);
             this.Submit(data);
         });
         (this as any).sockets.subscribe("result", (data: any) => {
+            this.onMineResult(data);
             this.Update(data);
         });
     },
@@ -355,6 +441,87 @@ export default defineComponent({
             this.requestStatus(`/api/status/${problemId}/${userId}/${language}/${result}/${pageCount}/${simCheckbox}/${pri}`);
         },
 
+        loadMine (): void {
+            const uid = this.myId;
+            if (!uid || !this.arena) {
+                return;
+            }
+            this.axios.get(`/api/status/null/${encodeURIComponent(uid)}/null/null/0/`)
+                .then(({ data }: any) => {
+                    const last = data && Array.isArray(data.result) ? data.result[0] : null;
+                    if (last && (!this.mine || last.solution_id >= this.mine.solution_id)) {
+                        this.mine = Object.assign({}, last);
+                        this.loadMineTitle();
+                    }
+                })
+                .catch(() => undefined);
+        },
+        loadMineTitle (): void {
+            const id = this.mine ? Math.abs(this.mine.problem_id) : 0;
+            this.mineTitle = "";
+            if (!id) {
+                return;
+            }
+            this.axios.get("/api/problem/local", { params: { id } })
+                .then(({ data }: any) => {
+                    const title = data && data.problem && data.problem.title;
+                    if (title && this.mine && Math.abs(this.mine.problem_id) === id) {
+                        this.mineTitle = shortTitle(title);
+                    }
+                })
+                .catch(() => undefined);
+        },
+        /** a new submission of mine (from any tab / page) replaces the pinned card, whatever the list filters are */
+        onMineSubmit (data: any): void {
+            if (!this.arena || !this.myId || !data || data.user_id !== this.myId || !data.val) {
+                return;
+            }
+            if (this.mine && data.submission_id <= this.mine.solution_id) {
+                return;
+            }
+            const changed = !this.mine || Math.abs(this.mine.problem_id) !== Math.abs(data.val.id);
+            this.mine = {
+                solution_id: data.submission_id,
+                problem_id: Math.abs(data.val.id),
+                user_id: data.user_id,
+                language: data.val.language,
+                result: 0,
+                pass_point: 0,
+                total_point: 0,
+                time: 0,
+                memory: 0,
+                in_date: new Date().toISOString(),
+                judger: ""
+            };
+            if (changed) {
+                this.loadMineTitle();
+            }
+        },
+        onMineResult (data: any): void {
+            if (!this.mine || !data || Number(data.solution_id) !== Number(this.mine.solution_id)) {
+                return;
+            }
+            this.mine = Object.assign({}, this.mine, {
+                result: data.state,
+                time: data.time,
+                memory: data.memory,
+                pass_point: data.pass_point,
+                total_point: parseInt(data.total_point) || this.mine.total_point || 0,
+                judger: data.judger || this.mine.judger
+            });
+        },
+        onlyMe (on: boolean): void {
+            this.user_id = on ? this.myId : null;
+            this.search();
+        },
+        memoryText (m: any): string {
+            const kb = parseInt(m);
+            return isNaN(kb) ? "" : kb >= 1024 ? `${(kb / 1024).toFixed(1)}MB` : `${kb}KB`;
+        },
+        timeText (t: any): string {
+            const ms = parseInt(t);
+            return isNaN(ms) ? "" : `${ms}ms`;
+        },
         Submit (data: any): Promise<any> {
             return lockedSubmit.call(this, [data]);
         },
@@ -454,5 +621,107 @@ export default defineComponent({
 <style scoped>
     .ui.form .fields .field .ui.checkbox {
         margin-top: inherit !important;
+    }
+
+    /* ---- 像素赛场 ---- */
+    .pa-st-wrap {
+        max-width: 1440px;
+        margin: 0 auto;
+        padding: 28px 28px 64px;
+    }
+
+    .pa-st-herobox {
+        margin-bottom: 36px;
+    }
+
+    .pa-st-tabs, .pa-st-bar, .pa-st-pages {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .pa-st-tabs {
+        margin-bottom: 18px;
+    }
+
+    .pa-st-bar {
+        margin-bottom: 18px;
+    }
+
+    .pa-tab {
+        height: 40px;
+        padding: 0 14px !important;
+        font-size: 14px !important;
+    }
+
+    .pa-tab.on {
+        background: #3a3a7a !important;
+        color: #fff !important;
+    }
+
+    .pa-tab[disabled] {
+        opacity: .4;
+        cursor: default;
+    }
+
+    .pa-st-bar .pa-primary {
+        height: 40px;
+    }
+
+    .pa-st-field {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        height: 40px;
+        padding: 0 10px;
+        background: var(--pa-bg2);
+        border: 3px solid var(--pa-line2);
+        font-size: 13px;
+    }
+
+    .pa-st-field:focus-within {
+        border-color: var(--pa-y);
+    }
+
+    .pa-st-field input, .pa-st-field select {
+        border: 0;
+        outline: 0;
+        background: transparent;
+        color: var(--pa-ink);
+        font-size: 14px;
+        max-width: 160px;
+    }
+
+    .pa-st-field option {
+        background: #1b1b3c;
+        color: var(--pa-ink);
+    }
+
+    .pa-st-gap {
+        flex: 1;
+    }
+
+    .pa-st-check {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        color: var(--pa-mute);
+        font-size: 13px;
+        cursor: pointer;
+    }
+
+    .pa-st-check input {
+        accent-color: var(--pa-y);
+    }
+
+    .pa-st-pages {
+        justify-content: center;
+        margin-top: 24px;
+    }
+
+    .pa-st-graph {
+        padding: 20px;
+        background: var(--pa-card);
     }
 </style>

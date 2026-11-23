@@ -39,28 +39,32 @@ export function shade (hex: string, factor: number): string {
 /**
  * Judge result codes (see const_list.result in the backend):
  * 0 waiting, 1 waiting rejudge, 2 compiling, 3 running, 4 AC, 5 PE, 6 WA, 7 TLE, 8 MLE, 9 OLE, 10 RE, 11 CE,
- * 12 compiled, 13 run finished, 14 queued (12-14 are still in progress), 15 rejected, 16 system error.
+ * 12 compiled, 13 run finished (final result of a test run with custom input), 14 queued (12 and 14 are still in
+ * progress), 15 rejected, 16 system error.
  */
 const RESULT_SHORT: Record<number, string> = {
     0: "等待", 1: "重判", 2: "编译", 3: "运行", 4: "AC", 5: "PE", 6: "WA", 7: "TLE", 8: "MLE", 9: "OLE", 10: "RE", 11: "CE",
-    12: "运行", 13: "运行", 14: "排队", 15: "拒绝", 16: "SE"
+    12: "运行", 13: "完成", 14: "排队", 15: "拒绝", 16: "SE"
 };
 
 export function isPending (code: number): boolean {
-    return (code >= 0 && code <= 3) || (code >= 12 && code <= 14);
+    return (code >= 0 && code <= 3) || code === 12 || code === 14;
 }
 
 export function resultShort (code: number): string {
     return RESULT_SHORT[code] ?? String(code);
 }
 
-/** css modifier for .pa-result: ac / wa / tle / ce / pd */
+/** css modifier for .pa-result: ac / wa / tle / ce / pd / run (test run finished) */
 export function resultClass (code: number): string {
     if (code === 4) {
         return "ac";
     }
     if (isPending(code)) {
         return "pd";
+    }
+    if (code === 13) {
+        return "run";
     }
     if (code === 7 || code === 8 || code === 9) {
         return "tle";

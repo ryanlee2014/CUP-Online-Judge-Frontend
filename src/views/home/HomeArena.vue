@@ -270,7 +270,7 @@ export default defineComponent({
         shortLabel (code: number): string {
             // AC / WA / TLE ... stay as-is; pending states get a localized word
             const key = `pa.result.${code}`;
-            return isPending(code) && this.$te(key) ? (this.$t(key) as string) : resultShort(code);
+            return (isPending(code) || code === 13) && this.$te(key) ? (this.$t(key) as string) : resultShort(code);
         },
         ago (time: string): string {
             const parts = relativeParts(time, this.now);

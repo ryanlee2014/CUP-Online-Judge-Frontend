@@ -102,6 +102,7 @@ a.pa-btn {
 .pa-result.tle { background: var(--pa-tle); }
 .pa-result.ce { background: var(--pa-ce); }
 .pa-result.pd { background: var(--pa-pend); color: #fff; }
+.pa-result.run { background: #4a4a86; color: #fff; }
 
 .pa-sq { display: inline-block; width: 14px; height: 14px; margin-right: 4px; background: #34346a; }
 .pa-sq.ac { background: var(--pa-ac); }

@@ -1,6 +1,48 @@
 <template>
-    <div class="ui left aligned container" id="problemsetContainer">
+    <div :class="arena ? 'pa-ps-wrap' : 'ui left aligned container'" id="problemsetContainer">
         <ContestMode v-if="contest_mode || contestMode"></ContestMode>
+        <div class="pa-ps" v-else-if="arena">
+            <div class="pa-ps-main">
+                <div class="pa-ps-bar">
+                    <label class="pa-ps-search">
+                        <span class="pa-px pa-y">&gt;</span>
+                        <input :placeholder="$t('pa.ps.searchPh')" :value="search_tag" @keypress.enter="enter($event)" type="text">
+                    </label>
+                    <button :class="{ on: !hide_currect }" @click="setHide(false)" class="pa-btn pa-tab">{{ $t("pa.ps.all") }}</button>
+                    <button :class="{ on: hide_currect }" @click="setHide(true)" class="pa-btn pa-tab">{{ $t("pa.ps.unsolved") }}</button>
+                    <button :class="{ on: show_tag }" @click="show_tag = !show_tag; check(show_tag)" class="pa-btn pa-tab">{{ $t("pa.ps.showTags") }}</button>
+                    <button :class="{ on: show_label_cloud }" @click="show_label_cloud = !show_label_cloud; cloud(show_label_cloud)" class="pa-btn pa-tab">+ {{ $t("pa.ps.tagCloud") }}</button>
+                    <span class="pa-ps-gap"></span>
+                    <router-link class="pa-btn pa-tab" to="/problem/upload" v-if="isAdmin">+ {{ $t("addproblem") }}</router-link>
+                    <button :disabled="randomBusy" @click="randomProblem" class="pa-btn pa-primary">{{ $t("pa.ps.random") }}</button>
+                </div>
+                <div class="pa-ps-filter" v-if="search_tag || label">
+                    <span class="pa-mute">{{ $t("pa.ps.filtering") }}</span>
+                    <a @click="remove('search')" class="pa-chip-x" v-if="search_tag">{{ search_tag }} ✕</a>
+                    <a @click="remove('label')" class="pa-chip-x" v-if="label">{{ label }} ✕</a>
+                </div>
+                <div class="pa-ps-meta pa-mute">
+                    {{$tc("totalProblem", (total || 0), {n: total || 0})}}
+                    {{recent_one_month !== -1 && (!label) && (!search_tag) ? $tc("addProblem", recent_one_month, {n: recent_one_month}) : "" }}
+                </div>
+                <list-state :empty-text="$t('noMatchingProblem')" :state="listState" @retry="retryList"></list-state>
+                <ps-arena-table :hide_currect="hide_currect" :order="order" :order_target="order_target"
+                                :problems="(table && table.problem) || []" :reloading="listReloading"
+                                :show_tag="show_tag" :stuck="stuckInfo" @sort="(t, d) => sort(t, null, d)" @tag="tag"
+                                v-show="hasRows"></ps-arena-table>
+                <div class="pa-ps-pages">
+                    <pagination :current_page="current_page" :on-page-changed="page" :page_cnt="page_cnt" :total="total"
+                                @pageUpdated="preloadContent"></pagination>
+                </div>
+            </div>
+            <ps-arena-side :balloons="myBalloons" :problems="(table && table.problem) || []" :solved="mySolved"
+                           :total="total" :user-id="userId">
+                <div class="pa-card pa-ps-cloud" v-show="show_label_cloud">
+                    <div class="pa-px pa-mute">{{$t("labelcloud")}}</div>
+                    <div id="word-cloud"></div>
+                </div>
+            </ps-arena-side>
+        </div>
         <div class="padding" v-else>
             <h2 class="ui dividing header">
                 {{$t("problemset")}}
@@ -131,6 +173,11 @@ import selectedTag from "../components/problemset/selected-tag.vue";
 import mainContent from "../components/problemset/MainContent.vue";
 import ContestMode from "../components/contestMode/block.vue";
 import ListState, { ListStateType } from "../components/common/ListState.vue";
+import PsArenaTable from "../components/problemset/arena/PsArenaTable.vue";
+import PsArenaSide from "../components/problemset/arena/PsArenaSide.vue";
+import { uiModeState } from "@/util/uiMode";
+import { recentBalloons } from "@/util/problemsetArena";
+import { relativeParts, resultShort } from "@/util/pixelArena";
 import { mapGetters } from "vuex";
 import { defineComponent } from "vue";
 import { initMixin } from "../mixin/init";
@@ -190,7 +237,9 @@ export default defineComponent({
         Pagination,
         selectedTag,
         ContestMode,
-        ListState
+        ListState,
+        PsArenaTable,
+        PsArenaSide
     },
     mixins: [initMixin],
     data () {
@@ -213,11 +262,25 @@ export default defineComponent({
             // list request state (loading skeleton / empty / error + retry)
             listLoading: false,
             listLoaded: false,
-            listError: false
+            listError: false,
+            // 像素赛场 extras: last attempt of each stuck problem, solved count, recent AC balloons
+            stuckInfo: {} as Record<string, string>,
+            mySolved: null as number | null,
+            myBalloons: [] as number[],
+            randomBusy: false
         };
     },
     computed: {
-        ...mapGetters(["contestMode"]),
+        ...mapGetters(["contestMode", "user_id", "admin"]),
+        arena (): boolean {
+            return uiModeState.mode === "arena";
+        },
+        userId (): string {
+            return (this as any).user_id || "";
+        },
+        isAdmin (): boolean {
+            return !!(this as any).admin;
+        },
         tables: {
             get (): any {
                 return {
@@ -254,6 +317,14 @@ export default defineComponent({
         }
     },
     watch: {
+        table (): void {
+            if (this.arena) {
+                this.loadStuck();
+            }
+        },
+        userId (): void {
+            this.loadMine();
+        },
         show_tag: "check",
         // NOTE: watches a non-existent key (typo of hide_currect) exactly like the former @Watch("hide_current")
         hide_current: "hide",
@@ -264,6 +335,9 @@ export default defineComponent({
     },
     mounted () {
         document.title = `Problem Set -- ${document.title}`;
+        if (this.arena) {
+            this.loadMine();
+        }
         const that = this;
         const page = parseInt(getParameterByName("page") || queryString.page || "1") - 1;
         this.current_page = page;
@@ -435,6 +509,83 @@ export default defineComponent({
                 });
         },
 
+        setHide (val: boolean): void {
+            this.hide_currect = val;
+            this.hide(val);
+        },
+        /** solved count (same source as the home page) and the balloons of the latest ACs */
+        loadMine (): void {
+            const uid = this.userId;
+            if (!uid || !this.arena) {
+                return;
+            }
+            this.axios.get("/api/ranklist", { params: { page: 0, search: uid, time_stamp: "" } })
+                .then(({ data }: any) => {
+                    const row = data && Array.isArray(data.ranklist) ? data.ranklist.find((r: any) => r.user_id === uid) : null;
+                    this.mySolved = row ? Number(row.solved) || 0 : null;
+                })
+                .catch(() => undefined);
+            this.axios.get(`/api/status/null/${encodeURIComponent(uid)}/null/4/0/`)
+                .then(({ data }: any) => {
+                    this.myBalloons = recentBalloons(Array.isArray(data && data.result) ? data.result : []);
+                })
+                .catch(() => undefined);
+        },
+        /** "上次 2 小时前 · 答案错误 · 通过 3/10 个测试点" under each tried-but-unsolved problem on this page */
+        loadStuck (): void {
+            const uid = this.userId;
+            const problems: any[] = (this.table && this.table.problem) || [];
+            if (!uid) {
+                return;
+            }
+            problems.filter((p: any) => p.ac === false && this.stuckInfo[p.problem_id] === undefined).slice(0, 12)
+                .forEach((p: any) => {
+                    this.$set(this.stuckInfo, p.problem_id, "");
+                    this.axios.get(`/api/status/${p.problem_id}/${encodeURIComponent(uid)}/null/null/0/`)
+                        .then(({ data }: any) => {
+                            const last = data && Array.isArray(data.result) ? data.result[0] : null;
+                            if (last) {
+                                this.$set(this.stuckInfo, p.problem_id, this.stuckText(last));
+                            }
+                        })
+                        .catch(() => undefined);
+                });
+        },
+        stuckText (s: any): string {
+            const parts = relativeParts(s.in_date);
+            const ago = parts.key === "date" ? parts.date : this.$t(`pa.ago.${parts.key}`, { n: parts.n });
+            const key = `pa.result.${s.result}`;
+            // this page has its own <i18n> block, so $te would only look there: compare the lookup instead
+            const word = this.$t(key) as string;
+            const res = word && word !== key ? word : resultShort(Number(s.result));
+            const total = parseInt(s.total_point) || 0;
+            const pass = parseInt(s.pass_point) || 0;
+            const pts = total && s.result !== 11 ? this.$t("pa.ps.points", { a: pass, b: total }) : "";
+            return [this.$t("pa.ps.last", { ago }), res, pts].filter(Boolean).join(" · ");
+        },
+        /** jump to a random problem: random page, then a random unsolved problem on it */
+        randomProblem (): void {
+            const per = parseInt(this.page_cnt) || 50;
+            const pages = Math.max(1, Math.ceil((parseInt(this.total) || 0) / per));
+            const pick = (list: any[]) => {
+                const pool = list.filter((p: any) => p.ac !== true);
+                const from = pool.length ? pool : list;
+                return from.length ? from[Math.floor(Math.random() * from.length)] : null;
+            };
+            this.randomBusy = true;
+            const page = Math.floor(Math.random() * pages);
+            this.axios.get(`/api/problemset/${page}/none/problem_id/0/?label=`)
+                .then(({ data }: any) => {
+                    const p = pick((data && data.problem) || []);
+                    if (p) {
+                        this.$router.push(`/problem/submit/${p.problem_id}`);
+                    }
+                })
+                .catch(() => undefined)
+                .finally(() => {
+                    this.randomBusy = false;
+                });
+        },
         check (val: boolean): void {
             localStorage.setItem("show_tag", "" + val);
         },
@@ -560,6 +711,112 @@ export default defineComponent({
 
     .list-state-reloading {
         margin-left: .5em;
+    }
+
+    /* ---- 像素赛场 ---- */
+    .pa-ps-wrap {
+        max-width: 1440px;
+        margin: 0 auto;
+        padding: 28px 28px 64px;
+    }
+
+    .pa-ps {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 340px;
+        gap: 32px;
+        align-items: start;
+    }
+
+    .pa-ps-bar {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .pa-ps-search {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex: 0 1 380px;
+        min-width: 220px;
+        height: 46px;
+        padding: 0 14px;
+        background: var(--pa-bg2);
+        border: 3px solid var(--pa-line2);
+    }
+
+    .pa-ps-search:focus-within {
+        border-color: var(--pa-y);
+    }
+
+    .pa-ps-search input {
+        flex: 1;
+        min-width: 0;
+        border: 0;
+        outline: 0;
+        background: transparent;
+        color: var(--pa-ink);
+        font-size: 15px;
+    }
+
+    .pa-ps-search input::placeholder {
+        color: var(--pa-dim);
+    }
+
+    .pa-tab {
+        height: 42px;
+        padding: 0 14px !important;
+        font-size: 14px !important;
+    }
+
+    .pa-tab.on {
+        background: #3a3a7a !important;
+        color: #fff !important;
+    }
+
+    .pa-ps-gap {
+        flex: 1;
+    }
+
+    .pa-ps-bar .pa-primary {
+        height: 42px;
+    }
+
+    .pa-ps-filter {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        margin-top: 14px;
+        font-size: 14px;
+    }
+
+    .pa-chip-x {
+        padding: 2px 10px;
+        background: #383870;
+        color: var(--pa-ink);
+        cursor: pointer;
+    }
+
+    .pa-ps-meta {
+        margin: 16px 0 12px;
+        font-size: 13px;
+    }
+
+    .pa-ps-pages {
+        display: flex;
+        justify-content: center;
+        margin-top: 24px;
+    }
+
+    .pa-ps-cloud {
+        padding: 18px 20px;
+    }
+
+    @media (max-width: 1100px) {
+        .pa-ps {
+            grid-template-columns: minmax(0, 1fr);
+        }
     }
 </style>
 <i18n>
