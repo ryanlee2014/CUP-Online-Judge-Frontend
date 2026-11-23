@@ -95,15 +95,15 @@ export default defineComponent({
         width: 40%;
         height: calc(100vh - 92px);
         overflow-y: auto;
-        background: var(--pa-paper);
-        color: var(--pa-paper-ink);
+        background: #1c1c3a !important;
+        color: #d6d5ef !important;
         padding: 26px 32px 40px !important;
-        box-shadow: 0 -4px 0 0 #0a0a18, 0 4px 0 0 #0a0a18, -4px 0 0 0 #0a0a18, 4px 0 0 0 #0a0a18;
+        box-shadow: 0 -4px 0 0 var(--pa-line), 0 4px 0 0 var(--pa-line), -4px 0 0 0 var(--pa-line), 4px 0 0 0 var(--pa-line), 8px 8px 0 0 var(--pa-shadow);
     }
 
     .pa-st-kicker {
         font-size: 13px;
-        color: #7a7a9a;
+        color: var(--pa-mute);
         margin-left: 46px;
     }
 
@@ -117,7 +117,7 @@ export default defineComponent({
         font-size: 28px;
         line-height: 1.25;
         font-weight: normal;
-        color: var(--pa-paper-ink);
+        color: var(--pa-ink);
     }
 
     .pa-st-title >>> p { margin: 0; display: inline; }
@@ -133,8 +133,8 @@ export default defineComponent({
 
     .pa-st-chips span {
         font-size: 13px;
-        background: #e4e0cf;
-        color: #55557a;
+        background: #2c2c58;
+        color: #b9b8e6;
         padding: 4px 9px;
     }
 
@@ -143,7 +143,7 @@ export default defineComponent({
         gap: 16px;
         align-items: center;
         flex-wrap: wrap;
-        border-bottom: 3px solid #e4e0cf;
+        border-bottom: 3px solid var(--pa-line2);
         margin-bottom: 18px;
         font-size: 15px;
     }
@@ -151,17 +151,17 @@ export default defineComponent({
     .pa-st-tabs > * {
         padding: 8px 2px;
         white-space: nowrap;
-        color: #6a6a8a !important;
+        color: var(--pa-mute) !important;
         cursor: pointer;
     }
 
     .pa-st-tabs .on {
-        background: #262640;
+        background: #33336a;
         color: var(--pa-y) !important;
         padding: 8px 12px;
     }
 
-    .pa-st-tabs a:hover { color: #262640 !important; }
+    .pa-st-tabs a:hover { color: var(--pa-ink) !important; }
 
     section { margin-bottom: 18px; }
 
@@ -171,7 +171,7 @@ export default defineComponent({
         gap: 10px;
         font-size: 16px !important;
         margin: 0 0 8px !important;
-        color: var(--pa-paper-ink) !important;
+        color: var(--pa-ink) !important;
     }
 
     h3::before {
@@ -183,20 +183,23 @@ export default defineComponent({
 
     .pa-st-body {
         font-size: 15px;
-        line-height: 1.85;
+        line-height: 1.9;
+        color: #d6d5ef;
     }
 
     .pa-st-body >>> img { max-width: 100%; }
     .pa-st-body >>> .ui.segment,
     .pa-st-body >>> .ui.segments {
-        background: #fffdf5 !important;
-        color: var(--pa-paper-ink) !important;
-        box-shadow: 0 0 0 2px #d9d4c0 !important;
+        background: #12122a !important;
+        color: #d6d5ef !important;
+        box-shadow: 0 0 0 2px var(--pa-line2) !important;
     }
     .pa-st-body >>> .ui.label {
-        background: #e4e0cf !important;
-        color: #55557a !important;
+        background: #2c2c58 !important;
+        color: #b9b8e6 !important;
     }
+    .pa-st-body >>> a { color: #8fb2ff; }
+    .pa-st-body >>> pre, .pa-st-body >>> code { background: #0d0d1e !important; color: #e9e8ff !important; }
     .pa-st-body >>> span { font-size: inherit !important; }
 
     .pa-samples {
@@ -205,7 +208,7 @@ export default defineComponent({
         gap: 10px;
     }
 
-    .pa-sample { background: #1b1b30; padding-bottom: 3px; min-width: 0; }
+    .pa-sample { background: #12122a; padding-bottom: 3px; min-width: 0; box-shadow: 0 0 0 2px var(--pa-line2); }
 
     .pa-sample-head {
         display: flex;
@@ -218,8 +221,8 @@ export default defineComponent({
     .pa-sample-head a { color: var(--pa-y) !important; cursor: pointer; }
 
     .pa-sample pre {
-        background: #fffdf5;
-        color: #222;
+        background: #0d0d1e;
+        color: #e9e8ff;
         margin: 0 3px;
         padding: 10px;
         font-size: 14px;
@@ -230,13 +233,13 @@ export default defineComponent({
 
     .pa-st-meta {
         font-size: 13px;
-        color: #7a7a9a;
+        color: var(--pa-mute);
         display: flex;
         flex-direction: column;
         gap: 4px;
-        border-top: 2px dashed #e4e0cf;
+        border-top: 2px dashed var(--pa-line2);
         padding-top: 12px;
     }
 
-    .pa-st-meta a { color: #3156c8 !important; }
+    .pa-st-meta a { color: #8fb2ff !important; }
 </style>

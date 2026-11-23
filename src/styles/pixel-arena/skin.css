@@ -493,3 +493,30 @@ body.pa-mode .router #left-side .ui.label {
     background: #e4e0cf !important;
     color: #55557a !important;
 }
+
+/* problem statement: dark (user feedback: paper was too bright) */
+body.pa-mode .router #left-side.pa-statement,
+body.pa-mode .router #left-side.pa-statement .ui.segment,
+body.pa-mode .router #left-side.pa-statement .ui.segments {
+    color: #d6d5ef !important;
+}
+body.pa-mode .router #left-side.pa-statement .ui.segment,
+body.pa-mode .router #left-side.pa-statement .ui.segments {
+    background: #12122a !important;
+    box-shadow: 0 0 0 2px var(--pa-line2) !important;
+}
+body.pa-mode .router #left-side.pa-statement .ui.label {
+    background: #2c2c58 !important;
+    color: #b9b8e6 !important;
+}
+body.pa-mode .router #left-side.pa-statement .markdown-body { color: #d6d5ef !important; }
+body.pa-mode .router #left-side.pa-statement a { color: #8fb2ff; }
+body.pa-mode .router #left-side.pa-statement { background: #1c1c3a !important; }
+body.pa-mode .router #left-side.pa-statement h1,
+body.pa-mode .router #left-side.pa-statement h2,
+body.pa-mode .router #left-side.pa-statement h3,
+body.pa-mode .router #left-side.pa-statement h4,
+body.pa-mode .router #left-side.pa-statement .ui.header { color: var(--pa-ink) !important; }
+body.pa-mode .router #left-side.pa-statement .ui.table,
+body.pa-mode .router #left-side.pa-statement .ui.table td,
+body.pa-mode .router #left-side.pa-statement .ui.table th { color: #d6d5ef !important; }
