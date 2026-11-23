@@ -562,3 +562,38 @@ body.pa-mode .router .ui.labels > .ui.label.orange {
     font-family: var(--pa-font-px);
     font-weight: normal;
 }
+
+/* default (uncoloured) labels and multi-select chips were light grey: make them dark */
+body.pa-mode .router .ui.label:not(.red):not(.orange):not(.yellow):not(.olive):not(.green):not(.teal):not(.blue):not(.violet):not(.purple):not(.pink):not(.brown):not(.grey):not(.black):not(.ribbon),
+body.pa-mode .router .ui.multiple.dropdown > .label,
+body.pa-mode .router .ui.multiple.search.dropdown > .label {
+    background: #2c2c58 !important;
+    color: #c9c8ee !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    font-weight: normal;
+}
+body.pa-mode .router .ui.multiple.dropdown > .label > .delete.icon { color: var(--pa-mute) !important; opacity: .9; }
+body.pa-mode .router .ui.multiple.dropdown > .label > .delete.icon:hover { color: var(--pa-wa) !important; }
+body.pa-mode .router .ui.multiple.dropdown > input.search { color: var(--pa-ink) !important; }
+
+/* toggle knob: no bright white square */
+body.pa-mode .router .ui.toggle.checkbox label::after,
+body.pa-mode .router .ui.toggle.checkbox input ~ label::after {
+    background: #b9b8e6 !important;
+    box-shadow: none !important;
+}
+body.pa-mode .router .ui.toggle.checkbox input:checked ~ label::after { background: #f2f1ff !important; }
+
+/* date / calendar inputs */
+body.pa-mode .router .ui.calendar .ui.input input,
+body.pa-mode .router input[type="datetime-local"],
+body.pa-mode .router input[type="date"] {
+    background: var(--pa-card2) !important;
+    color: var(--pa-ink) !important;
+}
+body.pa-mode .ui.popup.calendar,
+body.pa-mode .ui.popup.calendar .ui.table {
+    background: var(--pa-card2) !important;
+    color: var(--pa-ink) !important;
+}
