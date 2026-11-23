@@ -373,3 +373,25 @@ body.pa-mode .router #left-side .ui.styled.accordion .title {
 body.pa-mode .router #left-side .ui.styled.accordion .active.title {
     box-shadow: inset 4px 0 0 #5b8cff;
 }
+
+/* cards: meta / extra lines (user page awards etc.) need real contrast on dark */
+body.pa-mode .router .ui.card .meta,
+body.pa-mode .router .ui.card .meta a,
+body.pa-mode .router .ui.card .meta span,
+body.pa-mode .router .ui.card > .extra,
+body.pa-mode .router .ui.card > .extra a,
+body.pa-mode .router .ui.card > .extra span {
+    color: #d4d3f5 !important;
+    line-height: 1.75;
+}
+
+body.pa-mode .router .ui.card .meta .icon,
+body.pa-mode .router .ui.card > .extra .icon { color: var(--pa-y) !important; opacity: .85; }
+
+body.pa-mode .router .ui.card > .content > .header,
+body.pa-mode .router .ui.card > .content > .header a { color: var(--pa-ink) !important; font-family: var(--pa-font-px); font-weight: normal; }
+
+/* calendar heatmap: empty days dark, labels readable */
+body.pa-mode .router .heatmap rect[fill="#dfdfdf"],
+body.pa-mode .router .heatmap rect[fill="rgb(223, 223, 223)"] { fill: #2c2c58; }
+body.pa-mode .router .heatmap text { fill: var(--pa-mute) !important; }
