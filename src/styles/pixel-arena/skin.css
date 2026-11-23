@@ -5,6 +5,7 @@
  * Problem statements keep a light "paper" background for long reading.
  */
 
+html.pa-mode,
 body.pa-mode,
 body.pa-mode #app {
     background-color: var(--pa-bg) !important;
@@ -236,8 +237,7 @@ body.pa-mode .router .ui.button {
 body.pa-mode .router .ui.button:hover { background: #383870; color: #fff; }
 
 body.pa-mode .router .ui.primary.button,
-body.pa-mode .router .ui.green.button:not(.basic),
-body.pa-mode .router .ui.positive.button:not(.basic) {
+body.pa-mode .router #Submit.ui.button {
     background: var(--pa-y) !important;
     color: #1a1a10 !important;
     box-shadow: 0 -2px 0 0 var(--pa-shadow), 0 2px 0 0 var(--pa-shadow), -2px 0 0 0 var(--pa-shadow), 2px 0 0 0 var(--pa-shadow), inset 0 -3px 0 0 var(--pa-y2) !important;
@@ -596,4 +596,66 @@ body.pa-mode .ui.popup.calendar,
 body.pa-mode .ui.popup.calendar .ui.table {
     background: var(--pa-card2) !important;
     color: var(--pa-ink) !important;
+}
+
+/* contest scoreboard (RankView / ResultGrid) */
+body.pa-mode .router td.ui.white { background: var(--pa-card) !important; color: var(--pa-ink) !important; }
+body.pa-mode .router td.accept { background: #1d6b47 !important; }
+body.pa-mode .router td.first.accept { background: var(--pa-ac) !important; }
+body.pa-mode .router td.accept .text.accept,
+body.pa-mode .router .text.accept { color: #cfffe4 !important; }
+body.pa-mode .router td.first.accept .text,
+body.pa-mode .router .text.accept.first { color: #06301b !important; }
+body.pa-mode .router .text.red { color: var(--pa-wa) !important; }
+body.pa-mode .router td.ui.yellow { background: var(--pa-y) !important; color: #1a1a10 !important; }
+body.pa-mode .router td.ui.grey { background: #8f8fc0 !important; color: #0d0d18 !important; }
+body.pa-mode .router td.ui.orange { background: var(--pa-tle) !important; color: #1a0d00 !important; }
+
+/* mavon editor splitter */
+body.pa-mode .router .v-note-wrapper .v-note-panel .v-note-edit.divarea-wrapper { border-right-color: var(--pa-line2) !important; }
+body.pa-mode .router .v-note-wrapper .v-note-panel { border-color: var(--pa-line2) !important; }
+
+/* other green / positive buttons (e.g. 「可见」 toggles in lists): quiet dark green, not the yellow primary */
+body.pa-mode .router .ui.green.button:not(.basic):not(#Submit),
+body.pa-mode .router .ui.positive.button:not(.basic) {
+    background: #1d6b47 !important;
+    color: #d9ffe9 !important;
+}
+
+/* markdown editor (mavon-editor) on edit pages was white */
+body.pa-mode .router .v-note-wrapper,
+body.pa-mode .router .v-note-wrapper .v-note-op,
+body.pa-mode .router .v-note-wrapper .v-note-panel,
+body.pa-mode .router .v-note-wrapper .v-note-edit,
+body.pa-mode .router .v-note-wrapper .content-input-wrapper,
+body.pa-mode .router .v-note-wrapper .auto-textarea-wrapper,
+body.pa-mode .router .v-note-wrapper .auto-textarea-input,
+body.pa-mode .router .v-note-wrapper .v-note-show,
+body.pa-mode .router .v-note-wrapper .v-show-content {
+    background: var(--pa-card2) !important;
+    color: #d6d5ef !important;
+    border-color: var(--pa-line2) !important;
+}
+body.pa-mode .router .v-note-wrapper {
+    box-shadow: 0 0 0 2px var(--pa-line) !important;
+    border-radius: 0 !important;
+}
+body.pa-mode .router .v-note-wrapper .v-note-op .op-icon { color: var(--pa-mute) !important; }
+body.pa-mode .router .v-note-wrapper .v-note-op .op-icon:hover,
+body.pa-mode .router .v-note-wrapper .v-note-op .op-icon.selected { background: #33336a !important; color: var(--pa-ink) !important; }
+body.pa-mode .router .v-note-wrapper .v-note-op .op-icon-divider { border-color: var(--pa-line2) !important; }
+body.pa-mode .router .v-note-wrapper .popup-dropdown { background: var(--pa-card2) !important; color: var(--pa-ink) !important; }
+
+/* code blocks inside rendered markdown (hljs github theme is white) */
+body.pa-mode .router .markdown-body pre,
+body.pa-mode .router .markdown-body pre code,
+body.pa-mode .router .v-note-wrapper .v-show-content pre,
+body.pa-mode .router .v-note-wrapper .v-show-content pre code,
+body.pa-mode .router .hljs {
+    background: #0d0d1e !important;
+    color: #e9e8ff !important;
+}
+body.pa-mode .router .markdown-body code {
+    background: #2c2c58 !important;
+    color: #e9e8ff !important;
 }

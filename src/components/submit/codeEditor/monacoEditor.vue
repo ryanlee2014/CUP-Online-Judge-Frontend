@@ -169,7 +169,10 @@ export default defineComponent({
             editor.updateOptions({
                 fontSize: this.getFontSizeFromStorage()
             });
-            monaco.editor.setTheme(this.getThemeFromStorage());
+            // the stored theme may be an Ace one ("ace/theme/monokai") when the user last used Ace;
+            // Monaco would then silently fall back to its light theme
+            const storedTheme = String(this.getThemeFromStorage() || "");
+            monaco.editor.setTheme(storedTheme.includes("vs") || storedTheme.includes("hc-black") ? storedTheme : "vs-dark");
             this.getNewLanguageServer(editor, this.value, language);
         },
         // Editor-level content event: keeps firing after setModel() (language switch / rebuild),

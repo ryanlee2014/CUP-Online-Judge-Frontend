@@ -29,7 +29,7 @@
                                 </router-link>
                                 <a class="ui inverted not theme large button download basic" @click="switchToArena">
                                     <i class="magic icon"></i>
-                                    试试新版界面
+                                    {{ $t("pa.tryArena") }}
                                 </a>
                             </div>
                             <br>

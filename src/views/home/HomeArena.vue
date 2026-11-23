@@ -11,83 +11,83 @@
                         <div class="pa-skel pa-skel-md"></div>
                     </template>
                     <template v-else-if="task">
-                        <div class="pa-px pa-kicker">▶ 当前任务 · P{{ task.problem_id }}</div>
+                        <div class="pa-px pa-kicker">▶ {{ $t("pa.home.currentTask") }} · P{{ task.problem_id }}</div>
                         <h1 class="pa-px pa-task-title">{{ taskTitle || ("P" + task.problem_id) }}</h1>
                         <div class="pa-task-line">
-                            <span class="pa-result" :class="resultClass(task.result)">{{ resultShort(task.result) }}</span>
-                            <span>{{ relativeTime(task.in_date) }}提交，{{ resultText(task.result) }}<template v-if="draft">，草稿已保存</template></span>
+                            <span class="pa-result" :class="resultClass(task.result)">{{ shortLabel(task.result) }}</span>
+                            <span>{{ $t("pa.home.submittedAgo", { ago: ago(task.in_date), result: resultText(task.result) }) }}<template v-if="draft">{{ $t("pa.home.draftSaved") }}</template></span>
                         </div>
                         <div class="pa-task-cases" v-if="passSquares">
-                            <span class="pa-px pa-mute">通过比例</span>
+                            <span class="pa-px pa-mute">{{ $t("pa.home.passRatio") }}</span>
                             <span class="pa-sq" v-for="(c, i) in passSquares" :key="i" :class="c"></span>
                             <span class="pa-px pa-mute">{{ passPercent }}%</span>
                         </div>
                         <div class="pa-actions">
-                            <router-link class="pa-btn pa-primary" :to="`/problem/submit/${task.problem_id}`">继续挑战 <span class="pa-key">↵</span></router-link>
-                            <router-link class="pa-btn" :to="`/status?problem_id=${task.problem_id}&user_id=${userId}`">我的提交</router-link>
-                            <router-link class="pa-btn" to="/problemset">去题库</router-link>
+                            <router-link class="pa-btn pa-primary" :to="`/problem/submit/${task.problem_id}`">{{ $t("pa.home.continue") }} <span class="pa-key">↵</span></router-link>
+                            <router-link class="pa-btn" :to="`/status?problem_id=${task.problem_id}&user_id=${userId}`">{{ $t("pa.home.mySubmissions") }}</router-link>
+                            <router-link class="pa-btn" to="/problemset">{{ $t("pa.home.toProblemset") }}</router-link>
                         </div>
                     </template>
                     <template v-else>
-                        <div class="pa-px pa-kicker">▶ 当前任务</div>
-                        <h1 class="pa-px pa-task-title">最近没有卡住的题</h1>
-                        <div class="pa-task-line pa-mute" v-if="statusError">提交记录没加载出来。<a class="pa-link" @click="loadStatus">重试</a></div>
-                        <div class="pa-task-line pa-mute" v-else>最近的提交都通过了，去题库挑一道新的吧。</div>
+                        <div class="pa-px pa-kicker">▶ {{ $t("pa.home.currentTask") }}</div>
+                        <h1 class="pa-px pa-task-title">{{ $t("pa.home.noStuck") }}</h1>
+                        <div class="pa-task-line pa-mute" v-if="statusError">{{ $t("pa.home.statusError") }}<a class="pa-link" @click="loadStatus">{{ $t("pa.home.retry") }}</a></div>
+                        <div class="pa-task-line pa-mute" v-else>{{ $t("pa.home.allPassed") }}</div>
                         <div class="pa-solved" v-if="solvedCount !== null">
                             <span class="pa-px pa-solved-num">{{ solvedCount }}</span>
-                            <span class="pa-mute">道题已通过</span>
+                            <span class="pa-mute">{{ $t("pa.home.solved") }}</span>
                         </div>
                         <div class="pa-actions">
-                            <router-link class="pa-btn pa-primary" to="/problemset">去题库 <span class="pa-key">↵</span></router-link>
-                            <router-link class="pa-btn" to="/contest">竞赛 &amp; 作业</router-link>
+                            <router-link class="pa-btn pa-primary" to="/problemset">{{ $t("pa.home.toProblemset") }} <span class="pa-key">↵</span></router-link>
+                            <router-link class="pa-btn" to="/contest">{{ $t("pa.home.contestHomework") }}</router-link>
                         </div>
                     </template>
                 </section>
 
                 <section class="pa-card pa-focus pa-task" v-else>
-                    <div class="pa-px pa-kicker">▶ 中国石油大学（北京）</div>
+                    <div class="pa-px pa-kicker">▶ {{ $t("pa.home.school") }}</div>
                     <h1 class="pa-px pa-task-title">CUP Online Judge</h1>
-                    <div class="pa-task-line pa-mute">程序设计在线评测：题库、比赛、作业都在这里。登录后首页会记住你卡在哪道题。</div>
+                    <div class="pa-task-line pa-mute">{{ $t("pa.home.intro") }}</div>
                     <div class="pa-actions">
-                        <router-link class="pa-btn pa-primary" to="/login">登录 <span class="pa-key">↵</span></router-link>
-                        <router-link class="pa-btn" to="/register">注册</router-link>
-                        <router-link class="pa-btn" to="/problemset">先看看题库</router-link>
+                        <router-link class="pa-btn pa-primary" to="/login">{{ $t("pa.home.login") }} <span class="pa-key">↵</span></router-link>
+                        <router-link class="pa-btn" to="/register">{{ $t("pa.home.register") }}</router-link>
+                        <router-link class="pa-btn" to="/problemset">{{ $t("pa.home.browseFirst") }}</router-link>
                     </div>
                 </section>
 
                 <div class="pa-side">
                     <section class="pa-card pa-clock">
                         <template v-if="nextContest">
-                            <div class="pa-px pa-mute pa-center">下一场 · {{ nextContest.title }}</div>
+                            <div class="pa-px pa-mute pa-center">{{ $t("pa.home.next") }} · {{ nextContest.title }}</div>
                             <div class="pa-px pa-clock-digits">
                                 <template v-if="clock.days > 0">{{ pad2(clock.days) }}<span>:</span></template>{{ pad2(clock.hours) }}<span>:</span>{{ pad2(clock.minutes) }}<span>:</span>{{ pad2(clock.seconds) }}
                             </div>
-                            <div class="pa-px pa-clock-units"><template v-if="clock.days > 0">天 </template>时 分 秒</div>
-                            <div class="pa-px pa-dim pa-center">{{ formatDate(nextContest.start_time) }} 开始<template v-if="nextContest.private"> · 需报名</template></div>
-                            <div class="pa-center pa-clock-link"><router-link class="pa-link" :to="`/contest/${nextContest.contest_id}`">去比赛页 ▶</router-link></div>
+                            <div class="pa-px pa-clock-units"><template v-if="clock.days > 0">{{ $t("pa.home.unitDays") }} </template>{{ $t("pa.home.unitHms") }}</div>
+                            <div class="pa-px pa-dim pa-center">{{ $t("pa.home.startsAt", { time: formatDate(nextContest.start_time) }) }}<template v-if="nextContest.private"> · {{ $t("pa.home.needRegister") }}</template></div>
+                            <div class="pa-center pa-clock-link"><router-link class="pa-link" :to="`/contest/${nextContest.contest_id}`">{{ $t("pa.home.toContest") }} ▶</router-link></div>
                         </template>
                         <template v-else-if="loading.contest">
                             <div class="pa-skel pa-skel-sm"></div>
                             <div class="pa-skel pa-skel-lg"></div>
                         </template>
                         <template v-else>
-                            <div class="pa-px pa-mute pa-center">近 30 天没有安排比赛</div>
+                            <div class="pa-px pa-mute pa-center">{{ $t("pa.home.noContest") }}</div>
                             <div class="pa-px pa-clock-digits pa-dim">--<span>:</span>--<span>:</span>--</div>
-                            <div class="pa-center pa-clock-link"><router-link class="pa-link" to="/contest">看全部竞赛 ▶</router-link></div>
+                            <div class="pa-center pa-clock-link"><router-link class="pa-link" to="/contest">{{ $t("pa.home.allContests") }} ▶</router-link></div>
                         </template>
                     </section>
 
                     <section class="pa-card pa-shelf" v-if="logined">
                         <div class="pa-head">
-                            <span class="pa-px pa-mute">我的气球 <span class="pa-y">×{{ solvedCount === null ? "…" : solvedCount }}</span></span>
-                            <router-link class="pa-px pa-mute pa-more" :to="`/user/${userId}`">主页 ▶</router-link>
+                            <span class="pa-px pa-mute">{{ $t("pa.home.myBalloons") }} <span class="pa-y">×{{ solvedCount === null ? "…" : solvedCount }}</span></span>
+                            <router-link class="pa-px pa-mute pa-more" :to="`/user/${userId}`">{{ $t("pa.home.profile") }} ▶</router-link>
                         </div>
                         <div class="pa-balloons" v-if="recentAc.length">
                             <router-link v-for="pid in recentAc" :key="pid" :to="`/problem/submit/${pid}`" :title="`P${pid}`">
                                 <PixelBalloon :problem-id="pid" :size="4"/>
                             </router-link>
                         </div>
-                        <div class="pa-mute pa-empty" v-else>每通过一道题，就收到一个这道题颜色的气球。</div>
+                        <div class="pa-mute pa-empty" v-else>{{ $t("pa.home.balloonHint") }}</div>
                     </section>
                 </div>
             </div>
@@ -95,43 +95,43 @@
             <!-- row 2 -->
             <div class="pa-row2">
                 <section class="pa-card pa-list">
-                    <div class="pa-head"><span class="pa-px pa-h">进行中的竞赛 &amp; 作业</span><router-link class="pa-px pa-mute pa-more" to="/contest">全部 ▶</router-link></div>
+                    <div class="pa-head"><span class="pa-px pa-h">{{ $t("pa.home.running") }}</span><router-link class="pa-px pa-mute pa-more" to="/contest">{{ $t("pa.home.all") }} ▶</router-link></div>
                     <div class="pa-dash"></div>
                     <template v-if="running.length">
                         <router-link class="pa-item" v-for="c in running" :key="c.contest_id" :to="`/contest/${c.contest_id}`">
                             <div class="pa-item-main">
                                 <div class="pa-item-title">{{ c.title }}</div>
-                                <div class="pa-item-sub">{{ endsIn(c.end_time) }}<template v-if="c.private"> · 需报名</template></div>
+                                <div class="pa-item-sub">{{ endsIn(c.end_time) }}<template v-if="c.private"> · {{ $t("pa.home.needRegister") }}</template></div>
                             </div>
                             <span class="pa-px pa-tag">{{ c.contest_id }}</span>
                         </router-link>
                     </template>
-                    <div class="pa-mute pa-empty" v-else-if="!loading.contest">现在没有进行中的竞赛或作业。</div>
+                    <div class="pa-mute pa-empty" v-else-if="!loading.contest">{{ $t("pa.home.noRunning") }}</div>
                 </section>
 
                 <section class="pa-card pa-list" v-if="logined">
-                    <div class="pa-head"><span class="pa-px pa-h">最近提交</span><router-link class="pa-px pa-mute pa-more" :to="`/status?user_id=${userId}`">全部 ▶</router-link></div>
+                    <div class="pa-head"><span class="pa-px pa-h">{{ $t("pa.home.recent") }}</span><router-link class="pa-px pa-mute pa-more" :to="`/status?user_id=${userId}`">{{ $t("pa.home.all") }} ▶</router-link></div>
                     <div class="pa-dash"></div>
                     <template v-if="recent.length">
                         <router-link class="pa-item" v-for="s in recent" :key="s.solution_id" :to="submissionLink(s)">
-                            <span class="pa-result" :class="resultClass(s.result)">{{ resultShort(s.result) }}</span>
+                            <span class="pa-result" :class="resultClass(s.result)">{{ shortLabel(s.result) }}</span>
                             <div class="pa-item-main">
                                 <div class="pa-item-title">P{{ s.problem_id }} {{ titleOf(s.problem_id) }}</div>
-                                <div class="pa-item-sub">{{ relativeTime(s.in_date) }}<template v-if="s.contest_id"> · 比赛 {{ s.contest_id }}</template> · {{ s.time }}ms</div>
+                                <div class="pa-item-sub">{{ ago(s.in_date) }}<template v-if="s.contest_id"> · {{ $t("pa.home.contestN", { id: s.contest_id }) }}</template> · {{ s.time }}ms</div>
                             </div>
                         </router-link>
                     </template>
-                    <div class="pa-mute pa-empty" v-else-if="!loading.status">还没有提交记录。</div>
+                    <div class="pa-mute pa-empty" v-else-if="!loading.status">{{ $t("pa.home.noSubmissions") }}</div>
                 </section>
 
                 <section class="pa-card pa-list">
-                    <div class="pa-head"><span class="pa-px pa-h">常用入口</span></div>
+                    <div class="pa-head"><span class="pa-px pa-h">{{ $t("pa.home.links") }}</span></div>
                     <div class="pa-dash"></div>
-                    <router-link class="pa-item" to="/about/icpc"><div class="pa-item-main"><div class="pa-item-title">关于 ICPC</div><div class="pa-item-sub">国际大学生程序设计竞赛介绍</div></div></router-link>
-                    <router-link class="pa-item" to="/about/fame"><div class="pa-item-main"><div class="pa-item-title">名人堂</div><div class="pa-item-sub">历届获奖队员</div></div></router-link>
-                    <router-link class="pa-item" to="/discuss/thread/23"><div class="pa-item-main"><div class="pa-item-title">内推信息</div><div class="pa-item-sub">校友实习 / 工作内推</div></div></router-link>
-                    <a class="pa-item" href="https://docs.cupacm.com" target="_blank" rel="noopener"><div class="pa-item-main"><div class="pa-item-title">CUPACM 文档</div><div class="pa-item-sub">评测环境、语言版本、常见问题</div></div></a>
-                    <a class="pa-item" href="javascript:void(0)" @click="switchToClassic"><div class="pa-item-main"><div class="pa-item-title">切回旧版界面</div><div class="pa-item-sub">随时可以在顶部「功能」菜单里切换回来</div></div></a>
+                    <router-link class="pa-item" to="/about/icpc"><div class="pa-item-main"><div class="pa-item-title">{{ $t("pa.home.aboutIcpc") }}</div><div class="pa-item-sub">{{ $t("pa.home.aboutIcpcSub") }}</div></div></router-link>
+                    <router-link class="pa-item" to="/about/fame"><div class="pa-item-main"><div class="pa-item-title">{{ $t("pa.home.fame") }}</div><div class="pa-item-sub">{{ $t("pa.home.fameSub") }}</div></div></router-link>
+                    <router-link class="pa-item" to="/discuss/thread/23"><div class="pa-item-main"><div class="pa-item-title">{{ $t("pa.home.intern") }}</div><div class="pa-item-sub">{{ $t("pa.home.internSub") }}</div></div></router-link>
+                    <a class="pa-item" href="https://docs.cupacm.com" target="_blank" rel="noopener"><div class="pa-item-main"><div class="pa-item-title">{{ $t("pa.home.docs") }}</div><div class="pa-item-sub">{{ $t("pa.home.docsSub") }}</div></div></a>
+                    <a class="pa-item" href="javascript:void(0)" @click="switchToClassic"><div class="pa-item-main"><div class="pa-item-title">{{ $t("pa.switchClassic") }}</div><div class="pa-item-sub">{{ $t("pa.switchClassicSub", { menu: $t("feature") }) }}</div></div></a>
                 </section>
             </div>
         </div>
@@ -146,18 +146,14 @@ import PixelBalloon from "../../components/pixel/PixelBalloon.vue";
 import { draftKey, loadDraft } from "@/util/codeDraft";
 import { setUiMode } from "@/util/uiMode";
 import {
-    countdown, Countdown, ContestLite, pad2, pickCurrentTask, pickNextContest, pickRunning,
-    relativeTime, resultClass, resultShort, shortTitle, SubmissionLite
+    countdown, Countdown, ContestLite, isPending, pad2, pickCurrentTask, pickNextContest, pickRunning,
+    relativeParts, resultClass, resultShort, shortTitle, SubmissionLite
 } from "@/util/pixelArena";
 
 interface Submission extends SubmissionLite {
     time?: number;
     num?: number;
 }
-
-const RESULT_TEXT: Record<number, string> = {
-    5: "格式错误", 6: "答案错误", 7: "时间超限", 8: "内存超限", 9: "输出超限", 10: "运行错误", 11: "编译错误", 15: "提交被拒绝", 16: "系统错误"
-};
 
 export default defineComponent({
     name: "HomeArena",
@@ -262,14 +258,26 @@ export default defineComponent({
     },
     methods: {
         pad2,
-        relativeTime,
         switchToClassic (): void {
             setUiMode("classic");
         },
         resultClass,
         resultShort,
         resultText (code: number): string {
-            return RESULT_TEXT[code] || resultShort(code);
+            const key = `pa.result.${code}`;
+            return this.$te(key) ? (this.$t(key) as string) : resultShort(code);
+        },
+        shortLabel (code: number): string {
+            // AC / WA / TLE ... stay as-is; pending states get a localized word
+            const key = `pa.result.${code}`;
+            return isPending(code) && this.$te(key) ? (this.$t(key) as string) : resultShort(code);
+        },
+        ago (time: string): string {
+            const parts = relativeParts(time, this.now);
+            if (parts.key === "date") {
+                return parts.date as string;
+            }
+            return this.$t(`pa.ago.${parts.key}`, { n: parts.n }) as string;
         },
         titleOf (pid: number | string): string {
             return this.titles[String(pid)] || "";
@@ -278,19 +286,25 @@ export default defineComponent({
             return `/status?problem_id=${s.problem_id}&user_id=${this.userId}`;
         },
         formatDate (t: string): string {
-            const d = new Date(t);
-            return `${d.getMonth() + 1} 月 ${d.getDate()} 日 ${pad2(d.getHours())}:${pad2(d.getMinutes())}`;
+            const locale = String(this.$i18n.locale || "zh-cn");
+            const tag = locale === "zh-cn" ? "zh-CN" : locale;
+            try {
+                return new Date(t).toLocaleString(tag, { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit", hour12: false });
+            }
+            catch (e) {
+                const d = new Date(t);
+                return `${d.getMonth() + 1}/${d.getDate()} ${pad2(d.getHours())}:${pad2(d.getMinutes())}`;
+            }
         },
         endsIn (t: string): string {
-            const ms = new Date(t).getTime() - this.now;
-            const c = countdown(ms);
+            const c = countdown(new Date(t).getTime() - this.now);
             if (c.days >= 1) {
-                return `还剩 ${c.days} 天`;
+                return this.$t("pa.home.leftDays", { n: c.days }) as string;
             }
             if (c.hours >= 1) {
-                return `还剩 ${c.hours} 小时`;
+                return this.$t("pa.home.leftHours", { n: c.hours }) as string;
             }
-            return `还剩 ${Math.max(1, c.minutes)} 分钟`;
+            return this.$t("pa.home.leftMinutes", { n: Math.max(1, c.minutes) }) as string;
         },
         loadUserData (): void {
             this.loadStatus();

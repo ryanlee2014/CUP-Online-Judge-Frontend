@@ -32,7 +32,7 @@
                     <router-link class="item" exact-active-class="active" to="/about/fame"><i class="chess queen icon"></i>{{$t("hall of fame")}}</router-link>
                     <a href="https://docs.cupacm.com" class="item" target="_blank"><i class="book icon"></i>{{$t("cupacm docs")}}</a>
                     <router-link class="item" exact-active-class="active" to="/system/version_control"><i class="node js icon"></i>{{$t("version control")}}</router-link>
-                    <a class="item" @click="toggleUiMode($event)"><i class="magic icon"></i>{{ arenaMode ? "切回旧版界面" : "试试新版界面" }}</a>
+                    <a class="item" @click="toggleUiMode($event)"><i class="magic icon"></i>{{ arenaMode ? $t("pa.switchClassic") : $t("pa.tryArena") }}</a>
                 </div>
             </div>
             <SocketMenu :nick="nick" :logined="logined" :user="user" :judger="judger" :connected="connected"

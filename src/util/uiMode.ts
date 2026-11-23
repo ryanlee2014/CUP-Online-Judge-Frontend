@@ -28,6 +28,8 @@ export function applyBodyClass (mode: UiMode = uiModeState.mode): void {
         return;
     }
     document.body.classList.toggle(BODY_CLASS, mode === "arena");
+    // <html> too: its own (white) background shows below short pages and when scrolling past the footer
+    document.documentElement.classList.toggle(BODY_CLASS, mode === "arena");
 }
 
 export function setUiMode (mode: UiMode): void {

@@ -3,7 +3,7 @@
         <div class="pa-st-kicker pa-px">
             <span>P{{ problem_id }}</span>
             <span class="pa-st-dot">·</span>
-            <span>本题气球：{{ balloonName }}</span>
+            <span>{{ $t("pa.statement.balloon", { name: balloonName }) }}</span>
         </div>
         <h1 class="pa-st-title">
             <PixelBalloon :problem-id="original_id || problem_id" :size="4" class="pa-st-balloon"/>
@@ -13,10 +13,10 @@
             <span>{{ $t("time limit") }} {{ time }}s</span>
             <span>{{ $t("memory limit") }} {{ memory }}MB</span>
             <span v-if="spj">Special Judge</span>
-            <span>通过 {{ accepted }}/{{ submit }}</span>
+            <span>{{ $t("pa.statement.passed", { a: accepted, s: submit }) }}</span>
         </div>
         <div class="pa-st-tabs pa-px">
-            <span class="on">题目</span>
+            <span class="on">{{ $t("pa.statement.problem") }}</span>
             <router-link :to="`/tutorial/${original_id}`" v-if="normal_problem || isadmin">{{ $t("read solution") }}</router-link>
             <router-link :to="`/status/problem/${original_id}`">{{ $t("history") }}</router-link>
             <a @click.prevent="switch_screen">{{ $t("switch single screen") }}</a>
@@ -36,14 +36,14 @@
             <div class="pa-st-body" id="problem_output" v-html="output"></div>
         </section>
         <section>
-            <h3 class="pa-px">样例</h3>
+            <h3 class="pa-px">{{ $t("pa.statement.samples") }}</h3>
             <div class="pa-samples">
                 <div class="pa-sample">
-                    <div class="pa-sample-head pa-px"><span>{{ $t("sampleinput") }} #1</span><a class="copy context">复制</a></div>
+                    <div class="pa-sample-head pa-px"><span>{{ $t("sampleinput") }} #1</span><a class="copy context">{{ $t("pa.statement.copy") }}</a></div>
                     <pre><span class="sample_input" id="problem_sample_input" v-text="sampleinput"></span></pre>
                 </div>
                 <div class="pa-sample">
-                    <div class="pa-sample-head pa-px"><span>{{ $t("sampleoutput") }} #1</span><a class="copy context">复制</a></div>
+                    <div class="pa-sample-head pa-px"><span>{{ $t("sampleoutput") }} #1</span><a class="copy context">{{ $t("pa.statement.copy") }}</a></div>
                     <pre><span class="sample_output" id="problem_sample_output" v-text="sampleoutput"></span></pre>
                 </div>
             </div>
@@ -71,7 +71,7 @@
 import { defineComponent } from "vue";
 import LeftPanel from "./leftPanel.vue";
 import PixelBalloon from "@/components/pixel/PixelBalloon.vue";
-import { balloonName } from "@/util/pixelArena";
+import { balloonIndex } from "@/util/pixelArena";
 import markdownIt from "../../../lib/markdownIt/markdownIt";
 
 // 像素赛场 layout of the problem statement. Same props / data loading as LeftPanel (extends it).
@@ -81,7 +81,7 @@ export default defineComponent({
     components: { PixelBalloon },
     computed: {
         balloonName (): string {
-            return balloonName((this as any).original_id || (this as any).problem_id);
+            return this.$t(`pa.balloon.${balloonIndex((this as any).original_id || (this as any).problem_id)}`) as string;
         },
         titleHtml (): string {
             return markdownIt.renderRaw((this as any).title);

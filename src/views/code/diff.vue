@@ -47,6 +47,7 @@
 
 <script lang="ts">
 import Vue from "vue";
+import { uiModeState } from "@/util/uiMode";
 import * as monaco from "monaco-editor";
 import mixins from "../../mixin/init";
 import { init, format } from "wastyle";
@@ -135,7 +136,9 @@ export default class CodeDiff extends Mixins(mixins) {
         this.$forceUpdate();
         this.$nextTick(() => {
             const diffEditor = this.diffEditor = monaco.editor.createDiffEditor(document.getElementById("container")!, {
-                scrollBeyondLastLine: false
+                scrollBeyondLastLine: false,
+                // new interface is dark; classic keeps Monaco's default light theme
+                theme: uiModeState.mode === "arena" ? "vs-dark" : "vs"
             });
             diffEditor.setModel({
                 original: originalModel,

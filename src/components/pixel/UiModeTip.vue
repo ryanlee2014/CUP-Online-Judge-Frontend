@@ -3,13 +3,12 @@
         <div class="pa-tip-ring" :style="ringStyle" v-if="anchor"></div>
         <div class="pa-tip" :style="boxStyle" role="dialog" aria-live="polite" aria-labelledby="pa-tip-title">
             <div class="pa-tip-arrow" :style="arrowStyle" v-if="anchor"></div>
-            <div class="pa-tip-title pa-px" id="pa-tip-title">这是新版界面「像素赛场」</div>
-            <div class="pa-tip-text">
-                想用回原来的样子，点顶部的<b>「功能」</b>菜单，选<b>「切回旧版界面」</b>就行。随时可以再切回来，选择会记在这台电脑的浏览器里。
-            </div>
+            <div class="pa-tip-title pa-px" id="pa-tip-title">{{ $t("pa.tip.title") }}</div>
+            <!-- message text is our own locale string; only the menu / item names are interpolated -->
+            <div class="pa-tip-text" v-html="$t('pa.tip.body', { menu: $t('feature'), item: $t('pa.switchClassic') })"></div>
             <div class="pa-tip-actions">
-                <button class="pa-btn pa-primary" type="button" @click="dismiss">知道了</button>
-                <button class="pa-btn" type="button" @click="switchBack">现在切回旧版</button>
+                <button class="pa-btn pa-primary" type="button" @click="dismiss">{{ $t("pa.tip.gotIt") }}</button>
+                <button class="pa-btn" type="button" @click="switchBack">{{ $t("pa.tip.switchNow") }}</button>
             </div>
         </div>
     </div>
@@ -65,7 +64,7 @@ export default defineComponent({
             if (!a) {
                 return { right: "24px", top: "78px" };
             }
-            const width = 340;
+            const width = 380;
             const left = Math.max(12, Math.min(window.innerWidth - width - 12, a.left + a.width / 2 - 40));
             return { left: `${left}px`, top: `${a.top + a.height + 18}px`, width: `${width}px` };
         },
@@ -94,7 +93,8 @@ export default defineComponent({
     methods: {
         locate (): void {
             const items = Array.from(document.querySelectorAll(".following.bar.topmenu .ui.dropdown.item")) as HTMLElement[];
-            const el = items.find(i => i.offsetParent !== null && /功能|Feature|機能/.test(i.innerText || ""));
+            const label = String(this.$t("feature"));
+            const el = items.find(i => i.offsetParent !== null && (i.innerText || "").includes(label));
             if (!el) {
                 this.anchor = null;
                 return;
@@ -173,6 +173,7 @@ export default defineComponent({
     .pa-tip-actions .pa-btn {
         font-size: 14px;
         padding: 8px 14px;
+        white-space: nowrap;
     }
 
     @keyframes pa-tip-blink {

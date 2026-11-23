@@ -99,7 +99,9 @@ const detectLang = require("../../lib/langDetector");
     }
 })
 export default class Whiteboard extends Mixins(InitMixin) {
-    theme = "ace/theme/monokai";
+    // starts on Monaco (editorPackage = true), so start with a Monaco theme; the selector already showed
+    // "Visual Studio Dark" while the editor rendered light because "ace/theme/monokai" isn't a Monaco theme
+    theme = "vs-dark";
     code = "";
     editorPackage = true;
     fontSize = "16";

@@ -18,6 +18,10 @@ export function balloonColor (problemId: number | string | null | undefined): st
     return BALLOON_COLORS[paletteIndex(problemId)];
 }
 
+export function balloonIndex (problemId: number | string | null | undefined): number {
+    return paletteIndex(problemId);
+}
+
 export function balloonName (problemId: number | string | null | undefined): string {
     return BALLOON_NAMES[paletteIndex(problemId)];
 }
@@ -92,30 +96,46 @@ export function pad2 (n: number): string {
     return n < 10 ? `0${n}` : String(n);
 }
 
-/** "刚刚 / 5 分钟前 / 3 小时前 / 昨天 / 4 天前 / 2026-10-01" */
-export function relativeTime (time: string | number | Date, now = Date.now()): string {
+export interface RelativeParts { key: "justNow" | "minutes" | "hours" | "yesterday" | "days" | "date"; n?: number; date?: string }
+
+/** Locale-neutral relative time; the UI turns `key` into words (pa.ago.*). */
+export function relativeParts (time: string | number | Date, now = Date.now()): RelativeParts {
     const t = new Date(time).getTime();
     if (!Number.isFinite(t)) {
-        return "";
+        return { key: "date", date: "" };
     }
     const diff = Math.max(0, now - t) / 1000;
     if (diff < 60) {
-        return "刚刚";
+        return { key: "justNow" };
     }
     if (diff < 3600) {
-        return `${Math.floor(diff / 60)} 分钟前`;
+        return { key: "minutes", n: Math.floor(diff / 60) };
     }
     if (diff < 86400) {
-        return `${Math.floor(diff / 3600)} 小时前`;
+        return { key: "hours", n: Math.floor(diff / 3600) };
     }
     if (diff < 2 * 86400) {
-        return "昨天";
+        return { key: "yesterday" };
     }
     if (diff < 30 * 86400) {
-        return `${Math.floor(diff / 86400)} 天前`;
+        return { key: "days", n: Math.floor(diff / 86400) };
     }
     const d = new Date(t);
-    return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
+    return { key: "date", date: `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}` };
+}
+
+const ZH_AGO: Record<string, (n?: number) => string> = {
+    justNow: () => "刚刚",
+    minutes: n => `${n} 分钟前`,
+    hours: n => `${n} 小时前`,
+    yesterday: () => "昨天",
+    days: n => `${n} 天前`
+};
+
+/** Chinese wording of relativeParts ("刚刚 / 5 分钟前 / 3 小时前 / 昨天 / 4 天前 / 2026-10-01"). */
+export function relativeTime (time: string | number | Date, now = Date.now()): string {
+    const p = relativeParts(time, now);
+    return p.key === "date" ? (p.date as string) : ZH_AGO[p.key](p.n);
 }
 
 export interface SubmissionLite {
