@@ -9,6 +9,7 @@
             <router-view class="router"/>
         </transition>
         <Bottom/>
+        <UiModeTip/>
     </div>
 </template>
 <script lang="ts">
@@ -16,6 +17,7 @@ import Vue from "vue";
 import Navbar from "./components/navigator/Navbar.vue";
 import AdminNavbar from "./components/navigator/AdminNavbar.vue";
 import Bottom from "./components/bottom/Bottom.vue";
+import UiModeTip from "./components/pixel/UiModeTip.vue";
 import util from "./lib/util";
 import { mapGetters } from "vuex";
 import $ from "jquery";
@@ -27,6 +29,7 @@ import store from "@/store";
     components: {
         Navbar: Navbar,
         Bottom: Bottom,
+        UiModeTip,
         AdminNavbar: AdminNavbar
     },
     computed: mapGetters(["logined", "avatar", "admin", "user_id", "nick", "email"])
