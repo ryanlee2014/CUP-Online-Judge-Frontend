@@ -5,6 +5,8 @@ module.exports = {
     moduleNameMapper: {
         "^@/(.*)$": "<rootDir>/src/$1",
         "^lodash-es$": "lodash",
+        // d3-color 3 为纯 ESM（通过 overrides 修复 ReDoS），Jest 27 走 CJS，映射到其自带的 UMD 构建
+        "^d3-color$": "<rootDir>/node_modules/d3-color/dist/d3-color.js",
         "^monaco-editor$": "<rootDir>/tests/__mocks__/empty.js",
         "^mermaid$": "<rootDir>/tests/__mocks__/empty.js",
         "^mermaid/dist/mermaid.core(?:\\.js)?$": "<rootDir>/tests/__mocks__/empty.js",
