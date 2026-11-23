@@ -395,3 +395,101 @@ body.pa-mode .router .ui.card > .content > .header a { color: var(--pa-ink) !imp
 body.pa-mode .router .heatmap rect[fill="#dfdfdf"],
 body.pa-mode .router .heatmap rect[fill="rgb(223, 223, 223)"] { fill: #2c2c58; }
 body.pa-mode .router .heatmap text { fill: var(--pa-mute) !important; }
+
+/* ---------- problem page (side-by-side view) ---------- */
+body.pa-mode #total_control.pa-problem {
+    max-width: none !important;
+    width: 100%;
+    margin: 0 !important;
+    padding: 18px 28px 0;
+    display: flex !important;
+    flex-wrap: nowrap;
+    gap: 28px;
+    align-items: flex-start;
+}
+
+body.pa-mode #total_control.pa-problem > #left-side,
+body.pa-mode #total_control.pa-problem > #right-side {
+    margin: 0 !important;
+    padding: 0;
+}
+
+body.pa-mode #total_control.pa-problem > #right-side {
+    flex: 1;
+    min-width: 0;
+    width: auto !important;
+    display: flex;
+    flex-direction: column;
+    background: #0d0d1e;
+    box-shadow: 0 -4px 0 0 var(--pa-line), 0 4px 0 0 var(--pa-line), -4px 0 0 0 var(--pa-line), 4px 0 0 0 var(--pa-line), 8px 8px 0 0 var(--pa-shadow);
+}
+
+/* judge result goes right above the editor */
+body.pa-mode .pa-problem #right-side > #modeBar { order: 1; }
+body.pa-mode .pa-problem #right-side > #progress { order: 0; }
+body.pa-mode .pa-problem #right-side > .ui.warning.message { order: 0; }
+body.pa-mode .pa-problem #right-side > * { order: 2; }
+body.pa-mode .pa-problem #right-side > #statusBar { order: 3; }
+body.pa-mode .pa-problem #right-side > br { display: none; }
+
+body.pa-mode .pa-problem #modeBar,
+body.pa-mode .pa-problem #statusBar {
+    background: var(--pa-card2) !important;
+    box-shadow: none !important;
+    height: auto !important;
+    min-height: 44px;
+    border-radius: 0 !important;
+}
+
+body.pa-mode .pa-problem #statusBar { border-top: 3px solid var(--pa-line2); }
+body.pa-mode .pa-problem #modeBar { border-bottom: 3px solid var(--pa-line2); }
+
+body.pa-mode .pa-problem #progress.ui.progress {
+    margin: 0 !important;
+    border-radius: 0 !important;
+    background: var(--pa-card2) !important;
+    padding: 0;
+    height: auto;
+}
+
+body.pa-mode .pa-problem #progress.ui.progress .bar {
+    height: 10px;
+    min-width: 0;
+    border-radius: 0 !important;
+    background: var(--pa-pend) !important;
+}
+
+body.pa-mode .pa-problem #progress.ui.progress.success .bar { background: var(--pa-ac) !important; }
+body.pa-mode .pa-problem #progress.ui.progress.error .bar { background: var(--pa-wa) !important; }
+body.pa-mode .pa-problem #progress.ui.progress.warning .bar { background: var(--pa-tle) !important; }
+
+body.pa-mode .pa-problem #progress.ui.progress > .label {
+    position: static;
+    margin: 0;
+    padding: 14px 18px;
+    text-align: left;
+    font-family: var(--pa-font-px);
+    font-size: 20px;
+    font-weight: normal;
+    color: var(--pa-ink) !important;
+}
+
+body.pa-mode .pa-problem #progress.ui.progress.success > .label { background: #17402b; color: #c9ffe0 !important; }
+body.pa-mode .pa-problem #progress.ui.progress.error > .label { background: #4a1c24; color: #ffd0d2 !important; }
+body.pa-mode .pa-problem #progress.ui.progress.warning > .label { background: #4a3315; color: #ffe2bd !important; }
+
+body.pa-mode .pa-problem #Submit {
+    padding: 10px 22px !important;
+    font-size: 16px !important;
+}
+body.pa-mode .pa-problem #right-side > #progress.pa-has-result { display: block !important; }
+body.pa-mode .router #left-side .ui.segment,
+body.pa-mode .router #left-side .ui.segments {
+    background: #fffdf5 !important;
+    color: var(--pa-paper-ink) !important;
+    box-shadow: 0 0 0 2px #d9d4c0 !important;
+}
+body.pa-mode .router #left-side .ui.label {
+    background: #e4e0cf !important;
+    color: #55557a !important;
+}

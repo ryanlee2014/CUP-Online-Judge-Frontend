@@ -35,9 +35,9 @@
                     :static_theme="static_theme" v-if="!editorPackage && trimedCurrentPrepend"></ace-static>
         <monaco-static :content="trimedCurrentPrepend" :fontSize="fontSize + ''" :selected_language="selected_language"
                        :static_theme="static_theme" v-if="editorPackage && !!trimedCurrentPrepend"></monaco-static>
-        <ace-editor :fontSize="fontSize + ''" :selected_language="selected_language" :theme="theme"
+        <ace-editor :fontSize="fontSize + ''" :selected_language="selected_language" :theme="theme" :height="editorHeight"
                     v-if="!editorPackage" v-model="code" :prepend-length="codePrependLines"></ace-editor>
-        <monaco-editor :fontSize="fontSize + ''" :selected_language="selected_language" :theme="theme"
+        <monaco-editor :fontSize="fontSize + ''" :selected_language="selected_language" :theme="theme" :height="editorHeight"
                        v-else v-model="code" :enable-language-server="enableLanguageServerForEditor" :prepend-length="codePrependLines">
 
         </monaco-editor>
@@ -84,7 +84,7 @@
                 </div>
             </div>
         </div>
-        <div class="ui teal progress result" data-total="3" data-value="0" id="progress" style="display:none">
+        <div class="ui teal progress result" :class="{ 'pa-has-result': !!judgeInfoText }" data-total="3" data-value="0" id="progress" style="display:none">
             <div class="bar">
                 <div class="progress"></div>
             </div>
@@ -103,6 +103,7 @@
 </template>
 <i18n src="../../../locales/rightPanel.json"></i18n>
 <script lang="ts">
+import { uiModeState } from "@/util/uiMode";
 import aceEditor from "@/components/submit/codeEditor/aceEditor.vue";
 import aceThemeSelector from "@/components/submit/codeEditor/aceComponent/aceThemeSelector.vue";
 import aceStatic from "@/components/submit/codeEditor/aceComponent/aceStatic.vue";
@@ -179,7 +180,9 @@ export default defineComponent({
             dirty: false,
             // was assigned onto the iscontest prop before; kept as local state
             isContestRoute: false,
-            submitHotkey: isMac ? "⌘ + Enter" : "Ctrl + Enter"
+            submitHotkey: isMac ? "⌘ + Enter" : "Ctrl + Enter",
+            // new interface: editor fills the window height (top bar 62 + toolbars 65 + margins)
+            editorHeight: uiModeState.mode === "arena" && typeof window !== "undefined" ? Math.max(360, window.innerHeight - 340) : 460
         };
     },
     computed: {

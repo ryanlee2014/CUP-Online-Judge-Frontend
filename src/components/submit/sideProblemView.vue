@@ -1,9 +1,10 @@
 <template>
     <div
         class="ui grid"
+        :class="{ 'pa-problem': arena }"
         id="total_control"
         style="max-width:1300px;position:relative;margin:auto;border-radius: 10px">
-        <leftPanel :accepted="accepted" :description="description" :hint="hint" :input="input" :isadmin="isadmin"
+        <component :is="arena ? 'leftPanelArena' : 'leftPanel'" :accepted="accepted" :description="description" :hint="hint" :input="input" :isadmin="isadmin"
                    :iseditor="iseditor"
                    :memory="memory"
                    :normal_problem="normal_problem" :original_id="original_id" :output="output" :problem_id="problem_id"
@@ -11,7 +12,7 @@
                    :sampleoutput="sampleoutput"
                    :source="source" :spj="spj" :submit="submit" :switch_screen="switch_screen"
                    :time="time"
-                   :title="title" :uploader="uploader"></leftPanel>
+                   :title="title" :uploader="uploader"></component>
         <rightPanel :append="append" :do_submit="do_submit" :lang_list="lang_list" :pre_test_run="pre_test_run"
                     :prepend="prepend" :source_code="source_code" :submitDisabled="submitDisabled"
                     :judge-info-text="judgeInfoText"
@@ -25,13 +26,21 @@
 <script lang="ts">
 import leftPanel from "./sidePage/leftPanel.vue";
 import rightPanel from "./sidePage/rightPanel.vue";
+import leftPanelArena from "./sidePage/leftPanelArena.vue";
+import { uiModeState } from "@/util/uiMode";
 import { defineComponent, PropType } from "vue";
 type Fn = (...arg: any[]) => any;
 export default defineComponent({
     name: "SideProblemView",
     components: {
         leftPanel,
+        leftPanelArena,
         rightPanel
+    },
+    computed: {
+        arena (): boolean {
+            return uiModeState.mode === "arena";
+        }
     },
     props: {
         title: { type: String, default: "" },
