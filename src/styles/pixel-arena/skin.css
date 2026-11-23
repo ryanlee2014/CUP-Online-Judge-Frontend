@@ -292,7 +292,7 @@ body.pa-mode .router .ui.progress .bar { border-radius: 0 !important; }
 /* ---------- long reading: problem statement & markdown stay on "paper" ---------- */
 body.pa-mode .router .markdown-body,
 body.pa-mode .router .ui.segment .markdown-body {
-    color: var(--pa-paper-ink) !important;
+    color: #d6d5ef !important;
 }
 
 body.pa-mode .router #left-side .ui.segment,
@@ -402,7 +402,8 @@ body.pa-mode #total_control.pa-problem {
     width: 100%;
     margin: 0 !important;
     padding: 18px 28px 0;
-    display: flex !important;
+    /* no !important: v-show (display:none inline) must still hide it in single-screen mode */
+    display: flex;
     flex-wrap: nowrap;
     gap: 28px;
     align-items: flex-start;
@@ -520,3 +521,44 @@ body.pa-mode .router #left-side.pa-statement .ui.header { color: var(--pa-ink) !
 body.pa-mode .router #left-side.pa-statement .ui.table,
 body.pa-mode .router #left-side.pa-statement .ui.table td,
 body.pa-mode .router #left-side.pa-statement .ui.table th { color: #d6d5ef !important; }
+
+/* single-screen problem view: sticky title bar was white */
+body.pa-mode .following.bar.title,
+body.pa-mode .following.bar.title.light,
+body.pa-mode .following.bar.title.light.fixed {
+    background: var(--pa-bg2) !important;
+    border-bottom: 4px solid var(--pa-shadow) !important;
+    box-shadow: none !important;
+}
+body.pa-mode .following.bar.title .ui.header {
+    color: var(--pa-ink) !important;
+    font-family: var(--pa-font-px) !important;
+    font-weight: normal !important;
+}
+body.pa-mode .following.bar.title .ui.label { border-radius: 0 !important; }
+/* single-screen statement: readable body text, quiet labels */
+body.pa-mode .router .ui.vertical.segment.single,
+body.pa-mode .router .ui.vertical.segment.single p,
+body.pa-mode .router .ui.vertical.segment.single li,
+body.pa-mode .router .ui.vertical.segment.single div:not(.ui.label):not(.header) {
+    color: #d6d5ef !important;
+}
+body.pa-mode .router .ui.vertical.segment.single { font-size: 15px; line-height: 1.9; }
+body.pa-mode .following.bar.title .ui.label,
+body.pa-mode .router .ui.top.attached.label {
+    background: #2c2c58 !important;
+    color: #b9b8e6 !important;
+    border-radius: 0 !important;
+}
+body.pa-mode .router .ui.top.attached.label a { color: var(--pa-y) !important; }
+
+body.pa-mode .router .ui.labels > .ui.label.red,
+body.pa-mode .router .ui.labels > .ui.label.grey,
+body.pa-mode .router .ui.labels > .ui.label.green,
+body.pa-mode .router .ui.labels > .ui.label.orange {
+    background: #2c2c58 !important;
+    color: #b9b8e6 !important;
+    border-radius: 0 !important;
+    font-family: var(--pa-font-px);
+    font-weight: normal;
+}
