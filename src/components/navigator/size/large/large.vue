@@ -32,6 +32,7 @@
                     <router-link class="item" exact-active-class="active" to="/about/fame"><i class="chess queen icon"></i>{{$t("hall of fame")}}</router-link>
                     <a href="https://docs.cupacm.com" class="item" target="_blank"><i class="book icon"></i>{{$t("cupacm docs")}}</a>
                     <router-link class="item" exact-active-class="active" to="/system/version_control"><i class="node js icon"></i>{{$t("version control")}}</router-link>
+                    <a class="item" @click="toggleUiMode($event)"><i class="magic icon"></i>{{ arenaMode ? "切回旧版界面" : "试试新版界面" }}</a>
                 </div>
             </div>
             <SocketMenu :nick="nick" :logined="logined" :user="user" :judger="judger" :connected="connected"
@@ -44,13 +45,26 @@
 import SocketMenu from "../../components/SocketMenu.vue";
 import { Component, Mixins } from "vue-property-decorator";
 import MenuMixin from "@/mixin/menu/MenuMixin";
+import { toggleUiMode, uiModeState } from "@/util/uiMode";
+import $ from "jquery";
 @Component({
     components: {
         SocketMenu
     }
 })
 export default class LargeMenu extends Mixins(MenuMixin) {
+    get arenaMode () {
+        return uiModeState.mode === "arena";
+    }
 
+    toggleUiMode (event?: Event) {
+        toggleUiMode();
+        // Semantic UI copies a clicked item's text into the dropdown label; put "功能" back.
+        const dropdown = event && (event.currentTarget as HTMLElement | null)?.closest(".ui.dropdown");
+        if (dropdown) {
+            setTimeout(() => ($(dropdown) as any).dropdown("restore defaults"), 0);
+        }
+    }
 }
 </script>
 

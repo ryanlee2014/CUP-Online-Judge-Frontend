@@ -3,24 +3,24 @@
  * Only colours, fonts and the active marker change; markup, dropdown menus and behaviour stay as they are,
  * until the remaining pages drop Semantic UI.
  */
-.following.bar.topmenu,
-.following.bar.topmenu.light,
-.following.bar.topmenu.inverted {
+body.pa-mode .following.bar.topmenu,
+body.pa-mode .following.bar.topmenu.light,
+body.pa-mode .following.bar.topmenu.inverted {
     background: var(--pa-bg2) !important;
     border-bottom: 4px solid var(--pa-shadow) !important;
     box-shadow: none !important;
     padding: 0 !important;
 }
 
-.following.bar.topmenu .ui.secondary.menu {
+body.pa-mode .following.bar.topmenu .ui.secondary.menu {
     background: transparent !important;
     min-height: 58px;
 }
 
-.following.bar.topmenu .ui.secondary.menu > .container > .item,
-.following.bar.topmenu .ui.secondary.menu > .container > .msg.header.item > .item,
-.following.bar.topmenu .ui.secondary.menu .right.menu > .item,
-.following.bar.topmenu .ui.secondary.menu .ui.dropdown.item > .text {
+body.pa-mode .following.bar.topmenu .ui.secondary.menu > .container > .item,
+body.pa-mode .following.bar.topmenu .ui.secondary.menu > .container > .msg.header.item > .item,
+body.pa-mode .following.bar.topmenu .ui.secondary.menu .right.menu > .item,
+body.pa-mode .following.bar.topmenu .ui.secondary.menu .ui.dropdown.item > .text {
     font-family: var(--pa-font-px);
     font-weight: normal !important;
     font-size: 15px;
@@ -29,17 +29,17 @@
     background: transparent !important;
 }
 
-.following.bar.topmenu .ui.secondary.menu > .container > .item:hover,
-.following.bar.topmenu .ui.secondary.menu .right.menu > .item:hover {
+body.pa-mode .following.bar.topmenu .ui.secondary.menu > .container > .item:hover,
+body.pa-mode .following.bar.topmenu .ui.secondary.menu .right.menu > .item:hover {
     color: var(--pa-ink) !important;
 }
 
-.following.bar.topmenu .ui.secondary.menu > .container > a.item.active {
+body.pa-mode .following.bar.topmenu .ui.secondary.menu > .container > a.item.active {
     color: var(--pa-ink) !important;
     background: transparent !important;
 }
 
-.following.bar.topmenu .ui.secondary.menu > .container > a.item.active::before {
+body.pa-mode .following.bar.topmenu .ui.secondary.menu > .container > a.item.active::before {
     content: "▶" !important;
     display: inline-block !important;
     position: static !important;
@@ -51,16 +51,16 @@
     font-size: 12px;
 }
 
-.following.bar.topmenu .ui.secondary.menu > .container > a.item.active > i.icon {
+body.pa-mode .following.bar.topmenu .ui.secondary.menu > .container > a.item.active > i.icon {
     display: none;
 }
 
-.following.bar.topmenu .ui.secondary.menu i.icon,
-.following.bar.topmenu .ui.secondary.menu .dropdown.icon {
+body.pa-mode .following.bar.topmenu .ui.secondary.menu i.icon,
+body.pa-mode .following.bar.topmenu .ui.secondary.menu .dropdown.icon {
     color: var(--pa-dim);
 }
 
-.following.bar.topmenu .ui.secondary.menu .right.menu .ui.button {
+body.pa-mode .following.bar.topmenu .ui.secondary.menu .right.menu .ui.button {
     font-family: var(--pa-font-px);
     font-weight: normal;
     border-radius: 0;
@@ -69,7 +69,7 @@
     box-shadow: 0 0 0 3px var(--pa-shadow);
 }
 
-.following.bar.topmenu .ui.secondary.menu .right.menu .ui.primary.button {
+body.pa-mode .following.bar.topmenu .ui.secondary.menu .right.menu .ui.primary.button {
     background: var(--pa-y);
     color: #1a1a10;
 }

@@ -5,6 +5,7 @@ import VueAxios from "vue-axios";
 import axios from "axios";
 import VueLazyload from "vue-lazyload";
 import App from "./App.vue";
+import { applyBodyClass } from "./util/uiMode";
 import router from "./router";
 import store from "./store";
 
@@ -38,6 +39,8 @@ Vue.component("mavon-editor", () => import(/* webpackChunkName: "mavon-editor" *
     // @ts-ignore
     .then(m => m.mavonEditor || m.default.mavonEditor));
 Vue.use(VueObserveVisibility);
+applyBodyClass();
+
 new Vue({
     router,
     store,
