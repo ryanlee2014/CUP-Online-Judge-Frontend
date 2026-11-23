@@ -2,7 +2,6 @@ import axios, { AxiosRequestConfig } from "axios";
 import router from "@/router";
 import store from "@/store";
 import UrlParser from "url-parse";
-import queryString from "query-string";
 
 export default function () {
     axios.interceptors.response.use(response => {
@@ -50,8 +49,9 @@ export default function () {
     };
 
     axios.noCacheGet = function (url: string, config?: AxiosRequestConfig) {
-        const parsedUrl = new UrlParser(url, false);
-        const parsedObject = queryString.parse(parsedUrl.query as unknown as string);
+        // url-parse 自带 querystringify 解析器，parser=true 时 query 即为对象
+        const parsedUrl = new UrlParser(url, true);
+        const parsedObject: Record<string, string | undefined> = { ...parsedUrl.query };
         parsedObject.timeHash = (Math.random() * 100 * Date.now().valueOf()).toString();
         parsedUrl.set("query", parsedObject);
         return _get.call(this, parsedUrl.toString(), config);
