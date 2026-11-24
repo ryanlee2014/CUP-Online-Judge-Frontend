@@ -156,4 +156,12 @@ export default class App extends Vue {
     .router {
         min-height: 90%;
     }
+    /* 样式表还是 Semantic UI 2.x，脚本已是 Fomantic 2.9：Fomantic 的 popup 先加 invisible 类、
+       在页面上试摆位置并量坐标，旧样式表里没有这条规则，弹窗量的时候仍是 display:none，
+       jQuery 量出 (0,0)，于是顶栏账号菜单被判为“上方放得下”，摆到了屏幕外。补上 Fomantic 的这条规则。 */
+    .ui.invisible.popup {
+        display: block;
+        visibility: hidden !important;
+        z-index: -1;
+    }
 </style>
