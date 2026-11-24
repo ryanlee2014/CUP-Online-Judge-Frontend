@@ -73,3 +73,79 @@ body.pa-mode .following.bar.topmenu .ui.secondary.menu .right.menu .ui.primary.b
     background: var(--pa-y);
     color: #1a1a10;
 }
+
+/* ---- 顶栏账号名悬停弹出的个人卡片（ProfileCard）---- */
+body.pa-mode .ui.popup.dropdown_menu_group {
+    background: var(--pa-card) !important;
+    color: var(--pa-ink) !important;
+    border: none !important;
+    border-radius: 0 !important;
+    padding: 16px 18px !important;
+    box-shadow: 0 -4px 0 0 var(--pa-line), 0 4px 0 0 var(--pa-line), -4px 0 0 0 var(--pa-line), 4px 0 0 0 var(--pa-line), 8px 8px 0 0 var(--pa-shadow) !important;
+}
+
+/* 指向账号名的小三角：去掉，像素卡片不用斜角 */
+body.pa-mode .ui.popup.dropdown_menu_group::before {
+    display: none !important;
+}
+
+body.pa-mode .ui.popup.dropdown_menu_group .ui.image {
+    border-radius: 0 !important;
+    image-rendering: pixelated;
+    box-shadow: 0 0 0 3px var(--pa-line), 4px 4px 0 3px var(--pa-shadow);
+}
+
+body.pa-mode .ui.popup.dropdown_menu_group .ui.header {
+    color: var(--pa-y) !important;
+    font-family: var(--pa-font-px);
+    font-weight: normal !important;
+    letter-spacing: .5px;
+    margin-top: 12px;
+}
+
+body.pa-mode .ui.popup.dropdown_menu_group .ui.header .sub.header {
+    color: var(--pa-mute) !important;
+    font-family: var(--pa-font);
+}
+
+body.pa-mode .ui.popup.dropdown_menu_group p {
+    color: var(--pa-ink);
+    font-family: var(--pa-font-px);
+}
+
+body.pa-mode .ui.popup.dropdown_menu_group .ui.link.list .item {
+    color: var(--pa-ink) !important;
+    font-family: var(--pa-font-px);
+    display: inline-block;
+    padding: 3px 6px !important;
+    margin: 2px -6px;
+    line-height: 1.5;
+}
+
+body.pa-mode .ui.popup.dropdown_menu_group .ui.link.list .item:hover {
+    color: var(--pa-bg) !important;
+    background: var(--pa-y);
+}
+
+body.pa-mode .ui.popup.dropdown_menu_group .ui.link.list .item i.icon {
+    color: var(--pa-mute);
+}
+
+body.pa-mode .ui.popup.dropdown_menu_group .ui.link.list .item:hover i.icon {
+    color: var(--pa-bg);
+}
+
+body.pa-mode .ui.popup.dropdown_menu_group .ui.link.list .logout.item:hover {
+    background: var(--pa-wa);
+    color: #fff !important;
+}
+
+body.pa-mode .ui.popup.dropdown_menu_group .ui.toggle.checkbox label,
+body.pa-mode .ui.popup.dropdown_menu_group .ui.toggle.checkbox input:checked ~ label {
+    color: var(--pa-mute) !important;
+    font-family: var(--pa-font-px);
+}
+
+body.pa-mode .ui.popup.dropdown_menu_group .ui.toggle.checkbox label::before { background: #34346a !important; border-radius: 0 !important; }
+body.pa-mode .ui.popup.dropdown_menu_group .ui.toggle.checkbox input:checked ~ label::before { background: var(--pa-ac) !important; }
+body.pa-mode .ui.popup.dropdown_menu_group .ui.toggle.checkbox label::after { border-radius: 0 !important; box-shadow: none !important; }
