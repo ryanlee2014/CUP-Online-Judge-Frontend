@@ -148,6 +148,8 @@ interface IMember {
 }
 
 const emailSet: any = {};
+// rows whose biography has already been turned into HTML
+const renderedRows: WeakSet<object> = new WeakSet();
 
 @Component({
     components: {
@@ -191,7 +193,14 @@ export default class RanklistMainContent extends Mixins(MarkdownWorkerMixin, Sem
         else {
             payload = [];
         }
+        // Render each biography once. Writing the HTML back into the row re-runs this getter, and
+        // rendering already-rendered HTML again adds a line break each pass (markdown-it 14), so
+        // without the guard one biography grows into thousands of empty lines.
         payload.forEach(async (e: any) => {
+            if (renderedRows.has(e)) {
+                return;
+            }
+            renderedRows.add(e);
             if (typeof e.biography === "string") {
                 e.biography = await this.renderRawAsync(e.biography);
             }

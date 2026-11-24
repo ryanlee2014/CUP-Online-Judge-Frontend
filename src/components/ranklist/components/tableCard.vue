@@ -39,6 +39,8 @@
 import avatarMixin from "../../../mixin/avatarMixin";
 import { Component, Mixins, Prop, Watch } from "vue-property-decorator";
 import MarkdownWorkerMixin from "@/mixin/MarkdownWorkerMixin";
+const renderedRows: WeakSet<object> = new WeakSet();
+
 @Component
 export default class TableCard extends Mixins(avatarMixin, MarkdownWorkerMixin) {
     @Prop({ default: () => [] }) content!: any[];
@@ -49,7 +51,9 @@ export default class TableCard extends Mixins(avatarMixin, MarkdownWorkerMixin) 
     onContentChanged (val: any[]) {
         this.contentPayload = val;
         val.forEach(async (e: any) => {
-            if (e && e.biography) {
+            // the same row objects can come back in a later update; render each biography only once
+            if (e && e.biography && !renderedRows.has(e)) {
+                renderedRows.add(e);
                 e.biography = await this.renderRawAsync(e.biography || "");
             }
         });
