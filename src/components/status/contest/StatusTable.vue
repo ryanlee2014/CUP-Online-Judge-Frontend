@@ -17,11 +17,11 @@
         </tr>
         </thead>
         <transition-group name="list-complete" tag="tbody">
-        <tr :key="row.solution_id" v-for="row in problem_lists" :class="((row.sim  && ((isadmin) || showSim))?'warning need_popup':'need_popup') + ' list-complete-item'" :data-html="'<b>IP:'+row.ip+'</b><br><p>类型:'+detect_place(row.ip)+'</p><p>用户指纹:<br>'+row.fingerprint+'<br>硬件指纹:<br>'+row.fingerprintRaw+'</p>'">
+        <tr :key="row.solution_id" v-for="row in problem_lists" :class="((row.sim  && ((isadmin) || showSim))?'warning need_popup':'need_popup') + ' list-complete-item'" :data-html="row.ip ? '<b>IP:'+row.ip+'</b><br><p>类型:'+detect_place(row.ip)+'</p><p>用户指纹:<br>'+row.fingerprint+'<br>硬件指纹:<br>'+row.fingerprintRaw+'</p>' : null">
             <td>{{row.solution_id}}</td>
             <td><div class="ui grid">
             <div class="four wide column" style="margin:auto">
-            <v-gravatar :hostname="$store.getters.gravatarCDN" :original-src="getAvatarURL(row)" class="ui avatar image" :email="row.email" style="object-fit: cover;"></v-gravatar>
+            <v-gravatar :hostname="$store.getters.gravatarCDN" :original-src="getAvatarURL(row)" class="ui avatar image" :email="row.email" :hash="row.email_hash" style="object-fit: cover;"></v-gravatar>
             </div>
             <div class="twelve wide column">
                 <router-link :to="`/user/${row.user_id}`">{{row.user_id}}<br>{{row.nick}}</router-link>
@@ -62,7 +62,7 @@
                 <span class="boldstatus" v-if="self === row.user_id || isadmin">{{language_name[(!row.oj_name?'local':row.oj_name.toLowerCase())][row.language]}}  / </span>
                 <span class="boldstatus">{{row.length}}B</span>
             </td>
-            <td>{{dayjs(row.in_date).format("YYYY-MM-DD HH:mm:ss")}}<br><p>类型:{{detect_place(row.ip)}}</p></td>
+            <td>{{dayjs(row.in_date).format("YYYY-MM-DD HH:mm:ss")}}<p v-if="row.ip">类型:{{detect_place(row.ip)}}</p></td>
             <td>{{row.judger}}</td>
         </tr>
         </transition-group>

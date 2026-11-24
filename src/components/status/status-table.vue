@@ -18,13 +18,13 @@
         </tr>
         </thead>
         <transition-group name="list-complete" tag="tbody">
-        <tr :class="(row.sim?'warning':'') + ' list-complete-item'" :data-html="'<b>IP:'+row.ip+'</b><br><p>类型:'+detect_place(row.ip)+'</p><p>用户指纹:<br>'+row.fingerprint+'<br>硬件指纹:<br>'+row.fingerprintRaw+'</p>'" :key="row.solution_id"
+        <tr :class="(row.sim?'warning':'') + ' list-complete-item'" :data-html="row.ip ? '<b>IP:'+row.ip+'</b><br><p>类型:'+detect_place(row.ip)+'</p><p>用户指纹:<br>'+row.fingerprint+'<br>硬件指纹:<br>'+row.fingerprintRaw+'</p>' : null" :key="row.solution_id"
             v-for="row in problem_lists">
             <td>{{row.solution_id}}</td>
             <td>
                 <div class="ui grid">
                     <div class="four wide column" style="margin:auto">
-                        <v-gravatar :hostname="$store.getters.gravatarCDN" :original-src="getAvatarURL(row)" class="ui avatar image" :email="row.email" style="object-fit: cover;"></v-gravatar>
+                        <v-gravatar :hostname="$store.getters.gravatarCDN" :original-src="getAvatarURL(row)" class="ui avatar image" :email="row.email" :hash="row.email_hash" style="object-fit: cover;"></v-gravatar>
                     </div>
                     <div class="twelve wide column">
                         <router-link :to="`/user/${row.user_id}`">

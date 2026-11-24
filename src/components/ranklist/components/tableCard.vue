@@ -20,7 +20,7 @@
                     </router-link>
                 </td>
                 <td>
-                    <v-gravatar :hostname="$store.getters.gravatarCDN" :original-src="getAvatarURL(row)" class="ui avatar image" :email="row.email" style="object-fit: cover;"></v-gravatar>
+                    <v-gravatar :hostname="$store.getters.gravatarCDN" :original-src="getAvatarURL(row)" class="ui avatar image" :email="row.email" :hash="row.email_hash" style="object-fit: cover;"></v-gravatar>
                 </td>
                 <td>
                     {{convertHTML(row.nick)}}
