@@ -1,7 +1,7 @@
 <template>
     <div>
         <div>
-            <div class="ui inverted not theme vertical masthead center aligned segment gr5" id="background">
+            <div class="ui not theme vertical masthead center aligned segment gr5" id="background">
                 <div id="main_container">
                     <div class="ui container">
                         <div class="ui large secondary inverted not theme pointing menu">
@@ -9,25 +9,25 @@
                     </div>
                     <div class="ui grid" id="main_masthead" style="transform: translateX(25%)">
                         <div class="ui text container transition main title eight wide column" id="left">
-                            <h1 class="ui inverted not theme header text shape">
+                            <h1 class="ui not theme header text shape">
                                 <div class="sides">
-                                    <div class="ui inverted not theme header side active hometitle">{{$t("oj-name")}}</div>
+                                    <div class="ui not theme header side active hometitle">{{$t("oj-name")}}</div>
                                 </div>
                             </h1>
                             <div class="column buttonset">
-                                <router-link class="ui inverted not theme large button download basic" to="/about/icpc">
+                                <router-link class="ui not theme large button download basic" to="/about/icpc">
                                     <i class="newspaper outline icon"></i>
                                     {{$t("about icpc")}}
                                 </router-link>
-                                <router-link class="ui inverted not theme large button download basic" to="/discuss/thread/23">
+                                <router-link class="ui not theme large button download basic" to="/discuss/thread/23">
                                     <i class="briefcase icon"></i>
                                     {{$t("internship referral")}}
                                 </router-link>
-                                <router-link class="ui inverted not theme large button download basic" to="/about/fame">
+                                <router-link class="ui not theme large button download basic" to="/about/fame">
                                     <i class="chess queen icon"></i>
                                     {{$t("hall of fame")}}
                                 </router-link>
-                                <a class="ui inverted not theme large button download basic" @click="switchToArena">
+                                <a class="ui not theme large button download basic" @click="switchToArena">
                                     <i class="magic icon"></i>
                                     {{ $t("pa.tryArena") }}
                                 </a>
@@ -79,7 +79,7 @@
 
                         </div>
                     </div>
-                    <div class="ui vertical divider inverted" id="divider" style="opacity: 0">
+                    <div class="ui vertical divider" id="divider" style="opacity: 0">
 
                     </div>
                     <br>
@@ -298,5 +298,25 @@ export default class Home extends Mixins(InitMixin) {
     .hometitle {
         font-weight: normal!important;
         font-size: 1em!important;
+        color: #1b1c1d!important;
+    }
+    /* 纯白首屏：去掉灰色蒙层，ICPC 图只作淡水印，文字和按钮用深色 */
+    #background.masthead {
+        background: #fff!important;
+        color: #1b1c1d;
+    }
+    #background.gr5:after {
+        background-color: #fff;
+        opacity: 0.12;
+    }
+    #background .ui.basic.button {
+        color: #1b1c1d!important;
+        box-shadow: 0 0 0 1px rgba(27, 28, 29, 0.35) inset!important;
+    }
+    #background .ui.basic.button:hover {
+        background: rgba(27, 28, 29, 0.05)!important;
+    }
+    #background img[alt="Aliyun"] {
+        filter: invert(1);
     }
 </style>

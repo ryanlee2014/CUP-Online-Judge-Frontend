@@ -39,7 +39,7 @@
                         </div>
                         <div class="pa-actions">
                             <router-link class="pa-btn pa-primary" to="/problemset">{{ $t("pa.home.toProblemset") }} <span class="pa-key">↵</span></router-link>
-                            <router-link class="pa-btn" to="/contest">{{ $t("pa.home.contestHomework") }}</router-link>
+                            <router-link class="pa-btn" to="/topic">{{ $t("pa.home.topics") }}</router-link>
                         </div>
                     </template>
                 </section>
